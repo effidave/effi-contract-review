@@ -25,7 +25,8 @@ from word_document_server.tools import (
     protection_tools,
     footnote_tools,
     extended_document_tools,
-    comment_tools
+    comment_tools,
+    numbering_tools
 )
 
 def get_transport_config():
@@ -450,6 +451,41 @@ def register_tools():
     def get_comments_for_paragraph(filename: str, paragraph_index: int):
         """Extract comments for a specific paragraph in a Word document."""
         return comment_tools.get_comments_for_paragraph(filename, paragraph_index)
+    
+    # Numbering analysis tools
+    @mcp.tool()
+    def analyze_document_numbering(filename: str, debug: bool = False, 
+                                   include_non_numbered: bool = False):
+        """
+        Analyze the numbering structure of a Word document.
+        
+        Uses effilocal's NumberingInspector to produce detailed analysis of:
+        - Numbered paragraphs (lists, outlines, etc.)
+        - Numbering formats (decimal, roman, bullets, etc.)
+        - Counter values and rendered numbers
+        - Numbering hierarchy and levels
+        """
+        return numbering_tools.analyze_document_numbering(filename, debug, include_non_numbered)
+    
+    @mcp.tool()
+    def get_numbering_summary(filename: str):
+        """
+        Get a high-level summary of numbering styles used in a document.
+        
+        Returns statistics on numbering formats, levels, and usage counts.
+        """
+        return numbering_tools.get_numbering_summary(filename)
+    
+    @mcp.tool()
+    def extract_outline_structure(filename: str, max_level: int = None):
+        """
+        Extract the document outline based on numbering structure.
+        
+        Creates a hierarchical view of numbered items for understanding
+        document structure and navigation.
+        """
+        return numbering_tools.extract_outline_structure(filename, max_level)
+    
     # New table column width tools
     @mcp.tool()
     def set_table_column_width(filename: str, table_index: int, col_index: int, 

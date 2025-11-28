@@ -1,0 +1,49 @@
+{
+  "doc_id": "3e4e2c50-413f-4d30-92d2-066d1f9a5301",
+  "hierarchy_depth": 1,
+  "depth_max": 1,
+  "avg_blocks_per_section": 2.0,
+  "root": {
+    "children": [
+      {
+        "id": "0a2ae5ed-5e62-4ebd-9c37-c761b1ab0f9e",
+        "title": "Introduction",
+        "level": 1,
+        "parent_id": null,
+        "child_ids": [],
+        "block_ids": [
+          "c6ddf274-7d69-4b83-8fb2-0e7d3e9d4d11",
+          "7a5b1c4c-5ab2-4aff-9e3d-3c9b8f5f752f"
+        ],
+        "char_count": 66,
+        "children": []
+      },
+      {
+        "id": "0df2ebfa-ead7-4f16-9ad0-56a8dd2b8897",
+        "title": "Capabilities",
+        "level": 1,
+        "parent_id": null,
+        "child_ids": [],
+        "block_ids": [
+          "9b1a86ec-8d1f-4a0d-af6a-d54f0c8d52c3",
+          "a24b77e0-4a69-4039-9f60-510d94d26635"
+        ],
+        "char_count": 72,
+        "children": []
+      },
+      {
+        "id": "5cf0c1aa-53a8-4f43-8bf2-50a62ddb29e0",
+        "title": "Summary",
+        "level": 1,
+        "parent_id": null,
+        "child_ids": [],
+        "block_ids": [
+          "b904b6f5-252f-4b8a-a5de-1cf3f5da2abf",
+          "f64bcba7-8aa0-4c89-ab57-8f744c6a32d3"
+        ],
+        "char_count": 59,
+        "children": []
+      }
+    ]
+  }
+}

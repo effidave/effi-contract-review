@@ -1,0 +1,25 @@
+{
+  "styles": [
+    {
+      "name": "Heading 1",
+      "type": "heading",
+      "count": 1,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "List Paragraph",
+      "type": "paragraph",
+      "count": 9,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "Normal",
+      "type": "paragraph",
+      "count": 1,
+      "semantic_hint": null,
+      "hint_scores": null
+    }
+  ]
+}

@@ -1,0 +1,160 @@
+[
+  {
+    "type": "heading",
+    "content_hash": "sha256:eb9df8b3054b49b9667848247ea28023abb7a6047fc116dc76f48bc7a271fb48",
+    "text": "Table Example",
+    "style": "Heading 1",
+    "style_id": "Heading1",
+    "para_id": "",
+    "num_pr": null,
+    "level": 1,
+    "list": null,
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Table Example",
+      "source": "explicit"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 0
+  },
+  {
+    "type": "paragraph",
+    "content_hash": "sha256:4001f04ee804acb398440afea9e094333b01eaf8191af3cb4a61751ea31bba2f",
+    "text": "Below is a small table.",
+    "style": "Normal",
+    "style_id": "Normal",
+    "para_id": "",
+    "num_pr": null,
+    "level": null,
+    "list": null,
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 1
+  },
+  {
+    "type": "table_cell",
+    "content_hash": "sha256:dcd1d5223f73b3a965c07e3ff5dbee3eedcfedb806686a05b9b3868a2c3d6d50",
+    "text": "Name",
+    "style": "Normal",
+    "level": null,
+    "list": null,
+    "table": {
+      "table_id": "tbl_1",
+      "row": 0,
+      "col": 0
+    },
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": null
+  },
+  {
+    "type": "table_cell",
+    "content_hash": "sha256:8e37953d23daca5ff01b8282c33f4e0a2152f1d1885f94c06418617e3ee1d24e",
+    "text": "Value",
+    "style": "Normal",
+    "level": null,
+    "list": null,
+    "table": {
+      "table_id": "tbl_1",
+      "row": 0,
+      "col": 1
+    },
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": null
+  },
+  {
+    "type": "table_cell",
+    "content_hash": "sha256:1af851907331c0ed99e7c63b4e55df808bc5fc4c990a1cf80ca8c0f76daf1f3b",
+    "text": "Size",
+    "style": "Normal",
+    "level": null,
+    "list": null,
+    "table": {
+      "table_id": "tbl_1",
+      "row": 1,
+      "col": 0
+    },
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": null
+  },
+  {
+    "type": "table_cell",
+    "content_hash": "sha256:73475cb40a568e8da8a045ced110137e159f890ac4da883b6b17dc651b3a8049",
+    "text": "42",
+    "style": "Normal",
+    "level": null,
+    "list": null,
+    "table": {
+      "table_id": "tbl_1",
+      "row": 1,
+      "col": 1
+    },
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": null
+  },
+  {
+    "type": "paragraph",
+    "content_hash": "sha256:2908b1ded35d905d06cefcf774498991e5d62d4c5c8456c761bbccb0e1afda87",
+    "text": "End of table.",
+    "style": "Normal",
+    "style_id": "Normal",
+    "para_id": "",
+    "num_pr": null,
+    "level": null,
+    "list": null,
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 2
+  }
+]

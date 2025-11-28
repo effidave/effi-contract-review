@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    
+    {
+      "name": "Run effi-local CLI",
+      "type": "python",
+      "request": "launch",
+      "module": "effi_local.cli",
+      "env": { "PYTHONPATH": "${workspaceFolder}/src" }
+    }
+  ]
+}

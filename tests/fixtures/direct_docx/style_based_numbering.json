@@ -1,0 +1,186 @@
+[
+  {
+    "type": "paragraph",
+    "content_hash": "sha256:b563ec9d1894a5495e8b48a66031ea6967a2e97eed9a8675b1b54f50eb73b61e",
+    "text": "AGREED TERMS",
+    "style": "Paragraph",
+    "style_id": "Paragraph",
+    "para_id": "67B3C20B",
+    "num_pr": null,
+    "level": null,
+    "list": null,
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 0
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:920ae4212ef166b9aca1828c00ddb564f55fa0be0081cb759fd4349af36a95a5",
+    "text": "Parties and background",
+    "style": "Title Clause",
+    "style_id": "TitleClause",
+    "para_id": "76280DD7",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 1,
+      "abstract_num_id": 0,
+      "level": 0,
+      "counters": [
+        1
+      ],
+      "ordinal": "1.",
+      "format": "decimal",
+      "pattern": "%1.",
+      "is_legal": false,
+      "restart_boundary": true,
+      "numbering_digest": "num-aff04085255c47e983ecf62062b687193688a8fa",
+      "ordinal_at_parse": 1
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 1
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:9eda8a48aa931fbfef9c6445423850179b7636b9290945665e349ec48fe26e2b",
+    "text": "This Master Services Agreement (the Agreement) is entered into between the Supplier (as defined above in the Agreement Details) and PRINSIX TECHNOLOGIES LIMITED incorporated and registered in England and Wales with company number 12315496 whose registered office is at 4 Wharfe Mews, Cliffe Terrace, Wetherby, West Yorkshire, LS22 6LX (the Customer).",
+    "style": "Untitled subclause 1",
+    "style_id": "Untitledsubclause1",
+    "para_id": "79A7D5E1",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 1,
+      "abstract_num_id": 0,
+      "level": 1,
+      "counters": [
+        1,
+        1
+      ],
+      "ordinal": "1.1",
+      "format": "decimal",
+      "pattern": "%1.%2",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-643a7a533936c492f5d41d3133b0db0147a2465d",
+      "ordinal_at_parse": 2
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 2
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:2b3263f789393f7de49881fbaae0de6cd22fae777e283402c771bc3c471c5dc1",
+    "text": "This Agreement operates as a master services agreement, which allows the parties to enter into one or more Statements of Work for Services.",
+    "style": "Untitled subclause 1",
+    "style_id": "Untitledsubclause1",
+    "para_id": "36C524C8",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 1,
+      "abstract_num_id": 0,
+      "level": 1,
+      "counters": [
+        1,
+        2
+      ],
+      "ordinal": "1.2",
+      "format": "decimal",
+      "pattern": "%1.%2",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-643a7a533936c492f5d41d3133b0db0147a2465d",
+      "ordinal_at_parse": 3
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 3
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:8148506eff934b3f876379d362f7064cbfe8e5ba2d6038acf63a7ae5926042e8",
+    "text": "The parties may agree any number of Statements of Work under the terms of this Agreement following the process set out in the MSA Terms and Conditions of Purchase in Schedule 2.",
+    "style": "Untitled subclause 1",
+    "style_id": "Untitledsubclause1",
+    "para_id": "4420D2DD",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 1,
+      "abstract_num_id": 0,
+      "level": 1,
+      "counters": [
+        1,
+        3
+      ],
+      "ordinal": "1.3",
+      "format": "decimal",
+      "pattern": "%1.%2",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-643a7a533936c492f5d41d3133b0db0147a2465d",
+      "ordinal_at_parse": 4
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 4
+  }
+]

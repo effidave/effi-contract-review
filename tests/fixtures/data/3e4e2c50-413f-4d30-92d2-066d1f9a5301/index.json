@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "doc_id": "3e4e2c50-413f-4d30-92d2-066d1f9a5301",
+  "doc_format": "docx",
+  "source_filename": "sample.docx",
+  "char_count": 197,
+  "block_count": 6,
+  "section_count": 3,
+  "ltu_count": 0,
+  "max_section_depth": 1,
+  "has_tag_ranges": false,
+  "schema_version": "2025.10",
+  "filemap": {
+    "blocks": "blocks.jsonl",
+    "sections": "sections.json",
+    "styles": "styles.json"
+  }
+}

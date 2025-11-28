@@ -1,0 +1,1332 @@
+[
+  {
+    "type": "heading",
+    "content_hash": "sha256:3eef41639786591e43234e857d8942af754a975a2566b6ace81c8717a61a7beb",
+    "text": "Schedule 2 - MSA Terms and Conditions of Purchase",
+    "style": "Schedule",
+    "style_id": "Schedule",
+    "para_id": "1EB46216",
+    "num_pr": null,
+    "level": 1,
+    "list": null,
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Schedule 2 - MSA Terms and Conditions of Purchase",
+      "source": "explicit"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 0,
+    "attachment": {
+      "type": "schedule",
+      "ordinal": "2",
+      "title": "MSA Terms and Conditions of Purchase"
+    }
+  },
+  {
+    "type": "heading",
+    "content_hash": "sha256:d5da114b5fac7b65f63c275a3caff490710e4c68f52b2f6fb260b85cb98bd9b8",
+    "text": "Interpretation",
+    "style": "Title Clause",
+    "style_id": "TitleClause",
+    "para_id": "09239700",
+    "num_pr": {
+      "numId": 3,
+      "ilvl": 0,
+      "numRestart": false
+    },
+    "level": 1,
+    "list": {
+      "num_id": 3,
+      "abstract_num_id": 0,
+      "level": 0,
+      "counters": [
+        1
+      ],
+      "ordinal": "1.",
+      "format": "decimal",
+      "pattern": "%1.",
+      "is_legal": false,
+      "restart_boundary": true,
+      "numbering_digest": "num-00d570025bbf20e29461c2c322fd3a5c9618d326",
+      "ordinal_at_parse": 1
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Interpretation",
+      "source": "toc_synthesized"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 1
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:dab8490a8568d8aafc28af7e9ac358359dd6e61bdc577634057846e7230f3150",
+    "text": "The following definitions and rules of interpretation apply in these Terms and Conditions:",
+    "style": "Untitled subclause 1",
+    "style_id": "Untitledsubclause1",
+    "para_id": "35648689",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 1,
+      "abstract_num_id": 0,
+      "level": 1,
+      "counters": [
+        1,
+        1
+      ],
+      "ordinal": "1.1",
+      "format": "decimal",
+      "pattern": "%1.%2",
+      "is_legal": false,
+      "restart_boundary": true,
+      "numbering_digest": "num-643a7a533936c492f5d41d3133b0db0147a2465d",
+      "ordinal_at_parse": 1
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 2
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:c1bf4983433974ae7fa245d670422d9ac0e6091caf781e8723c1523b498bb0d4",
+    "text": "Agreement: the agreement between the parties consisting of the Master Services Agreement and its Schedules (including these MSA Terms and Conditions of Purchase and any Statements of Work agreed by the parties under the Agreement).",
+    "style": "Defined Term Para",
+    "style_id": "DefinedTermPara",
+    "para_id": "6C89FDB3",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 2,
+      "abstract_num_id": 1,
+      "level": 0,
+      "counters": [
+        1
+      ],
+      "ordinal": "",
+      "format": "none",
+      "pattern": "%1",
+      "is_legal": false,
+      "restart_boundary": true,
+      "numbering_digest": "num-1c00dbdb32558540e5213052503aaf2e23653c1e",
+      "ordinal_at_parse": 1
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 3
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:5f2ab9cb0a5ac5d5840ca9212b0c5b116b2f2b4191366bdf5dc2abf6bf8cf397",
+    "text": "Applicable Laws: all applicable laws, statutes and regulation from time to time in force.",
+    "style": "Defined Term Para",
+    "style_id": "DefinedTermPara",
+    "para_id": "04D6A442",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 2,
+      "abstract_num_id": 1,
+      "level": 0,
+      "counters": [
+        2
+      ],
+      "ordinal": "",
+      "format": "none",
+      "pattern": "%1",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-1c00dbdb32558540e5213052503aaf2e23653c1e",
+      "ordinal_at_parse": 2
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 4
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:8df119de329c92a6dea8d5a5ead492f572a7768a6f3b794ecd7efa760de1c11c",
+    "text": "Business Day: a day, other than a Saturday, Sunday or public holiday in England, when banks in London are open for business.",
+    "style": "Defined Term Para",
+    "style_id": "DefinedTermPara",
+    "para_id": "39681E91",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 2,
+      "abstract_num_id": 1,
+      "level": 0,
+      "counters": [
+        3
+      ],
+      "ordinal": "",
+      "format": "none",
+      "pattern": "%1",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-1c00dbdb32558540e5213052503aaf2e23653c1e",
+      "ordinal_at_parse": 3
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 5
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:3c9020a211216e660481316c44ef0a42717a19567483d3d1e0062b394b275ce7",
+    "text": "Charges: the sums payable for the Services as set out in the Statement of Work.",
+    "style": "Defined Term Para",
+    "style_id": "DefinedTermPara",
+    "para_id": "6A69690E",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 2,
+      "abstract_num_id": 1,
+      "level": 0,
+      "counters": [
+        4
+      ],
+      "ordinal": "",
+      "format": "none",
+      "pattern": "%1",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-1c00dbdb32558540e5213052503aaf2e23653c1e",
+      "ordinal_at_parse": 4
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 6
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:748ab03b2cdea1b4a7c2800f60c040719d550c6fcfec71c82a424947c54d3a5c",
+    "text": "control: has the meaning given in section 1124 of the Corporation Tax Act 2010, and the expression change of control shall be construed accordingly.",
+    "style": "Defined Term Para",
+    "style_id": "DefinedTermPara",
+    "para_id": "68F029C1",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 2,
+      "abstract_num_id": 1,
+      "level": 0,
+      "counters": [
+        5
+      ],
+      "ordinal": "",
+      "format": "none",
+      "pattern": "%1",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-1c00dbdb32558540e5213052503aaf2e23653c1e",
+      "ordinal_at_parse": 5
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 7
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:a22fbf964554b0309e1f0856640daf8f982172e601e86aedb4cab7f74c9c5b47",
+    "text": "Marks: has the meaning given in section 8.8.",
+    "style": "Defined Term Para",
+    "style_id": "DefinedTermPara",
+    "para_id": "607ED1FD",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 2,
+      "abstract_num_id": 1,
+      "level": 0,
+      "counters": [
+        6
+      ],
+      "ordinal": "",
+      "format": "none",
+      "pattern": "%1",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-1c00dbdb32558540e5213052503aaf2e23653c1e",
+      "ordinal_at_parse": 6
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 8
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:95aba007b92c609a69929ffabcbfe465566bde24a34d3ae8503d1348c19a5177",
+    "text": "Customer Materials: all documents, information, items and materials in any form, whether owned by the Customer or a third party, which are provided or made available to the Supplier in connection with the Services.",
+    "style": "Defined Term Para",
+    "style_id": "DefinedTermPara",
+    "para_id": "7C4AC0EE",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 2,
+      "abstract_num_id": 1,
+      "level": 0,
+      "counters": [
+        7
+      ],
+      "ordinal": "",
+      "format": "none",
+      "pattern": "%1",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-1c00dbdb32558540e5213052503aaf2e23653c1e",
+      "ordinal_at_parse": 7
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 9
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:3ce851f41180c48c958cf442ace2c752cccc31662abfb72fd22eedf20b023297",
+    "text": "Customer Systems: means the Customer\u2019s or any third party\u2019s network(s) and information technology system(s) which are used directly or indirectly by the Supplier in connection with the Services.",
+    "style": "Defined Term Para",
+    "style_id": "DefinedTermPara",
+    "para_id": "5AD86B7C",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 2,
+      "abstract_num_id": 1,
+      "level": 0,
+      "counters": [
+        8
+      ],
+      "ordinal": "",
+      "format": "none",
+      "pattern": "%1",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-1c00dbdb32558540e5213052503aaf2e23653c1e",
+      "ordinal_at_parse": 8
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 10
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:8e343a4e5e3d6a70a28bb271d92ebd1f4dbf2cffea31e242239af8a3d845da32",
+    "text": "Deliverables: any outputs of the Services to be provided by the Supplier to the Customer or, where relevant, any Service Recipient(s) as specified in a Statement of Work and any other documents, products and materials provided by the Supplier to the Customer or, where relevant, any Service Recipient(s) in relation to the Services.",
+    "style": "Defined Term Para",
+    "style_id": "DefinedTermPara",
+    "para_id": "3BA06C28",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 2,
+      "abstract_num_id": 1,
+      "level": 0,
+      "counters": [
+        9
+      ],
+      "ordinal": "",
+      "format": "none",
+      "pattern": "%1",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-1c00dbdb32558540e5213052503aaf2e23653c1e",
+      "ordinal_at_parse": 9
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 11
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:a729d050b3ccbcd9f6c34d109708ddd38317321bb2af19b1cceae36c98f043e2",
+    "text": "Intellectual Property Rights: patents, rights to inventions, copyright and related rights, trade marks, business names and domain names, rights in get-up, goodwill and the right to sue for passing off, rights in designs, rights in computer software, database rights, rights to use, and protect the confidentiality of, confidential information (including know-how and trade secrets) and all other intellectual property rights, in each case whether registered or unregistered and including all applications and rights to apply for and be granted, renewals or extensions of, and rights to claim priority from, such rights and all similar or equivalent rights or forms of protection which subsist or will subsist now or in the future in any part of the world.",
+    "style": "Defined Term Para",
+    "style_id": "DefinedTermPara",
+    "para_id": "14621AE4",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 2,
+      "abstract_num_id": 1,
+      "level": 0,
+      "counters": [
+        10
+      ],
+      "ordinal": "",
+      "format": "none",
+      "pattern": "%1",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-1c00dbdb32558540e5213052503aaf2e23653c1e",
+      "ordinal_at_parse": 10
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 12
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:fcfc297f265a6dec99b1fa0b804ddf7263c86d3b0716796f66f2f2866ad9bb72",
+    "text": "Key Personnel: the individuals identified as key personnel in a Statement of Work, or any replacement individuals appointed by the Supplier pursuant to section 4.",
+    "style": "Defined Term Para",
+    "style_id": "DefinedTermPara",
+    "para_id": "12AE66EF",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 2,
+      "abstract_num_id": 1,
+      "level": 0,
+      "counters": [
+        11
+      ],
+      "ordinal": "",
+      "format": "none",
+      "pattern": "%1",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-1c00dbdb32558540e5213052503aaf2e23653c1e",
+      "ordinal_at_parse": 11
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 13
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:f3cc288428384ccb23fcbfc60e099ffb7ea8951abb234b9a592a2da48937fb2d",
+    "text": "Service Recipient: where relevant, any third party who is the intended beneficiary of some or all of the Services and/or the Deliverables under the Statement of Work, as set out in the Statement of Work or as communicated by the Customer from time to time.",
+    "style": "Defined Term Para",
+    "style_id": "DefinedTermPara",
+    "para_id": "47AFAAF4",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 2,
+      "abstract_num_id": 1,
+      "level": 0,
+      "counters": [
+        12
+      ],
+      "ordinal": "",
+      "format": "none",
+      "pattern": "%1",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-1c00dbdb32558540e5213052503aaf2e23653c1e",
+      "ordinal_at_parse": 12
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 14
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:fc35d39c9937f553e09898e3a378e914ebd52ef6641f375e83a342aac8606ef1",
+    "text": "Services: the services to be provided by the Supplier as set out in the Statement of Work.",
+    "style": "Defined Term Para",
+    "style_id": "DefinedTermPara",
+    "para_id": "393E1B19",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 2,
+      "abstract_num_id": 1,
+      "level": 0,
+      "counters": [
+        13
+      ],
+      "ordinal": "",
+      "format": "none",
+      "pattern": "%1",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-1c00dbdb32558540e5213052503aaf2e23653c1e",
+      "ordinal_at_parse": 13
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 15
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:fb18dae27709b1c058136b17fb9968250c61ccd3e41602d0f797cd20c6db0c77",
+    "text": "Services Start Date: the commencement date the Services, as set out in the Statement of Work, or if no such date is specified, the date the Statement of Work is agreed by the parties.",
+    "style": "Defined Term Para",
+    "style_id": "DefinedTermPara",
+    "para_id": "1EA25A5D",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 2,
+      "abstract_num_id": 1,
+      "level": 0,
+      "counters": [
+        14
+      ],
+      "ordinal": "",
+      "format": "none",
+      "pattern": "%1",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-1c00dbdb32558540e5213052503aaf2e23653c1e",
+      "ordinal_at_parse": 14
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 16
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:0d9c7aab14aaca036f2675450ac965e3553ac751cb573c57e6d4c906c7edf681",
+    "text": "Statement of Work: a statement of work agreed and signed by both parties, setting out a description of the relevant Services, Charges and any other material terms.",
+    "style": "Defined Term Para",
+    "style_id": "DefinedTermPara",
+    "para_id": "557151D0",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 2,
+      "abstract_num_id": 1,
+      "level": 0,
+      "counters": [
+        15
+      ],
+      "ordinal": "",
+      "format": "none",
+      "pattern": "%1",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-1c00dbdb32558540e5213052503aaf2e23653c1e",
+      "ordinal_at_parse": 15
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 17
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:4b00f5f298db73adfe653e7d223b233993dff2ebf74c4c88118bca8425b20fd2",
+    "text": "Supplier Personnel: any individuals involved in providing the Services, including any substitutes",
+    "style": "Defined Term Para",
+    "style_id": "DefinedTermPara",
+    "para_id": "775C82F5",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 2,
+      "abstract_num_id": 1,
+      "level": 0,
+      "counters": [
+        16
+      ],
+      "ordinal": "",
+      "format": "none",
+      "pattern": "%1",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-1c00dbdb32558540e5213052503aaf2e23653c1e",
+      "ordinal_at_parse": 16
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 18
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:7cbb2f88008bd8ce683dadff74466fa30edef2c77c8f5f69afe5df2a159c7d0e",
+    "text": "Terms and Conditions: these MSA Terms and Conditions of Purchase",
+    "style": "Defined Term Para",
+    "style_id": "DefinedTermPara",
+    "para_id": "3318EE83",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 2,
+      "abstract_num_id": 1,
+      "level": 0,
+      "counters": [
+        17
+      ],
+      "ordinal": "",
+      "format": "none",
+      "pattern": "%1",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-1c00dbdb32558540e5213052503aaf2e23653c1e",
+      "ordinal_at_parse": 17
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 19
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:2c093334a34018ffeb70ed28cde293a3fe8e8f8e90b96fc8f965bcde26b0d0e1",
+    "text": "Third Party Material: any material included in the Deliverables the rights in which are not owned by the Customer, any Service Recipient(s) or the Supplier.",
+    "style": "Defined Term Para",
+    "style_id": "DefinedTermPara",
+    "para_id": "5E82D4A8",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 2,
+      "abstract_num_id": 1,
+      "level": 0,
+      "counters": [
+        18
+      ],
+      "ordinal": "",
+      "format": "none",
+      "pattern": "%1",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-1c00dbdb32558540e5213052503aaf2e23653c1e",
+      "ordinal_at_parse": 18
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 20
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:6458d735e25e275e93aebd0d8948b4dc0f75f488215285f6138cff19989d014d",
+    "text": "VAT: value added tax or any equivalent tax chargeable in the UK or elsewhere.",
+    "style": "Defined Term Para",
+    "style_id": "DefinedTermPara",
+    "para_id": "5C250C4B",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 2,
+      "abstract_num_id": 1,
+      "level": 0,
+      "counters": [
+        19
+      ],
+      "ordinal": "",
+      "format": "none",
+      "pattern": "%1",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-1c00dbdb32558540e5213052503aaf2e23653c1e",
+      "ordinal_at_parse": 19
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 21
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:791c8d5c0b3c8c9940de44be62da751b51e3f6c453f8b8d5affaec8de7d77aa5",
+    "text": "Clause, Schedule, section and paragraph headings shall not affect the interpretation of these Terms and Conditions or the Agreement.",
+    "style": "Untitled subclause 1",
+    "style_id": "Untitledsubclause1",
+    "para_id": "14557C3B",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 1,
+      "abstract_num_id": 0,
+      "level": 1,
+      "counters": [
+        1,
+        2
+      ],
+      "ordinal": "1.2",
+      "format": "decimal",
+      "pattern": "%1.%2",
+      "is_legal": false,
+      "restart_boundary": true,
+      "numbering_digest": "num-643a7a533936c492f5d41d3133b0db0147a2465d",
+      "ordinal_at_parse": 1
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 22
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:4558f7892cf90ada3427267e337b6a984b70da01a4ee0befef5ca189f34f41d4",
+    "text": "A person includes a natural person, corporate or unincorporated body (whether or not having separate legal personality).",
+    "style": "Untitled subclause 1",
+    "style_id": "Untitledsubclause1",
+    "para_id": "2E8B94E3",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 1,
+      "abstract_num_id": 0,
+      "level": 1,
+      "counters": [
+        1,
+        3
+      ],
+      "ordinal": "1.3",
+      "format": "decimal",
+      "pattern": "%1.%2",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-643a7a533936c492f5d41d3133b0db0147a2465d",
+      "ordinal_at_parse": 2
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 23
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:550646b1817cdbd6bb1c0f93dbfc56d896692bcaf38a5297ef2e7564339cb9a1",
+    "text": "A reference to a company shall include any company, corporation or other body corporate, wherever and however incorporated or established.",
+    "style": "Untitled subclause 1",
+    "style_id": "Untitledsubclause1",
+    "para_id": "3BDB9DCF",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 1,
+      "abstract_num_id": 0,
+      "level": 1,
+      "counters": [
+        1,
+        4
+      ],
+      "ordinal": "1.4",
+      "format": "decimal",
+      "pattern": "%1.%2",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-643a7a533936c492f5d41d3133b0db0147a2465d",
+      "ordinal_at_parse": 3
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 24
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:c8e69d297926ab3248d6e630720f1238b643e36ca9ed50f73c04ebcbe95382e8",
+    "text": "The Agreement shall be binding on, and enure to the benefit of, the parties to the Agreement and their respective personal representatives, successors and permitted assigns, and references to any party shall include that party\u2019s personal representatives, successors and permitted assigns.",
+    "style": "Untitled subclause 1",
+    "style_id": "Untitledsubclause1",
+    "para_id": "7341E3C4",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 1,
+      "abstract_num_id": 0,
+      "level": 1,
+      "counters": [
+        1,
+        5
+      ],
+      "ordinal": "1.5",
+      "format": "decimal",
+      "pattern": "%1.%2",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-643a7a533936c492f5d41d3133b0db0147a2465d",
+      "ordinal_at_parse": 4
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 25
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:50e0075847a87c04281079883919210fd91881548a9ff1c20782be2a16160819",
+    "text": "A reference to legislation or a legislative provision is a reference to it as amended, extended or re-enacted from time to time and shall include all subordinate legislation made from time to time under that legislation or legislative provision.",
+    "style": "Untitled subclause 1",
+    "style_id": "Untitledsubclause1",
+    "para_id": "41CBC0AD",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 1,
+      "abstract_num_id": 0,
+      "level": 1,
+      "counters": [
+        1,
+        6
+      ],
+      "ordinal": "1.6",
+      "format": "decimal",
+      "pattern": "%1.%2",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-643a7a533936c492f5d41d3133b0db0147a2465d",
+      "ordinal_at_parse": 5
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 26
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:06017549a240a1a554dac0da71f45651bcaaec7d9aade0d932d75f995d959469",
+    "text": "A reference to writing or written includes email.",
+    "style": "Untitled subclause 1",
+    "style_id": "Untitledsubclause1",
+    "para_id": "40AB8B08",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 1,
+      "abstract_num_id": 0,
+      "level": 1,
+      "counters": [
+        1,
+        7
+      ],
+      "ordinal": "1.7",
+      "format": "decimal",
+      "pattern": "%1.%2",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-643a7a533936c492f5d41d3133b0db0147a2465d",
+      "ordinal_at_parse": 6
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 27
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:e133f59058e4ac18c0b99aac9aefe6655da80c60ee041f71d69d5f7cc102022c",
+    "text": "Any obligation on a party not to do something includes an obligation not to allow that thing to be done.",
+    "style": "Untitled subclause 1",
+    "style_id": "Untitledsubclause1",
+    "para_id": "1001981D",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 1,
+      "abstract_num_id": 0,
+      "level": 1,
+      "counters": [
+        1,
+        8
+      ],
+      "ordinal": "1.8",
+      "format": "decimal",
+      "pattern": "%1.%2",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-643a7a533936c492f5d41d3133b0db0147a2465d",
+      "ordinal_at_parse": 7
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 28
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:bb8fd4e21e6745d3f31e9e8bf140c1238df95443957581c60592504410c07757",
+    "text": "References to clauses and Schedules are to the clauses and Schedules of the Agreement, references to sections are to the sections of these Terms and Conditions and references to paragraphs are to paragraphs of the relevant Schedule.",
+    "style": "Untitled subclause 1",
+    "style_id": "Untitledsubclause1",
+    "para_id": "28353AB9",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 1,
+      "abstract_num_id": 0,
+      "level": 1,
+      "counters": [
+        1,
+        9
+      ],
+      "ordinal": "1.9",
+      "format": "decimal",
+      "pattern": "%1.%2",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-643a7a533936c492f5d41d3133b0db0147a2465d",
+      "ordinal_at_parse": 8
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 29
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:88bd361be534b3403591bfaeb847d98dc949458710168d3e42b4b9e102f09fce",
+    "text": "Any words following the terms including, include, in particular, for example or any similar expression shall be construed as illustrative and shall not limit the sense of the words, description, definition, phrase or term preceding those terms.",
+    "style": "Untitled subclause 1",
+    "style_id": "Untitledsubclause1",
+    "para_id": "1D1A88CD",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 1,
+      "abstract_num_id": 0,
+      "level": 1,
+      "counters": [
+        1,
+        10
+      ],
+      "ordinal": "1.10",
+      "format": "decimal",
+      "pattern": "%1.%2",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-643a7a533936c492f5d41d3133b0db0147a2465d",
+      "ordinal_at_parse": 9
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 30
+  },
+  {
+    "type": "heading",
+    "content_hash": "sha256:2c70b7e2ec713e4eca8c0f9b524d5ca5018379d6386bd762aeb29e2fea124319",
+    "text": "Statements of Work",
+    "style": "Title Clause",
+    "style_id": "TitleClause",
+    "para_id": "1DFEDFCA",
+    "num_pr": null,
+    "level": 1,
+    "list": {
+      "num_id": 1,
+      "abstract_num_id": 0,
+      "level": 0,
+      "counters": [
+        3
+      ],
+      "ordinal": "3.",
+      "format": "decimal",
+      "pattern": "%1.",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-aff04085255c47e983ecf62062b687193688a8fa",
+      "ordinal_at_parse": 10
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Statements of Work",
+      "source": "toc_synthesized"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 31
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:53f36509024ba4e5a69c4c1b52f8138861a72bebf377cc9eb7b19d986920e8a7",
+    "text": "Each Statement of Work shall be agreed by the parties in writing.",
+    "style": "Untitled subclause 1",
+    "style_id": "Untitledsubclause1",
+    "para_id": "55DC0E84",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 1,
+      "abstract_num_id": 0,
+      "level": 1,
+      "counters": [
+        2,
+        1
+      ],
+      "ordinal": "2.1",
+      "format": "decimal",
+      "pattern": "%1.%2",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-643a7a533936c492f5d41d3133b0db0147a2465d",
+      "ordinal_at_parse": 11
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 32
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:263873d6cb93f5a45e825aa5a894faa77ad8b2c5a37f78d56e54a277a8b6529e",
+    "text": "No party is obliged to agree any Statements of Work.",
+    "style": "Untitled subclause 1",
+    "style_id": "Untitledsubclause1",
+    "para_id": "7625B863",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 1,
+      "abstract_num_id": 0,
+      "level": 1,
+      "counters": [
+        2,
+        2
+      ],
+      "ordinal": "2.2",
+      "format": "decimal",
+      "pattern": "%1.%2",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-643a7a533936c492f5d41d3133b0db0147a2465d",
+      "ordinal_at_parse": 12
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 33
+  }
+]

@@ -1,0 +1,221 @@
+[
+  {
+    "type": "list_item",
+    "content_hash": "sha256:4c0cfb82e983c61610b67106d725808c31d971d59397def73ad8fd9d12ed8eb5",
+    "text": "Section 1",
+    "style": "Normal",
+    "style_id": "Normal",
+    "para_id": "",
+    "num_pr": {
+      "numId": 10,
+      "ilvl": 0,
+      "numRestart": false
+    },
+    "level": null,
+    "list": {
+      "num_id": 10,
+      "abstract_num_id": 100,
+      "level": 0,
+      "counters": [
+        1
+      ],
+      "ordinal": "1.",
+      "format": "decimal",
+      "pattern": "%1.",
+      "is_legal": false,
+      "restart_boundary": true,
+      "numbering_digest": "num-7705c91f00ae28cc894c1e9d0840ec17cb9fe4c3",
+      "ordinal_at_parse": 1
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 0
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:efdcdd619b54890679cf9e328a3812a9de6bec5f4e30f257af5c47406c1744da",
+    "text": "Section 1.1",
+    "style": "Normal",
+    "style_id": "Normal",
+    "para_id": "",
+    "num_pr": {
+      "numId": 10,
+      "ilvl": 1,
+      "numRestart": false
+    },
+    "level": null,
+    "list": {
+      "num_id": 10,
+      "abstract_num_id": 100,
+      "level": 1,
+      "counters": [
+        1,
+        1
+      ],
+      "ordinal": "1.1",
+      "format": "decimal",
+      "pattern": "%1.%2",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-25e159af755ccf200a44c16af4c4e999776e752a",
+      "ordinal_at_parse": 2
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 1
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:92392bd4789dae26e5c008d9abce511f99081b2075f762d9f967e91adb89e6c2",
+    "text": "Section 1.1.1",
+    "style": "Normal",
+    "style_id": "Normal",
+    "para_id": "",
+    "num_pr": {
+      "numId": 10,
+      "ilvl": 2,
+      "numRestart": false
+    },
+    "level": null,
+    "list": {
+      "num_id": 10,
+      "abstract_num_id": 100,
+      "level": 2,
+      "counters": [
+        1,
+        1,
+        1
+      ],
+      "ordinal": "1.1.1",
+      "format": "decimal",
+      "pattern": "%1.%2.%3",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-a76569d378888636ef1d7166f348ff5b7ae489a8",
+      "ordinal_at_parse": 3
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 2
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:66eb13793dee4bc6e9977653746360eff78ba55a73088213ba99f510673281bf",
+    "text": "Section 1.2",
+    "style": "Normal",
+    "style_id": "Normal",
+    "para_id": "",
+    "num_pr": {
+      "numId": 10,
+      "ilvl": 1,
+      "numRestart": false
+    },
+    "level": null,
+    "list": {
+      "num_id": 10,
+      "abstract_num_id": 100,
+      "level": 1,
+      "counters": [
+        1,
+        2
+      ],
+      "ordinal": "1.2",
+      "format": "decimal",
+      "pattern": "%1.%2",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-25e159af755ccf200a44c16af4c4e999776e752a",
+      "ordinal_at_parse": 4
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 3
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:7b0d4c438cdc7fbd912d6f6d27b82250d7da88cc59aa6d264af4dba5947eebc9",
+    "text": "Section 2",
+    "style": "Normal",
+    "style_id": "Normal",
+    "para_id": "",
+    "num_pr": {
+      "numId": 10,
+      "ilvl": 0,
+      "numRestart": false
+    },
+    "level": null,
+    "list": {
+      "num_id": 10,
+      "abstract_num_id": 100,
+      "level": 0,
+      "counters": [
+        2
+      ],
+      "ordinal": "2.",
+      "format": "decimal",
+      "pattern": "%1.",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-7705c91f00ae28cc894c1e9d0840ec17cb9fe4c3",
+      "ordinal_at_parse": 5
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 4
+  }
+]

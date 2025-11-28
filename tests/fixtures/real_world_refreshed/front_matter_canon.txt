@@ -1,0 +1,23 @@
+    idx    paraId             styleId source numId abstractNumId ilvl pattern rendered_number                     counters  num_restart  prev_level                                               text
+0     0  505719F6       HeadingLevel2                                                                                 None        False         NaN                                         CONSULTANT
+1     1  388BC5D7       HeadingLevel2                                                                                 None        False         NaN                          MASTER SERVICES AGREEMENT
+2     2  653189EB           Paragraph                                                                                 None        False         NaN                                                   
+3     3  331E06D5           Paragraph                                                                                 None        False         NaN                     DATE: [DATE OF THIS AGREEMENT]
+4     4  21F8EE5A           Paragraph                                                                                 None        False         NaN                                                   
+5     5  65DCA56B           Paragraph                                                                                 None        False         NaN                                  AGREEMENT DETAILS
+6     6  5CC2F8F3           Paragraph                                                                                 None        False         NaN                                          Supplier:
+7     7  3ED55E84           Paragraph                                                                                 None        False         NaN  [FULL COMPANY NAME] incorporated and registere...
+8     8  498B42EE           Paragraph                                                                                 None        False         NaN            Supplier’s address and contact details:
+9     9  7E937EAC           Paragraph                                                                                 None        False         NaN                               [REGISTERED ADDRESS]
+10   10  7FB4A1DB           Paragraph                                                                                 None        False         NaN                                  Initial Services:
+11   11  4FB24C10           Paragraph                                                                                 None        False         NaN  [IF YOU ARE NOT READY TO AGREE THE INITIAL SER...
+12   12  061CE53F           Paragraph                                                                                 None        False         NaN  Description: [BRIEF DESCRIPTION OF INITIAL SER...
+13   13  1D9356CA           Paragraph                                                                                 None        False         NaN                        Services Start Date: [DATE]
+14   14  38754000           Paragraph                                                                                 None        False         NaN  Charges: [INSERT CHARGES] OR [As set out in Sc...
+15   15  7B0F8244        IntroDefault                                                                                 None        False         NaN                                                   
+16   16  1D0566A3           Paragraph                                                                                 None        False         NaN                                       AGREED TERMS
+17   17  733F3F79         TitleClause  style     1             0    0     %1.              1.  [1, 0, 0, 0, 0, 0, 0, 0, 0]        False         0.0                             Parties and background
+18   18  5C72F101  Untitledsubclause1  style     1             0    1   %1.%2             1.1  [1, 1, 0, 0, 0, 0, 0, 0, 0]        False         1.0  This Master Services Agreement (the Agreement)...
+19   19  40948A81  Untitledsubclause1  style     1             0    1   %1.%2             1.2  [1, 2, 0, 0, 0, 0, 0, 0, 0]        False         1.0  This Agreement operates as a master services a...
+20   20  1D925A38  Untitledsubclause1  style     1             0    1   %1.%2             1.3  [1, 3, 0, 0, 0, 0, 0, 0, 0]        False         1.0  The parties may agree any number of Statements...
+21   21  6936891E                                                                                                     None        False         NaN                                                   

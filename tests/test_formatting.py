@@ -2,14 +2,19 @@
 Test script for add_paragraph and add_heading formatting parameters.
 """
 import asyncio
+import pytest
+from pathlib import Path
 from docx import Document
 from word_document_server.tools.content_tools import add_paragraph, add_heading
 from word_document_server.tools.document_tools import create_document
 
 
+@pytest.mark.asyncio
 async def test_formatting():
     """Test the new formatting parameters."""
-    test_doc = 'test_formatting.docx'
+    fixtures_dir = Path(__file__).parent / 'fixtures'
+    fixtures_dir.mkdir(exist_ok=True)
+    test_doc = str(fixtures_dir / 'test_formatting.docx')
 
     # Create test document
     print("Creating test document...")

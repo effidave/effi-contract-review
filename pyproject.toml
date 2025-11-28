@@ -23,6 +23,7 @@ dependencies = [
     "msoffcrypto-tool>=5.4.2",
     "docx2pdf>=0.1.8",
     "pytest>=8.4.2",
+    "lxml>=4.9.0",
 ]
 
 [project.urls]
@@ -38,3 +39,4 @@ sources = ["."]
 
 [project.scripts]
 word_mcp_server = "word_document_server.main:run_server"
+

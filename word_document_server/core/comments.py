@@ -2,24 +2,26 @@
 Core comment extraction functionality for Word documents.
 
 This module provides low-level functions to extract and process comments
-from Word documents using the python-docx library.
+from Word documents using the python-docx library, including comment status
+(active/resolved) from the commentsExtended.xml part.
 """
 import datetime
 from typing import Dict, List, Optional, Any
 from docx import Document
 from docx.document import Document as DocumentType
 from docx.text.paragraph import Paragraph
+from docx.opc.constants import RELATIONSHIP_TYPE as RT
 
 
 def extract_all_comments(doc: DocumentType) -> List[Dict[str, Any]]:
     """
-    Extract all comments from a Word document.
+    Extract all comments from a Word document, including status information from commentsExtended.xml.
     
     Args:
         doc: The Document object to extract comments from
         
     Returns:
-        List of dictionaries containing comment information
+        List of dictionaries containing comment information including status
     """
     comments = []
     
@@ -48,6 +50,13 @@ def extract_all_comments(doc: DocumentType) -> List[Dict[str, Any]]:
         if not comments:
             # Fallback: scan paragraphs for comment references
             comments = extract_comments_from_paragraphs(doc)
+        
+        # Extract comment status information from commentsExtended.xml
+        status_map = extract_comment_status_map(doc)
+        
+        # Merge status information into comments
+        if status_map:
+            comments = merge_comment_status(comments, status_map)
     
     except Exception as e:
         # If direct access fails, try alternative approach
@@ -105,6 +114,9 @@ def extract_comment_data(comment_element, index: int) -> Optional[Dict[str, Any]
         initials = comment_element.get('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}initials', '')
         date_str = comment_element.get('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}date', '')
         
+        # Extract para_id (used to link to commentsExtended.xml status information)
+        para_id = comment_element.get('{http://schemas.microsoft.com/office/word/2010/wordml}paraId', '')
+        
         # Parse date if available
         date = None
         if date_str:
@@ -121,13 +133,16 @@ def extract_comment_data(comment_element, index: int) -> Optional[Dict[str, Any]
         return {
             'id': f'comment_{index + 1}',
             'comment_id': comment_id,
+            'para_id': para_id,
             'author': author,
             'initials': initials,
             'date': date,
             'text': text.strip(),
             'paragraph_index': None,  # Will be filled if we can determine it
             'in_table': False,
-            'reference_text': ''
+            'reference_text': '',
+            'status': 'active',  # Will be updated with actual status if commentsExtended exists
+            'is_resolved': False
         }
     
     except Exception as e:
@@ -208,3 +223,95 @@ def get_comments_for_paragraph(comments: List[Dict[str, Any]], paragraph_index: 
         Comments for the specified paragraph
     """
     return [c for c in comments if c.get('paragraph_index') == paragraph_index]
+
+
+def extract_comment_status_map(doc: DocumentType) -> Dict[str, Dict[str, Any]]:
+    """
+    Extract comment status information from commentsExtended.xml.
+    
+    The commentsExtended.xml part contains w15:commentEx elements with:
+    - w15:paraId: Links to the w14:paraId in comments.xml
+    - w15:done: Status flag (0=active/unresolved, 1=resolved)
+    
+    Args:
+        doc: The Document object
+        
+    Returns:
+        Dictionary mapping paraId to status info: {'paraId': {'status': 'active|resolved', 'done': 0|1}}
+    """
+    status_map = {}
+    
+    try:
+        # Find the comments extended part through relationships
+        document_part = doc.part
+        comments_extended_part = None
+        
+        for rel_id, rel in document_part.rels.items():
+            reltype = rel.reltype
+            # Look for commentsExtended relationship (office 2012+ Word namespace)
+            if 'commentsExtended' in reltype or 'w15' in reltype:
+                comments_extended_part = rel.target_part
+                break
+        
+        if comments_extended_part:
+            # Parse commentsExtended.xml for w15:commentEx elements
+            # Namespace: http://schemas.microsoft.com/office/word/2012/wordml
+            comment_ex_elements = comments_extended_part.element.xpath(
+                './/w15:commentEx',
+                namespaces={
+                    'w15': 'http://schemas.microsoft.com/office/word/2012/wordml'
+                }
+            )
+            
+            for comment_ex in comment_ex_elements:
+                para_id = comment_ex.get(
+                    '{http://schemas.microsoft.com/office/word/2012/wordml}paraId'
+                )
+                done_flag = comment_ex.get(
+                    '{http://schemas.microsoft.com/office/word/2012/wordml}done',
+                    '0'
+                )
+                
+                if para_id:
+                    # Convert done flag to boolean and status string
+                    is_resolved = done_flag == '1'
+                    status = 'resolved' if is_resolved else 'active'
+                    
+                    status_map[para_id] = {
+                        'status': status,
+                        'done': int(done_flag),
+                        'is_resolved': is_resolved
+                    }
+    except Exception as e:
+        # If commentsExtended doesn't exist or can't be parsed, return empty map
+        # This is normal for older Word documents without comment status tracking
+        pass
+    
+    return status_map
+
+
+def merge_comment_status(comments: List[Dict[str, Any]], status_map: Dict[str, Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """
+    Merge comment status information into comment dictionaries.
+    
+    Args:
+        comments: List of comment dictionaries extracted from comments.xml
+        status_map: Status information map from commentsExtended.xml
+        
+    Returns:
+        Comments list with status information merged in (status and is_resolved fields added)
+    """
+    for comment in comments:
+        # Use para_id if available, otherwise fall back to comment_id
+        para_id = comment.get('para_id')
+        
+        if para_id and para_id in status_map:
+            status_info = status_map[para_id]
+            comment['status'] = status_info['status']
+            comment['is_resolved'] = status_info['is_resolved']
+        else:
+            # Default to 'active' if no status information available
+            comment['status'] = 'active'
+            comment['is_resolved'] = False
+    
+    return comments

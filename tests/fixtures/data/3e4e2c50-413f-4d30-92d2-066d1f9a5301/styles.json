@@ -1,0 +1,20 @@
+{
+  "styles": [
+    {
+      "name": "Heading 1",
+      "type": "heading",
+      "count": 3,
+      "semantic_hint": "heading",
+      "hint_scores": {
+        "heading": 0.9
+      }
+    },
+    {
+      "name": "Normal",
+      "type": "paragraph",
+      "count": 3,
+      "semantic_hint": "body",
+      "hint_scores": null
+    }
+  ]
+}

@@ -1,0 +1,324 @@
+[
+  {
+    "type": "list_item",
+    "content_hash": "sha256:38734bf838f578d8358a6ff1d6263ccf8be245f1b79690b9a48b6c67f58d4fd8",
+    "text": "Scope of the Agreement",
+    "style": "Title Clause",
+    "style_id": "TitleClause",
+    "para_id": "6C33F567",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 1,
+      "abstract_num_id": 0,
+      "level": 0,
+      "counters": [
+        1
+      ],
+      "ordinal": "1.",
+      "format": "decimal",
+      "pattern": "%1.",
+      "is_legal": false,
+      "restart_boundary": true,
+      "numbering_digest": "num-aff04085255c47e983ecf62062b687193688a8fa",
+      "ordinal_at_parse": 1
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 0
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:9866d55142faf833fbfe63e77351cbdd986d154fdd1dea72427a7fbb6174883d",
+    "text": "The Schedules form part of this Agreement and shall have effect as if set out in full in the body of this Agreement. Any reference to this Agreement includes the Schedules except where required or implied by the context or where expressly stated.",
+    "style": "Untitled subclause 1",
+    "style_id": "Untitledsubclause1",
+    "para_id": "205A6AEE",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 1,
+      "abstract_num_id": 0,
+      "level": 1,
+      "counters": [
+        1,
+        1
+      ],
+      "ordinal": "1.1",
+      "format": "decimal",
+      "pattern": "%1.%2",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-643a7a533936c492f5d41d3133b0db0147a2465d",
+      "ordinal_at_parse": 2
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 1
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:7d70116bbc4ec9a2d07e0e477aaa016bcd83e58066f3a583b630d9a8c64089b5",
+    "text": "Where the Statement of Work in Schedule 1 specifies Services (the Initial Services), that Schedule and the relevant information in the Agreement Details shall together form the first Statement of Work.",
+    "style": "Untitled subclause 1",
+    "style_id": "Untitledsubclause1",
+    "para_id": "47C4DF56",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 1,
+      "abstract_num_id": 0,
+      "level": 1,
+      "counters": [
+        1,
+        2
+      ],
+      "ordinal": "1.2",
+      "format": "decimal",
+      "pattern": "%1.%2",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-643a7a533936c492f5d41d3133b0db0147a2465d",
+      "ordinal_at_parse": 3
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 2
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:6884ba6fe3932cce3205f4adf266acedfca74735e4a3154e89d98f53a4a1b7be",
+    "text": "The parties may agree any number of Statements of Work for Services, each of which shall be substantially in the form set out in Schedule 1.  Each Statement of Work shall be deemed to be a Schedule to this Agreement when it is signed by the authorised representatives of both parties.",
+    "style": "Untitled subclause 1",
+    "style_id": "Untitledsubclause1",
+    "para_id": "66B8CCE4",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 1,
+      "abstract_num_id": 0,
+      "level": 1,
+      "counters": [
+        1,
+        3
+      ],
+      "ordinal": "1.3",
+      "format": "decimal",
+      "pattern": "%1.%2",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-643a7a533936c492f5d41d3133b0db0147a2465d",
+      "ordinal_at_parse": 4
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 3
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:7d566fab9bff33ce0fc13d090564cc5a173893aea3e4579a3d2fc4838ea98613",
+    "text": "At the date this Agreement is signed by the parties, the Schedules are as follows:",
+    "style": "Untitled subclause 1",
+    "style_id": "Untitledsubclause1",
+    "para_id": "5A99412F",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 1,
+      "abstract_num_id": 0,
+      "level": 1,
+      "counters": [
+        1,
+        4
+      ],
+      "ordinal": "1.4",
+      "format": "decimal",
+      "pattern": "%1.%2",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-643a7a533936c492f5d41d3133b0db0147a2465d",
+      "ordinal_at_parse": 5
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 4
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:961543b280fb573cab0d3347a503336f6b9559dc09a894b8621a494d0bbe625d",
+    "text": "Schedule 1: Statement of Work for the Initial Services / Template Statement of Work.",
+    "style": "Untitled subclause 2",
+    "style_id": "Untitledsubclause2",
+    "para_id": "446699AA",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 1,
+      "abstract_num_id": 0,
+      "level": 2,
+      "counters": [
+        1,
+        4,
+        1
+      ],
+      "ordinal": "(a)",
+      "format": "lowerLetter",
+      "pattern": "(%3)",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-39441dc8c13953d3672794b5733e39551259aaba",
+      "ordinal_at_parse": 6
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 5
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:ce3a6124f5abd96c676e2dc204000a95743a51e8c7120ae66aeda20ffcb1b970",
+    "text": "Schedule 2: the MSA Terms and Conditions of Purchase which shall apply to the Agreement, including all Statements of Work.",
+    "style": "Untitled subclause 2",
+    "style_id": "Untitledsubclause2",
+    "para_id": "2F21F6AF",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 1,
+      "abstract_num_id": 0,
+      "level": 2,
+      "counters": [
+        1,
+        4,
+        2
+      ],
+      "ordinal": "(b)",
+      "format": "lowerLetter",
+      "pattern": "(%3)",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-39441dc8c13953d3672794b5733e39551259aaba",
+      "ordinal_at_parse": 7
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 6
+  },
+  {
+    "type": "list_item",
+    "content_hash": "sha256:8138e2eeca94fc1707f9a9c28fb1f1050066ee220972af0be54ace6bc0941b5e",
+    "text": "Schedule 3: Data Protection.",
+    "style": "Untitled subclause 2",
+    "style_id": "Untitledsubclause2",
+    "para_id": "45016EF1",
+    "num_pr": null,
+    "level": null,
+    "list": {
+      "num_id": 1,
+      "abstract_num_id": 0,
+      "level": 2,
+      "counters": [
+        1,
+        4,
+        3
+      ],
+      "ordinal": "(c)",
+      "format": "lowerLetter",
+      "pattern": "(%3)",
+      "is_legal": false,
+      "restart_boundary": false,
+      "numbering_digest": "num-39441dc8c13953d3672794b5733e39551259aaba",
+      "ordinal_at_parse": 8
+    },
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 7
+  }
+]

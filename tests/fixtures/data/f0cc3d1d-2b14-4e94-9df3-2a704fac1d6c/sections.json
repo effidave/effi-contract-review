@@ -1,0 +1,23 @@
+{
+  "doc_id": "f0cc3d1d-2b14-4e94-9df3-2a704fac1d6c",
+  "hierarchy_depth": 1,
+  "depth_max": 1,
+  "avg_blocks_per_section": 2.0,
+  "root": {
+    "children": [
+      {
+        "id": "3d2f2dd5-4f05-4f29-a6dc-b899e6b6e1df",
+        "title": "Contact",
+        "level": 1,
+        "parent_id": null,
+        "child_ids": [],
+        "block_ids": [
+          "47a8b4d1-d3b4-49cf-9cf2-6b2ce1d3b3e8",
+          "313f4d2e-8f87-4d21-9bc5-a2f9f5425d62"
+        ],
+        "char_count": 94,
+        "children": []
+      }
+    ]
+  }
+}

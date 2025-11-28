@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "doc_id": "f0cc3d1d-2b14-4e94-9df3-2a704fac1d6c",
+  "doc_format": "docx",
+  "source_filename": "contact.docx",
+  "char_count": 94,
+  "block_count": 2,
+  "section_count": 1,
+  "ltu_count": 0,
+  "max_section_depth": 1,
+  "has_tag_ranges": false,
+  "schema_version": "2025.10",
+  "filemap": {
+    "blocks": "blocks.jsonl",
+    "sections": "sections.json",
+    "styles": "styles.json"
+  }
+}

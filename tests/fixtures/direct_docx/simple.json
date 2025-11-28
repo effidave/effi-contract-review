@@ -1,0 +1,125 @@
+[
+  {
+    "type": "heading",
+    "content_hash": "sha256:b605350bc00209520b7cd8f546322663356ba630708f71bbf30aead6b3dd608e",
+    "text": "Introduction",
+    "style": "Heading 1",
+    "style_id": "Heading1",
+    "para_id": "",
+    "num_pr": null,
+    "level": 1,
+    "list": null,
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Introduction",
+      "source": "explicit"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 0
+  },
+  {
+    "type": "paragraph",
+    "content_hash": "sha256:0063d15840b750dd1500b4615035aa690fae662ea3b330fbf89cce125e00681a",
+    "text": "This document describes the purpose of the Word-AI parser.",
+    "style": "Normal",
+    "style_id": "Normal",
+    "para_id": "",
+    "num_pr": null,
+    "level": null,
+    "list": null,
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 1
+  },
+  {
+    "type": "heading",
+    "content_hash": "sha256:45989de49fb7f66dfe17a8fc26f3a02c7abcd74f7e8e6cf9f39fa0e3775780df",
+    "text": "Details",
+    "style": "Heading 2",
+    "style_id": "Heading2",
+    "para_id": "",
+    "num_pr": null,
+    "level": 2,
+    "list": null,
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Details",
+      "source": "explicit"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 2
+  },
+  {
+    "type": "paragraph",
+    "content_hash": "sha256:31f2497e7165e28e81e3bea1f6fae74c1c62d82059b989c0c696b6ff4cb55fb8",
+    "text": "The system extracts paragraphs, headings, and tables.",
+    "style": "Normal",
+    "style_id": "Normal",
+    "para_id": "",
+    "num_pr": null,
+    "level": null,
+    "list": null,
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 3
+  },
+  {
+    "type": "paragraph",
+    "content_hash": "sha256:56ebfa31c9f67fe043b7b34b8354a945db9e19129b6eced1f33699554903bb10",
+    "text": "Each block is written as JSON.",
+    "style": "Normal",
+    "style_id": "Normal",
+    "para_id": "",
+    "num_pr": null,
+    "level": null,
+    "list": null,
+    "table": null,
+    "anchor": null,
+    "metadata": null,
+    "heading": {
+      "text": "Body (no heading)",
+      "source": "none",
+      "fallback_label": "Body (no heading)"
+    },
+    "indent": {
+      "left": 0,
+      "hanging": 0,
+      "first_line": 0
+    },
+    "para_idx": 4
+  }
+]

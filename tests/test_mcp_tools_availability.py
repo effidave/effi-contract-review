@@ -66,6 +66,9 @@ EXPECTED_TOOLS = {
     "get_comments_by_author",
     "get_comments_for_paragraph",
     "convert_to_pdf",
+    "analyze_document_numbering",
+    "get_numbering_summary",
+    "extract_outline_structure",
 }
 
 
@@ -87,10 +90,12 @@ class MCPToolTester:
         self.mcp_process: subprocess.Popen | None = None
 
     def create_fixture_document(self) -> Path:
-        temp_dir = Path(tempfile.gettempdir())
-        self.fixture_file = temp_dir / "mcp_test_fixture.docx"
-        if self.fixture_file.exists():
-            self.fixture_file.unlink()
+        # Use a temporary file with a unique name to avoid conflicts
+        import tempfile
+        fd, temp_path = tempfile.mkstemp(suffix=".docx", prefix="mcp_test_")
+        import os
+        os.close(fd)  # Close the file descriptor, we'll write with python-docx
+        self.fixture_file = Path(temp_path)
 
         doc = Document()
         doc.add_heading("MCP Test Fixture Document", 0)
@@ -111,7 +116,11 @@ class MCPToolTester:
 
     def cleanup_fixture(self) -> None:
         if self.fixture_file and self.fixture_file.exists():
-            self.fixture_file.unlink()
+            try:
+                self.fixture_file.unlink()
+            except PermissionError:
+                # File is locked by another process, skip cleanup
+                pass
 
     def _read_response_until_id(self, target_id: int, timeout_sec: float = 20.0) -> dict:
         import time
@@ -468,6 +477,26 @@ def test_image_tools(mcp_tester):
             test_file.unlink()
         if test_image.exists():
             test_image.unlink()
+
+
+def test_numbering_tools(mcp_tester):
+    # Use a document with known numbering
+    fixtures_dir = Path(__file__).parent / "fixtures"
+    numbered_doc = fixtures_dir / "numbering_decimal.docx"
+    
+    if not numbered_doc.exists():
+        # Fallback to regular fixture
+        numbered_doc = mcp_tester.fixture_file
+    
+    tests = [
+        ("analyze_document_numbering", {"filename": str(numbered_doc), "debug": False, "include_non_numbered": False}),
+        ("get_numbering_summary", {"filename": str(numbered_doc)}),
+        ("extract_outline_structure", {"filename": str(numbered_doc), "max_level": None}),
+    ]
+
+    for tool_name, params in tests:
+        result = mcp_tester.call_mcp_tool(tool_name, **params)
+        assert result["success"], f"{tool_name} failed: {result.get('error')}"
 
 
 def test_all_expected_tools_were_called(mcp_tester):
