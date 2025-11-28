@@ -846,19 +846,30 @@ async def add_paragraph_after_clause(
         pPr = OxmlElement('w:pPr')
         new_p.append(pPr)
         
-        # Apply style if specified
+        # Determine numbering source: 'paragraph' (direct numPr), 'style' (from paragraph style), or 'style-link'
+        numbering_source = target_clause.get("source", "paragraph")
+        
+        # Apply style if specified by user
         if style:
             pStyle = OxmlElement('w:pStyle')
             pStyle.set(qn('w:val'), style)
             pPr.append(pStyle)
+        elif inherit_numbering and numbering_source == "style":
+            # Style-based numbering: inherit the paragraph style which contains the numbering
+            # The style itself contains the numPr, so we just need to apply the style
+            if target_paragraph.style:
+                pStyle = OxmlElement('w:pStyle')
+                pStyle.set(qn('w:val'), target_paragraph.style.style_id)
+                pPr.append(pStyle)
         elif target_paragraph.style:
-            # Inherit style from target if no style specified
+            # No specific requirements, inherit style from target if available
             pStyle = OxmlElement('w:pStyle')
             pStyle.set(qn('w:val'), target_paragraph.style.style_id)
             pPr.append(pStyle)
         
-        # Inherit numbering properties if requested
-        if inherit_numbering:
+        # Inherit numbering properties if requested and source is direct numPr
+        # (For style-based numbering, we already applied the style above)
+        if inherit_numbering and numbering_source == "paragraph":
             num_id = target_clause.get("numId")
             ilvl = target_clause.get("ilvl")
             
@@ -893,8 +904,11 @@ async def add_paragraph_after_clause(
         if inherit_numbering:
             num_id = target_clause.get("numId")
             ilvl = target_clause.get("ilvl")
+            numbering_source = target_clause.get("source", "paragraph")
             if num_id:
-                numbering_info = f" with inherited numbering (numId={num_id}, level={ilvl})"
+                numbering_info = f" with inherited numbering (source={numbering_source}, numId={num_id}, level={ilvl})"
+            elif numbering_source == "style" and target_paragraph.style:
+                numbering_info = f" with inherited numbering (source={numbering_source}, style={target_paragraph.style.style_id})"
         
         return f"Paragraph added after clause '{clause_number}'{numbering_info} in {filename}"
         
@@ -955,6 +969,7 @@ async def add_paragraphs_after_clause(
                 # Find all paragraphs with the same numId and ilvl as target
                 target_num_id = None
                 target_ilvl = None
+                target_clause = None
                 
                 for row in rows:
                     rendered = row.get("rendered_number", "").strip().rstrip('.')
@@ -962,6 +977,7 @@ async def add_paragraphs_after_clause(
                     if rendered == clause_normalized:
                         target_num_id = row.get("numId")
                         target_ilvl = row.get("ilvl")
+                        target_clause = row
                         break
                 
                 if target_num_id is None:
@@ -991,16 +1007,27 @@ async def add_paragraphs_after_clause(
                 pPr = OxmlElement('w:pPr')
                 new_p.append(pPr)
                 
+                # Determine numbering source
+                numbering_source = target_clause.get("source", "paragraph") if target_clause else "paragraph"
+                
+                # Apply style
                 if style:
                     pStyle = OxmlElement('w:pStyle')
                     pStyle.set(qn('w:val'), style)
                     pPr.append(pStyle)
+                elif inherit_numbering and numbering_source == "style":
+                    # Style-based numbering: inherit the style which contains numPr
+                    if target_paragraph.style:
+                        pStyle = OxmlElement('w:pStyle')
+                        pStyle.set(qn('w:val'), target_paragraph.style.style_id)
+                        pPr.append(pStyle)
                 elif target_paragraph.style:
                     pStyle = OxmlElement('w:pStyle')
                     pStyle.set(qn('w:val'), target_paragraph.style.style_id)
                     pPr.append(pStyle)
                 
-                if inherit_numbering and target_num_id:
+                # Apply direct numPr only if source is 'paragraph' (not style-based)
+                if inherit_numbering and numbering_source == "paragraph" and target_num_id:
                     numPr = OxmlElement('w:numPr')
                     ilvl_elem = OxmlElement('w:ilvl')
                     ilvl_elem.set(qn('w:val'), str(target_ilvl if target_ilvl is not None else 0))
