@@ -1,0 +1,12 @@
+{
+  "servers": {
+    "effi-local": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["-m", "word_document_server.main"],
+      "cwd": "c:\\Users\\DavidSant\\Office-Word-MCP-Server"
+    }
+  }
+}
+
+// The MCP server is running and I can interact with it through the stdio connection configured in mcp.json. The server is set to run as a Python module word_document_server.main from the Office-Word-MCP-Server directory.

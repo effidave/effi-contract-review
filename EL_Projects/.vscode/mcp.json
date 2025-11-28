@@ -1,0 +1,10 @@
+{
+  "servers": {
+    "effi-local": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["-m", "word_document_server.main"],
+      "cwd": "c:\\Users\\DavidSant\\Office-Word-MCP-Server"
+    }
+  }
+}

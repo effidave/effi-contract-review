@@ -1,0 +1,32 @@
+{
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "chat.mcp.serverSampling": {
+        "Office-Word-MCP-Server/.vscode/mcp.json: effi-local": {
+            "allowedModels": [
+                "copilot/auto",
+                "copilot/claude-haiku-4.5",
+                "copilot/claude-sonnet-4",
+                "copilot/claude-sonnet-4.5",
+                "copilot/claude-opus-4.5",
+                "copilot/gpt-4o",
+                "copilot/gpt-4o-mini",
+                "copilot/o1-preview",
+                "copilot/o1-mini",
+                "copilot/gpt-4.1",
+                "copilot/gpt-5",
+                "copilot/gpt-5 mini",
+                "copilot/gpt-5-codex",
+                "copilot/gpt-5.1",
+                "copilot/gpt-5.1-codex",
+                "copilot/gpt-5.1-codex-mini"
+            ]
+        }
+    },
+    "github.copilot.instructions": [
+        "${workspaceFolder}/docs/wmcp_instructions.md"
+    ]
+}
