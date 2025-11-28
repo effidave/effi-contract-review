@@ -5,31 +5,97 @@ These tools add various types of content to Word documents,
 including headings, paragraphs, tables, images, and page breaks.
 """
 import os
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Any
 from docx import Document
 from docx.shared import Inches, Pt, RGBColor
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
 
 from word_document_server.utils.file_utils import check_file_writeable, ensure_docx_extension
-from word_document_server.utils.document_utils import find_and_replace_text, insert_header_near_text, insert_numbered_list_near_text, insert_line_or_paragraph_near_text, replace_paragraph_block_below_header, replace_block_between_manual_anchors
+from word_document_server.utils.document_utils import (
+    find_and_replace_text,
+    edit_run_text,
+    insert_header_near_text,
+    insert_numbered_list_near_text,
+    insert_line_or_paragraph_near_text,
+    replace_paragraph_block_below_header,
+    replace_block_between_manual_anchors,
+)
 from word_document_server.core.styles import ensure_heading_style, ensure_table_style
 
 
-async def add_heading(filename: str, text: str, level: int = 1,
-                      font_name: Optional[str] = None, font_size: Optional[int] = None,
-                      bold: Optional[bool] = None, italic: Optional[bool] = None,
-                      border_bottom: bool = False) -> str:
-    """Add a heading to a Word document with optional formatting.
+def _parse_optional_bool(value: Optional[Any], field_name: str) -> Optional[bool]:
+    """Normalize optional truthy fields supplied as bools/strings."""
+    if value is None:
+        return None
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        normalized = value.strip().lower()
+        if normalized in {"true", "1", "yes", "y", "on"}:
+            return True
+        if normalized in {"false", "0", "no", "n", "off"}:
+            return False
+    raise ValueError(f"Invalid parameter: {field_name} must be boolean-like")
 
-    Args:
-        filename: Path to the Word document
-        text: Heading text
-        level: Heading level (1-9, where 1 is the highest level)
-        font_name: Font family (e.g., 'Helvetica')
-        font_size: Font size in points (e.g., 14)
-        bold: True/False for bold text
-        italic: True/False for italic text
-        border_bottom: True to add bottom border (for section headers)
-    """
+
+def _normalize_color_string(color: Optional[str]) -> Optional[str]:
+    """Return an uppercase hex RGB string or None."""
+    if color is None:
+        return None
+    cleaned = str(color).strip()
+    if cleaned.startswith("#"):
+        cleaned = cleaned[1:]
+    cleaned = cleaned.upper()
+    if len(cleaned) != 6 or any(ch not in "0123456789ABCDEF" for ch in cleaned):
+        raise ValueError("Invalid parameter: color must be a 6-digit hex value")
+    return cleaned
+
+
+def _apply_run_formatting(run, font_name: Optional[str], font_size_pt: Optional[float], bold: Optional[bool], italic: Optional[bool], color: Optional[str]) -> None:
+    """Apply optional formatting attributes to a run."""
+    if font_name:
+        run.font.name = font_name
+    if font_size_pt is not None:
+        run.font.size = Pt(font_size_pt)
+    if bold is not None:
+        run.bold = bold
+    if italic is not None:
+        run.italic = italic
+    if color:
+        run.font.color.rgb = RGBColor.from_string(color)
+
+
+def _apply_paragraph_bottom_border(paragraph) -> None:
+    """Add a single bottom border to a paragraph."""
+    pPr = paragraph._p.get_or_add_pPr()
+    pBdr = pPr.find(qn('w:pBdr'))
+    if pBdr is None:
+        pBdr = OxmlElement('w:pBdr')
+        pPr.append(pBdr)
+    bottom = pBdr.find(qn('w:bottom'))
+    if bottom is None:
+        bottom = OxmlElement('w:bottom')
+        pBdr.append(bottom)
+    bottom.set(qn('w:val'), 'single')
+    bottom.set(qn('w:sz'), '12')
+    bottom.set(qn('w:space'), '1')
+    bottom.set(qn('w:color'), 'auto')
+
+
+async def add_heading(
+    filename: str,
+    text: str,
+    level: int = 1,
+    font_name: Optional[str] = None,
+    font_size: Optional[float] = None,
+    bold: Optional[Any] = None,
+    italic: Optional[Any] = None,
+    border_bottom: Optional[Any] = False,
+    *,
+    color: Optional[str] = None,
+) -> str:
+    """Add a heading to a Word document with optional formatting."""
     filename = ensure_docx_extension(filename)
 
     # Ensure level is converted to integer
@@ -42,134 +108,156 @@ async def add_heading(filename: str, text: str, level: int = 1,
     if level < 1 or level > 9:
         return f"Invalid heading level: {level}. Level must be between 1 and 9."
 
+    text_value = "" if text is None else str(text)
+
+    try:
+        bold_value = _parse_optional_bool(bold, "bold")
+    except ValueError as exc:
+        return str(exc)
+
+    try:
+        italic_value = _parse_optional_bool(italic, "italic")
+    except ValueError as exc:
+        return str(exc)
+
+    try:
+        border_value = _parse_optional_bool(border_bottom, "border_bottom")
+    except ValueError as exc:
+        return str(exc)
+    border_value = bool(border_value) if border_value is not None else False
+
+    try:
+        color_value = _normalize_color_string(color)
+    except ValueError as exc:
+        return str(exc)
+
+    font_size_value = None
+    if font_size is not None:
+        try:
+            font_size_value = float(font_size)
+        except (TypeError, ValueError):
+            return "Invalid parameter: font_size must be a positive number"
+        if font_size_value <= 0:
+            return "Invalid parameter: font_size must be greater than 0"
+
+    font_name_value = font_name.strip() if isinstance(font_name, str) and font_name.strip() else None
+
     if not os.path.exists(filename):
         return f"Document {filename} does not exist"
 
     # Check if file is writeable
     is_writeable, error_message = check_file_writeable(filename)
     if not is_writeable:
-        # Suggest creating a copy
         return f"Cannot modify document: {error_message}. Consider creating a copy first or creating a new document."
 
     try:
         doc = Document(filename)
-
-        # Ensure heading styles exist
         ensure_heading_style(doc)
 
-        # Try to add heading with style
+        fallback_used = False
         try:
-            heading = doc.add_heading(text, level=level)
-        except Exception as style_error:
-            # If style-based approach fails, use direct formatting
-            heading = doc.add_paragraph(text)
-            heading.style = doc.styles['Normal']
-            if heading.runs:
-                run = heading.runs[0]
-                run.bold = True
-                # Adjust size based on heading level
-                if level == 1:
-                    run.font.size = Pt(16)
-                elif level == 2:
-                    run.font.size = Pt(14)
-                else:
-                    run.font.size = Pt(12)
+            heading_para = doc.add_heading(text_value, level=level)
+        except Exception:
+            fallback_used = True
+            heading_para = doc.add_paragraph()
+            heading_para.style = doc.styles['Normal']
 
-        # Apply formatting to all runs in the heading
-        if any([font_name, font_size, bold is not None, italic is not None]):
-            for run in heading.runs:
-                if font_name:
-                    run.font.name = font_name
-                if font_size:
-                    run.font.size = Pt(font_size)
-                if bold is not None:
-                    run.font.bold = bold
-                if italic is not None:
-                    run.font.italic = italic
+        heading_para.text = text_value
+        if not heading_para.runs:
+            heading_para.add_run(text_value)
 
-        # Add bottom border if requested
-        if border_bottom:
-            from docx.oxml import OxmlElement
-            from docx.oxml.ns import qn
+        # Apply formatting to each run (usually a single run after setting text)
+        effective_font_size = font_size_value
+        if fallback_used and effective_font_size is None:
+            effective_font_size = 16 if level == 1 else 14 if level == 2 else 12
 
-            pPr = heading._element.get_or_add_pPr()
-            pBdr = OxmlElement('w:pBdr')
+        effective_bold = bold_value if bold_value is not None else (True if fallback_used else None)
 
-            bottom = OxmlElement('w:bottom')
-            bottom.set(qn('w:val'), 'single')
-            bottom.set(qn('w:sz'), '4')  # 0.5pt border
-            bottom.set(qn('w:space'), '0')
-            bottom.set(qn('w:color'), '000000')
+        for run in heading_para.runs:
+            _apply_run_formatting(run, font_name_value, effective_font_size, effective_bold, italic_value, color_value)
 
-            pBdr.append(bottom)
-            pPr.append(pBdr)
+        if border_value:
+            _apply_paragraph_bottom_border(heading_para)
 
         doc.save(filename)
-        return f"Heading '{text}' (level {level}) added to {filename}"
-    except Exception as e:
-        return f"Failed to add heading: {str(e)}"
+
+        if fallback_used:
+            return f"Heading '{text_value}' added to {filename} with direct formatting (style not available)"
+        return f"Heading '{text_value}' (level {level}) added to {filename}"
+    except Exception as exc:
+        return f"Failed to add heading: {str(exc)}"
 
 
-async def add_paragraph(filename: str, text: str, style: Optional[str] = None,
-                        font_name: Optional[str] = None, font_size: Optional[int] = None,
-                        bold: Optional[bool] = None, italic: Optional[bool] = None,
-                        color: Optional[str] = None) -> str:
-    """Add a paragraph to a Word document with optional formatting.
-
-    Args:
-        filename: Path to the Word document
-        text: Paragraph text
-        style: Optional paragraph style name
-        font_name: Font family (e.g., 'Helvetica', 'Times New Roman')
-        font_size: Font size in points (e.g., 14, 36)
-        bold: True/False for bold text
-        italic: True/False for italic text
-        color: RGB color as hex string (e.g., '000000' for black)
-    """
+async def add_paragraph(
+    filename: str,
+    text: str,
+    style: Optional[str] = None,
+    font_name: Optional[str] = None,
+    font_size: Optional[float] = None,
+    bold: Optional[Any] = None,
+    italic: Optional[Any] = None,
+    color: Optional[str] = None,
+) -> str:
+    """Add a paragraph to a Word document with optional formatting."""
     filename = ensure_docx_extension(filename)
+
+    text_value = "" if text is None else str(text)
+
+    try:
+        bold_value = _parse_optional_bool(bold, "bold")
+    except ValueError as exc:
+        return str(exc)
+
+    try:
+        italic_value = _parse_optional_bool(italic, "italic")
+    except ValueError as exc:
+        return str(exc)
+
+    try:
+        color_value = _normalize_color_string(color)
+    except ValueError as exc:
+        return str(exc)
+
+    font_size_value = None
+    if font_size is not None:
+        try:
+            font_size_value = float(font_size)
+        except (TypeError, ValueError):
+            return "Invalid parameter: font_size must be a positive number"
+        if font_size_value <= 0:
+            return "Invalid parameter: font_size must be greater than 0"
+
+    font_name_value = font_name.strip() if isinstance(font_name, str) and font_name.strip() else None
 
     if not os.path.exists(filename):
         return f"Document {filename} does not exist"
 
-    # Check if file is writeable
     is_writeable, error_message = check_file_writeable(filename)
     if not is_writeable:
-        # Suggest creating a copy
         return f"Cannot modify document: {error_message}. Consider creating a copy first or creating a new document."
 
     try:
         doc = Document(filename)
-        paragraph = doc.add_paragraph(text)
+        paragraph = doc.add_paragraph()
 
+        style_warning = None
         if style:
             try:
                 paragraph.style = style
             except KeyError:
-                # Style doesn't exist, use normal and report it
+                style_warning = f"Style '{style}' not found; using default style."
                 paragraph.style = doc.styles['Normal']
-                doc.save(filename)
-                return f"Style '{style}' not found, paragraph added with default style to {filename}"
 
-        # Apply formatting to all runs in the paragraph
-        if any([font_name, font_size, bold is not None, italic is not None, color]):
-            for run in paragraph.runs:
-                if font_name:
-                    run.font.name = font_name
-                if font_size:
-                    run.font.size = Pt(font_size)
-                if bold is not None:
-                    run.font.bold = bold
-                if italic is not None:
-                    run.font.italic = italic
-                if color:
-                    # Remove any '#' prefix if present
-                    color_hex = color.lstrip('#')
-                    run.font.color.rgb = RGBColor.from_string(color_hex)
+        run = paragraph.add_run(text_value)
+        _apply_run_formatting(run, font_name_value, font_size_value, bold_value, italic_value, color_value)
 
         doc.save(filename)
+
+        if style_warning:
+            return f"Style '{style}' not found, paragraph added with default style to {filename}"
         return f"Paragraph added to {filename}"
-    except Exception as e:
-        return f"Failed to add paragraph: {str(e)}"
+    except Exception as exc:
+        return f"Failed to add paragraph: {str(exc)}"
 
 
 async def add_table(filename: str, rows: int, cols: int, data: Optional[List[List[str]]] = None) -> str:
@@ -428,13 +516,17 @@ async def delete_paragraph(filename: str, paragraph_index: int) -> str:
         return f"Failed to delete paragraph: {str(e)}"
 
 
-async def search_and_replace(filename: str, find_text: str, replace_text: str) -> str:
+async def search_and_replace(filename: str, find_text: str, replace_text: str, whole_word_only: bool = False) -> str:
     """Search for text and replace all occurrences.
+    
+    Matches entirely within a single run are replaced automatically. Matches spanning multiple 
+    runs are reported but not replaced; use edit_run_text to handle those cases precisely.
     
     Args:
         filename: Path to the Word document
         find_text: Text to search for
         replace_text: Text to replace with
+        whole_word_only: If True, only replace whole words (not partial matches within words)
     """
     filename = ensure_docx_extension(filename)
     
@@ -450,32 +542,207 @@ async def search_and_replace(filename: str, find_text: str, replace_text: str) -
         doc = Document(filename)
         
         # Perform find and replace
-        count = find_and_replace_text(doc, find_text, replace_text)
+        count, snippets, split_matches = find_and_replace_text(doc, find_text, replace_text, whole_word_only=whole_word_only)
         
+        # Save if we made any in-run replacements
         if count > 0:
             doc.save(filename)
-            return f"Replaced {count} occurrence(s) of '{find_text}' with '{replace_text}'."
-        else:
-            return f"No occurrences of '{find_text}' found."
+        
+        # Build response
+        mode_info = " (whole word only)" if whole_word_only else ""
+        response = ""
+        
+        if count > 0:
+            response = f"Replaced {count} occurrence(s) of '{find_text}' with '{replace_text}'{mode_info}.\n"
+            
+            for i, snippet in enumerate(snippets, 1):
+                response += f"\n--- Replacement {i} ({snippet['location']}) ---\n"
+                response += f"Before: ...{snippet['before']}...\n"
+                response += f"After:  ...{snippet['after']}...\n"
+        
+        # Report split matches
+        if split_matches:
+            if count == 0:
+                response = f"No in-run occurrences of '{find_text}' found.\n"
+            
+            response += f"\n{len(split_matches)} match(es) span multiple runs and require manual editing:\n"
+            
+            for i, match in enumerate(split_matches, 1):
+                para_idx = match['paragraph_index']
+                run_info = ", ".join(
+                    f"run {r['run_index']}[{r['offset_start']}:{r['offset_end']}]='{r['text']}'"
+                    for r in match['runs']
+                )
+                response += f"\n  {i}. Paragraph {para_idx}: {run_info}\n"
+            
+            response += f"\nUse edit_run_text to modify these spans. Example for split match 1:\n"
+            response += f"  edit_run_text(filename, {split_matches[0]['paragraph_index']}, {split_matches[0]['runs'][0]['run_index']}, new_text)\n"
+        
+        if count == 0 and not split_matches:
+            response = f"No occurrences of '{find_text}' found."
+        
+        return response
     except Exception as e:
         return f"Failed to search and replace: {str(e)}"
 
-async def insert_header_near_text_tool(filename: str, target_text: str = None, header_title: str = "", position: str = 'after', header_style: str = 'Heading 1', target_paragraph_index: int = None) -> str:
-    """Insert a header (with specified style) before or after the target paragraph. Specify by text or paragraph index."""
-    return insert_header_near_text(filename, target_text, header_title, position, header_style, target_paragraph_index)
 
-async def insert_numbered_list_near_text_tool(filename: str, target_text: str = None, list_items: list = None, position: str = 'after', target_paragraph_index: int = None, bullet_type: str = 'bullet') -> str:
-    """Insert a bulleted or numbered list before or after the target paragraph. Specify by text or paragraph index."""
-    return insert_numbered_list_near_text(filename, target_text, list_items, position, target_paragraph_index, bullet_type)
+async def insert_header_near_text_tool(
+    filename: str,
+    target_text: Optional[str] = None,
+    header_title: Optional[str] = None,
+    position: str = 'after',
+    header_style: str = 'Heading 1',
+    target_paragraph_index: Optional[int] = None,
+) -> str:
+    """Insert a styled header relative to a target paragraph."""
+    title_value = "" if header_title is None else str(header_title)
+    normalized_position = (position or "after").lower()
+    if normalized_position not in {"before", "after"}:
+        return "position must be either 'before' or 'after'."
 
-async def insert_line_or_paragraph_near_text_tool(filename: str, target_text: str = None, line_text: str = "", position: str = 'after', line_style: str = None, target_paragraph_index: int = None) -> str:
-    """Insert a new line or paragraph (with specified or matched style) before or after the target paragraph. Specify by text or paragraph index."""
-    return insert_line_or_paragraph_near_text(filename, target_text, line_text, position, line_style, target_paragraph_index)
+    style_value = header_style or 'Heading 1'
+    return insert_header_near_text(
+        filename,
+        target_text,
+        title_value,
+        normalized_position,
+        style_value,
+        target_paragraph_index,
+    )
 
-async def replace_paragraph_block_below_header_tool(filename: str, header_text: str, new_paragraphs: list, detect_block_end_fn=None) -> str:
-    """Reemplaza el bloque de párrafos debajo de un encabezado, evitando modificar TOC."""
-    return replace_paragraph_block_below_header(filename, header_text, new_paragraphs, detect_block_end_fn)
+
+async def insert_line_or_paragraph_near_text_tool(
+    filename: str,
+    target_text: Optional[str] = None,
+    line_text: Optional[str] = None,
+    position: str = 'after',
+    line_style: Optional[str] = None,
+    target_paragraph_index: Optional[int] = None,
+) -> str:
+    """Insert a paragraph relative to a target paragraph, optionally matching style."""
+    text_value = "" if line_text is None else str(line_text)
+    normalized_position = (position or "after").lower()
+    if normalized_position not in {"before", "after"}:
+        return "position must be either 'before' or 'after'."
+
+    style_value = line_style.strip() if isinstance(line_style, str) and line_style.strip() else None
+
+    return insert_line_or_paragraph_near_text(
+        filename,
+        target_text,
+        text_value,
+        normalized_position,
+        style_value,
+        target_paragraph_index,
+    )
+
+
+async def insert_numbered_list_near_text_tool(
+    filename: str,
+    target_text: Optional[str] = None,
+    list_items: Optional[List[str]] = None,
+    position: str = 'after',
+    target_paragraph_index: Optional[int] = None,
+    bullet_type: str = 'bullet',
+) -> str:
+    """Insert a bullet or numbered list relative to a target paragraph."""
+    if list_items is None or not isinstance(list_items, list) or not list_items:
+        return "list_items must be a non-empty list of strings."
+
+    normalized_items = [str(item) for item in list_items]
+
+    normalized_position = (position or "after").lower()
+    if normalized_position not in {"before", "after"}:
+        return "position must be either 'before' or 'after'."
+
+    bullet_value = (bullet_type or 'bullet').lower()
+    if bullet_value in {"bullet", "bullets"}:
+        list_style = 'bullet'
+    elif bullet_value in {"number", "numbered", "numbers"}:
+        list_style = 'number'
+    else:
+        return "bullet_type must be 'bullet' or 'number'."
+
+    return insert_numbered_list_near_text(
+        filename,
+        target_text,
+        normalized_items,
+        normalized_position,
+        target_paragraph_index,
+        list_style,
+    )
+
+
+async def insert_str_content_near_text(
+    filename: str,
+    target_text: Optional[str] = None,
+    content_text: Optional[str] = None,
+    position: str = 'after',
+    content_style: Optional[str] = None,
+    target_paragraph_index: Optional[int] = None,
+) -> str:
+    """
+    Insert string content near a target paragraph. If the provided content_style appears to be a heading
+    (defaults to Heading 1 when not specified), the content is inserted as a header. Otherwise a normal
+    paragraph/line is inserted, with the optional paragraph style applied.
+    """
+    text_value = (content_text or "").strip()
+    if not text_value:
+        return "content_text must be provided and non-empty."
+
+    position_normalized = (position or "after").lower()
+    if position_normalized not in {"before", "after"}:
+        return "position must be either 'before' or 'after'."
+
+    style_value = (content_style or "").strip()
+    is_heading = bool(style_value) and style_value.lower().startswith("heading")
+
+    # If the caller explicitly requested a heading (style starts with 'heading'), use the header helper.
+    if is_heading:
+        header_style_value = style_value or "Heading 1"
+        if header_style_value.lower().startswith("heading"):
+            header_style_value = header_style_value.title()
+        return await insert_header_near_text_tool(
+            filename=filename,
+            target_text=target_text,
+            header_title=text_value,
+            position=position_normalized,
+            header_style=header_style_value,
+            target_paragraph_index=target_paragraph_index,
+        )
+
+    # Non-heading content path inserts a paragraph/line with the provided style (if any).
+    return await insert_line_or_paragraph_near_text_tool(
+        filename=filename,
+        target_text=target_text,
+        line_text=text_value,
+        position=position_normalized,
+        line_style=style_value if style_value else None,
+        target_paragraph_index=target_paragraph_index,
+    )
+
+#async def replace_paragraph_block_below_header_tool(filename: str, header_text: str, new_paragraphs: list, detect_block_end_fn=None) -> str:
+#    """Reemplaza el bloque de párrafos debajo de un encabezado, evitando modificar TOC."""
+#    return replace_paragraph_block_below_header(filename, header_text, new_paragraphs, detect_block_end_fn)
 
 async def replace_block_between_manual_anchors_tool(filename: str, start_anchor_text: str, new_paragraphs: list, end_anchor_text: str = None, match_fn=None, new_paragraph_style: str = None) -> str:
     """Replace all content between start_anchor_text and end_anchor_text (or next logical header if not provided)."""
     return replace_block_between_manual_anchors(filename, start_anchor_text, new_paragraphs, end_anchor_text, match_fn, new_paragraph_style)
+
+
+async def edit_run_text_tool(filename: str, paragraph_index: int, run_index: int, new_text: str, start_offset: Optional[int] = None, end_offset: Optional[int] = None) -> str:
+    """
+    Edit text within a specific run of a paragraph.
+    
+    Use this tool to handle matches that span multiple runs (as reported by search_and_replace).
+    
+    Args:
+        filename: Path to the Word document
+        paragraph_index: Index of the paragraph (0-based)
+        run_index: Index of the run within the paragraph (0-based)
+        new_text: Text to insert or replace
+        start_offset: Optional start position within the run (0-based)
+        end_offset: Optional end position within the run (0-based, exclusive).
+                   If not provided, replaces the entire run text
+    """
+    return edit_run_text(filename, paragraph_index, run_index, new_text, start_offset, end_offset)

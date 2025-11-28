@@ -27,6 +27,6 @@
         }
     },
     "github.copilot.instructions": [
-        "${workspaceFolder}/docs/wmcp_instructions.md"
+        "${workspaceFolder}/docs/llm_instructions/eli.md"
     ]
 }

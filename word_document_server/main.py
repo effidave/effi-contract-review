@@ -6,10 +6,14 @@ Supports multiple transports: stdio, sse, and streamable-http using standalone F
 
 import os
 import sys
+import logging
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
-print("Loading configuration from .env file...")
+# Configure logging to stderr so MCP stdio parser isn't broken by plain prints
+logging.basicConfig(stream=sys.stderr, level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+logger.info("Loading configuration from .env file...")
 load_dotenv()
 # Set required environment variable for FastMCP 2.8.1+
 os.environ.setdefault('FASTMCP_LOG_LEVEL', 'INFO')
@@ -23,8 +27,6 @@ from word_document_server.tools import (
     extended_document_tools,
     comment_tools
 )
-from word_document_server.tools.content_tools import replace_paragraph_block_below_header_tool
-from word_document_server.tools.content_tools import replace_block_between_manual_anchors_tool
 
 def get_transport_config():
     """
@@ -88,6 +90,10 @@ mcp = FastMCP("Word Document Server")
 
 
 def register_tools():
+    @mcp.tool()
+    async def save_document_as_markdown(filename: str):
+        """Extract all text from a Word document and save as a Markdown (.md) file with the same base name."""
+        return await document_tools.save_document_as_markdown(filename)
     """Register all tools with the MCP server using FastMCP decorators."""
     
     # Document tools (create, copy, info, etc.)
@@ -164,7 +170,8 @@ def register_tools():
     @mcp.tool()
     def add_heading(filename: str, text: str, level: int = 1,
                     font_name: str = None, font_size: int = None,
-                    bold: bool = None, italic: bool = None, border_bottom: bool = False):
+                    bold: bool = None, italic: bool = None,
+                    border_bottom: bool = False, color: str = None):
         """Add a heading to a Word document with optional formatting.
 
         Args:
@@ -176,8 +183,19 @@ def register_tools():
             bold: Make heading bold
             italic: Make heading italic
             border_bottom: Add bottom border (for section headers)
+            color: Hex RGB text color (e.g., '#2F5496')
         """
-        return content_tools.add_heading(filename, text, level, font_name, font_size, bold, italic, border_bottom)
+        return content_tools.add_heading(
+            filename,
+            text,
+            level,
+            font_name,
+            font_size,
+            bold,
+            italic,
+            border_bottom,
+            color=color,
+        )
     
     @mcp.tool()
     def add_picture(filename: str, image_path: str, width: float = None):
@@ -224,6 +242,24 @@ def register_tools():
             filename, paragraph_index, start_pos, end_pos, bold, italic, 
             underline, color, font_size, font_name
         )
+    
+    @mcp.tool()
+    def edit_run_text(filename: str, paragraph_index: int, run_index: int, new_text: str, 
+                     start_offset: int = None, end_offset: int = None):
+        """Edit text within a specific run of a paragraph.
+        
+        Handles cases where text spans multiple formatting regions (runs).
+        Use this when search_and_replace detects text spans multiple runs.
+        
+        Args:
+            filename: Path to Word document
+            paragraph_index: Paragraph number (0-based)
+            run_index: Run number within paragraph (0-based)
+            new_text: Replacement text for the run
+            start_offset: Optional start position within the run (0-based)
+            end_offset: Optional end position within the run (0-based, exclusive)
+        """
+        return content_tools.edit_run_text_tool(filename, paragraph_index, run_index, new_text, start_offset, end_offset)
     
     @mcp.tool()
     def format_table(filename: str, table_index: int, has_header_row: bool = None,
@@ -389,15 +425,15 @@ def register_tools():
         """Convert a Word document to PDF format."""
         return extended_document_tools.convert_to_pdf(filename, output_filename)
 
-    @mcp.tool()
-    def replace_paragraph_block_below_header(filename: str, header_text: str, new_paragraphs: list, detect_block_end_fn=None):
-        """Reemplaza el bloque de párrafos debajo de un encabezado, evitando modificar TOC."""
-        return replace_paragraph_block_below_header_tool(filename, header_text, new_paragraphs, detect_block_end_fn)
+#    @mcp.tool()
+#    def replace_paragraph_block_below_header(filename: str, header_text: str, new_paragraphs: list, detect_block_end_fn=None):
+#        """Reemplaza el bloque de párrafos debajo de un encabezado, evitando modificar TOC."""
+#        return replace_paragraph_block_below_header_tool(filename, header_text, new_paragraphs, detect_block_end_fn)
 
     @mcp.tool()
     def replace_block_between_manual_anchors(filename: str, start_anchor_text: str, new_paragraphs: list, end_anchor_text: str = None, match_fn=None, new_paragraph_style: str = None):
         """Replace all content between start_anchor_text and end_anchor_text (or next logical header if not provided)."""
-        return replace_block_between_manual_anchors_tool(filename, start_anchor_text, new_paragraphs, end_anchor_text, match_fn, new_paragraph_style)
+        return content_tools.replace_block_between_manual_anchors_tool(filename, start_anchor_text, new_paragraphs, end_anchor_text, match_fn, new_paragraph_style)
 
     # Comment tools
     @mcp.tool()

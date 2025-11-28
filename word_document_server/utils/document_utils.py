@@ -7,7 +7,6 @@ from docx import Document
 from docx.oxml.table import CT_Tbl
 from docx.oxml.text.paragraph import CT_P
 from docx.oxml.ns import qn
-from docx.oxml import OxmlElement
 
 
 def get_document_properties(doc_path: str) -> Dict[str, Any]:
@@ -15,11 +14,11 @@ def get_document_properties(doc_path: str) -> Dict[str, Any]:
     import os
     if not os.path.exists(doc_path):
         return {"error": f"Document {doc_path} does not exist"}
-    
+
     try:
         doc = Document(doc_path)
         core_props = doc.core_properties
-        
+
         return {
             "title": core_props.title or "",
             "author": core_props.author or "",
@@ -36,6 +35,74 @@ def get_document_properties(doc_path: str) -> Dict[str, Any]:
         }
     except Exception as e:
         return {"error": f"Failed to get document properties: {str(e)}"}
+
+
+def edit_run_text(doc_path: str, paragraph_index: int, run_index: int, new_text: str, start_offset: int = None, end_offset: int = None) -> str:
+    """
+    Edit text within a specific run of a paragraph.
+    
+    Args:
+        doc_path: Path to the Word document
+        paragraph_index: Index of the paragraph (0-based)
+        run_index: Index of the run within the paragraph (0-based)
+        new_text: Text to insert/replace
+        start_offset: Optional start position within the run (0-based)
+        end_offset: Optional end position within the run (0-based, exclusive)
+                   If not provided, replaces the entire run text
+        
+    Returns:
+        Status message
+    """
+    import os
+    from docx import Document
+    from word_document_server.utils.file_utils import check_file_writeable, ensure_docx_extension
+    
+    doc_path = ensure_docx_extension(doc_path)
+    
+    if not os.path.exists(doc_path):
+        return f"Document {doc_path} does not exist"
+    
+    is_writeable, error_message = check_file_writeable(doc_path)
+    if not is_writeable:
+        return f"Cannot modify document: {error_message}"
+    
+    try:
+        doc = Document(doc_path)
+        
+        if paragraph_index < 0 or paragraph_index >= len(doc.paragraphs):
+            return f"Invalid paragraph index: {paragraph_index}. Document has {len(doc.paragraphs)} paragraphs."
+        
+        para = doc.paragraphs[paragraph_index]
+        
+        if run_index < 0 or run_index >= len(para.runs):
+            return f"Invalid run index: {run_index}. Paragraph {paragraph_index} has {len(para.runs)} runs."
+        
+        run = para.runs[run_index]
+        old_text = run.text
+        
+        # Default to replacing entire run
+        if start_offset is None:
+            start_offset = 0
+        if end_offset is None:
+            end_offset = len(old_text)
+        
+        # Validate offsets
+        if start_offset < 0 or start_offset > len(old_text):
+            return f"Invalid start_offset: {start_offset}. Run text length is {len(old_text)}."
+        if end_offset < 0 or end_offset > len(old_text):
+            return f"Invalid end_offset: {end_offset}. Run text length is {len(old_text)}."
+        if start_offset > end_offset:
+            return f"Invalid offsets: start_offset ({start_offset}) > end_offset ({end_offset})."
+        
+        # Perform the replacement
+        run.text = old_text[:start_offset] + new_text + old_text[end_offset:]
+        
+        doc.save(doc_path)
+        
+        return f"Run {run_index} in paragraph {paragraph_index} updated: '{old_text[start_offset:end_offset]}' → '{new_text}'"
+    
+    except Exception as e:
+        return f"Failed to edit run: {str(e)}"
 
 
 def extract_document_text(doc_path: str) -> str:
@@ -135,46 +202,183 @@ def find_paragraph_by_text(doc, text, partial_match=False):
     return matching_paragraphs
 
 
-def find_and_replace_text(doc, old_text, new_text):
+def find_and_replace_text(doc, old_text, new_text, whole_word_only=False):
     """
     Find and replace text throughout the document, skipping Table of Contents (TOC) paragraphs.
+    
+    **BEHAVIOR**: This function replaces text ONLY when it exists entirely within a single run.
+    If search text spans multiple runs exactly (with whitespace matching), it is detected and 
+    reported as a split match but NOT automatically replaced. The caller must use edit_run_text 
+    to handle those cases precisely.
     
     Args:
         doc: Document object
         old_text: Text to find
         new_text: Text to replace with
+        whole_word_only: If True, only replace whole words (surrounded by spaces, punctuation, or boundaries)
         
     Returns:
-        Number of replacements made
+        Tuple of (replaced_count, snippets, split_matches) where:
+        - replaced_count: Number of in-run replacements made
+        - snippets: List of dicts with 'before', 'after', 'location' for replaced occurrences
+        - split_matches: List of dicts describing matches that span multiple runs
     """
+    import re
+    
     count = 0
+    snippets = []
+    split_matches = []
+    
+    def should_replace(text, search_text, pos):
+        """Check if replacement at this position should occur (for whole_word_only mode)."""
+        if not whole_word_only:
+            return True
+        
+        # Check character before
+        if pos > 0:
+            before_char = text[pos - 1]
+            if before_char.isalnum() or before_char == '_':
+                return False
+        
+        # Check character after
+        end_pos = pos + len(search_text)
+        if end_pos < len(text):
+            after_char = text[end_pos]
+            if after_char.isalnum() or after_char == '_':
+                return False
+        
+        return True
+    
+    def build_run_map(runs):
+        """Build a map of run boundaries: (run_index, start_char, end_char, text)."""
+        run_map = []
+        char_count = 0
+        for run_idx, run in enumerate(runs):
+            run_len = len(run.text)
+            run_map.append((run_idx, char_count, char_count + run_len, run.text))
+            char_count += run_len
+        return run_map
+    
+    def find_runs_for_match(run_map, match_start, match_end):
+        """Find which runs a match spans. Returns list of (run_idx, offset_in_run_start, offset_in_run_end)."""
+        spans = []
+        for run_idx, run_start, run_end, _ in run_map:
+            # Check overlap
+            overlap_start = max(match_start, run_start)
+            overlap_end = min(match_end, run_end)
+            if overlap_start < overlap_end:
+                # This run contains part of the match
+                offset_in_start = overlap_start - run_start
+                offset_in_end = overlap_end - run_start
+                spans.append((run_idx, offset_in_start, offset_in_end))
+        return spans
+    
+    def replace_in_paragraph(para, old_text, new_text, whole_word_only, location, para_idx):
+        """
+        Find and replace text in a paragraph. Only replace in-run matches; report split matches.
+        
+        Returns: (count, snippets, split_matches) for this paragraph
+        """
+        local_count = 0
+        local_snippets = []
+        local_split_matches = []
+        
+        full_text = para.text
+        if old_text not in full_text:
+            return local_count, local_snippets, local_split_matches
+        
+        runs = para.runs
+        if not runs:
+            return local_count, local_snippets, local_split_matches
+        
+        # Find all occurrences
+        pos = 0
+        while True:
+            pos = full_text.find(old_text, pos)
+            if pos == -1:
+                break
+            
+            if not should_replace(full_text, old_text, pos):
+                pos += 1
+                continue
+            
+            # Rebuild run_map after each replacement to account for offset changes
+            run_map = build_run_map(runs)
+            
+            # Determine which runs this match spans
+            match_start = pos
+            match_end = pos + len(old_text)
+            run_spans = find_runs_for_match(run_map, match_start, match_end)
+            
+            if len(run_spans) == 1:
+                # Match is entirely within one run - replace it
+                run_idx, offset_start, offset_end = run_spans[0]
+                run = runs[run_idx]
+                run.text = run.text[:offset_start] + new_text + run.text[offset_end:]
+                
+                local_count += 1
+                local_snippets.append({
+                    "before": full_text[max(0, pos - 20):min(len(full_text), pos + len(old_text) + 20)],
+                    "after": run.text[max(0, offset_start - 20):min(len(run.text), offset_start + len(new_text) + 20)],
+                    "location": location
+                })
+                
+                # Update full_text for next iteration
+                full_text = full_text[:pos] + new_text + full_text[match_end:]
+                pos += len(new_text)
+            else:
+                # Match spans multiple runs - verify concatenated text equals old_text exactly
+                concat_text = ""
+                run_details = []
+                for run_idx, offset_start, offset_end in run_spans:
+                    _, _, _, run_text = run_map[run_idx]
+                    fragment = run_text[offset_start:offset_end]
+                    concat_text += fragment
+                    run_details.append({
+                        "run_index": run_idx,
+                        "offset_start": offset_start,
+                        "offset_end": offset_end,
+                        "text": fragment
+                    })
+                
+                # Only report as split match if concatenation exactly matches
+                if concat_text == old_text:
+                    local_split_matches.append({
+                        "paragraph_index": para_idx,
+                        "runs": run_details,
+                        "full_match": old_text
+                    })
+                
+                pos += 1
+        
+        return local_count, local_snippets, local_split_matches
     
     # Search in paragraphs
-    for para in doc.paragraphs:
+    for para_idx, para in enumerate(doc.paragraphs):
         # Skip TOC paragraphs
         if para.style and para.style.name.startswith("TOC"):
             continue
-        if old_text in para.text:
-            for run in para.runs:
-                if old_text in run.text:
-                    run.text = run.text.replace(old_text, new_text)
-                    count += 1
+        
+        para_count, para_snippets, para_splits = replace_in_paragraph(para, old_text, new_text, whole_word_only, "paragraph", para_idx)
+        count += para_count
+        snippets.extend(para_snippets)
+        split_matches.extend(para_splits)
     
     # Search in tables
     for table in doc.tables:
         for row in table.rows:
             for cell in row.cells:
-                for para in cell.paragraphs:
+                for cell_para_idx, para in enumerate(cell.paragraphs):
                     # Skip TOC paragraphs in tables
                     if para.style and para.style.name.startswith("TOC"):
                         continue
-                    if old_text in para.text:
-                        for run in para.runs:
-                            if old_text in run.text:
-                                run.text = run.text.replace(old_text, new_text)
-                                count += 1
+                    
+                    para_count, para_snippets, para_splits = replace_in_paragraph(para, old_text, new_text, whole_word_only, "table", cell_para_idx)
+                    count += para_count
+                    snippets.extend(para_snippets)
+                    split_matches.extend(para_splits)
     
-    return count
+    return count, snippets, split_matches
 
 
 def get_document_xml(doc_path: str) -> str:
@@ -295,55 +499,23 @@ def insert_line_or_paragraph_near_text(doc_path: str, target_text: str = None, l
         return f"Failed to insert line/paragraph: {str(e)}"
 
 
-def add_bullet_numbering(paragraph, num_id=1, level=0):
+def insert_numbered_list_near_text(
+    doc_path: str,
+    target_text: str = None,
+    list_items: list = None,
+    position: str = 'after',
+    target_paragraph_index: int = None,
+    list_style: str = 'bullet',
+) -> str:
     """
-    Add bullet/numbering XML to a paragraph.
-
-    Args:
-        paragraph: python-docx Paragraph object
-        num_id: Numbering definition ID (1=bullets, 2=numbers, etc.)
-        level: Indentation level (0=first level, 1=second level, etc.)
-
-    Returns:
-        The modified paragraph
-    """
-    # Get or create paragraph properties
-    pPr = paragraph._element.get_or_add_pPr()
-
-    # Remove existing numPr if any (to avoid duplicates)
-    existing_numPr = pPr.find(qn('w:numPr'))
-    if existing_numPr is not None:
-        pPr.remove(existing_numPr)
-
-    # Create numbering properties element
-    numPr = OxmlElement('w:numPr')
-
-    # Set indentation level
-    ilvl = OxmlElement('w:ilvl')
-    ilvl.set(qn('w:val'), str(level))
-    numPr.append(ilvl)
-
-    # Set numbering definition ID
-    numId = OxmlElement('w:numId')
-    numId.set(qn('w:val'), str(num_id))
-    numPr.append(numId)
-
-    # Add to paragraph properties
-    pPr.append(numPr)
-
-    return paragraph
-
-
-def insert_numbered_list_near_text(doc_path: str, target_text: str = None, list_items: list = None, position: str = 'after', target_paragraph_index: int = None, bullet_type: str = 'bullet') -> str:
-    """
-    Insert a bulleted or numbered list before or after the target paragraph. Specify by text or paragraph index. Skips TOC paragraphs in text search.
+    Insert a numbered list before or after the target paragraph. Specify by text or paragraph index. Skips TOC paragraphs in text search.
     Args:
         doc_path: Path to the Word document
         target_text: Text to search for in paragraphs (optional if using index)
         list_items: List of strings, each as a list item
         position: 'before' or 'after' (default: 'after')
         target_paragraph_index: Optional paragraph index to use as anchor
-        bullet_type: 'bullet' for bullets (•), 'number' for numbers (1,2,3) (default: 'bullet')
+        list_style: 'bullet' or 'number' to choose between bullet or numbered styles
     Returns:
         Status message
     """
@@ -380,12 +552,18 @@ def insert_numbered_list_near_text(doc_path: str, target_text: str = None, list_
                 if p is para:
                     anchor_index = i
                     break
-        # Determine numbering ID based on bullet_type
-        num_id = 1 if bullet_type == 'bullet' else 2
-
-        # Use ListParagraph style for proper list formatting
+        # Robust style selection for numbered/bulleted list
         style_name = None
-        for candidate in ['List Paragraph', 'ListParagraph', 'Normal']:
+        style_preference = []
+        normalized_style = (list_style or 'bullet').lower()
+        list_label = 'Bulleted'
+        if normalized_style == 'number':
+            style_preference = ['List Number', 'Numbered List', 'List Paragraph', 'Normal']
+            list_label = 'Numbered'
+        else:
+            style_preference = ['List Bullet', 'Bullet List', 'List Paragraph', 'Normal']
+
+        for candidate in style_preference:
             try:
                 _ = doc.styles[candidate]
                 style_name = candidate
@@ -394,12 +572,9 @@ def insert_numbered_list_near_text(doc_path: str, target_text: str = None, list_
                 continue
         if not style_name:
             style_name = None  # fallback to default
-
         new_paras = []
         for item in (list_items or []):
             p = doc.add_paragraph(item, style=style_name)
-            # Add bullet numbering XML - this is the fix!
-            add_bullet_numbering(p, num_id=num_id, level=0)
             new_paras.append(p)
         # Move the new paragraphs to the correct position
         for p in reversed(new_paras):
@@ -408,11 +583,10 @@ def insert_numbered_list_near_text(doc_path: str, target_text: str = None, list_
             else:
                 para._element.addnext(p._element)
         doc.save(doc_path)
-        list_type = "bulleted" if bullet_type == 'bullet' else "numbered"
         if anchor_index is not None:
-            return f"{list_type.capitalize()} list with {len(new_paras)} items inserted {position} paragraph (index {anchor_index})."
+            return f"{list_label} list inserted {position} paragraph (index {anchor_index})."
         else:
-            return f"{list_type.capitalize()} list with {len(new_paras)} items inserted {position} the target paragraph."
+            return f"{list_label} list inserted {position} the target paragraph."
     except Exception as e:
         return f"Failed to insert numbered list: {str(e)}"
 
@@ -551,8 +725,10 @@ def replace_block_between_manual_anchors(
     start_idx = None
     end_idx = None
     # Find start anchor
+    paragraph_tag = qn('w:p')
+
     for i, el in enumerate(elements):
-        if el.tag == CT_P.tag:
+        if el.tag == paragraph_tag:
             p_text = "".join([node.text or '' for node in el.iter() if node.tag.endswith('}t')]).strip()
             if match_fn:
                 if match_fn(p_text, el):
@@ -567,7 +743,7 @@ def replace_block_between_manual_anchors(
     if end_anchor_text:
         for i in range(start_idx + 1, len(elements)):
             el = elements[i]
-            if el.tag == CT_P.tag:
+            if el.tag == paragraph_tag:
                 p_text = "".join([node.text or '' for node in el.iter() if node.tag.endswith('}t')]).strip()
                 if match_fn:
                     if match_fn(p_text, el, is_end=True):
@@ -580,7 +756,7 @@ def replace_block_between_manual_anchors(
         # Heuristic: next visually distinct paragraph (bold, all caps, or different font size), or end of document
         for i in range(start_idx + 1, len(elements)):
             el = elements[i]
-            if el.tag == CT_P.tag:
+            if el.tag == paragraph_tag:
                 # Check for bold, all caps, or font size
                 runs = [node for node in el.iter() if node.tag.endswith('}r')]
                 for run in runs:
