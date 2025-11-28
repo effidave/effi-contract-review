@@ -486,6 +486,32 @@ def register_tools():
         """
         return numbering_tools.extract_outline_structure(filename, max_level)
     
+    # Clause-based paragraph insertion tools
+    @mcp.tool()
+    def add_paragraph_after_clause(filename: str, clause_number: str, text: str,
+                                   style: str = None, inherit_numbering: bool = True):
+        """
+        Add a paragraph after a specific clause number.
+        
+        Uses NumberingInspector to find clauses by rendered number (e.g., '1.2.3', '7.1(a)')
+        and inserts content after them. If inherit_numbering is True, the new paragraph
+        will inherit the numId and ilvl from the target clause, creating a sibling at the
+        same level (e.g., after 7.1(a), it becomes 7.1(b)).
+        """
+        return content_tools.add_paragraph_after_clause(filename, clause_number, text, style, inherit_numbering)
+    
+    @mcp.tool()
+    def add_paragraphs_after_clause(filename: str, clause_number: str, paragraphs: list,
+                                    style: str = None, inherit_numbering: bool = True):
+        """
+        Add multiple paragraphs after a specific clause number.
+        
+        Adds multiple paragraphs sequentially after a clause, each inheriting the same
+        numbering properties. Useful for adding multiple items at the same level
+        (e.g., adding 7.1(b), 7.1(c), 7.1(d) after 7.1(a)).
+        """
+        return content_tools.add_paragraphs_after_clause(filename, clause_number, paragraphs, style, inherit_numbering)
+    
     # New table column width tools
     @mcp.tool()
     def set_table_column_width(filename: str, table_index: int, col_index: int, 

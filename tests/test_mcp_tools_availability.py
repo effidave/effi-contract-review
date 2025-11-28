@@ -69,6 +69,8 @@ EXPECTED_TOOLS = {
     "analyze_document_numbering",
     "get_numbering_summary",
     "extract_outline_structure",
+    "add_paragraph_after_clause",
+    "add_paragraphs_after_clause",
 }
 
 
@@ -492,6 +494,8 @@ def test_numbering_tools(mcp_tester):
         ("analyze_document_numbering", {"filename": str(numbered_doc), "debug": False, "include_non_numbered": False}),
         ("get_numbering_summary", {"filename": str(numbered_doc)}),
         ("extract_outline_structure", {"filename": str(numbered_doc), "max_level": None}),
+        ("add_paragraph_after_clause", {"filename": str(numbered_doc), "clause_number": "1", "text": "Test paragraph", "inherit_numbering": True}),
+        ("add_paragraphs_after_clause", {"filename": str(numbered_doc), "clause_number": "1.1", "paragraphs": ["Test 1", "Test 2"], "inherit_numbering": True}),
     ]
 
     for tool_name, params in tests:

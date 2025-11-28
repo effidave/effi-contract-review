@@ -22,6 +22,7 @@ from word_document_server.utils.document_utils import (
     replace_block_between_manual_anchors,
 )
 from word_document_server.core.styles import ensure_heading_style, ensure_table_style
+from docx.oxml.ns import qn
 
 
 def _parse_optional_bool(value: Optional[Any], field_name: str) -> Optional[bool]:
@@ -746,3 +747,281 @@ async def edit_run_text_tool(filename: str, paragraph_index: int, run_index: int
                    If not provided, replaces the entire run text
     """
     return edit_run_text(filename, paragraph_index, run_index, new_text, start_offset, end_offset)
+
+
+async def add_paragraph_after_clause(
+    filename: str,
+    clause_number: str,
+    text: str,
+    style: Optional[str] = None,
+    inherit_numbering: bool = True,
+) -> str:
+    """
+    Add a paragraph after a specific clause number, optionally inheriting its numbering.
+    
+    This tool uses the NumberingInspector to locate clauses by their rendered number
+    (e.g., "1.2.3", "5", "7.1(a)") and inserts content after them.
+    
+    Args:
+        filename: Path to the Word document
+        clause_number: The rendered clause number to find (e.g., "1.2.3", "5.1")
+        text: Text content to add
+        style: Optional style name to apply to the new paragraph
+        inherit_numbering: If True, inherit the numId and ilvl from the target clause
+                          (creating a sibling clause at the same level)
+    
+    Returns:
+        Success message or error description
+    """
+    from pathlib import Path
+    
+    try:
+        from effilocal.doc.numbering_inspector import NumberingInspector
+    except ImportError:
+        return (
+            "effilocal package not available. This tool requires effilocal for clause numbering analysis.\n"
+            "The effilocal package should be in the same workspace."
+        )
+    
+    filename = ensure_docx_extension(filename)
+    
+    if not os.path.exists(filename):
+        return f"Document {filename} does not exist"
+    
+    is_writeable, error_message = check_file_writeable(filename)
+    if not is_writeable:
+        return f"Cannot modify document: {error_message}. Consider creating a copy first or creating a new document."
+    
+    try:
+        # Use NumberingInspector to analyze the document
+        docx_path = Path(filename)
+        inspector = NumberingInspector.from_docx(docx_path)
+        rows, _ = inspector.analyze(debug=False)
+        
+        if not rows:
+            return f"No paragraphs found in {filename}"
+        
+        # Find the clause with matching rendered number
+        target_clause = None
+        target_index = None
+        
+        for row in rows:
+            rendered = row.get("rendered_number", "").strip()
+            # Normalize for comparison (remove trailing dots)
+            rendered_normalized = rendered.rstrip('.')
+            clause_normalized = clause_number.strip().rstrip('.')
+            
+            if rendered_normalized == clause_normalized:
+                target_clause = row
+                # The idx in the row corresponds to the paragraph index in the document
+                target_index = row.get("idx")
+                break
+        
+        if target_clause is None:
+            return f"Clause '{clause_number}' not found in {filename}"
+        
+        if target_index is None:
+            return f"Could not determine paragraph index for clause '{clause_number}'"
+        
+        # Load the document
+        doc = Document(filename)
+        
+        # Validate target_index
+        if target_index < 0 or target_index >= len(doc.paragraphs):
+            return f"Invalid paragraph index {target_index} for clause '{clause_number}'"
+        
+        # Get the target paragraph to extract numbering properties
+        target_paragraph = doc.paragraphs[target_index]
+        
+        # Insert new paragraph after target
+        # We need to insert into the XML structure directly
+        target_p = target_paragraph._p
+        parent = target_p.getparent()
+        target_position = list(parent).index(target_p)
+        
+        # Create new paragraph element
+        new_p = OxmlElement('w:p')
+        
+        # Add paragraph properties if needed
+        pPr = OxmlElement('w:pPr')
+        new_p.append(pPr)
+        
+        # Apply style if specified
+        if style:
+            pStyle = OxmlElement('w:pStyle')
+            pStyle.set(qn('w:val'), style)
+            pPr.append(pStyle)
+        elif target_paragraph.style:
+            # Inherit style from target if no style specified
+            pStyle = OxmlElement('w:pStyle')
+            pStyle.set(qn('w:val'), target_paragraph.style.style_id)
+            pPr.append(pStyle)
+        
+        # Inherit numbering properties if requested
+        if inherit_numbering:
+            num_id = target_clause.get("numId")
+            ilvl = target_clause.get("ilvl")
+            
+            if num_id is not None and num_id != "":
+                numPr = OxmlElement('w:numPr')
+                
+                # Add ilvl (level)
+                ilvl_elem = OxmlElement('w:ilvl')
+                ilvl_elem.set(qn('w:val'), str(ilvl if ilvl is not None else 0))
+                numPr.append(ilvl_elem)
+                
+                # Add numId
+                numId_elem = OxmlElement('w:numId')
+                numId_elem.set(qn('w:val'), str(num_id))
+                numPr.append(numId_elem)
+                
+                pPr.append(numPr)
+        
+        # Add text run
+        r = OxmlElement('w:r')
+        t = OxmlElement('w:t')
+        t.text = text
+        r.append(t)
+        new_p.append(r)
+        
+        # Insert after target paragraph
+        parent.insert(target_position + 1, new_p)
+        
+        doc.save(filename)
+        
+        numbering_info = ""
+        if inherit_numbering:
+            num_id = target_clause.get("numId")
+            ilvl = target_clause.get("ilvl")
+            if num_id:
+                numbering_info = f" with inherited numbering (numId={num_id}, level={ilvl})"
+        
+        return f"Paragraph added after clause '{clause_number}'{numbering_info} in {filename}"
+        
+    except Exception as exc:
+        return f"Failed to add paragraph after clause: {str(exc)}"
+
+
+async def add_paragraphs_after_clause(
+    filename: str,
+    clause_number: str,
+    paragraphs: List[str],
+    style: Optional[str] = None,
+    inherit_numbering: bool = True,
+) -> str:
+    """
+    Add multiple paragraphs after a specific clause number.
+    
+    This tool adds multiple paragraphs sequentially after a clause, each inheriting
+    the same numbering properties. This is useful for adding multiple items at the
+    same level (e.g., adding 7.1(b), 7.1(c), 7.1(d) after 7.1(a)).
+    
+    Args:
+        filename: Path to the Word document
+        clause_number: The rendered clause number to find (e.g., "1.2.3", "7.1(a)")
+        paragraphs: List of paragraph texts to add
+        style: Optional style name to apply to all new paragraphs
+        inherit_numbering: If True, all paragraphs inherit the numId and ilvl from the target clause
+    
+    Returns:
+        Success message with count of paragraphs added
+    """
+    if not paragraphs or not isinstance(paragraphs, list):
+        return "paragraphs parameter must be a non-empty list of strings"
+    
+    filename = ensure_docx_extension(filename)
+    
+    # Add first paragraph
+    result = await add_paragraph_after_clause(
+        filename, clause_number, paragraphs[0], style, inherit_numbering
+    )
+    
+    if "Failed" in result or "not found" in result or "does not exist" in result:
+        return result
+    
+    # If more paragraphs, add them sequentially
+    # Each one is added after the previous, maintaining the same level
+    if len(paragraphs) > 1:
+        try:
+            from pathlib import Path
+            from effilocal.doc.numbering_inspector import NumberingInspector
+            
+            for i, text in enumerate(paragraphs[1:], 1):
+                # Re-analyze document to find the last inserted paragraph
+                docx_path = Path(filename)
+                inspector = NumberingInspector.from_docx(docx_path)
+                rows, _ = inspector.analyze(debug=False)
+                
+                # Find all paragraphs with the same numId and ilvl as target
+                target_num_id = None
+                target_ilvl = None
+                
+                for row in rows:
+                    rendered = row.get("rendered_number", "").strip().rstrip('.')
+                    clause_normalized = clause_number.strip().rstrip('.')
+                    if rendered == clause_normalized:
+                        target_num_id = row.get("numId")
+                        target_ilvl = row.get("ilvl")
+                        break
+                
+                if target_num_id is None:
+                    break
+                
+                # Find the last paragraph with this numId and ilvl
+                last_matching_idx = None
+                for row in rows:
+                    if (row.get("numId") == target_num_id and 
+                        row.get("ilvl") == target_ilvl):
+                        last_matching_idx = row.get("idx")
+                
+                if last_matching_idx is None:
+                    continue
+                
+                # Insert after the last matching paragraph
+                doc = Document(filename)
+                if last_matching_idx >= len(doc.paragraphs):
+                    break
+                
+                target_paragraph = doc.paragraphs[last_matching_idx]
+                target_p = target_paragraph._p
+                parent = target_p.getparent()
+                target_position = list(parent).index(target_p)
+                
+                new_p = OxmlElement('w:p')
+                pPr = OxmlElement('w:pPr')
+                new_p.append(pPr)
+                
+                if style:
+                    pStyle = OxmlElement('w:pStyle')
+                    pStyle.set(qn('w:val'), style)
+                    pPr.append(pStyle)
+                elif target_paragraph.style:
+                    pStyle = OxmlElement('w:pStyle')
+                    pStyle.set(qn('w:val'), target_paragraph.style.style_id)
+                    pPr.append(pStyle)
+                
+                if inherit_numbering and target_num_id:
+                    numPr = OxmlElement('w:numPr')
+                    ilvl_elem = OxmlElement('w:ilvl')
+                    ilvl_elem.set(qn('w:val'), str(target_ilvl if target_ilvl is not None else 0))
+                    numPr.append(ilvl_elem)
+                    numId_elem = OxmlElement('w:numId')
+                    numId_elem.set(qn('w:val'), str(target_num_id))
+                    numPr.append(numId_elem)
+                    pPr.append(numPr)
+                
+                r = OxmlElement('w:r')
+                t = OxmlElement('w:t')
+                t.text = text
+                r.append(t)
+                new_p.append(r)
+                
+                parent.insert(target_position + 1, new_p)
+                doc.save(filename)
+            
+            return f"Added {len(paragraphs)} paragraph(s) after clause '{clause_number}' in {filename}"
+            
+        except Exception as exc:
+            return f"Added 1 paragraph successfully, but failed to add remaining paragraphs: {str(exc)}"
+    
+    return result
