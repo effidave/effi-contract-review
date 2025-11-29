@@ -490,17 +490,26 @@ def test_numbering_tools(mcp_tester):
         # Fallback to regular fixture
         numbered_doc = mcp_tester.fixture_file
     
+    # Create a temporary copy to avoid modifying the fixture
+    test_file = Path(tempfile.gettempdir()) / "test_numbering_tools.docx"
+    import shutil
+    shutil.copy2(numbered_doc, test_file)
+    
     tests = [
-        ("analyze_document_numbering", {"filename": str(numbered_doc), "debug": False, "include_non_numbered": False}),
-        ("get_numbering_summary", {"filename": str(numbered_doc)}),
-        ("extract_outline_structure", {"filename": str(numbered_doc), "max_level": None}),
-        ("add_paragraph_after_clause", {"filename": str(numbered_doc), "clause_number": "1", "text": "Test paragraph", "inherit_numbering": True}),
-        ("add_paragraphs_after_clause", {"filename": str(numbered_doc), "clause_number": "1.1", "paragraphs": ["Test 1", "Test 2"], "inherit_numbering": True}),
+        ("analyze_document_numbering", {"filename": str(test_file), "debug": False, "include_non_numbered": False}),
+        ("get_numbering_summary", {"filename": str(test_file)}),
+        ("extract_outline_structure", {"filename": str(test_file), "max_level": None}),
+        ("add_paragraph_after_clause", {"filename": str(test_file), "clause_number": "1", "text": "Test paragraph", "inherit_numbering": True}),
+        ("add_paragraphs_after_clause", {"filename": str(test_file), "clause_number": "1", "paragraphs": ["Test 1", "Test 2"], "inherit_numbering": True}),
     ]
 
-    for tool_name, params in tests:
-        result = mcp_tester.call_mcp_tool(tool_name, **params)
-        assert result["success"], f"{tool_name} failed: {result.get('error')}"
+    try:
+        for tool_name, params in tests:
+            result = mcp_tester.call_mcp_tool(tool_name, **params)
+            assert result["success"], f"{tool_name} failed: {result.get('error')}"
+    finally:
+        if test_file.exists():
+            test_file.unlink()
 
 
 def test_all_expected_tools_were_called(mcp_tester):

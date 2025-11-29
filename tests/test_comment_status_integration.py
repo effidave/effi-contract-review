@@ -57,7 +57,7 @@ def test_integration():
         
         if missing:
             print(f"❌ Missing fields: {missing}")
-            return False
+            assert False, f"Missing fields: {missing}"
         else:
             print(f"✓ All required fields present: {required_fields}")
             print(f"  Sample comment status: {comment.get('status')}")
@@ -87,7 +87,7 @@ def test_integration():
         print(f"   - has 'status': {all_have_status}")
         print(f"   - has 'is_resolved': {all_have_resolved}")
         print(f"   - has 'done_flag': {all_have_flag}")
-        return False
+        assert False, "Status consistency check failed"
     
     # Cleanup
     test_doc_path.unlink(missing_ok=True)
@@ -95,7 +95,6 @@ def test_integration():
     print("\n" + "=" * 80)
     print("✓ All integration tests passed!")
     print("=" * 80)
-    return True
 
 
 if __name__ == "__main__":

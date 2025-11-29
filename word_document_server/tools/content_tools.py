@@ -5,6 +5,7 @@ These tools add various types of content to Word documents,
 including headings, paragraphs, tables, images, and page breaks.
 """
 import os
+import uuid
 from typing import List, Optional, Any
 from docx import Document
 from docx.shared import Inches, Pt, RGBColor
@@ -12,6 +13,7 @@ from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 
 from word_document_server.utils.file_utils import check_file_writeable, ensure_docx_extension
+from word_document_server.tools.attachment_tools import add_custom_para_id
 from word_document_server.utils.document_utils import (
     find_and_replace_text,
     edit_run_text,
@@ -929,6 +931,9 @@ async def add_paragraph_after_clause(
         r.append(t)
         new_p.append(r)
         
+        # Add custom para ID for tracking
+        custom_id = add_custom_para_id(new_p)
+        
         # Insert after target paragraph
         parent.insert(target_position + 1, new_p)
         
@@ -944,7 +949,7 @@ async def add_paragraph_after_clause(
             elif numbering_source == "style" and target_paragraph.style:
                 numbering_info = f" with inherited numbering (source={numbering_source}, style={target_paragraph.style.style_id})"
         
-        return f"Paragraph added after clause '{clause_number}'{numbering_info} in {filename}"
+        return f"Paragraph added after clause '{clause_number}'{numbering_info} in {filename} (para_id={custom_id})"
         
     except Exception as exc:
         return f"Failed to add paragraph after clause: {str(exc)}"

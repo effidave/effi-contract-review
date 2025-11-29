@@ -26,7 +26,8 @@ from word_document_server.tools import (
     footnote_tools,
     extended_document_tools,
     comment_tools,
-    numbering_tools
+    numbering_tools,
+    attachment_tools
 )
 
 def get_transport_config():
@@ -511,6 +512,53 @@ def register_tools():
         (e.g., adding 7.1(b), 7.1(c), 7.1(d) after 7.1(a)).
         """
         return content_tools.add_paragraphs_after_clause(filename, clause_number, paragraphs, style, inherit_numbering)
+    
+    # Attachment-based paragraph insertion tools
+    @mcp.tool()
+    def add_paragraph_after_attachment(filename: str, attachment_identifier: str, text: str,
+                                       style: str = None, inherit_numbering: bool = True):
+        """
+        Add a paragraph after a specific attachment (Schedule, Annex, Exhibit, etc.).
+        
+        Locates attachments by their identifier (e.g., "Schedule 1", "Annex A", "Exhibit B")
+        and inserts content after the entire attachment section.
+        
+        Examples:
+        - "Schedule 1" -> finds Schedule 1 and inserts after its content
+        - "Annex A" -> finds Annex A and inserts after its content
+        - "Exhibit B" -> finds Exhibit B and inserts after its content
+        """
+        return attachment_tools.add_paragraph_after_attachment(filename, attachment_identifier, text, style, inherit_numbering)
+    
+    @mcp.tool()
+    def add_paragraphs_after_attachment(filename: str, attachment_identifier: str, paragraphs: list,
+                                        style: str = None, inherit_numbering: bool = True):
+        """
+        Add multiple paragraphs after a specific attachment.
+        
+        Adds multiple paragraphs sequentially after an attachment section (Schedule, Annex, Exhibit).
+        Useful for adding multiple items after a schedule or annex.
+        """
+        return attachment_tools.add_paragraphs_after_attachment(filename, attachment_identifier, paragraphs, style, inherit_numbering)
+    
+    @mcp.tool()
+    def add_new_attachment_after(filename: str, after_attachment: str, new_attachment_text: str,
+                                 content: str = None):
+        """
+        Add a new attachment (Schedule, Annex, Exhibit) after an existing attachment.
+        
+        Creates a new attachment header with the same style and formatting as the reference
+        attachment. Use this when you need to add "Schedule 5" after "Schedule 4", or
+        "Annex B" after "Annex A", etc.
+        
+        The tool automatically copies the formatting (style, font, size, color) from the
+        reference attachment to ensure consistency.
+        
+        Examples:
+        - "Add Schedule 5 after Schedule 4" → add_new_attachment_after("doc.docx", "Schedule 4", "Schedule 5 - New Services")
+        - "Add Annex B after Annex A" → add_new_attachment_after("doc.docx", "Annex A", "Annex B - Additional Terms")
+        """
+        return attachment_tools.add_new_attachment_after(filename, after_attachment, new_attachment_text, content)
     
     # New table column width tools
     @mcp.tool()

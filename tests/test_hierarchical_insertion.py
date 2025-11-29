@@ -34,12 +34,12 @@ async def test_insert_after_parent_skips_children(temp_numbered_doc):
     
     Document structure (from numbering_decimal.docx):
     1. Section 1
-    2. Test paragraph
-    3. Test paragraph
-    3.1 Section 1.1
-    3.1.1 Section 1.1.1
-    3.2 Section 1.2
-    4. Section 2
+    2. Section 2
+    3. Section 3
+    3.1 Section 3.1
+    3.1.1 Section 3.1.1
+    3.2 Section 3.2
+    4. Section 4
     
     When inserting after "3", should insert after "3.2" (before "4").
     """

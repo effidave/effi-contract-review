@@ -7,6 +7,9 @@ from docx import Document
 # Target for testing: convert_to_pdf (async function)
 from word_document_server.tools.extended_document_tools import convert_to_pdf
 
+# Skip this test by default since it launches Microsoft Word on Windows
+pytestmark = pytest.mark.skip(reason="Skipped by default - launches Microsoft Word on Windows. Run with: pytest -m word_automation")
+
 
 def _make_sample_docx(path: Path) -> None:
     """Generates a simple .docx file in a temporary directory."""

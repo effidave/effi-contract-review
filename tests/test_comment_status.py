@@ -26,7 +26,7 @@ def test_extract_comment_status_from_fixtures():
     
     if not comments_extended_path.exists():
         print(f"❌ Fixture file not found: {comments_extended_path}")
-        return False
+        assert False, f"Fixture file not found: {comments_extended_path}"
     
     try:
         from lxml import etree
@@ -64,14 +64,13 @@ def test_extract_comment_status_from_fixtures():
             print(f"  - paraId: {para_id}, done: {done_flag}, status: {status}")
         
         print(f"✓ Status extraction working: {status_count_active} active, {status_count_resolved} resolved")
-        return True
         
     except ImportError:
         print("⚠ lxml not installed, trying with docx library instead")
         return test_with_docx_library()
     except Exception as e:
         print(f"❌ Error parsing fixture: {e}")
-        return False
+        assert False, f"Error parsing fixture: {e}"
 
 
 def test_with_docx_library():
@@ -84,11 +83,10 @@ def test_with_docx_library():
         # For now, we'll test the core functions directly
         
         print("✓ Comment status extraction functions imported successfully")
-        return True
         
     except Exception as e:
         print(f"❌ Error: {e}")
-        return False
+        assert False, f"Error: {e}"
 
 
 if __name__ == "__main__":
