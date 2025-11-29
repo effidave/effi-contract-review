@@ -203,12 +203,8 @@ async def add_paragraph_after_clause(
             "The effilocal package should be in the same workspace."
         )
     
-    # Import add_custom_para_id from attachment_tools (now in effilocal)
-    try:
-        from effilocal.mcp_server.tools.attachment_tools import add_custom_para_id
-    except ImportError:
-        # Fallback to word_document_server version if not migrated yet
-        from word_document_server.tools.attachment_tools import add_custom_para_id
+    # Import add_custom_para_id from attachment_tools (effilocal only - not in upstream)
+    from effilocal.mcp_server.tools.attachment_tools import add_custom_para_id
     
     filename = ensure_docx_extension(filename)
     
@@ -332,9 +328,8 @@ async def add_paragraph_after_clause(
         # Insert into document
         parent.insert(target_position + 1, new_p)
         
-        # Add custom para_id for future reference
-        custom_id = str(uuid.uuid4())
-        add_custom_para_id(new_p, custom_id)
+        # Add custom para_id for future reference (function generates and returns UUID)
+        custom_id = add_custom_para_id(new_p)
         
         doc.save(filename)
         
