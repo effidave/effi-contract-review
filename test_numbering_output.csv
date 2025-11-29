@@ -1,0 +1,671 @@
+idx,paraId,styleId,numId,abstractNumId,ilvl,rendered_number,counters,text
+0,3DD8236A,IntroDefault,,,,,,This agreement is dated [DATE]
+1,27D37A9E,DescriptiveHeading,,,,,,Parties
+2,7713C275,Parties,5,22,0,(1),"[1, 0, 0, 0, 0, 0, 0, 0, 0]",[FULL COMPANY NAME] incorporated and registered in England and Wales with company number [NUMBER] whose registered office is at [REGISTERED OFFICE ADDRESS] (Supplier)
+3,4C17F226,Parties,5,22,0,(2),"[2, 0, 0, 0, 0, 0, 0, 0, 0]","Norton Motorcycle Co. Limited incorporated and registered in England and Wales with company number 12545195 whose registered office is at Unit 500 Solar Park, Highlands Road, Solihull, United Kingdom, B90 4SH (Norton)"
+4,4DB16828,DescriptiveHeading,,,,,,BACKGROUND
+5,29F5A3E5,Background,1,19,0,(A),"[1, 0, 0, 0, 0, 0, 0, 0, 0]",Norton is a manufacturer and seller of motorcycles and related components.
+6,4F9D481B,Background,1,19,0,(B),"[2, 0, 0, 0, 0, 0, 0, 0, 0]",The Supplier is in the business of providing engineering consultancy and research and development services.
+7,5FE40B53,Background,1,19,0,(C),"[3, 0, 0, 0, 0, 0, 0, 0, 0]","Norton wishes to engage the Supplier to provide research and development Services on various Work Packages to achieve certain Project Objectives, as more particularly described in this agreement."
+8,4A934EFC,Background,1,19,0,(D),"[4, 0, 0, 0, 0, 0, 0, 0, 0]","The parties have agreed to adopt a Development Approach involving iterative development, regular technical reviews and adaptive planning based on ongoing results and findings."
+9,1049FF9A,DescriptiveHeading,,,,,,Agreed terms
+10,01DF7990,TitleClause,24,0,0,1.,"[1, 0, 0, 0, 0, 0, 0, 0, 0]",Interpretation
+11,754728C8,ParaClause,,,,,,The following definitions and rules of interpretation apply in this agreement.
+12,45F46596,Untitledsubclause1,24,0,1,1.1,"[1, 1, 0, 0, 0, 0, 0, 0, 0]",Definitions.
+13,4BEA0FAC,DefinedTermPara,22,21,0,,"[1, 0, 0, 0, 0, 0, 0, 0, 0]","Affiliate: in relation to a party, any entity that directly or indirectly controls, is controlled by, or is under common control with that party from time to time."
+14,6D680DB4,DefinedTermPara,22,21,0,,"[2, 0, 0, 0, 0, 0, 0, 0, 0]","Development Approach: an iterative research and development methodology involving regular evaluation and progress reviews, adaptive development planning based on technical findings and evolving Project Objectives, co-operation between the parties' technical teams, contribution to Completion Reports and participation in regular meetings as reasonably required by Norton and maintenance of comprehensive documentation and provision of knowledge transfer sessions as may be requested by Norton, as may be further described in Schedule 5."
+15,4BE29286,DefinedTermPara,22,21,0,,"[3, 0, 0, 0, 0, 0, 0, 0, 0]","Applicable Laws: all applicable laws, statutes, regulations and codes from time to time in force."
+16,4E1BFA51,DefinedTermPara,22,21,0,,"[4, 0, 0, 0, 0, 0, 0, 0, 0]","Business Day: a day, other than a Saturday, Sunday or public holiday in England, when banks in London are open for business."
+17,225ED4E3,DefinedTermPara,22,21,0,,"[5, 0, 0, 0, 0, 0, 0, 0, 0]","Background Intellectual Property: any Intellectual Property Rights, other than Foreground Intellectual Property, that are used in connection with the Services."
+18,2B19CBAD,DefinedTermPara,22,21,0,,"[6, 0, 0, 0, 0, 0, 0, 0, 0]",Business Hours: the period from 9.00 am to 5.00 pm on any Business Day.
+19,17A78311,DefinedTermPara,22,21,0,,"[7, 0, 0, 0, 0, 0, 0, 0, 0]","Change: a change to the scope, nature, volume or execution of the Services under this agreement."
+20,105BE724,DefinedTermPara,22,21,0,,"[8, 0, 0, 0, 0, 0, 0, 0, 0]",Change Control Note: the written record of any Change agreed or to be agreed by the parties under clause 8.
+21,30BEF9E4,DefinedTermPara,22,21,0,,"[9, 0, 0, 0, 0, 0, 0, 0, 0]","Charges: the fees payable for the Services, as set out in Schedule 2."
+22,298560F1,DefinedTermPara,22,21,0,,"[10, 0, 0, 0, 0, 0, 0, 0, 0]","Completion Report: a written report prepared and agreed by the Supplier and Norton at the completion of each Work Package, incorporating details of the Services performed, results achieved, any Foreground Intellectual Property arising (or potentially arising) and recommendations as may be agreed between the parties."
+23,7CE4D178,DefinedTermPara,22,21,0,,"[11, 0, 0, 0, 0, 0, 0, 0, 0]","Confidential Information: all information (however recorded or preserved) that one party or any of its Affiliates (discloser) discloses or makes available to the other party or any of its Affiliates (recipient) in connection with this agreement and which is designated as confidential or would be regarded as confidential by a reasonable business person. It includes the terms of this agreement, Norton Materials and any information of a confidential nature relating to the business, operations, customers, suppliers, plans, processes, products, trade secrets or know-how of the discloser. It does not include information that:"
+24,7144D337,DefinedTermNumber,22,21,1,a),"[11, 1, 0, 0, 0, 0, 0, 0, 0]",is or becomes generally available to the public (other than as a result of the recipient's breach);
+25,7867D119,DefinedTermNumber,22,21,1,b),"[11, 2, 0, 0, 0, 0, 0, 0, 0]",can be shown by the recipient to have been known to it on a non-confidential basis before disclosure by the discloser;
+26,41CDB07B,DefinedTermNumber,22,21,1,c),"[11, 3, 0, 0, 0, 0, 0, 0, 0]","was, is or becomes available to the recipient on a non-confidential basis from a person who, to the recipient's knowledge, is not bound by a confidentiality agreement with the discloser or otherwise prohibited from disclosing the information to the recipient; or"
+27,0AF83707,DefinedTermNumber,22,21,1,d),"[11, 4, 0, 0, 0, 0, 0, 0, 0]",the parties agree in writing is not confidential or may be disclosed.
+28,6F63C0EF,DefinedTermPara,22,21,0,,"[12, 0, 0, 0, 0, 0, 0, 0, 0]","Contract Manager: Norton Contract Manager or Supplier Contract Manager, as the case may be."
+29,60ED9645,DefinedTermPara,22,21,0,,"[13, 0, 0, 0, 0, 0, 0, 0, 0]",Contract Year: each 12-month period starting on the Effective Date or an anniversary of it.
+30,15AAC23D,DefinedTermPara,22,21,0,,"[14, 0, 0, 0, 0, 0, 0, 0, 0]","control: has the meaning given in section 1124 of the Corporation Tax Act 2010 and controls, controlled and the expression change of control shall be interpreted accordingly."
+31,52EA6A96,DefinedTermPara,22,21,0,,"[15, 0, 0, 0, 0, 0, 0, 0, 0]","Deliverables: all documents, products, designs, software, reports, specifications, plans, prototypes, technical documentation, test results, Completion Reports and other materials or items of any kind developed or created as part of or in connection with the Services, including any deliverables specified in Schedule 1."
+32,0607E0D3,DefinedTermPara,22,21,0,,"[16, 0, 0, 0, 0, 0, 0, 0, 0]",Effective Date: has the meaning given in clause 2.1.
+33,7748BA71,DefinedTermPara,22,21,0,,"[17, 0, 0, 0, 0, 0, 0, 0, 0]",Foreground Intellectual Property: any Intellectual Property Rights that arise in the course of or in connection with the Services.
+34,3C257F4E,DefinedTermPara,22,21,0,,"[18, 0, 0, 0, 0, 0, 0, 0, 0]",Effective Date: has the meaning given in clause 2.1.
+35,0591AFBA,DefinedTermPara,22,21,0,,"[19, 0, 0, 0, 0, 0, 0, 0, 0]","Intellectual Property Rights: patents, utility models, rights to inventions, copyright and neighbouring and related rights, moral rights, trade marks and service marks, business names and domain names, rights in get-up and trade dress, goodwill and the right to sue for passing off or unfair competition, rights in designs, rights in computer software, database rights, rights to use and protect the confidentiality of confidential information (including know-how and trade secrets) and all other intellectual property rights, in each case whether registered or unregistered and including all applications and rights to apply for and be granted renewals or extensions of, or to claim priority from, those rights and all similar or equivalent rights or forms of protection which subsist or will subsist now or in the future in any part of the world."
+36,410F249F,DefinedTermPara,22,21,0,,"[20, 0, 0, 0, 0, 0, 0, 0, 0]","Key Milestone Date: a Milestone Date which is identified as ""key"" in Schedule 1 or by the written agreement of the parties."
+37,7CFCCE7C,DefinedTermPara,22,21,0,,"[21, 0, 0, 0, 0, 0, 0, 0, 0]",Key Personnel: the individuals identified as key personnel in Schedule 3 or any replacement individuals appointed by the Supplier pursuant to clause 6.3.
+38,098A6C60,DefinedTermPara,22,21,0,,"[22, 0, 0, 0, 0, 0, 0, 0, 0]","Losses: all liabilities, damages, losses (including loss of profits, loss of business, loss of reputation, loss of savings and loss of opportunity), fines, awards, expenses and costs (including all interest, penalties, legal costs (calculated on a full indemnity basis) and reasonable professional costs and expenses)."
+39,1E6C6622,DefinedTermPara,22,21,0,,"[23, 0, 0, 0, 0, 0, 0, 0, 0]","Mandatory Policies: Norton's business policies and codes listed in Schedule 4, as updated by notification to the Supplier from time to time."
+40,3F96F63A,DefinedTermPara,22,21,0,,"[24, 0, 0, 0, 0, 0, 0, 0, 0]","Milestone: any event, task or phase of the Services described as a milestone in Schedule 1."
+41,1D70DAAD,DefinedTermPara,22,21,0,,"[25, 0, 0, 0, 0, 0, 0, 0, 0]","Milestone Date: a date by which a Milestone is to be completed, as set out in Schedule 1 or agreed by the parties in writing from time to time."
+42,0D81DCE4,DefinedTermPara,22,21,0,,"[26, 0, 0, 0, 0, 0, 0, 0, 0]","Norton Contract Manager: Norton's principal point(s) of contact for managing the Services on behalf of Norton, being the (or each) individual identified as such in Schedule 3 or any replacement individual(s) appointed under clause 12.1."
+43,4A03D997,DefinedTermPara,22,21,0,,"[27, 0, 0, 0, 0, 0, 0, 0, 0]","Norton Equipment: any equipment, including tools, systems, cabling or facilities, provided by or on behalf of Norton to the Supplier and which is used directly or indirectly in the supply of the Services, including any items specified in Schedule 1."
+44,10BF49A1,DefinedTermPara,22,21,0,,"[28, 0, 0, 0, 0, 0, 0, 0, 0]","Norton Materials: all documents, information, software, items and materials in any form (whether owned by Norton or a third party), which are provided by Norton to the Supplier in connection with the Services, including the items provided pursuant to clause 7.1(c)."
+45,15785BD0,DefinedTermPara,22,21,0,,"[29, 0, 0, 0, 0, 0, 0, 0, 0]",Regulator: each person having regulatory or supervisory authority over all or any part of this agreement or Norton's or any Norton Affiliate's business.
+46,4567087D,DefinedTermPara,22,21,0,,"[30, 0, 0, 0, 0, 0, 0, 0, 0]","Project: the overall development work to be carried out by the Supplier under this agreement, working closely with Norton and comprising the Work Packages set out in Schedule 1, as the same may be amended from time to time by mutual written agreement."
+47,1CBD79A8,DefinedTermPara,22,21,0,,"[31, 0, 0, 0, 0, 0, 0, 0, 0]","Project Objectives: the technical goals, success criteria, deliverable specifications and expected outcomes for each Work Package, including performance targets, evaluation criteria and review milestones, as agreed in writing."
+48,2BF0D822,DefinedTermPara,22,21,0,,"[32, 0, 0, 0, 0, 0, 0, 0, 0]","Services: research, development, design, prototyping and testing activities and any other services agreed by the parties, including the services set out in Schedule 1."
+49,51A0495F,DefinedTermPara,22,21,0,,"[33, 0, 0, 0, 0, 0, 0, 0, 0]","Non-Norton Background Intellectual Property: all Background Intellectual Property owned by the Supplier or any third party (other than an Affiliate of Norton), including the Intellectual Property Rights in the Supplier Materials and Third Party Materials."
+50,0D2BA41F,DefinedTermPara,22,21,0,,"[34, 0, 0, 0, 0, 0, 0, 0, 0]","Supplier Contract Manager: the principal point(s) of contact for managing the Services on behalf of the Supplier, being the (or each) individual identified in Schedule 3 or any replacement individual(s) appointed by the Supplier under clause 12.1."
+51,5E43EE3C,DefinedTermPara,22,21,0,,"[35, 0, 0, 0, 0, 0, 0, 0, 0]","Supplier Equipment: the hardware, tools, systems, cabling, devices or other equipment used by the Supplier or its subcontractors in the supply of the Services, including any items specified in Schedule 1 but excluding any items which are provided by Norton."
+52,6F175DBE,DefinedTermPara,22,21,0,,"[36, 0, 0, 0, 0, 0, 0, 0, 0]","Supplier Materials: all documents, information, software, items and other materials in any form created prior to the Effective Date or wholly outside the scope of this agreement by the Supplier or its suppliers or licensors and which are used to perform the Services or provided or made available to Norton in connection with this agreement."
+53,6E743C14,DefinedTermPara,22,21,0,,"[37, 0, 0, 0, 0, 0, 0, 0, 0]","Supplier Personnel: all employees, workers, agents, consultants, contractors and other representatives of the Supplier, or any of its subcontractors, who are engaged in the performance of this agreement from time to time and Supplier Person means any of them."
+54,7C31C76B,DefinedTermPara,22,21,0,,"[38, 0, 0, 0, 0, 0, 0, 0, 0]",Term: has the meaning given in clause 2.1.
+55,1CBC5354,DefinedTermPara,22,21,0,,"[39, 0, 0, 0, 0, 0, 0, 0, 0]","Third Party Materials: all documents, information, software, items and other materials in any form belonging to a third party (other than an Affiliate of Norton) which the Supplier uses or wants to use in connection with the Services."
+56,7FD56FF0,DefinedTermPara,22,21,0,,"[40, 0, 0, 0, 0, 0, 0, 0, 0]","Work Package: a discrete package of Services with defined scope, deliverables, timeline, Project Objectives and Completion Report requirements, as set out in Schedule 1 or agreed by the parties in writing following joint evaluation and planning."
+57,3A3453C2,DefinedTermPara,22,21,0,,"[41, 0, 0, 0, 0, 0, 0, 0, 0]",VAT: value added tax or any equivalent tax chargeable in the UK or elsewhere.
+58,047DFFD7,Untitledsubclause1,24,0,1,1.2,"[1, 2, 0, 0, 0, 0, 0, 0, 0]","Clause, Schedule and paragraph headings do not affect the interpretation of this agreement."
+59,70CC7DB8,Untitledsubclause1,24,0,1,1.3,"[1, 3, 0, 0, 0, 0, 0, 0, 0]","A person includes a natural person, corporate or unincorporated body (whether or not having separate legal personality)."
+60,6FFFF8E5,Untitledsubclause1,24,0,1,1.4,"[1, 4, 0, 0, 0, 0, 0, 0, 0]",The Schedules form part of this agreement and have effect as if set out in full in the body of this agreement. Any reference to this agreement includes the Schedules.
+61,49FC6F8A,Untitledsubclause1,24,0,1,1.5,"[1, 5, 0, 0, 0, 0, 0, 0, 0]","A reference to a company includes any company, corporation or other body corporate, wherever and however incorporated or established."
+62,744FCED5,Untitledsubclause1,24,0,1,1.6,"[1, 6, 0, 0, 0, 0, 0, 0, 0]","Unless the context otherwise requires, words in the singular include the plural and in the plural include the singular."
+63,34BEA915,Untitledsubclause1,24,0,1,1.7,"[1, 7, 0, 0, 0, 0, 0, 0, 0]","This agreement is binding on and enures to the benefit of, the parties to this agreement and their respective personal representatives, successors and permitted assigns and references to any party include that party's personal representatives, successors and permitted assigns."
+64,11694D18,Untitledsubclause1,24,0,1,1.8,"[1, 8, 0, 0, 0, 0, 0, 0, 0]","Unless expressly provided otherwise in this agreement, a reference to legislation or a legislative provision:"
+65,0FBF499E,Untitledsubclause2,24,0,2,(a),"[1, 8, 1, 0, 0, 0, 0, 0, 0]","is a reference to it as amended, extended or re-enacted from time to time; and"
+66,3877F935,Untitledsubclause2,24,0,2,(b),"[1, 8, 2, 0, 0, 0, 0, 0, 0]",includes all subordinate legislation made from time to time under that legislation or legislative provision.
+67,6DA032AE,Untitledsubclause1,24,0,1,1.9,"[1, 9, 0, 0, 0, 0, 0, 0, 0]",A reference to writing or written excludes fax but not email.
+68,35C5218A,Untitledsubclause1,24,0,1,1.10,"[1, 10, 0, 0, 0, 0, 0, 0, 0]",Any obligation on a party not to do something includes an obligation not to allow that thing to be done.
+69,66A48D5D,Untitledsubclause1,24,0,1,1.11,"[1, 11, 0, 0, 0, 0, 0, 0, 0]","A reference to this agreement or to any other agreement or document is a reference to this agreement or that other agreement or document, in each case as varied from time to time."
+70,51D007A5,Untitledsubclause1,24,0,1,1.12,"[1, 12, 0, 0, 0, 0, 0, 0, 0]",References to clauses and Schedules are to the clauses and Schedules of this agreement and references to paragraphs are to paragraphs of the relevant Schedule.
+71,34C21D22,Untitledsubclause1,24,0,1,1.13,"[1, 13, 0, 0, 0, 0, 0, 0, 0]","Any words following the terms including, include, in particular, for example or any similar expression shall be interpreted as illustrative and shall not limit the sense of the words preceding those terms."
+72,15E4732D,TitleClause,24,0,0,2.,"[2, 0, 0, 0, 0, 0, 0, 0, 0]",Commencement and duration
+73,7823464F,Untitledsubclause1,24,0,1,2.1,"[2, 1, 0, 0, 0, 0, 0, 0, 0]","This agreement starts on the date when it has been signed by all the parties (Effective Date) and continues, unless terminated earlier in accordance with clause 19 (Termination), until the completion of all existing Work Packages in relation to the Project.  If the parties subsequently agree any further Work Package(s), this agreement shall be deemed to be extended until completion of such Work Package(s)."
+74,7C4D310B,Untitledsubclause1,24,0,1,2.2,"[2, 2, 0, 0, 0, 0, 0, 0, 0]",The Supplier shall provide the Services to Norton in accordance with this agreement from the Effective Date.
+75,385F6603,TitleClause,24,0,0,3.,"[3, 0, 0, 0, 0, 0, 0, 0, 0]",Non-exclusivity and Norton Affiliates
+76,3ED95409,Untitledsubclause1,24,0,1,3.1,"[3, 1, 0, 0, 0, 0, 0, 0, 0]",The supply of Services under this agreement is not an exclusive arrangement. Norton may purchase services that are the same as or similar to the Services from any third party or provide them itself.
+77,3279BA08,Untitledsubclause1,24,0,1,3.2,"[3, 2, 0, 0, 0, 0, 0, 0, 0]",Norton's Affiliates may receive Services under this agreement.
+78,02E299CE,Untitledsubclause1,24,0,1,3.3,"[3, 3, 0, 0, 0, 0, 0, 0, 0]","Norton may require the Supplier to enter into a written agreement with any of its Affiliates that incorporates the terms of this agreement and creates a direct relationship between the Supplier and the Affiliate (Adoption Agreement). Alternatively, Norton may require the Supplier to provide Services to an Affiliate without an Adoption Agreement in which case:"
+79,4A331F98,Untitledsubclause2,24,0,2,(a),"[3, 3, 1, 0, 0, 0, 0, 0, 0]",Norton shall procure that the Affiliate complies with the terms of this agreement as if it were a party to this agreement in place of Norton;
+80,264FE70F,Untitledsubclause2,24,0,2,(b),"[3, 3, 2, 0, 0, 0, 0, 0, 0]",Norton shall be liable for the acts and omissions of the Affiliate as if they were its own acts and omissions;
+81,625FF6F3,Untitledsubclause2,24,0,2,(c),"[3, 3, 3, 0, 0, 0, 0, 0, 0]",the Supplier shall invoice the Affiliate for the Charges and other costs and expenses incurred in relation to the Services provided to the Affiliate;
+82,1691B394,Untitledsubclause2,24,0,2,(d),"[3, 3, 4, 0, 0, 0, 0, 0, 0]",the Supplier shall deal with the Affiliate as if it were a party to this agreement in place of Norton. The Affiliate shall have the same rights as Norton under this agreement and may enforce its terms against the Supplier; and
+83,6EA2EC6F,Untitledsubclause2,24,0,2,(e),"[3, 3, 5, 0, 0, 0, 0, 0, 0]","Norton may, as agent and trustee, enforce the terms of this agreement on behalf of any of its Affiliates and for this purpose Norton may recover the Affiliate's Losses as if they were its own. In any case in which Norton does enforce any term in this agreement on behalf of an Affiliate under this clause 3.3(e), that Affiliate may not exercise its rights under clause 3.3(d).]"
+84,7B555CF3,TitleClause,24,0,0,4.,"[4, 0, 0, 0, 0, 0, 0, 0, 0]",Supplier's responsibilities
+85,14DBD595,Untitledsubclause1,24,0,1,4.1,"[4, 1, 0, 0, 0, 0, 0, 0, 0]",The Supplier shall:
+86,509D7FFB,Untitledsubclause2,24,0,2,(a),"[4, 1, 1, 0, 0, 0, 0, 0, 0]",provide the Services and Deliverables in accordance with the terms and conditions of this agreement;
+87,4543ABA1,Untitledsubclause2,24,0,2,(b),"[4, 1, 2, 0, 0, 0, 0, 0, 0]","ensure that the Services and Deliverables conform to the Project Objectives, specifications, requirements and standards set out in Schedule 1 and that the Deliverables are fit for any purpose expressly or implicitly made known to the Supplier by Norton;"
+88,501C2B76,Untitledsubclause2,24,0,2,(c),"[4, 1, 3, 0, 0, 0, 0, 0, 0]","perform the Services with the care, skill and diligence expected from a supplier highly skilled and experienced in providing services similar to the Services;"
+89,63BC1DE4,Untitledsubclause2,24,0,2,(d),"[4, 1, 4, 0, 0, 0, 0, 0, 0]","ensure that the Deliverables and all goods, materials, standards and techniques used in providing the Services, are of the standard expected of a market-leading provider of similar services and are free from defects in workmanship, installation and design in all material respects;"
+90,42D38D5E,Untitledsubclause2,24,0,2,(e),"[4, 1, 5, 0, 0, 0, 0, 0, 0]",co-operate with Norton in all matters relating to the Services and comply with Norton's reasonable instructions as to the performance of the Services;
+91,48E32B4F,Untitledsubclause2,24,0,2,(f),"[4, 1, 6, 0, 0, 0, 0, 0, 0]","provide Norton with information, advice and training as reasonably required by Norton to make effective use of the Services;"
+92,4E015F93,Untitledsubclause2,24,0,2,(g),"[4, 1, 7, 0, 0, 0, 0, 0, 0]","maintain all licences, consents and permissions needed to supply the Services in accordance with this agreement, excluding any licences, consents and permissions that Norton has agreed in writing to maintain;"
+93,25BC5721,Untitledsubclause2,24,0,2,(h),"[4, 1, 8, 0, 0, 0, 0, 0, 0]",hold all Norton Materials in safe custody at its own risk and maintain Norton Materials in good condition until returned to Norton and not dispose of or use Norton Materials other than in accordance with Norton's written instructions or authorisations;
+94,456766D4,Untitledsubclause2,24,0,2,(i),"[4, 1, 9, 0, 0, 0, 0, 0, 0]",take good care of Norton Equipment in its possession or control;
+95,2AE0A4B0,Untitledsubclause2,24,0,2,(j),"[4, 1, 10, 0, 0, 0, 0, 0, 0]","not do or omit to do anything which may cause Norton to lose any licence, authority, consent or permission on which it relies for the purposes of conducting its business;"
+96,071ACD55,Untitledsubclause2,24,0,2,(k),"[4, 1, 11, 0, 0, 0, 0, 0, 0]",notify Norton in writing immediately on the occurrence of a change of control of the Supplier;
+97,2A43DDBE,Untitledsubclause2,24,0,2,(l),"[4, 1, 12, 0, 0, 0, 0, 0, 0]",work co-operatively with Norton's technical teams and provide regular access to personnel as reasonably required for the performance of the Services; and
+98,089E8DC8,Untitledsubclause2,24,0,2,(m),"[4, 1, 13, 0, 0, 0, 0, 0, 0]","follow the Development Approach including Work Package planning, regular reviews and retrospectives."
+99,45B1D745,TitleClause,24,0,0,5.,"[5, 0, 0, 0, 0, 0, 0, 0, 0]",Work Package Governance
+100,529C52F3,Untitledsubclause1,24,0,1,5.1,"[5, 1, 0, 0, 0, 0, 0, 0, 0]","The parties shall agree each Work Package in writing before the Supplier commences work on it, in accordance with the process set out in Schedule 5 (Development Approach and Work Packages)."
+101,522708CC,Untitledsubclause1,24,0,1,5.2,"[5, 2, 0, 0, 0, 0, 0, 0, 0]","Each agreed Work Package shall specify the scope, deliverables, timeline, resources, budget and acceptance criteria for that package of Services."
+102,3E894FC1,TitleClause,24,0,0,6.,"[6, 0, 0, 0, 0, 0, 0, 0, 0]",Supplier Personnel
+103,34C56A31,Untitledsubclause1,24,0,1,6.1,"[6, 1, 0, 0, 0, 0, 0, 0, 0]",The Supplier shall ensure that the Supplier Personnel:
+104,1487B3CB,Untitledsubclause2,24,0,2,(a),"[6, 1, 1, 0, 0, 0, 0, 0, 0]",have suitable skills and experience to enable them to perform the tasks assigned to them and have been adequately trained in the provision of the Services;
+105,35092BFE,Untitledsubclause2,24,0,2,(b),"[6, 1, 2, 0, 0, 0, 0, 0, 0]","hold all licences, permits, visas and consents required for the proper performance of this agreement, including the right to work in all relevant jurisdictions and have been properly screened and vetted by the Supplier to ensure they are fit for the positions that they are in;"
+106,3BE9806C,Untitledsubclause2,24,0,2,(c),"[6, 1, 3, 0, 0, 0, 0, 0, 0]",observe all health and safety rules and regulations and all reasonable security requirements that apply from time to time at Norton's premises they access; and
+107,07F07E36,Untitledsubclause2,24,0,2,(d),"[6, 1, 4, 0, 0, 0, 0, 0, 0]",are in sufficient number to enable the Supplier to fulfil its obligations under this agreement.
+108,3026A254,Untitledsubclause1,24,0,1,6.2,"[6, 2, 0, 0, 0, 0, 0, 0, 0]","If Norton (acting reasonably) believes that any Supplier Person is not performing the Services properly or effectively or is disruptive to Norton's business, Norton may require the Supplier to remove that Supplier Person from Norton's account and ensure they cease to be involved in the Services. The Supplier shall promptly do so at its cost and without  interruption to the Services."
+109,552E39A5,Untitledsubclause1,24,0,1,6.3,"[6, 3, 0, 0, 0, 0, 0, 0, 0]",The Supplier shall:
+110,69665391,Untitledsubclause2,24,0,2,(a),"[6, 3, 1, 0, 0, 0, 0, 0, 0]",use the Key Personnel in the provision of the Services;
+111,15A0DFB5,Untitledsubclause2,24,0,2,(b),"[6, 3, 2, 0, 0, 0, 0, 0, 0]","promptly inform Norton of the absence (or the anticipated absence) of any of the Key Personnel (other than for short-term absences of two weeks or less) and, if required by Norton, provide a suitably qualified, temporary replacement for that individual;"
+112,57B2EA29,Untitledsubclause2,24,0,2,(c),"[6, 3, 3, 0, 0, 0, 0, 0, 0]",use its reasonable endeavours not to remove or replace any Key Personnel during the Term provided that the Supplier may do so if:
+113,05CE04B5,Untitledsubclause3,24,0,3,(i),"[6, 3, 3, 1, 0, 0, 0, 0, 0]",requested to do so by Norton under clause 6.2;
+114,4B97571D,Untitledsubclause3,24,0,3,(ii),"[6, 3, 3, 2, 0, 0, 0, 0, 0]","the person is on maternity leave, paternity leave, shared parental leave, or long-term sick leave;"
+115,07F5D8B1,Untitledsubclause3,24,0,3,(iii),"[6, 3, 3, 3, 0, 0, 0, 0, 0]",the person is suspended for misconduct;
+116,7D86BA04,Untitledsubclause3,24,0,3,(iv),"[6, 3, 3, 4, 0, 0, 0, 0, 0]",the person resigns from their employment with the Supplier or ceases to be employed by the Supplier; or
+117,349B22BD,Untitledsubclause3,24,0,3,(v),"[6, 3, 3, 5, 0, 0, 0, 0, 0]",the Supplier obtains the prior written approval of Norton (not to be unreasonably withheld or delayed);
+118,3E908D18,Untitledsubclause2,24,0,2,(d),"[6, 3, 4, 0, 0, 0, 0, 0, 0]",ensure that any replacement for a Key Personnel member has the qualifications and experience to carry out the tasks assigned to the Key Personnel member being replaced;
+119,4A81A2CA,Untitledsubclause2,24,0,2,(e),"[6, 3, 5, 0, 0, 0, 0, 0, 0]","bear all costs and expenses associated with the appointment, removal or replacement of Key Personnel, including time spent by any replacement familiarising themselves with the Supplier's duties under this agreement."
+120,6A4F0DC0,TitleClause,24,0,0,7.,"[7, 0, 0, 0, 0, 0, 0, 0, 0]",Norton's obligations
+121,75CF6DF1,Untitledsubclause1,24,0,1,7.1,"[7, 1, 0, 0, 0, 0, 0, 0, 0]",Norton shall:
+122,31B9A5AC,Untitledsubclause2,24,0,2,(a),"[7, 1, 1, 0, 0, 0, 0, 0, 0]",co-operate with the Supplier in all matters relating to the Services;
+123,3A157959,Untitledsubclause2,24,0,2,(b),"[7, 1, 2, 0, 0, 0, 0, 0, 0]","provide access to Norton's premises and other facilities as may reasonably be requested by the Supplier and agreed with Norton in writing in advance, for the purposes of the Services;"
+124,64DD1835,Untitledsubclause2,24,0,2,(c),"[7, 1, 3, 0, 0, 0, 0, 0, 0]","provide to the Supplier all documents, information, items and materials required under Schedule 1 or otherwise reasonably required by the Supplier for the purpose of providing the Services;"
+125,10F69108,Untitledsubclause2,24,0,2,(d),"[7, 1, 4, 0, 0, 0, 0, 0, 0]",provide Norton Equipment to the Supplier by the dates and in the manner prescribed in Schedule 1; and
+126,5E26A956,Untitledsubclause2,24,0,2,(e),"[7, 1, 5, 0, 0, 0, 0, 0, 0]",inform the Supplier of all health and safety and security requirements that apply from time to time at Norton's premises which the Supplier will require access to..
+127,0C3B2262,TitleClause,24,0,0,8.,"[8, 0, 0, 0, 0, 0, 0, 0, 0]",Change control
+128,53A2D0C8,Untitledsubclause1,24,0,1,8.1,"[8, 1, 0, 0, 0, 0, 0, 0, 0]","Either party may submit a written request for Change to the other party in accordance with this clause 8, but no proposed Change will come into effect until a Change Control Note has been signed by the authorised representatives of both parties."
+129,283077ED,Untitledsubclause1,24,0,1,8.2,"[8, 2, 0, 0, 0, 0, 0, 0, 0]",If Norton wishes to make a Change:
+130,66758ED2,Untitledsubclause2,24,0,2,(a),"[8, 2, 1, 0, 0, 0, 0, 0, 0]","Norton shall submit a written request to the Supplier, providing as much detail as is reasonably necessary to enable the Supplier to prepare the draft Change Control Note; and"
+131,46F4F251,Untitledsubclause2,24,0,2,(b),"[8, 2, 2, 0, 0, 0, 0, 0, 0]","the Supplier shall, within 10 Business Days of receiving Norton's request at clause 8.2(a), provide a Change Control Note to Norton."
+132,3E00FA12,Untitledsubclause1,24,0,1,8.3,"[8, 3, 0, 0, 0, 0, 0, 0, 0]","If the Supplier wishes to make a Change, it shall send a Change Control Note to Norton."
+133,46866CEA,Untitledsubclause1,24,0,1,8.4,"[8, 4, 0, 0, 0, 0, 0, 0, 0]","A Change Control Note must contain sufficient information to enable Norton to assess the Change, including as a minimum:"
+134,2E0D27D3,Untitledsubclause2,24,0,2,(a),"[8, 4, 1, 0, 0, 0, 0, 0, 0]",the title of the Change;
+135,49BD82D3,Untitledsubclause2,24,0,2,(b),"[8, 4, 2, 0, 0, 0, 0, 0, 0]",a description of the Change;
+136,0650A2D6,Untitledsubclause2,24,0,2,(c),"[8, 4, 3, 0, 0, 0, 0, 0, 0]",details of the effect of the proposed Change on:
+137,5E839879,Untitledsubclause3,24,0,3,(i),"[8, 4, 3, 1, 0, 0, 0, 0, 0]",the Services;
+138,797D44A7,Untitledsubclause3,24,0,3,(ii),"[8, 4, 3, 2, 0, 0, 0, 0, 0]",the Charges;
+139,55BFADAF,Untitledsubclause3,24,0,3,(iii),"[8, 4, 3, 3, 0, 0, 0, 0, 0]",the timetable for the Services; and
+140,3576E585,Untitledsubclause3,24,0,3,(iv),"[8, 4, 3, 4, 0, 0, 0, 0, 0]",any other term of this agreement.
+141,2D4FFC14,Untitledsubclause1,24,0,1,8.5,"[8, 5, 0, 0, 0, 0, 0, 0, 0]",The Supplier may only reject a request for Change from Norton under clause 8.2(a) if the Supplier can demonstrate to Norton's reasonable satisfaction that:
+142,70866028,Untitledsubclause2,24,0,2,(a),"[8, 5, 1, 0, 0, 0, 0, 0, 0]",the proposed Change would require this agreement to be delivered in a way that infringes any Applicable Law; or
+143,6E23D703,Untitledsubclause2,24,0,2,(b),"[8, 5, 2, 0, 0, 0, 0, 0, 0]",it does not have the technical skill or capacity to implement the proposed Change.
+144,6FFC9149,Untitledsubclause1,24,0,1,8.6,"[8, 6, 0, 0, 0, 0, 0, 0, 0]",If the parties:
+145,475E9FD2,Untitledsubclause2,24,0,2,(a),"[8, 6, 1, 0, 0, 0, 0, 0, 0]","agree to the terms of a Change Control Note, they shall sign it and that Change Control Note will amend this agreement; or"
+146,14261056,Untitledsubclause2,24,0,2,(b),"[8, 6, 2, 0, 0, 0, 0, 0, 0]","are unable to agree a Change Control Note, either party may require the disagreement to be dealt with in accordance with clause 34."
+147,134D6CF1,Untitledsubclause1,24,0,1,8.7,"[8, 7, 0, 0, 0, 0, 0, 0, 0]",Each party bears its own costs in relation to compliance with the procedure in this clause 8.
+148,1C5907C9,TitleClause,24,0,0,9.,"[9, 0, 0, 0, 0, 0, 0, 0, 0]",Charges and payment
+149,1E8C6045,Untitledsubclause1,24,0,1,9.1,"[9, 1, 0, 0, 0, 0, 0, 0, 0]","In consideration of the provision of the Services by the Supplier, Norton shall pay the Charges."
+150,0A55FE07,Untitledsubclause1,24,0,1,9.2,"[9, 2, 0, 0, 0, 0, 0, 0, 0]",Where the Charges are calculated on a time and materials basis:
+151,1FFF068C,Untitledsubclause2,24,0,2,(a),"[9, 2, 1, 0, 0, 0, 0, 0, 0]",the Supplier's fee rates for each individual person are set out in Schedule 2;
+152,15AADE96,Untitledsubclause2,24,0,2,(b),"[9, 2, 2, 0, 0, 0, 0, 0, 0]","daily fee rates are calculated on the basis of an eight-hour day, worked during Business Hours; and"
+153,5729DD08,Untitledsubclause2,24,0,2,(c),"[9, 2, 3, 0, 0, 0, 0, 0, 0]",the Supplier shall ensure that all Supplier Personnel complete time sheets to record time spent on the Services and the Supplier shall indicate the time spent per individual in its invoices.
+154,7C11731D,Untitledsubclause1,24,0,1,9.3,"[9, 3, 0, 0, 0, 0, 0, 0, 0]",Norton shall reimburse the Supplier for the following costs and expenses which are excluded from the Charges:
+155,447A1F5D,Untitledsubclause2,24,0,2,(a),"[9, 3, 1, 0, 0, 0, 0, 0, 0]","the cost of hotel, subsistence, travelling and any other ancillary expenses reasonably incurred by the Supplier Personnel in connection with the Services, provided that the Supplier obtains Norton's prior written approval; and"
+156,1C120822,Untitledsubclause2,24,0,2,(b),"[9, 3, 2, 0, 0, 0, 0, 0, 0]",the cost to the Supplier of any materials or services procured by the Supplier from third parties for the provision of the Services provided that those items and their cost are specified in Schedule 2 or approved by Norton in writing before being incurred by the Supplier.
+157,7ACEAF8E,Untitledsubclause1,24,0,1,9.4,"[9, 4, 0, 0, 0, 0, 0, 0, 0]","Except as otherwise provided in this agreement, the Supplier shall bear its own costs and expenses incurred in performing its obligations under this agreement."
+158,6631C50F,Untitledsubclause1,24,0,1,9.5,"[9, 5, 0, 0, 0, 0, 0, 0, 0]","The Supplier shall invoice Norton for the Charges on the schedule specified in Schedule 2. If no schedule is specified, the Supplier shall invoice Norton at the end of each month for Services performed during that month. Each invoice must:"
+159,1E61AEA3,Untitledsubclause2,24,0,2,(a),"[9, 5, 1, 0, 0, 0, 0, 0, 0]",set out how any Charges which are not fixed price have been calculated;
+160,2475630E,Untitledsubclause2,24,0,2,(b),"[9, 5, 2, 0, 0, 0, 0, 0, 0]",be accompanied by management information to verify the accuracy of the invoice;
+161,4665E0A2,Untitledsubclause2,24,0,2,(c),"[9, 5, 3, 0, 0, 0, 0, 0, 0]",explicitly refer to Norton's purchase order number (if any); and
+162,4D678ACE,Untitledsubclause2,24,0,2,(d),"[9, 5, 4, 0, 0, 0, 0, 0, 0]",contain any other information reasonably requested by Norton.
+163,1844E684,Untitledsubclause1,24,0,1,9.6,"[9, 6, 0, 0, 0, 0, 0, 0, 0]","The Supplier shall invoice Norton monthly in arrears for expenses and third party costs. The Supplier shall ensure that expenses and third party costs are passed through to Norton at cost, with no mark-up."
+164,264C1C17,Untitledsubclause1,24,0,1,9.7,"[9, 7, 0, 0, 0, 0, 0, 0, 0]",The Supplier shall provide Norton with any documents and other information reasonably requested by Norton to verify the accuracy of the Supplier's invoices. This includes time sheets for Supplier Personnel and invoices and receipts for expenses and third party costs.
+165,50DE526E,Untitledsubclause1,24,0,1,9.8,"[9, 8, 0, 0, 0, 0, 0, 0, 0]",Norton shall pay each undisputed invoice submitted to it by the Supplier within 30 days of receipt to a bank account nominated in writing by the Supplier.
+166,7C0D2903,Untitledsubclause1,24,0,1,9.9,"[9, 9, 0, 0, 0, 0, 0, 0, 0]","If Norton fails to make a payment due to the Supplier under this agreement by the due date, then, without limiting the Supplier's remedies under clause 19, the Supplier may charge (and Norton shall pay) interest on the overdue sum from the due date until payment of the overdue sum. Interest under this clause 9.9 will accrue each day at 4% a year above the Bank of England's base rate from time to time, but at 4% a year for any period when that base rate is below 0%."
+167,1FEB5D3D,Untitledsubclause1,24,0,1,9.10,"[9, 10, 0, 0, 0, 0, 0, 0, 0]","All sums payable to the Supplier under this agreement are exclusive of VAT and Norton shall, in addition, pay an amount equal to any VAT chargeable on those sums subject to receipt of a valid VAT invoice."
+168,2364BE76,Untitledsubclause1,24,0,1,9.11,"[9, 11, 0, 0, 0, 0, 0, 0, 0]","Norton may, at any time, without notice to the Supplier, set off any liability of the Supplier to Norton against any liability of Norton to the Supplier, whether either liability is present or future, liquidated or unliquidated and whether or not either liability arises under this agreement. If the liabilities to be set off are expressed in different currencies, Norton may convert either liability at a market rate of exchange for the purpose of set-off. Any exercise by Norton of its rights under this clause shall not limit or affect any other rights or remedies available to it under this agreement or otherwise."
+169,6AEB6B6A,TitleClause,24,0,0,10.,"[10, 0, 0, 0, 0, 0, 0, 0, 0]",Audit
+170,6484A456,Untitledsubclause1,24,0,1,10.1,"[10, 1, 0, 0, 0, 0, 0, 0, 0]",The Supplier shall maintain complete and accurate records of and supporting documents for:
+171,4FA1678F,Untitledsubclause2,24,0,2,(a),"[10, 1, 1, 0, 0, 0, 0, 0, 0]",all amounts chargeable to Norton; and
+172,7E0EBD80,Untitledsubclause2,24,0,2,(b),"[10, 1, 2, 0, 0, 0, 0, 0, 0]","all activities carried out,"
+173,1688CE90,Parasubclause1,,,,,,under this agreement. These records shall be retained for access by Norton during the Term and for 12 months afterwards.
+174,196935EB,Untitledsubclause1,24,0,1,10.2,"[10, 2, 0, 0, 0, 0, 0, 0, 0]","During the Term and for up to 12 months afterwards, the Supplier shall allow Norton (and its auditors and professional advisers) access to the Supplier's premises, personnel, systems and relevant records as may reasonably be required to verify that the Services are being provided and all obligations of the Supplier are being performed, in accordance with this agreement."
+175,74463669,Untitledsubclause1,24,0,1,10.3,"[10, 3, 0, 0, 0, 0, 0, 0, 0]","The Supplier shall provide Norton (and its auditors and professional advisers) with all reasonable co-operation, access and assistance in relation to each audit. Norton and its auditors and professional advisers may take copies of any records which they reasonably require for the audit."
+176,1FFB81EA,TitleClause,24,0,0,11.,"[11, 0, 0, 0, 0, 0, 0, 0, 0]",Intellectual Property Rights
+177,0EB3AB4D,Untitledsubclause1,24,0,1,11.1,"[11, 1, 0, 0, 0, 0, 0, 0, 0]","Norton and its licensors shall retain ownership of all Intellectual Property Rights in Norton Materials. Norton grants to the Supplier a non-exclusive, royalty-free, non-transferable (except in accordance with clause 22.1) licence to use, copy and modify Norton Materials during the Term for the sole purpose of providing the Services to Norton in accordance with this agreement. The Supplier cannot sublicense Norton Materials to any third party (other than permitted subcontractors under clause 22) without Norton's prior written consent."
+178,1DBF72C8,Untitledsubclause1,24,0,1,11.2,"[11, 2, 0, 0, 0, 0, 0, 0, 0]","The Supplier assigns to Norton, immediately on creation, with full title guarantee, any improvements, modifications, enhancements and derivative works involving Norton’s Intellectual Property Rights, any other Foreground Intellectual Property and all Intellectual Property Rights in the Deliverables (excluding any Norton Materials and any Non-Norton Background Intellectual Property which Norton has approved for inclusion in the Deliverables)."
+179,54A312E9,Untitledsubclause1,24,0,1,11.3,"[11, 3, 0, 0, 0, 0, 0, 0, 0]","The Supplier grants to Norton a non-exclusive, royalty-free, transferable, perpetual and irrevocable licence (with the right to grant sublicences) to use, copy and modify the Supplier Materials for the purpose of receiving and using the Services and the Deliverables."
+180,0F194D96,Untitledsubclause1,24,0,1,11.4,"[11, 4, 0, 0, 0, 0, 0, 0, 0]","The Supplier shall not use or incorporate any Third Party Materials, any Supplier Materials or any Non -Norton Background Intellectual Property in the provision of the Services or in any Deliverables without obtaining Norton's prior written approval."
+181,58C23E45,Untitledsubclause1,24,0,1,11.5,"[11, 5, 0, 0, 0, 0, 0, 0, 0]","The Supplier shall, before commencing any Work Package and on an ongoing basis during the provision of the Services, identify and disclose to Norton in writing any Non-Norton Background Intellectual Property that the Supplier reasonably anticipates may be required or useful for the Services or Deliverables. Such disclosure shall include the nature of the intellectual property, the identity of the rights holder, any known licensing requirements and the Supplier's assessment of alternatives that would not Non -Norton Background Intellectual Property."
+182,2EDBC18C,Untitledsubclause1,24,0,1,11.6,"[11, 6, 0, 0, 0, 0, 0, 0, 0]","The Supplier shall immediately notify Norton in writing if the Supplier becomes aware of any actual or potential infringement of third-party intellectual property rights arising from or in connection with the Services or Deliverables, or if the Supplier receives any claim, allegation, or notice from any third party regarding intellectual property rights. Such notification shall include full details of the matter and the Supplier's proposed response."
+183,3F9CE197,Untitledsubclause1,24,0,1,11.7,"[11, 7, 0, 0, 0, 0, 0, 0, 0]","Norton grants the Supplier a non-exclusive, royalty-free, non-transferable (except in accordance with clause 22.1) licence to use, copy and modify, during the Term, the Deliverables assigned to Norton under clause 11.2 for the sole purpose of providing the Services to Norton in accordance with this agreement. The Supplier cannot sublicense such rights without Norton's prior written consent."
+184,00872D82,Untitledsubclause1,24,0,1,11.8,"[11, 8, 0, 0, 0, 0, 0, 0, 0]","The Supplier shall, to the maximum extent permitted by Applicable Law, obtain waivers of all moral rights in the Deliverables  to which any person is now, or may at any future time be, entitled to under the Copyright, Designs and Patents Act 1988 as amended from time to time or under any similar legislation from time to time in force anywhere in the world. The Supplier shall obtain Norton's prior written approval before incorporating into the Deliverables any Third Party Materials in which moral rights cannot be waived."
+185,5CE98AEC,Untitledsubclause1,24,0,1,11.9,"[11, 9, 0, 0, 0, 0, 0, 0, 0]","The Supplier shall, promptly at Norton's request, do (or procure to be done) all further acts and things and execute (or procure the execution of) all other documents as Norton may from time to time require for the purpose of securing for Norton all right, title and interest in and to the Intellectual Property Rights assigned or licensed to Norton under this agreement."
+186,06837082,TitleClause,24,0,0,12.,"[12, 0, 0, 0, 0, 0, 0, 0, 0]",Contract managers and governance
+187,7B7FD1F6,Untitledsubclause1,24,0,1,12.1,"[12, 1, 0, 0, 0, 0, 0, 0, 0]",Each party shall appoint its Contract Manager(s) to:
+188,71A6C70C,Untitledsubclause2,24,0,2,(a),"[12, 1, 1, 0, 0, 0, 0, 0, 0]",oversee the delivery and receipt of the Services on a day-to-day basis; and
+189,262EFACB,Untitledsubclause2,24,0,2,(b),"[12, 1, 2, 0, 0, 0, 0, 0, 0]",be the principal point(s) of contact for the other party in connection with managing the relationship between the parties.
+190,7357F2B8,Untitledsubclause1,24,0,1,12.2,"[12, 2, 0, 0, 0, 0, 0, 0, 0]",Each party's Contract Manager(s) shall have the authority to make decisions and act on its behalf in connection with the operation of this agreement (including by signing Change Control Notes).
+191,100766CC,Untitledsubclause1,24,0,1,12.3,"[12, 3, 0, 0, 0, 0, 0, 0, 0]",Each party shall designate its Contract Manager(s) in writing to the other party.
+192,06FF4D98,Untitledsubclause1,24,0,1,12.4,"[12, 4, 0, 0, 0, 0, 0, 0, 0]",The parties will hold review meetings at least once every quarter (or on any other frequency as may be agreed in writing) to discuss the operation of this agreement and the performance of the Services at which they will be represented by their Contract Managers.
+193,0B507D83,Untitledsubclause1,24,0,1,12.5,"[12, 5, 0, 0, 0, 0, 0, 0, 0]",The parties agree to be transparent with each other in connection with this agreement and accordingly will raise any issue without delay.
+194,29EBD465,Untitledsubclause1,24,0,1,12.6,"[12, 6, 0, 0, 0, 0, 0, 0, 0]","If a service or performance issue arises, the Supplier shall promptly work to remedy the issue even where it considers that the issue may have been caused in whole or in part by Norton or a third party and shall not seek to obtain any admission from Norton as a pre-condition to rectifying the relevant issue."
+195,573FFD4F,TitleClause,24,0,0,13.,"[13, 0, 0, 0, 0, 0, 0, 0, 0]",Compliance with laws and policies
+196,4CE598A3,Untitledsubclause1,24,0,1,13.1,"[13, 1, 0, 0, 0, 0, 0, 0, 0]","In performing its obligations under this agreement, the Supplier shall comply with:"
+197,1F1D965C,Untitledsubclause2,24,0,2,(a),"[13, 1, 1, 0, 0, 0, 0, 0, 0]",all Applicable Laws; and
+198,4D1E0589,Untitledsubclause2,24,0,2,(b),"[13, 1, 2, 0, 0, 0, 0, 0, 0]",the Mandatory Policies.
+199,13C748DE,Untitledsubclause1,24,0,1,13.2,"[13, 2, 0, 0, 0, 0, 0, 0, 0]","Norton shall give the Supplier not less than 30 days' notice of any change to the Mandatory Policies, including the introduction of any new Mandatory Policy, before the change takes effect. The Supplier shall comply with the change from the date it takes effect provided that if any change to the Mandatory Policies would materially increase the Supplier's obligations or costs under this agreement, the Supplier may, within 14 days of Norton's notice, request a proportionate increase to the Charges in accordance with the procedure in clause 8. Norton shall not unreasonably withhold or delay its consent to the Supplier's request to increase the Charges. The Supplier cannot exercise its rights under this clause 13.2 where the change to the Mandatory Policies reflects a change in Applicable Law that:"
+200,5F4315EF,Untitledsubclause2,24,0,2,(a),"[13, 2, 1, 0, 0, 0, 0, 0, 0]",generally affects the supply of services similar to the Services; or
+201,2BAD4EE3,Untitledsubclause2,24,0,2,(b),"[13, 2, 2, 0, 0, 0, 0, 0, 0]",would have been reasonably foreseeable on the Effective Date by an experienced supplier performing services similar to the Services.
+202,32B824DF,Untitledsubclause2,,,,,,
+203,5D6B40A6,TitleClause,24,0,0,14.,"[14, 0, 0, 0, 0, 0, 0, 0, 0]",Confidentiality
+204,769BFEA3,Untitledsubclause1,24,0,1,14.1,"[14, 1, 0, 0, 0, 0, 0, 0, 0]",Each party shall keep the other party's Confidential Information secret and confidential and shall not:
+205,5984A75A,Untitledsubclause2,24,0,2,(a),"[14, 1, 1, 0, 0, 0, 0, 0, 0]",use that Confidential Information except for the purpose of exercising or performing its rights and obligations under or in connection with this agreement (Permitted Purpose); or
+206,51151683,Untitledsubclause2,24,0,2,(b),"[14, 1, 2, 0, 0, 0, 0, 0, 0]","disclose that Confidential Information in whole or in part to any person, except as permitted by clause 14.2."
+207,310D923B,Untitledsubclause1,24,0,1,14.2,"[14, 2, 0, 0, 0, 0, 0, 0, 0]",Each party may disclose the other party's Confidential Information:
+208,70AFB7D3,Untitledsubclause2,24,0,2,(a),"[14, 2, 1, 0, 0, 0, 0, 0, 0]","to those of its and its Affiliates' employees, officers, representatives, independent contractors, subcontractors and advisers who need to know that information for the Permitted Purpose (Representatives). Each party shall ensure that its Representatives comply with confidentiality obligations which are substantially equivalent to those set out in this clause 14; and"
+209,202C040E,Untitledsubclause2,24,0,2,(b),"[14, 2, 2, 0, 0, 0, 0, 0, 0]","as may be required by law, a court of competent jurisdiction or any governmental or regulatory authority, provided that, to the extent it is legally permitted to do so, it gives the other party as much notice of the disclosure as possible and, where notice of disclosure is not prohibited, it takes into account the reasonable requests of the other party in relation to the content of the disclosure."
+210,53A43DDD,Untitledsubclause1,24,0,1,14.3,"[14, 3, 0, 0, 0, 0, 0, 0, 0]","The Supplier shall take additional security measures to protect Norton's Confidential Information relating to Norton’s Intellectual Property Rights, prototypes and technical materials, including: maintaining physical security for any prototypes, materials or technical documentation provided by or created for Norton; restricting access to authorised personnel only; maintaining secure storage facilities; and implementing procedures to prevent unauthorised removal, copying or disclosure of such materials."
+211,5EE62AA3,Untitledsubclause1,24,0,1,14.4,"[14, 4, 0, 0, 0, 0, 0, 0, 0]","The Supplier shall immediately notify Norton in writing if the Supplier becomes aware of any actual or suspected breach of confidentiality, unauthorised disclosure, loss, theft or compromise of Norton's Confidential Information. Such notification shall include full details of the breach, the information affected, the persons or entities who may have gained unauthorised access and the steps the Supplier has taken or proposes to take to remedy the breach and prevent future occurrences."
+212,3EFEA9DF,Untitledsubclause1,24,0,1,14.5,"[14, 5, 0, 0, 0, 0, 0, 0, 0]","The provisions of this clause 14 shall continue to apply indefinitely after termination or expiry of this agreement in relation to Norton’s Intellectual Property Rights, technical specifications, designs, test data, research results, prototypes and any other technical or scientific information disclosed or developed under this agreement and for a period of five years after termination or expiry for all other Confidential Information."
+213,4AC7B71D,TitleClause,24,0,0,15.,"[15, 0, 0, 0, 0, 0, 0, 0, 0]",Working with competitors
+214,6AC8AAF9,NoNumUntitledsubclause1,,,,,,"During the Term and for 12 months after termination or expiry of this agreement, the Supplier shall not supply services which are the same as or substantially similar to the Services to any business whose products or services are in competition with Norton's Products and Services without Norton's prior written approval (not to be unreasonably withheld, conditioned or delayed)."
+215,2F5411B0,TitleClause,24,0,0,16.,"[16, 0, 0, 0, 0, 0, 0, 0, 0]",Warranties and indemnities
+216,473750E6,Untitledsubclause1,24,0,1,16.1,"[16, 1, 0, 0, 0, 0, 0, 0, 0]",Each party warrants and represents to the other party that:
+217,302757BB,Untitledsubclause2,24,0,2,(a),"[16, 1, 1, 0, 0, 0, 0, 0, 0]",it has full power and authority to enter into this agreement and fulfil its obligations under it;
+218,705D620B,Untitledsubclause2,24,0,2,(b),"[16, 1, 2, 0, 0, 0, 0, 0, 0]",this agreement is executed by its duly authorised representative;
+219,49873A47,Untitledsubclause2,24,0,2,(c),"[16, 1, 3, 0, 0, 0, 0, 0, 0]","there are no actions, suits or proceedings or regulatory investigations pending or, to that party's knowledge, threatened against or affecting that party before any court or administrative body or arbitration tribunal that might affect its ability to meet and carry out its obligations under this agreement; and"
+220,63D3A06A,Untitledsubclause2,24,0,2,(d),"[16, 1, 4, 0, 0, 0, 0, 0, 0]","its obligations under this agreement constitute its legal, valid and binding obligations."
+221,48BDEE8E,Untitledsubclause1,24,0,1,16.2,"[16, 2, 0, 0, 0, 0, 0, 0, 0]",Norton warrants and represents that Norton Materials do not infringe the Intellectual Property Rights or any other rights of any third party. Norton shall not be liable under this clause 16.3 to the extent that the infringement arises from:
+222,39759494,Untitledsubclause2,24,0,2,(a),"[16, 2, 1, 0, 0, 0, 0, 0, 0]",changes made to Norton Materials without Norton's prior written consent; or
+223,6ED1C72E,Untitledsubclause2,24,0,2,(b),"[16, 2, 2, 0, 0, 0, 0, 0, 0]",the use of Norton Materials for a purpose or in a manner not authorised by Norton in writing.
+224,00D3329D,Untitledsubclause1,24,0,1,16.3,"[16, 3, 0, 0, 0, 0, 0, 0, 0]","The Supplier warrants, represents and undertakes that:"
+225,41497119,Untitledsubclause2,24,0,2,(a),"[16, 3, 1, 0, 0, 0, 0, 0, 0]","subject to clause 16.6, the supply, receipt and use of the Services and Deliverables shall not infringe the Intellectual Property Rights or any other rights of any third party;"
+226,3984B189,Untitledsubclause2,24,0,2,(b),"[16, 3, 2, 0, 0, 0, 0, 0, 0]","it is not and shall not become, subject to any contractual obligation which is likely to have a material adverse effect on its ability to perform its obligations under this agreement; and"
+227,329BB7D3,Untitledsubclause2,24,0,2,(c),"[16, 3, 3, 0, 0, 0, 0, 0, 0]",it shall not do anything that could reasonably be considered to bring Norton into disrepute or damage its reputation.
+228,1AE7F870,Untitledsubclause1,24,0,1,16.4,"[16, 4, 0, 0, 0, 0, 0, 0, 0]",The Supplier shall indemnify each Indemnified Person against all Losses incurred by the Indemnified Person as a result of:
+229,5032B1E9,Untitledsubclause2,24,0,2,(a),"[16, 4, 1, 0, 0, 0, 0, 0, 0]","any claim that the supply, receipt or use of any of the Services or Deliverables infringes the Intellectual Property Rights or any other rights of any third party; and"
+230,43E00D96,Untitledsubclause2,24,0,2,(b),"[16, 4, 2, 0, 0, 0, 0, 0, 0]","any claim by any person, or any action (including any investigation) by a Regulator or governmental authority, arising out of or in connection with the Supplier's failure to comply with Applicable."
+231,05761A73,Parasubclause1,,,,,,"In this clause 16.5, Indemnified Persons mean Norton and each of its Affiliates and each of its and their directors, officers, employees, agents and licensees and Indemnified Person means any of them."
+232,1EE150EC,Untitledsubclause1,24,0,1,16.5,"[16, 5, 0, 0, 0, 0, 0, 0, 0]",The Supplier shall not be liable under the warranty in clause 16.4(a) or the indemnity in clause 16.5(a) to the extent that the actual or alleged infringement arises directly from:
+233,44EA287A,Untitledsubclause2,24,0,2,(a),"[16, 5, 1, 0, 0, 0, 0, 0, 0]","any changes made to the Deliverables by Norton or any of its licensees without the Supplier's prior written consent, which shall not be unreasonably conditioned, withheld or delayed; or"
+234,661FB9BE,Untitledsubclause2,24,0,2,(b),"[16, 5, 2, 0, 0, 0, 0, 0, 0]",the use of Norton Materials in accordance with Norton's instructions.
+235,6A259DAA,Untitledsubclause1,24,0,1,16.6,"[16, 6, 0, 0, 0, 0, 0, 0, 0]","If a payment due from the Supplier under clause 16.5 is subject to tax (whether by way of direct assessment or withholding at its source), the amount of the payment shall be increased to ensure that the net receipt, after tax, to the beneficiary of the indemnity is the same as it would have been were the payment not subject to tax."
+236,401E7553,TitleClause,24,0,0,17.,"[17, 0, 0, 0, 0, 0, 0, 0, 0]",Insurance
+237,6B87C093,Untitledsubclause1,24,0,1,17.1,"[17, 1, 0, 0, 0, 0, 0, 0, 0]","During the Term and for a period of 6 years after the expiry or termination of this agreement, the Supplier shall maintain in force adequate insurance, with reputable insurance companies, to cover its potential liabilities under or in connection with this agreement."
+238,51F3B5EC,Untitledsubclause1,24,0,1,17.2,"[17, 2, 0, 0, 0, 0, 0, 0, 0]",The Supplier shall produce to Norton on request a certificate of insurance from each of its insurers evidencing the insurance required by this agreement.
+239,0D96F594,TitleClause,24,0,0,18.,"[18, 0, 0, 0, 0, 0, 0, 0, 0]",Limitation of liability
+240,7357F63F,Untitledsubclause1,24,0,1,18.1,"[18, 1, 0, 0, 0, 0, 0, 0, 0]",The following definitions apply in this clause 18:
+241,108EB3AB,Untitledsubclause2,24,0,2,(a),"[18, 1, 1, 0, 0, 0, 0, 0, 0]",default: any act or omission resulting in one party incurring liability to the other; and
+242,4D8F666F,Untitledsubclause2,24,0,2,(b),"[18, 1, 2, 0, 0, 0, 0, 0, 0]","liability: every kind of liability arising under or in connection with this agreement including liability in contract, tort (including negligence), or otherwise."
+243,11599CD3,Untitledsubclause1,24,0,1,18.2,"[18, 2, 0, 0, 0, 0, 0, 0, 0]",Nothing in this agreement limits or excludes:
+244,35E1FEBA,Untitledsubclause2,24,0,2,(a),"[18, 2, 1, 0, 0, 0, 0, 0, 0]",either party's liability for:
+245,39F608A0,Untitledsubclause3,24,0,3,(i),"[18, 2, 1, 1, 0, 0, 0, 0, 0]",deliberate or wilful default;
+246,2EB5C0E9,Untitledsubclause3,24,0,3,(ii),"[18, 2, 1, 2, 0, 0, 0, 0, 0]",death or personal injury caused by negligence to the extent preserved by section 2(1) of the Unfair Contract Terms Act 1977;
+247,0DB67BDF,Untitledsubclause3,24,0,3,(iii),"[18, 2, 1, 3, 0, 0, 0, 0, 0]",fraud or fraudulent misrepresentation;
+248,2CBAC998,Untitledsubclause3,24,0,3,(iv),"[18, 2, 1, 4, 0, 0, 0, 0, 0]",breach of the terms implied by section 2 of the Supply of Goods and Services Act 1982;
+249,14D48CCF,Untitledsubclause3,24,0,3,(v),"[18, 2, 1, 5, 0, 0, 0, 0, 0]",any liability that cannot legally be limited or excluded;
+250,392AAAB4,Untitledsubclause2,24,0,2,(b),"[18, 2, 2, 0, 0, 0, 0, 0, 0]",the Supplier's liability under clauses 14 (confidentiality) and 16.4 (third party intellectual property) of this agreement.
+251,34E39C80,Untitledsubclause1,24,0,1,18.3,"[18, 3, 0, 0, 0, 0, 0, 0, 0]","Subject to clause 18.2, the Supplier's total liability:"
+252,1AF79D90,Untitledsubclause2,24,0,2,(a),"[18, 3, 1, 0, 0, 0, 0, 0, 0]","for damage to customer property shall not exceed £2,000,000 for any one default or series of connected defaults. Norton property means premises, equipment or other property (but excluding data) owned, controlled or occupied by Norton or any of its Affiliates and which are made available for use by the Supplier or any of its suppliers;"
+253,28646698,Untitledsubclause2,24,0,2,(b),"[18, 3, 2, 0, 0, 0, 0, 0, 0]",for all other loss or damage arising from defaults occurring within any Contract Year shall not exceed 150% of the Charges paid or payable under this agreement in that Contract Year.
+254,2EC0A16C,Untitledsubclause1,24,0,1,18.4,"[18, 4, 0, 0, 0, 0, 0, 0, 0]","Subject to clause 18.2, Norton's total liability arising from defaults occurring within any Contract Year shall not exceed 100% of the Charges paid or payable under this agreement in that Contract Year."
+255,2EFD7BA9,TitleClause,24,0,0,19.,"[19, 0, 0, 0, 0, 0, 0, 0, 0]",Termination
+256,4D7DCA8D,Untitledsubclause1,24,0,1,19.1,"[19, 1, 0, 0, 0, 0, 0, 0, 0]","Without affecting any other right or remedy available to it, either party may terminate this agreement with immediate effect by notifying the other party if:"
+257,6DD059FD,Untitledsubclause2,24,0,2,(a),"[19, 1, 1, 0, 0, 0, 0, 0, 0]",the other party commits a material breach of any term of this agreement that:
+258,6D1925C9,Untitledsubclause3,24,0,3,(i),"[19, 1, 1, 1, 0, 0, 0, 0, 0]","is not capable of remedy, or"
+259,78CB78FE,Untitledsubclause3,24,0,3,(ii),"[19, 1, 1, 2, 0, 0, 0, 0, 0]","if capable of remedy, is not remedied within a period of 30 days by the other party after being notified to do so;"
+260,30ED948C,Untitledsubclause2,24,0,2,(b),"[19, 1, 2, 0, 0, 0, 0, 0, 0]",the other party repeatedly breaches any of the terms of this agreement in such a manner as to reasonably justify the opinion that its conduct is inconsistent with it having the intention or ability to give effect to the terms of this agreement;
+261,25688478,Untitledsubclause2,24,0,2,(c),"[19, 1, 3, 0, 0, 0, 0, 0, 0]","the other party suspends, or threatens to suspend, payment of its debts or is unable to pay its debts as they fall due or admits inability to pay its debts or is deemed unable to pay its debts within the meaning of section 123 of the Insolvency Act 1986 as if the words ""it is proved to the satisfaction of the court"" did not appear in sections 123(1)(e) or 123(2) of the Insolvency Act 1986;"
+262,35AEBF9E,Untitledsubclause2,24,0,2,(d),"[19, 1, 4, 0, 0, 0, 0, 0, 0]","the other party commences negotiations with all or any class of its creditors with a view to rescheduling any of its debts, or makes a proposal for or enters into any compromise or arrangement with any of its creditors other than for the sole purpose of a scheme for a solvent amalgamation of that other party with one or more other companies or the solvent reconstruction of that other party;"
+263,0BF9E9F1,Untitledsubclause2,24,0,2,(e),"[19, 1, 5, 0, 0, 0, 0, 0, 0]","the other party applies to court for, or obtains, a moratorium under Part A1 of the Insolvency Act 1986;"
+264,0D90785A,Untitledsubclause2,24,0,2,(f),"[19, 1, 6, 0, 0, 0, 0, 0, 0]","a petition is filed, a notice is given, a resolution is passed, or an order is made, for or in connection with the winding up of the other party other than for the sole purpose of a scheme for a solvent amalgamation of that other party with one or more other companies or the solvent reconstruction of that other party;"
+265,7A65D834,Untitledsubclause2,24,0,2,(g),"[19, 1, 7, 0, 0, 0, 0, 0, 0]","an application is made to court, or an order is made, for the appointment of an administrator, or a notice of intention to appoint an administrator is given or an administrator is appointed, over the other party;"
+266,302435FB,Untitledsubclause2,24,0,2,(h),"[19, 1, 8, 0, 0, 0, 0, 0, 0]",the holder of a qualifying floating charge over the assets of that other party has become entitled to appoint or has appointed an administrative receiver;
+267,7837B805,Untitledsubclause2,24,0,2,(i),"[19, 1, 9, 0, 0, 0, 0, 0, 0]",a person becomes entitled to appoint a receiver over all or any of the assets of the other party or a receiver is appointed over all or any of the assets of the other party;
+268,0C9B8FDB,Untitledsubclause2,24,0,2,(j),"[19, 1, 10, 0, 0, 0, 0, 0, 0]","a creditor or encumbrancer of the other party attaches or takes possession of, or a distress, execution, sequestration or other such process is levied or enforced on or sued against, the whole or any part of the other party's assets and that attachment or process is not discharged within 14 days;"
+269,46EA77BC,Untitledsubclause2,24,0,2,(k),"[19, 1, 11, 0, 0, 0, 0, 0, 0]","any event occurs, or proceeding is taken, with respect to the other party in any jurisdiction to which it is subject that has an effect equivalent or similar to any of the events mentioned in clause 19.1(c) to clause 19.1(j) (inclusive);"
+270,2C004376,Untitledsubclause2,24,0,2,(l),"[19, 1, 12, 0, 0, 0, 0, 0, 0]","the other party suspends or ceases, or threatens to suspend or cease, carrying on all or a substantial part of its business; or"
+271,2128C961,Untitledsubclause2,24,0,2,(m),"[19, 1, 13, 0, 0, 0, 0, 0, 0]",the other party's financial position deteriorates so far as to reasonably justify the opinion that its ability to give effect to the terms of this agreement is in jeopardy.
+272,34C25AF7,Untitledsubclause1,24,0,1,19.2,"[19, 2, 0, 0, 0, 0, 0, 0, 0]","Without affecting any other right or remedy available to it, Norton may terminate this agreement with immediate effect by notifying the Supplier if there is a change of control of the Supplier."
+273,1F288F92,Untitledsubclause1,24,0,1,19.3,"[19, 3, 0, 0, 0, 0, 0, 0, 0]","Norton may terminate this agreement for convenience, in whole or in part, by giving not less than one month’s notice to the Supplier."
+274,7218A5B5,TitleClause,24,0,0,20.,"[20, 0, 0, 0, 0, 0, 0, 0, 0]",Obligations on termination and survival
+275,369A1082,Untitledsubclause1,24,0,1,20.1,"[20, 1, 0, 0, 0, 0, 0, 0, 0]","On termination or expiry of this agreement, the Supplier shall immediately (or on any alternative timeframe specified by Norton for the purposes of clause 20.2):"
+276,4F781987,Untitledsubclause2,24,0,2,(a),"[20, 1, 1, 0, 0, 0, 0, 0, 0]","deliver to Norton all Deliverables, whether or not then complete;"
+277,4D7822C3,Untitledsubclause2,24,0,2,(b),"[20, 1, 2, 0, 0, 0, 0, 0, 0]",return to Norton all of Norton Equipment and other customer property in the possession or control of the Supplier or any Supplier Personnel;
+278,14DA8110,Untitledsubclause2,24,0,2,(c),"[20, 1, 3, 0, 0, 0, 0, 0, 0]",cease using (and return or destroy if required by Norton) all Norton Materials and Norton Confidential Information in the possession or control of the Supplier or any Supplier Personnel;
+279,1D95FDB5,Untitledsubclause2,24,0,2,(d),"[20, 1, 4, 0, 0, 0, 0, 0, 0]",remove any Supplier Equipment from Norton's premises.
+280,1E32D9C1,Untitledsubclause2,,,,,,
+281,1FD88227,Untitledsubclause1,24,0,1,20.2,"[20, 2, 0, 0, 0, 0, 0, 0, 0]",Survival
+282,5005DF1E,Untitledsubclause2,24,0,2,(a),"[20, 2, 1, 0, 0, 0, 0, 0, 0]",Any provision of this agreement that expressly or by implication is intended to come into or continue in force on or after termination or expiry of this agreement shall remain in full force and effect.
+283,0C4D70A5,Untitledsubclause2,24,0,2,(b),"[20, 2, 2, 0, 0, 0, 0, 0, 0]","Termination or expiry of this agreement shall not affect any rights, remedies, obligations or liabilities of the parties that have accrued up to the date of termination or expiry, including the right to claim damages in respect of any breach of this agreement which existed at or before the date of termination or expiry."
+284,11E72F41,TitleClause,24,0,0,21.,"[21, 0, 0, 0, 0, 0, 0, 0, 0]",Force majeure
+285,6D0C84C3,Untitledsubclause1,24,0,1,21.1,"[21, 1, 0, 0, 0, 0, 0, 0, 0]",Force Majeure Event means any circumstance not within a party's reasonable control including:
+286,144E16DE,Untitledsubclause2,24,0,2,(a),"[21, 1, 1, 0, 0, 0, 0, 0, 0]","acts of God, flood, drought, earthquake or other natural disaster;"
+287,12CFF707,Untitledsubclause2,24,0,2,(b),"[21, 1, 2, 0, 0, 0, 0, 0, 0]",epidemic or pandemic;
+288,4F4479BF,Untitledsubclause2,24,0,2,(c),"[21, 1, 3, 0, 0, 0, 0, 0, 0]","terrorist attack, civil war, civil commotion or riots, war, threat of or preparation for war, armed conflict, imposition of sanctions, embargo, or breaking off of diplomatic relations;"
+289,10FF62B1,Untitledsubclause2,24,0,2,(d),"[21, 1, 4, 0, 0, 0, 0, 0, 0]","nuclear, chemical or biological contamination, or sonic boom;"
+290,3079CCA9,Untitledsubclause2,24,0,2,(e),"[21, 1, 5, 0, 0, 0, 0, 0, 0]","any law or action taken by a government or public authority, including imposing an export or import restriction, quota, or prohibition;"
+291,4BAD3740,Untitledsubclause2,24,0,2,(f),"[21, 1, 6, 0, 0, 0, 0, 0, 0]","collapse of buildings, fire, explosion or accident; and"
+292,4F2D7382,Untitledsubclause2,24,0,2,(g),"[21, 1, 7, 0, 0, 0, 0, 0, 0]",interruption or failure of utility service.
+293,1DB5133A,Untitledsubclause1,24,0,1,21.2,"[21, 2, 0, 0, 0, 0, 0, 0, 0]","Subject to clause 21.4, a party (Affected Party) shall not be liable for any failure or delay in performing any of its obligations under this agreement for so long as and to the extent that, its performance is prevented, hindered or delayed by a Force Majeure Event."
+294,46AF591C,Untitledsubclause1,24,0,1,21.3,"[21, 3, 0, 0, 0, 0, 0, 0, 0]","For so long as the Affected Party's liability in relation to any of its obligations is suspended under clause 21.2, the other party shall not be liable for any failure or delay in performing its corresponding obligations. To the extent that Services are not provided during a Force Majeure Event, the Supplier shall not charge the relevant Charges for those Services."
+295,4FFA541F,TitleClause,24,0,0,22.,"[22, 0, 0, 0, 0, 0, 0, 0, 0]",Assignment and other dealings
+296,517A1801,Untitledsubclause1,24,0,1,22.1,"[22, 1, 0, 0, 0, 0, 0, 0, 0]","The Supplier shall not assign, novate, transfer, mortgage, charge, subcontract, delegate, declare a trust over or deal in any other manner with any or all of its rights and obligations under this agreement without the prior written consent of Norton (not to be unreasonably withheld or delayed)."
+297,53F7CA09,Untitledsubclause1,24,0,1,22.2,"[22, 2, 0, 0, 0, 0, 0, 0, 0]","Norton may at any time assign, novate, transfer, mortgage, charge, subcontract, delegate, declare a trust over or deal in any other manner with any or all of its rights and obligations under this agreement, provided that it gives prior notice to the Supplier."
+298,640E95C8,Untitledsubclause1,24,0,1,22.3,"[22, 3, 0, 0, 0, 0, 0, 0, 0]",Norton consents to the Supplier subcontracting the elements of the Services identified in Schedule 3 to the subcontractors identified in Schedule 3.
+299,1E9503AF,Untitledsubclause1,24,0,1,22.4,"[22, 4, 0, 0, 0, 0, 0, 0, 0]","Where the Supplier subcontracts any of its obligations under this agreement, the Supplier:"
+300,55BB04E0,Untitledsubclause2,24,0,2,(a),"[22, 4, 1, 0, 0, 0, 0, 0, 0]",shall enter into a written agreement with its subcontractor which is consistent with the terms of this agreement;
+301,02B6D6FA,Untitledsubclause2,24,0,2,(b),"[22, 4, 2, 0, 0, 0, 0, 0, 0]",remains responsible for the performance of this agreement and liable for all acts and omissions of its subcontractors as if they were its own.
+302,3B61E0E1,Untitledsubclause1,24,0,1,22.5,"[22, 5, 0, 0, 0, 0, 0, 0, 0]","Norton may withdraw its consent to using a subcontractor, by giving reasonable prior notice to the Supplier, where, in Norton's reasonable opinion:"
+303,34FCEA16,Untitledsubclause2,24,0,2,(a),"[22, 5, 1, 0, 0, 0, 0, 0, 0]",the acts or omissions of the relevant subcontractor have caused or materially contributed to the Supplier being in breach of this agreement;
+304,65AD305F,Untitledsubclause2,24,0,2,(b),"[22, 5, 2, 0, 0, 0, 0, 0, 0]","the acts or omissions of the subcontractor have brought Norton into public disrepute, whether or not those acts or omissions relate to the Services; or"
+305,4025994F,Untitledsubclause2,24,0,2,(c),"[22, 5, 3, 0, 0, 0, 0, 0, 0]",the continued use of that subcontractor will have a material adverse effect on the provision of the Services or Norton's business or reputation.
+306,7D773BA5,TitleClause,24,0,0,23.,"[23, 0, 0, 0, 0, 0, 0, 0, 0]",Variation
+307,623821E0,NoNumUntitledsubclause1,,,,,,No variation of this agreement shall be effective unless it is in writing and signed by the parties (or their authorised representatives).
+308,1E786ECF,TitleClause,24,0,0,24.,"[24, 0, 0, 0, 0, 0, 0, 0, 0]",Waiver
+309,0D3FCC46,Untitledsubclause1,24,0,1,24.1,"[24, 1, 0, 0, 0, 0, 0, 0, 0]",A waiver of any right or remedy under this agreement or by law is only effective if given in writing and shall not be deemed to be a waiver of any subsequent right or remedy.
+310,638C616F,Untitledsubclause1,24,0,1,24.2,"[24, 2, 0, 0, 0, 0, 0, 0, 0]","A failure or delay by a party to exercise any right or remedy provided under this agreement or by law shall not constitute a waiver of that or any other right or remedy, nor shall it prevent or restrict any further exercise of that or any other right or remedy. No single or partial exercise of any right or remedy provided under this agreement or by law shall prevent or restrict the further exercise of that or any other right or remedy."
+311,1B82CE85,TitleClause,24,0,0,25.,"[25, 0, 0, 0, 0, 0, 0, 0, 0]",Rights and remedies
+312,04398D13,NoNumUntitledsubclause1,,,,,,"The rights and remedies provided under this agreement are in addition to and not exclusive of, any rights or remedies provided by law."
+313,2EE5D3B1,TitleClause,24,0,0,26.,"[26, 0, 0, 0, 0, 0, 0, 0, 0]",Severance
+314,41F6F336,NoNumUntitledsubclause1,,,,,,"If any provision or part-provision of this agreement is or becomes invalid, illegal or unenforceable, it shall be deemed deleted, but that shall not affect the validity and enforceability of the rest of this agreement."
+315,39DD2427,TitleClause,24,0,0,27.,"[27, 0, 0, 0, 0, 0, 0, 0, 0]",Entire agreement
+316,73C0B538,Untitledsubclause1,24,0,1,27.1,"[27, 1, 0, 0, 0, 0, 0, 0, 0]","This agreement constitutes the entire agreement between the parties and supersedes and extinguishes all previous and contemporaneous agreements, promises, assurances and understandings between them, whether written or oral, relating to its subject matter."
+317,42F5295E,Untitledsubclause1,24,0,1,27.2,"[27, 2, 0, 0, 0, 0, 0, 0, 0]","Each party acknowledges that in entering into this agreement it does not rely on and shall have no remedies in respect of, any statement, representation, assurance or warranty (whether made innocently or negligently) that is not set out in this agreement. ]"
+318,5240D716,TitleClause,24,0,0,28.,"[28, 0, 0, 0, 0, 0, 0, 0, 0]",Conflict
+319,1C883BF7,NoNumUntitledsubclause1,,,,,,"If there is an inconsistency between any of the provisions in the main body of this agreement and the Schedules, the provisions in the main body of this agreement prevail."
+320,31712575,TitleClause,24,0,0,29.,"[29, 0, 0, 0, 0, 0, 0, 0, 0]",Announcements
+321,5CB6D238,NoNumUntitledsubclause1,,,,,,"No party shall make, or permit any person to make, any public announcement concerning the existence, subject matter or terms of this agreement, the wider transactions contemplated by it, or the relationship between the parties, without the prior written consent of the other party except as required by law, any governmental or regulatory authority (including any relevant securities exchange), any court or other authority of competent jurisdiction."
+322,6CAB8A94,TitleClause,24,0,0,30.,"[30, 0, 0, 0, 0, 0, 0, 0, 0]",No partnership or agency
+323,0BF0409C,Untitledsubclause1,24,0,1,30.1,"[30, 1, 0, 0, 0, 0, 0, 0, 0]","Nothing in this agreement is intended to, or shall be deemed to, establish any partnership or joint venture between the parties, constitute either party as the agent of the other party, or authorise any party to make or enter into any commitments for or on behalf of the other party."
+324,1AEB696E,Untitledsubclause1,24,0,1,30.2,"[30, 2, 0, 0, 0, 0, 0, 0, 0]",Each party confirms it is acting on its own behalf and not for the benefit of any other person.
+325,543862BF,TitleClause,24,0,0,31.,"[31, 0, 0, 0, 0, 0, 0, 0, 0]",Third party rights
+326,123125A9,Untitledsubclause1,24,0,1,31.1,"[31, 1, 0, 0, 0, 0, 0, 0, 0]",Unless it expressly states otherwise  this agreement does not give rise to any rights under the Contracts (Rights of Third Parties) Act 1999 to enforce any term of this agreement.
+327,027E89EF,TitleClause,24,0,0,32.,"[32, 0, 0, 0, 0, 0, 0, 0, 0]",Notices
+328,4B7E3884,Untitledsubclause1,24,0,1,32.1,"[32, 1, 0, 0, 0, 0, 0, 0, 0]",Any notice given to a party under or in connection with this agreement shall be in writing and shall be:
+329,444AFD9E,Untitledsubclause2,24,0,2,(a),"[32, 1, 1, 0, 0, 0, 0, 0, 0]",delivered by hand or by pre-paid first-class post or other next working day delivery service at its registered office (if a company) or its principal place of business (in any other case); or
+330,0BF062D4,Untitledsubclause2,24,0,2,(b),"[32, 1, 2, 0, 0, 0, 0, 0, 0]",sent by email to the following address (or an address substituted in writing by the party to be served):
+331,200C1CFC,Untitledsubclause3,24,0,3,(i),"[32, 1, 2, 1, 0, 0, 0, 0, 0]",for notices to Norton: [ADDRESS].
+332,0BC0AB58,Untitledsubclause3,24,0,3,(ii),"[32, 1, 2, 2, 0, 0, 0, 0, 0]",for notices to the Supplier: [ADDRESS].
+333,797A007E,Untitledsubclause1,24,0,1,32.2,"[32, 2, 0, 0, 0, 0, 0, 0, 0]",Any notice shall be deemed to have been received:
+334,5871E472,Untitledsubclause2,24,0,2,(a),"[32, 2, 1, 0, 0, 0, 0, 0, 0]","if delivered by hand, at the time the notice is left at the proper address;"
+335,2455E13A,Untitledsubclause2,24,0,2,(b),"[32, 2, 2, 0, 0, 0, 0, 0, 0]","if sent by pre-paid first-class post or other next working day delivery service, at 9.00 am on the second Business Day after posting; or"
+336,0DAE328F,Untitledsubclause2,24,0,2,(c),"[32, 2, 3, 0, 0, 0, 0, 0, 0]","if sent by email, at the time of transmission or, if this time falls outside Business Hours, when Business Hours resume."
+337,6ED64C2C,Untitledsubclause1,24,0,1,32.3,"[32, 3, 0, 0, 0, 0, 0, 0, 0]","This clause 32 does not apply to the service of any proceedings or any documents in any legal action or, where applicable, any arbitration or other method of dispute resolution."
+338,2E3524FA,TitleClause,24,0,0,33.,"[33, 0, 0, 0, 0, 0, 0, 0, 0]",Counterparts
+339,47D8615D,Untitledsubclause1,24,0,1,33.1,"[33, 1, 0, 0, 0, 0, 0, 0, 0]","This agreement may be executed in any number of counterparts, each of which constitutes a duplicate original, but all the counterparts together constitute the one agreement."
+340,531BFEC2,TitleClause,24,0,0,34.,"[34, 0, 0, 0, 0, 0, 0, 0, 0]",Dispute resolution procedure
+341,74092760,Untitledsubclause1,24,0,1,34.1,"[34, 1, 0, 0, 0, 0, 0, 0, 0]","If a dispute arises out of or in connection with this agreement or its performance, validity or enforceability (Dispute), then the parties shall attempt in good faith to resolve the Dispute."
+342,1E3871FB,Untitledsubclause1,24,0,1,34.2,"[34, 2, 0, 0, 0, 0, 0, 0, 0]","Subject to clause 34.3, no party may commence any court proceedings in relation to the whole or part of the Dispute until it has attempted to settle the Dispute by mediation and either the mediation has terminated, or the other party has failed to participate in the mediation, provided that the right to issue proceedings is not prejudiced by a delay."
+343,7679776F,Untitledsubclause1,24,0,1,34.3,"[34, 3, 0, 0, 0, 0, 0, 0, 0]","If for any reason the Dispute is not resolved within 60 days of the start of the mediation, the Dispute shall be finally resolved by the courts of England and Wales in accordance with clause 36."
+344,2CE7C194,TitleClause,24,0,0,35.,"[35, 0, 0, 0, 0, 0, 0, 0, 0]",Governing law
+345,51FA261A,NoNumUntitledsubclause1,,,,,,This agreement and any dispute or claim (including non-contractual disputes or claims) arising out of or in connection with it or its subject matter or formation shall be governed by and construed in accordance with the law of England and Wales.
+346,04949D66,TitleClause,24,0,0,36.,"[36, 0, 0, 0, 0, 0, 0, 0, 0]",Jurisdiction
+347,5466FF63,NoNumUntitledsubclause1,,,,,,Each party irrevocably agrees that the courts of England and Wales shall have non-exclusive jurisdiction to settle any dispute or claim (including non-contractual disputes or claims) arising out of or in connection with this agreement or its subject matter or formation.
+348,0E604EB0,Testimonium,,,,,,This agreement has been entered into on the date stated at the beginning of it.
+349,1FB7619F,,,,,,,
+350,5928E6A1,Schedule,27,26,0,Schedule 1,"[1, 0, 0, 0, 0, 0, 0, 0, 0]",Services
+351,11248E79,ScheduleTitleClause,32,2,0,1.,"[1, 0, 0, 0, 0, 0, 0, 0, 0]",Project Description
+352,427A8595,ScheduleUntitledsubclause1,,,,,,[High-level description/overview of the Project that Norton is engaging the Supplier to perform under this agreement]
+353,716385DC,ScheduleTitleClause,32,2,0,2.,"[2, 0, 0, 0, 0, 0, 0, 0, 0]",Project Objectives
+354,121335DF,ScheduleUntitledsubclause1,,,,,,"Technical goals, success criteria and expected outcomes for this Project:"
+355,060663B0,ScheduleTitleClause,32,2,1,2.1.,"[2, 1, 0, 0, 0, 0, 0, 0, 0]",[Technical goal/objective 1]
+356,3E2B08D7,ScheduleTitleClause,32,2,1,2.2.,"[2, 2, 0, 0, 0, 0, 0, 0, 0]",[Success criteria and measurable outcomes]
+357,13FEF8E6,ScheduleTitleClause,32,2,1,2.3.,"[2, 3, 0, 0, 0, 0, 0, 0, 0]",[Expected technical outcomes and deliverables]
+358,379F4C66,ScheduleTitleClause,32,2,0,3.,"[3, 0, 0, 0, 0, 0, 0, 0, 0]",Services
+359,7542AB69,ScheduleTitleClause,32,2,1,3.1.,"[3, 1, 0, 0, 0, 0, 0, 0, 0]",The Supplier shall provide the following types of research and development services across Work Packages as agreed with Norton:
+360,19B6CA7E,ScheduleTitleClause,32,2,2,3.1.1.,"[3, 1, 1, 0, 0, 0, 0, 0, 0]",[Research and feasibility studies]
+361,1482F441,ScheduleTitleClause,32,2,2,3.1.2.,"[3, 1, 2, 0, 0, 0, 0, 0, 0]",[Design and development work]
+362,7EE12917,ScheduleTitleClause,32,2,2,3.1.3.,"[3, 1, 3, 0, 0, 0, 0, 0, 0]",[Prototyping and testing]
+363,1EF26280,ScheduleTitleClause,32,2,2,3.1.4.,"[3, 1, 4, 0, 0, 0, 0, 0, 0]",[Technical documentation and reporting]
+364,53B987D0,ScheduleTitleClause,32,2,2,3.1.5.,"[3, 1, 5, 0, 0, 0, 0, 0, 0]",[Other R&D services as may be required]
+365,0F9C2310,ScheduleTitleClause,32,2,0,4.,"[4, 0, 0, 0, 0, 0, 0, 0, 0]",Deliverables
+366,73F9D0E3,ScheduleTitleClause,,,,,,High-level deliverables expected from this Project include:
+367,51CF7785,ScheduleTitleClause,32,2,1,4.1.,"[4, 1, 0, 0, 0, 0, 0, 0, 0]",[Prototypes and development samples]
+368,1F290841,ScheduleTitleClause,32,2,1,4.2.,"[4, 2, 0, 0, 0, 0, 0, 0, 0]","[Technical documentation, specifications and design drawings]"
+369,042E5E6A,ScheduleTitleClause,32,2,1,4.3.,"[4, 3, 0, 0, 0, 0, 0, 0, 0]","[Test reports, validation data and analysis]"
+370,01E8AFD9,ScheduleTitleClause,32,2,1,4.4.,"[4, 4, 0, 0, 0, 0, 0, 0, 0]",[Intellectual Property assignments and licenses]
+371,56AED92B,ScheduleTitleClause,32,2,1,4.5.,"[4, 5, 0, 0, 0, 0, 0, 0, 0]",[Knowledge transfer sessions and training materials]
+372,0CCE2F74,ScheduleTitleClause,32,2,1,4.6.,"[4, 6, 0, 0, 0, 0, 0, 0, 0]",[Completion Reports for completed Work Packages]
+373,5CFF1DAD,ScheduleTitleClause,32,2,0,5.,"[5, 0, 0, 0, 0, 0, 0, 0, 0]",Key Dates
+374,422259F4,ScheduleTitleClause,,,,,,Critical dates and milestones for this Project:
+375,3AE1B2E4,ScheduleTitleClause,32,2,1,5.1.,"[5, 1, 0, 0, 0, 0, 0, 0, 0]",Project commencement date: [DATE]
+376,7F98B914,ScheduleTitleClause,32,2,1,5.2.,"[5, 2, 0, 0, 0, 0, 0, 0, 0]",Key milestone dates: [DATES AND DESCRIPTIONS]
+377,210135D2,ScheduleTitleClause,32,2,1,5.3.,"[5, 3, 0, 0, 0, 0, 0, 0, 0]",Expected completion date: [DATE]
+378,467A6F03,ScheduleTitleClause,32,2,1,5.4.,"[5, 4, 0, 0, 0, 0, 0, 0, 0]",[Other significant dates or review points]
+379,6201A8FE,ScheduleTitleClause,32,2,0,6.,"[6, 0, 0, 0, 0, 0, 0, 0, 0]","Requirements, Project Objectives, specifications and standards"
+380,74BD0F7B,ScheduleTitleClause,,,,,,"Technical requirements, performance specifications, industry standards, regulatory requirements and quality standards applicable to this Project:"
+381,1407E184,ScheduleTitleClause,32,2,1,6.1.,"[6, 1, 0, 0, 0, 0, 0, 0, 0]",[Requirements documents and performance criteria]
+382,0D6333F0,ScheduleTitleClause,32,2,0,7.,"[7, 0, 0, 0, 0, 0, 0, 0, 0]",Norton Materials
+383,31CC2D65,ScheduleTitleClause,,,,,,Documentation and information that Norton will provide to the Supplier for this Project:
+384,00F63FCE,ScheduleTitleClause,32,2,1,7.1.,"[7, 1, 0, 0, 0, 0, 0, 0, 0]",[Existing technical documentation and specifications]
+385,01FA7996,ScheduleTitleClause,32,2,1,7.2.,"[7, 2, 0, 0, 0, 0, 0, 0, 0]","[Reference materials, drawings and data]"
+386,0117285E,ScheduleTitleClause,32,2,0,8.,"[8, 0, 0, 0, 0, 0, 0, 0, 0]",Norton Technology
+387,707457F3,ScheduleTitleClause,,,,,,Norton's pre-existing intellectual property to be provided to the Supplier for use in this Project:
+388,3A5F06E0,,,,,,,
+389,6A978F79,,,,,,,Description of Norton Technology
+390,5367F577,,,,,,,License Terms and Permitted Usage
+391,5640AE45,,,,,,,Usage Restrictions
+392,0A6A7751,,,,,,,Return/Destruction Requirements
+393,36AD3716,,,,,,,[Norton Technology item 1]
+394,2E271A8A,,,,,,,[Permitted usage scope]
+395,2D31E7EA,,,,,,,[Any restrictions on use]
+396,6E9AD64B,,,,,,,[Return or destruction obligations]
+397,5CD52498,,,,,,,[Norton Technology item 2]
+398,77E9D20D,,,,,,,[Permitted usage scope]
+399,602C4012,,,,,,,[Any restrictions on use]
+400,1CA2DC6A,,,,,,,[Return or destruction obligations]
+401,12C626A4,ScheduleTitleClause,32,2,0,9.,"[9, 0, 0, 0, 0, 0, 0, 0, 0]",Norton Equipment
+402,56C50CE3,ScheduleTitleClause,,,,,,Equipment that Norton will provide to the Supplier for use in this Project:
+403,608C39DA,,,,,,,Equipment
+404,7E9454C8,,,,,,,Specifications
+405,1B856EC6,,,,,,,Provision Date
+406,68F76DFB,,,,,,,Location
+407,77431E08,,,,,,,Maintenance Responsibility
+408,64E40FAA,,,,,,,Return Conditions
+409,74B4B181,,,,,,,[Equipment item 1]
+410,530A897D,,,,,,,[Technical specs]
+411,56496257,,,,,,,[Date]
+412,584E8CF4,,,,,,,[Location]
+413,58825550,,,,,,,[Norton/Supplier]
+414,1B0FD4C0,,,,,,,[Return requirements]
+415,402FBC27,,,,,,,[Equipment item 2]
+416,0251E92E,,,,,,,[Technical specs]
+417,1B6B485B,,,,,,,[Date]
+418,7DC378D7,,,,,,,[Location]
+419,4EFFC046,,,,,,,[Norton/Supplier]
+420,4480141F,,,,,,,[Return requirements]
+421,4D8263A4,ScheduleTitleClause,,,,,,
+422,1E356F6F,Paragraph,,,,,,
+423,0300C700,Schedule,27,26,0,Schedule 2,"[2, 0, 0, 0, 0, 0, 0, 0, 0]","Charges, costs and payment"
+424,4FDEFE07,ScheduleTitleClause,30,29,0,1.,"[1, 0, 0, 0, 0, 0, 0, 0, 0]",Charges
+425,38C420C5,ScheduleTitleClause,,,,,,[SELECT OPTIONS AND DELETE THE REST]
+426,572A0852,ScheduleTitlesubclause1,30,29,1,1.1,"[1, 1, 0, 0, 0, 0, 0, 0, 0]",Fixed price
+427,028E1B11,ScheduleUntitledsubclause2,30,29,2,(a),"[1, 1, 1, 0, 0, 0, 0, 0, 0]",The total charges for the [Services OR [PART OF THE SERVICES CHARGED ON A FIXED PRICE BASIS]] are £[AMOUNT].
+428,20B11685,ScheduleUntitledsubclause2,30,29,2,(b),"[1, 1, 2, 0, 0, 0, 0, 0, 0]",The[se] charges are calculated as follows: [CALCULATION METHOD].
+429,44B9C0C3,ScheduleTitlesubclause1,30,29,1,1.2,"[1, 2, 0, 0, 0, 0, 0, 0, 0]",Time and materials
+430,2524DE85,ScheduleUntitledsubclause2,30,29,2,(a),"[1, 2, 1, 0, 0, 0, 0, 0, 0]",The [Services OR [RELEVANT PART OF THE SERVICES]] shall be charged on a time and materials basis as follows:
+431,12795A74,ScheduleUntitledsubclause3,30,29,3,(i),"[1, 2, 1, 1, 0, 0, 0, 0, 0]",The [daily OR hourly] rates for the Supplier Personnel are: [SPECIFY]
+432,548FC837,ScheduleUntitledsubclause3,30,29,3,(ii),"[1, 2, 1, 2, 0, 0, 0, 0, 0]",The weekend and overtime rates for the Supplier Personnel are: [SPECIFY]
+433,2B00C90A,ScheduleTitleClause,30,29,0,2.,"[2, 0, 0, 0, 0, 0, 0, 0, 0]",Invoicing schedule
+434,582D3D0D,ScheduleUntitledsubclause1,30,29,1,2.1,"[2, 1, 0, 0, 0, 0, 0, 0, 0]",The Supplier shall invoice Norton for the Charges on the following schedule: [SPECIFY].
+435,5A8C134F,ScheduleTitleClause,30,29,0,3.,"[3, 0, 0, 0, 0, 0, 0, 0, 0]",Third party materials and services
+436,4ACD93A4,ScheduleUntitledsubclause1,30,29,1,3.1,"[3, 1, 0, 0, 0, 0, 0, 0, 0]",The following materials and services procured from third parties shall be invoiced to Norton in addition to the Charges: [DETAILS].
+437,4BA5E187,Schedule,27,26,0,Schedule 3,"[3, 0, 0, 0, 0, 0, 0, 0, 0]","Supplier's Key Personnel, Subcontractors and Contract Managers"
+438,35C9E7E9,ScheduleTitleClause,31,30,0,1.,"[1, 0, 0, 0, 0, 0, 0, 0, 0]",Supplier's Key Personnel
+439,1DD2B6C1,Paragraph,,,,,,Key Personnel member
+440,37B9CD2D,Paragraph,,,,,,Minimum percentage of working hours allocated to Services
+441,3781ECB1,Paragraph,,,,,,[NAMES AND TITLES OF RELEVANT EMPLOYEES]
+442,0E6211CE,Paragraph,,,,,,[SPECIFY]
+443,508A243A,Paragraph,,,,,,
+444,5E9CAC52,ScheduleTitleClause,31,30,0,2.,"[2, 0, 0, 0, 0, 0, 0, 0, 0]",Supplier Contract Manager(s)
+445,3B8BAB2B,BulletList1,2,20,0,·,"[1, 0, 0, 0, 0, 0, 0, 0, 0]",[NAME]
+446,7832613E,BulletList1,,,,,,
+447,3FC97272,ScheduleTitleClause,31,30,0,3.,"[3, 0, 0, 0, 0, 0, 0, 0, 0]",Permitted Subcontractors
+448,2E38610C,ScheduleTitleClause,,,,,,[DELETE IF N/A]
+449,43EFD6D6,Paragraph,,,,,,Permitted subcontractors
+450,6311A289,Paragraph,,,,,,Services subcontracted
+451,1A35D224,Paragraph,,,,,,[NAMES OF PERMITTED SUBCONTRACTORS]
+452,1DCB8074,Paragraph,,,,,,[SPECIFY]
+453,0FF8CEBE,ScheduleTitleClause,,,,,,
+454,57201947,ScheduleTitleClause,31,30,0,4.,"[4, 0, 0, 0, 0, 0, 0, 0, 0]",Norton Contract Manager(s)
+455,057692DC,Paragraph,,,,,,[NAME]
+456,30ECC223,Schedule,27,26,0,Schedule 4,"[4, 0, 0, 0, 0, 0, 0, 0, 0]",Mandatory Policies
+457,05E085BF,Paragraph,,,,,,[LIST ANY NORTON POLICIES THE SUPPLIER WILL NEED TO FOLLOW – DELETE THE REST]
+458,11779960,Paragraph,,,,,,The Mandatory Policies are:
+459,3443B910,BulletList1,2,20,0,·,"[2, 0, 0, 0, 0, 0, 0, 0, 0]",[Supplier Code of Conduct.]
+460,251F75B4,BulletList1,2,20,0,·,"[3, 0, 0, 0, 0, 0, 0, 0, 0]",[Modern Slavery and Human Trafficking Policy.]
+461,42F33A88,BulletList1,2,20,0,·,"[4, 0, 0, 0, 0, 0, 0, 0, 0]","[Environmental, Social and Governance Policy.]"
+462,08193978,BulletList1,2,20,0,·,"[5, 0, 0, 0, 0, 0, 0, 0, 0]",[Ethics and Anti-Bribery Policy.]
+463,4ABE5DB3,BulletList1,2,20,0,·,"[6, 0, 0, 0, 0, 0, 0, 0, 0]",[Expenses Policy.]
+464,041D8335,BulletList1,2,20,0,·,"[7, 0, 0, 0, 0, 0, 0, 0, 0]",[Health and Safety Policy.]
+465,7B3F404C,BulletList1,2,20,0,·,"[8, 0, 0, 0, 0, 0, 0, 0, 0]",[Security Policy.]
+466,44929EB7,BulletList1,2,20,0,·,"[9, 0, 0, 0, 0, 0, 0, 0, 0]",[AI Usage Policy.]
+467,47DFBD1A,,,,,,,
+468,6D667A7D,Schedule,27,26,0,Schedule 5,"[5, 0, 0, 0, 0, 0, 0, 0, 0]",Development Approach and Work Packages
+469,0F760AC5,ScheduleTitleClause,,,,,,Work Package Agreement Process
+470,3E87D6B2,ScheduleUntitledsubclause1,,,,,,The parties shall work together to agree each Work Package before the Supplier commences work. Each Work Package shall be documented in writing and signed by both parties' Contract Managers.
+471,7C444E2A,ScheduleUntitledsubclause1,,,,,,Each Work Package shall specify:
+472,6377A9DA,ScheduleUntitledsubclause2,,,,,,"scope of work, including technical objectives and deliverables;"
+473,00BBEF22,ScheduleUntitledsubclause2,,,,,,timeline and key milestones;
+474,44D1A426,ScheduleUntitledsubclause2,,,,,,"resources required, including personnel, equipment and materials;"
+475,39931382,ScheduleUntitledsubclause2,,,,,,estimated budget and any budget caps;
+476,5A602F07,ScheduleUntitledsubclause2,,,,,,acceptance criteria and review process; and
+477,36F9005A,ScheduleUntitledsubclause2,,,,,,any Norton Technology to be provided to the Supplier.
+478,098F4A40,ScheduleUntitledsubclause1,,,,,,"Norton may propose a Work Package by providing the Supplier with a written description of the proposed scope, objectives and timeline. The Supplier shall, within 10 Business Days, provide Norton with a detailed proposal including resource requirements, estimated costs and proposed timeline."
+479,59202CA6,ScheduleUntitledsubclause1,,,,,,The parties shall negotiate in good faith to agree the final terms of each Work Package. No Work Package shall be binding until signed by both parties' Contract Managers.
+480,425DCD5F,ScheduleTitleClause,,,,,,Work Package Change Control
+481,239C9306,ScheduleUntitledsubclause1,,,,,,"Either party may propose changes to an agreed Work Package by submitting a written change request to the other party's Contract Manager, setting out:"
+482,48C11B08,ScheduleUntitledsubclause2,,,,,,the nature and reason for the proposed change;
+483,3336D12E,ScheduleUntitledsubclause2,,,,,,"the impact on scope, timeline and deliverables; and"
+484,5903B24B,ScheduleUntitledsubclause2,,,,,,the estimated impact on costs and resources.
+485,7DDBC640,ScheduleUntitledsubclause1,,,,,,"The receiving party shall respond to a change request within 10 Business Days, either accepting the change, proposing modifications, or rejecting it with reasons."
+486,735191BD,ScheduleUntitledsubclause1,,,,,,No change to a Work Package shall be effective until agreed in writing and signed by both parties' Contract Managers. The Supplier shall not implement any change until it has been formally agreed.
+487,1B50EFAE,ScheduleTitleClause,,,,,,Review and Planning Meetings
+488,0B07AEF8,ScheduleUntitledsubclause1,,,,,,The parties shall hold regular Work Package review meetings at intervals agreed in each Work Package (and in any event not less frequently than monthly) to:
+489,40D021E2,ScheduleUntitledsubclause2,,,,,,review progress against milestones and objectives;
+490,0BB0A103,ScheduleUntitledsubclause2,,,,,,"discuss technical findings, challenges and solutions;"
+491,121DB5A0,ScheduleUntitledsubclause2,,,,,,review budget and resource utilisation;
+492,18CD842F,ScheduleUntitledsubclause2,,,,,,identify and manage risks and issues;
+493,1F54B660,ScheduleUntitledsubclause2,,,,,,plan activities for the next period; and
+494,0FE5364D,ScheduleUntitledsubclause2,,,,,,discuss opportunities for improvement.
+495,6760EF01,ScheduleUntitledsubclause1,,,,,,Each review meeting shall be attended by each party's Contract Manager and relevant technical personnel. The Supplier shall prepare and circulate meeting agendas at least 3 Business Days in advance.
+496,0CBDDAB3,ScheduleUntitledsubclause1,,,,,,"The Supplier shall prepare written minutes of each review meeting documenting decisions made, actions agreed and issues identified. Minutes shall be circulated to both parties within 5 Business Days of each meeting."
+497,6A7BB6A1,ScheduleUntitledsubclause1,,,,,,"At the completion of each Work Package, the parties shall hold a retrospective meeting to review what worked well, what could be improved and lessons learned for future Work Packages."
+498,271A21C5,ScheduleTitleClause,,,,,,Written Reports
+499,308E4FE5,ScheduleUntitledsubclause1,,,,,,The Supplier shall provide Norton with written progress reports for each active Work Package at the frequency specified in that Work Package (and in any event not less frequently than monthly).
+500,5E9BC90D,ScheduleUntitledsubclause1,,,,,,Each progress report shall include:
+501,197CCECB,ScheduleUntitledsubclause2,,,,,,summary of work completed during the reporting period;
+502,6415F7C4,ScheduleUntitledsubclause2,,,,,,progress against milestones and deliverables;
+503,39CF18FC,ScheduleUntitledsubclause2,,,,,,key technical findings and outcomes;
+504,58FE3BE9,ScheduleUntitledsubclause2,,,,,,actual costs incurred and comparison to budget;
+505,2C4D349C,ScheduleUntitledsubclause2,,,,,,forecast of costs to completion;
+506,28E80BC8,ScheduleUntitledsubclause2,,,,,,"identification of risks, issues and dependencies;"
+507,6918B997,ScheduleUntitledsubclause2,,,,,,planned activities for the next reporting period; and
+508,7494D010,ScheduleUntitledsubclause2,,,,,,any matters requiring Norton decision or input.
+509,0BFED978,ScheduleUntitledsubclause1,,,,,,"The Supplier shall immediately notify Norton in writing of any circumstances that may materially affect the delivery of a Work Package, including any anticipated delay, cost overrun, or technical obstacle."
+510,4AE99A8C,ScheduleUntitledsubclause1,,,,,,"Upon completion of each Work Package, the Supplier shall prepare a Completion Report documenting the work performed, results achieved, deliverables provided and any recommendations for future work."
+511,7EDAD169,ScheduleTitleClause,,,,,,Acceptance Criteria and Process
+512,2BA0A035,ScheduleUntitledsubclause1,,,,,,The parties shall work together to agree specific acceptance criteria for each Work Package before work commences. The acceptance criteria shall be documented in the Work Package agreement.
+513,4C2EDCDB,ScheduleUntitledsubclause1,,,,,,Acceptance criteria shall be appropriate to the nature of the work and may include:
+514,3CDBA1F7,ScheduleUntitledsubclause2,,,,,,technical performance specifications and tolerances;
+515,50E1437E,ScheduleUntitledsubclause2,,,,,,testing and validation requirements;
+516,6CE70C8A,ScheduleUntitledsubclause2,,,,,,documentation and reporting standards;
+517,76D90D2E,ScheduleUntitledsubclause2,,,,,,quality standards and inspection procedures;
+518,7FDB9212,ScheduleUntitledsubclause2,,,,,,completion of specific deliverables; and
+519,257FC031,ScheduleUntitledsubclause2,,,,,,achievement of Project Objectives.
+520,30FCD0D3,ScheduleUntitledsubclause1,,,,,,"When the Supplier believes a Work Package (or milestone within a Work Package) meets the acceptance criteria, it shall notify Norton in writing and provide evidence of compliance with the acceptance criteria."
+521,6DE3EAE4,ScheduleUntitledsubclause1,,,,,,"Norton shall, within the period specified in the Work Package agreement, review the work and either accept it, accept it subject to minor remedial work, or reject it with detailed reasons."
+522,5BB72E87,ScheduleUntitledsubclause1,,,,,,"If work is rejected, the parties shall work together in good faith to agree what remedial work is required. The Supplier shall carry out agreed remedial work at no additional cost to Norton unless the rejection resulted from a change in requirements not previously communicated to the Supplier."
+523,1D80DB12,ScheduleUntitledsubclause1,,,,,,"Given the nature of research and development work, the parties acknowledge that outcomes may vary from initial expectations. Where work has been performed in accordance with agreed methodologies and standards but does not achieve the desired technical outcome, this shall not constitute a failure to meet acceptance criteria, provided the Supplier has used reasonable skill and care."
+524,7360F5D6,ScheduleTitleClause,,,,,,Work Package Disputes
+525,69C40AB3,ScheduleUntitledsubclause1,,,,,,"If a dispute arises in relation to any Work Package (including disputes about scope, acceptance, technical approach, or costs), either party may refer the matter to the other party's Contract Manager for resolution."
+526,20DB6DE4,ScheduleUntitledsubclause1,,,,,,The Contract Managers shall meet (in person or remotely) within 5 Business Days of the dispute being raised and shall use reasonable endeavours to resolve the dispute through good faith negotiation.
+527,1D1376C8,ScheduleUntitledsubclause1,,,,,,"If the Contract Managers cannot resolve the dispute within 10 Business Days, either party may escalate the matter to senior management in accordance with clause 34 of this agreement."
+528,0EC09DEB,ScheduleUntitledsubclause1,,,,,,"Where a dispute relates to technical matters, the parties may agree to appoint an independent technical expert to provide a non-binding opinion on the matter in dispute. The costs of any such expert shall be shared equally unless the parties agree otherwise."
+529,0E76E9E2,ScheduleUntitledsubclause1,,,,,,"Unless otherwise agreed or directed by Norton, the Supplier shall continue to perform the Services during any dispute resolution process, provided Norton continues to pay undisputed amounts in accordance with this agreement."
+530,02F74EB5,ScheduleUntitledsubclause1,,,,,,Nothing in this Schedule limits the parties' rights under the dispute resolution provisions in clause 34 or any other provision of this agreement.
+531,649333CB,ScheduleTitleClause,,,,,,Roles and Responsibilities
+532,7E36DBDF,ScheduleUntitledsubclause1,,,,,,Contract Manager Responsibilities
+533,199DE4CA,ScheduleUntitledsubclause1,,,,,,Each party's Contract Manager shall have the following responsibilities in relation to Work Packages:
+534,595EC6B7,ScheduleUntitledsubclause2,,,,,,day-to-day oversight and coordination of Work Package delivery;
+535,23FA3033,ScheduleUntitledsubclause2,,,,,,negotiating and agreeing Work Package terms and changes;
+536,5017E693,ScheduleUntitledsubclause2,,,,,,"monitoring progress, budget and risks;"
+537,3FF56B45,ScheduleUntitledsubclause2,,,,,,facilitating communication between the parties;
+538,4521160D,ScheduleUntitledsubclause2,,,,,,resolving operational issues and escalating matters as appropriate;
+539,2157BE5A,ScheduleUntitledsubclause2,,,,,,reviewing and approving progress reports; and
+540,3E2E3D11,ScheduleUntitledsubclause2,,,,,,ensuring compliance with this agreement and Work Package terms.
+541,0EE97BC3,ScheduleUntitledsubclause1,,,,,,Technical Lead Responsibilities
+542,2E3D9F5D,ScheduleUntitledsubclause1,,,,,,Each party may designate a Technical Lead for each Work Package. The Technical Leads shall:
+543,0D177D1E,ScheduleUntitledsubclause2,,,,,,provide technical direction and guidance for the Work Package;
+544,5927A291,ScheduleUntitledsubclause2,,,,,,work together to resolve technical challenges and issues;
+545,60947721,ScheduleUntitledsubclause2,,,,,,review technical deliverables and provide feedback;
+546,3AAB20C1,ScheduleUntitledsubclause2,,,,,,assess technical risks and recommend mitigation strategies;
+547,521457F1,ScheduleUntitledsubclause2,,,,,,ensure technical quality and compliance with standards;
+548,717E8B7E,ScheduleUntitledsubclause2,,,,,,facilitate knowledge transfer between the parties' technical teams; and
+549,1EBA63E6,ScheduleUntitledsubclause2,,,,,,advise the Contract Managers on technical matters.
+550,6F974399,ScheduleTitleClause,,,,,,Decision-Making Authority
+551,190924A5,ScheduleUntitledsubclause1,,,,,,The following decision-making authority levels apply:
+552,0ECF7C53,ScheduleUntitledsubclause1,,,,,,Technical Leads may approve: (a) technical approaches and methodologies within agreed scope; (b) technical specifications and standards; (c) deliverable formats and documentation standards; and (d) technical risk mitigation strategies.
+553,48E14056,ScheduleUntitledsubclause1,,,,,,Contract Managers may approve: (a) written agreement of new Work Packages; (b) routine operational decisions within agreed Work Package scope; (c) schedule adjustments; (d) Work Package changes; (e) resource allocation decisions.
+554,046E0853,ScheduleUntitledsubclause1,,,,,,Contract Managers do not have authority to grant a licence of Intellectual Property Rights or approve the use of Confidential Information outside of the scope of a Work Package.
+555,0C420CE8,ScheduleUntitledsubclause1,,,,,,Any decision outside these authority levels must be escalated to the appropriate level for approval before implementation.
+556,5CF5CEF6,ScheduleTitleClause,,,,,,Knowledge Sharing and Transfer
+557,5D11936C,ScheduleUntitledsubclause1,,,,,,"For each Work Package, the Supplier shall deliver technical documentation appropriate to the nature and stage of the work, including design documentation, test results, materials specifications and recommendations for further development."
+558,06519132,ScheduleUntitledsubclause1,,,,,,"The Supplier shall provide knowledge transfer sessions as reasonably requested by Norton, including:"
+559,023BE16B,ScheduleUntitledsubclause2,,,,,,technical briefings on work performed and results achieved;
+560,4E436677,ScheduleUntitledsubclause2,,,,,,"training on methodologies, tools and processes developed;"
+561,0ABEBD9A,ScheduleUntitledsubclause2,,,,,,demonstrations of prototypes and deliverables;
+562,527C634F,ScheduleUntitledsubclause2,,,,,,workshops on technical capabilities developed; and
+563,08FAA78B,ScheduleUntitledsubclause2,,,,,,handover sessions for completed Work Packages.
+564,12FA2ACF,ScheduleUntitledsubclause1,,,,,,Norton shall have the right to observe work in progress and access the Supplier's facilities (subject to reasonable notice and security requirements) to facilitate knowledge transfer and understanding of the Services.
+565,2248FA3A,ScheduleUntitledsubclause1,,,,,,The parties shall share relevant technical information and expertise openly to facilitate effective problem-solving and achievement of Project Objectives.
+566,64B4514B,ScheduleTitleClause,,,,,,Joint Problem-Solving
+567,749F9C5C,ScheduleUntitledsubclause1,,,,,,"When technical challenges or obstacles arise, the parties shall work together in good faith to identify and implement solutions."
+568,2A3E67C4,ScheduleUntitledsubclause1,,,,,,The Supplier shall promptly notify Norton of any technical issues that may impact the delivery of a Work Package. The parties' Technical Leads shall meet promptly to assess the issue and agree on a resolution approach.
+569,371F84DF,ScheduleUntitledsubclause1,,,,,,Each party shall make available appropriate technical resources and expertise to support problem-solving activities as reasonably required.
+570,4F394178,ScheduleUntitledsubclause1,,,,,,"Where a technical issue requires a change to Work Package scope, timeline, or budget, the change control process set out in this Schedule shall apply."
+571,629165FE,ScheduleTitleClause,,,,,,Prototype Development and Testing
+572,7F02B376,ScheduleUntitledsubclause1,,,,,,"Testing of prototypes and development outputs shall be conducted through iterative review cycles rather than rigid pass/fail acceptance gates. The parties shall agree the testing approach for each Work Package, which may include bench testing, simulated environment testing, field testing and performance validation."
+573,25ABAF2E,ScheduleUntitledsubclause1,,,,,,"Test results shall be documented and reviewed jointly. Where testing reveals issues or opportunities for improvement, the parties shall agree whether to proceed with refinement, pursue alternative approaches, or conclude that aspect of the work."
+574,466C2E2F,,,,,,,
+575,2B54CF9F,Schedule,27,26,0,Schedule 6,"[6, 0, 0, 0, 0, 0, 0, 0, 0]",[OPTIONAL] Licence to Foreground Intellectual Property
+576,6859172E,ScheduleTitleClause,33,28,0,1.,"[1, 0, 0, 0, 0, 0, 0, 0, 0]",Interpretation
+577,3CDB301B,ScheduleUntitledsubclause1,33,28,1,1.1,"[1, 1, 0, 0, 0, 0, 0, 0, 0]",The following definitions apply in this Schedule in addition to terms defined elsewhere in the agreement:
+578,51F5115A,ScheduleUntitledsubclause1,,,,,,"Commercial Terms: the terms set out in paragraph 4 of this Schedule, as may be varied in the Licence Details."
+579,7004CB4E,ScheduleUntitledsubclause1,,,,,,"Licence Details: a written agreement, signed by the parties, setting out the Licence Duration, Licence Start Date, Licensed Products, Reserved Sector, Reserved Territory, Permitted Sector, Permitted Territory, Specified Intellectual Property Rights, Commercial Terms and such other terms as may be material to the licence granted under this Schedule."
+580,7EF4583F,ScheduleUntitledsubclause1,,,,,,"Licence Duration: the duration of the licence granted under this Schedule, as may be agreed in the Licence Details"
+581,0283A309,ScheduleUntitledsubclause1,,,,,,"Licence Start Date: the start date of the licence granted under this Schedule, as may be agreed in the Licence Details"
+582,48A87A9B,ScheduleUntitledsubclause1,,,,,,"Licensed Products: the class of products which shall incorporate or use (or the production of which uses) the Specified Intellectual Property Rights, as may be agreed in the Licence Details"
+583,6650F3FC,ScheduleUntitledsubclause1,,,,,,"Reserved Sector: the sector reserved to Norton, as may be agreed in the Licence Details"
+584,3F0D69AC,ScheduleUntitledsubclause1,,,,,,"Reserved Territory: the territory reserved to Norton, as may be agreed in the Licence Details"
+585,35474DC4,ScheduleUntitledsubclause1,,,,,,"Permitted Sector: the sectoral scope of the licence, as may be agreed in the Licence Details"
+586,00E05CCE,ScheduleUntitledsubclause1,,,,,,"Permitted Territory: the territorial scope of the licence, as may be agreed in the Licence Details"
+587,168A2497,ScheduleTitleClause,,,,,,"Specified Intellectual Property Rights: the Intellectual Property Rights licensed under this Schedule, as may be agreed in the Licence Details"
+588,3705900B,ScheduleTitleClause,33,28,0,2.,"[2, 0, 0, 0, 0, 0, 0, 0, 0]",Grant of Licence
+589,659B17B2,ScheduleUntitledsubclause1,,,,,,"Upon agreement of the Licence Details in writing and signed by the parties, Norton grants to the Supplier a [an exclusive OR a sole OR a non-exclusive] licence of the Specified Intellectual Property Rights in relation to the manufacture, use, sale and supply of Licensed Products in the Permitted Territory and within the Permitted Sector, subject to the terms of this Schedule."
+590,2CD68ED6,ScheduleUntitledsubclause1,,,,,,No rights or licences are conferred on the Supplier pursuant to this licence except those expressly set out in this Schedule.
+591,01438359,ScheduleUntitledsubclause1,,,,,,No rights or licences are granted to the Supplier pursuant to this licence in respect of the Reserved Sector [and/or the Reserved Territory].
+592,58174624,ScheduleTitleClause,,,,,,Duration and Termination
+593,0FEAB2FD,ScheduleUntitledsubclause1,,,,,,This licence shall commence on the Licence Start Date and shall continue for the Licence Duration unless terminated earlier in accordance with this Schedule.
+594,39E15A91,ScheduleUntitledsubclause1,,,,,,This licence shall terminate automatically upon termination or expiry of the agreement for any reason.
+595,19538B65,ScheduleUntitledsubclause1,,,,,,Norton may terminate this licence immediately by written notice to the Supplier if:
+596,5135867A,ScheduleUntitledsubclause2,,,,,,the Supplier breaches any material term of this Schedule and fails to remedy such breach within 30 days of receiving written notice;
+597,7C389E27,ScheduleUntitledsubclause2,,,,,,the Supplier uses the Specified Intellectual Property Rights outside the Permitted Territory or Permitted Sector;
+598,27741719,ScheduleUntitledsubclause2,,,,,,the Supplier sub-licenses the Specified Intellectual Property Rights without Norton's approval; or
+599,155C5188,ScheduleUntitledsubclause2,,,,,,the Supplier challenges Norton's ownership of the Specified Intellectual Property Rights.
+600,11B0949E,ScheduleUntitledsubclause1,,,,,,Norton may terminate this licence for convenience by giving the Supplier not less than [6] months' prior written notice.
+601,3E422C71,ScheduleUntitledsubclause1,,,,,,"Upon termination or expiry of this licence, all rights granted to the Supplier under this Schedule shall immediately cease, subject to the provisions regarding manufactured hardware set out in this Schedule."
+602,3E3268B5,ScheduleTitleClause,,,,,,Commercial Terms
+603,2EE7ADBD,ScheduleUntitledsubclause1,,,,,,[SELECT AN OPTION].
+604,0900F82A,ScheduleUntitledsubclause1,,,,,,[ROYALTY FREE] The licence is granted on a royalty-free basis. No payments shall be due from the Supplier to Norton for the use of the Specified Intellectual Property Rights.
+605,053D2832,ScheduleUntitledsubclause1,,,,,,"[ANNUAL LICENCE FEE] The Supplier shall pay Norton an annual licence fee of £[AMOUNT] (the ""Licence Fee""). The first Licence Fee shall be payable within 30 days of the first commercial use of the Specified Intellectual Property Rights. Subsequent annual Licence Fees shall be payable on each anniversary of the first commercial use. All Licence Fees are non-refundable."
+606,163BBDD7,ScheduleTitleClause,,,,,,Sub-licensing
+607,0CEE9303,ScheduleUntitledsubclause1,,,,,,The Supplier shall not sub-license the Specified Intellectual Property Rights without Norton's prior written approval.
+608,405F5281,ScheduleUntitledsubclause1,,,,,,Any request for sub-licensing approval must be made in writing and include:
+609,2ED68FDB,ScheduleUntitledsubclause2,,,,,,details of the proposed sub-licensee;
+610,0EE7B169,ScheduleUntitledsubclause2,,,,,,the scope of the proposed sub-licence;
+611,62F23BD0,ScheduleUntitledsubclause2,,,,,,[the commercial terms proposed]; and
+612,378A8C84,ScheduleUntitledsubclause2,,,,,,any other information reasonably required by Norton.
+613,593D8728,ScheduleUntitledsubclause1,,,,,,"Norton may grant or withhold approval in its absolute discretion and may impose commercial licensing terms and other conditions as a condition of approval, including requirements that:"
+614,2876F641,ScheduleUntitledsubclause2,,,,,,the sub-licensee enters into a direct licence agreement with Norton;
+615,76D1E497,ScheduleUntitledsubclause2,,,,,,the sub-licensee pays licence fees or royalties to Norton;
+616,6D3B71E9,ScheduleUntitledsubclause2,,,,,,the Supplier shares a percentage of any revenues received from the sub-licensee with Norton;
+617,1C8DD7A1,ScheduleUntitledsubclause2,,,,,,the sub-licence includes restrictions consistent with those in this Schedule; or
+618,08960931,ScheduleUntitledsubclause2,,,,,,the sub-licence terminates automatically if this licence terminates.
+619,7EEB5E22,ScheduleUntitledsubclause1,,,,,,Any sub-licence granted must be consistent with the terms of this licence and the Supplier shall remain responsible for all acts and omissions of its sub-licensees.
+620,26874D8B,ScheduleTitleClause,,,,,,Manufacturing Hardware and Effect of Termination
+621,2FB68578,ScheduleUntitledsubclause1,,,,,,"The Supplier may manufacture hardware products incorporating or utilising the Specified Intellectual Property Rights during the term of this licence, provided such manufacture and use complies with all terms of this licence including the Permitted Territory and Permitted Sector restrictions."
+622,082B1A60,ScheduleUntitledsubclause1,,,,,,Upon termination or expiry of this licence for any reason:
+623,789F76D0,ScheduleUntitledsubclause2,,,,,,The Supplier shall immediately cease all new manufacturing of hardware products incorporating or utilising the Specified Intellectual Property Rights.
+624,189E14A2,ScheduleUntitledsubclause2,,,,,,"The Supplier shall cease all new uses of the Specified Intellectual Property Rights, including in new products, services, or applications."
+625,038A4320,ScheduleUntitledsubclause2,,,,,,"The Supplier may continue to sell hardware products that have already been manufactured before the termination date for a period of [90] days following termination, provided such sales comply with the Permitted Territory and Permitted Sector restrictions and all other terms of this licence."
+626,63A9F9D4,ScheduleTitleClause,,,,,,Protection of Intellectual Property Rights
+627,0AE22039,ScheduleUntitledsubclause1,,,,,,The Supplier acknowledges Norton's ownership of the Specified Intellectual Property Rights and the Supplier's rights to use such Specified Intellectual Property Rights are limited to the licence expressly granted in this Schedule.
+628,1FFAD4E5,ScheduleUntitledsubclause1,,,,,,"The Supplier shall not take any action to challenge, oppose, or impugn the validity of Norton's ownership of the Specified Intellectual Property Rights or any registrations or applications relating to it."
+629,74C612C8,ScheduleUntitledsubclause1,,,,,,The Supplier shall not register or attempt to register any intellectual property rights that are identical or confusingly similar to the Specified Intellectual Property Rights in any jurisdiction.
+630,6DCB6855,ScheduleUntitledsubclause1,,,,,,"The Supplier shall promptly notify Norton in writing of any actual or threatened infringement of the Specified Intellectual Property Rights that comes to the Supplier's attention, providing full details of the infringement."
+631,2F6E7174,ScheduleUntitledsubclause1,,,,,,"Norton shall have the sole right to take action against any infringement of the Specified Intellectual Property Rights and shall have sole control over any such proceedings. The Supplier shall, at Norton's request and expense, provide reasonable assistance to Norton in any infringement proceedings."
+632,3B032A42,ScheduleUntitledsubclause1,,,,,,The Supplier shall use appropriate proprietary notices on products and materials incorporating the Specified Intellectual Property Rights as reasonably directed by Norton.
+633,03790BE2,ScheduleTitleClause,,,,,,Handling of Claims
+634,55C991C6,ScheduleUntitledsubclause1,,,,,,The Supplier shall immediately notify Norton in writing if any third party makes any claim or allegation that the Supplier's use of the Specified Intellectual Property Rights infringes any third-party intellectual property rights.
+635,30EA4D5F,ScheduleUntitledsubclause1,,,,,,"The Supplier shall not make any admissions, settlements, or compromises in relation to any such claim without Norton's prior written consent."
+636,27A6F354,ScheduleUntitledsubclause1,,,,,,"Norton may, at its option, assume control of the defence or settlement of any such claim. If Norton elects to assume control, the Supplier shall provide reasonable cooperation and assistance at Norton's expense."
+637,33122B11,ScheduleUntitledsubclause1,,,,,,"If Norton determines that the Supplier's use of the Specified Intellectual Property Rights is likely to infringe third party rights, Norton may:"
+638,74E80207,ScheduleUntitledsubclause2,,,,,,modify the licence grant to avoid infringement;
+639,71419502,ScheduleUntitledsubclause2,,,,,,obtain rights for the Supplier to continue using the Specified Intellectual Property Rights; or
+640,4AD1B1BC,ScheduleUntitledsubclause2,,,,,,terminate this licence with immediate effect. Norton shall have no liability to the Supplier in connection with any such action.
+641,699C596D,ScheduleTitleClause,,,,,,Quality Control and Standards
+642,2E1FAC86,ScheduleUntitledsubclause1,,,,,,"The Supplier shall use the Specified Intellectual Property Rights in accordance with good industry practice and all applicable laws, regulations and standards."
+643,102A692C,ScheduleUntitledsubclause1,,,,,,The Supplier shall maintain quality standards for all products and services incorporating the Specified Intellectual Property Rights that are consistent with the standards maintained for the development of such Specified Intellectual Property Rights under this agreement.
+644,46118451,ScheduleUntitledsubclause1,,,,,,"Norton may, upon reasonable notice and during Business Hours, inspect the Supplier's facilities and processes related to the use of the Specified Intellectual Property Rights to verify compliance with this Schedule. The Supplier shall provide reasonable cooperation with any such inspection."
+645,290DEE45,ScheduleUntitledsubclause1,,,,,,"If Norton reasonably determines that the Supplier's use of the Specified Intellectual Property Rights does not meet the required quality standards or is otherwise damaging to Norton's reputation or goodwill, Norton may require the Supplier to cease the non-compliant use or, if the Supplier fails to remedy the issue within a reasonable time specified by Norton, terminate this licence."
+646,167A948D,ScheduleTitleClause,,,,,,Records and Reporting
+647,3233B4C1,ScheduleUntitledsubclause1,,,,,,[DELETE WHOLE CLAUSE IF ROYALTY FREE]
+648,77A1A3A3,ScheduleUntitledsubclause1,,,,,,The Supplier shall maintain complete and accurate records of all uses of the Specified Intellectual Property Rights and all revenues derived from products and services incorporating or utilising the Specified Intellectual Property Rights.
+649,54855332,ScheduleUntitledsubclause1,,,,,,The Supplier shall provide Norton with written reports [quarterly OR annually] containing:
+650,7CFD769D,ScheduleUntitledsubclause2,,,,,,details of all products and services incorporating the Specified Intellectual Property Rights;
+651,14B82E81,ScheduleUntitledsubclause2,,,,,,sales volumes and net revenue for all such products and services;
+652,14BFED7C,ScheduleUntitledsubclause2,,,,,,territories in which sales have been made; and
+653,0F0F89D2,ScheduleUntitledsubclause2,,,,,,any sub-licences granted or contemplated.
+654,6226FC74,ScheduleUntitledsubclause1,,,,,,"Norton shall have the right, upon reasonable notice and during Business Hours, to audit the Supplier's records relating to the Specified Intellectual Property Rights for the purpose of verifying compliance with this Schedule. Any such audit shall be conducted no more than once per calendar year unless a previous audit has revealed material non-compliance. The Supplier shall provide reasonable cooperation with any such audit."
+655,0CAFCCB4,ScheduleUntitledsubclause1,,,,,,"If an audit reveals that the Supplier has underpaid licence fees by more than 5%, the Supplier shall reimburse Norton for the reasonable costs of the audit in addition to paying any amounts due."
+656,4F4CD1B5,ScheduleUntitledsubclause1,,,,,,The Supplier shall maintain all records required under this clause for a period of at least 3 years following the end of the period to which they relate.
+657,5115EF0F,ScheduleTitleClause,,,,,,Improvements
+658,5180F847,ScheduleUntitledsubclause1,,,,,,"If the Supplier develops any improvements, modifications, enhancements, or derivative works of the Specified Intellectual Property (""Specified IPR Improvements""), the Supplier shall promptly notify Norton in writing and provide Norton with full details of such Specified IPR Improvements."
+659,2D0FC6BE,ScheduleUntitledsubclause1,,,,,,Where the Specified IPR Improvements were developed by the Supplier within the scope of the Licence Details:
+660,50A54738,ScheduleUntitledsubclause2,,,,,,the Supplier shall own all rights and title to any Intellectual Property Rights in the Specified IPR Improvements (excluding the Specified Intellectual Property Rights);
+661,15CF5EE3,ScheduleUntitledsubclause2,,,,,,"the Supplier hereby grants to Norton a perpetual, irrevocable, worldwide, royalty-free, exclusive licence to use, reproduce, modify and sub-license all Specified IPR Improvements in relation to the Reserved Sector [and/or the Reserved Territory]; and"
+662,4F77EA14,ScheduleUntitledsubclause2,,,,,,"the Supplier shall not use, license, or otherwise exploit Specified IPR Improvements in relation to the Reserved Sector [and/or the Reserved Territory] except as expressly permitted in writing by Norton."
+663,69368975,Untitledsubclause1,24,0,1,36.1,"[36, 1, 0, 0, 0, 0, 0, 0, 0]","Where the Specified IPR Improvements were developed by the Supplier outside of the scope of the Licence Details, Norton shall own all rights and title to any Intellectual Property Rights in the Specified IPR Improvements.  The Supplier assigns to Norton, immediately on creation, with full title guarantee, such Specified IPR Improvements."
+664,6EFBC97C,ScheduleUntitledsubclause1,,,,,,"The Supplier shall, at Norton's request and expense, execute all documents and take all actions reasonably necessary to perfect Norton's rights in any Specified IPR Improvements, including any assignments, patent applications and registrations."
+665,253C5714,ScheduleTitleClause,,,,,,General Provisions
+666,16E56AF7,ScheduleUntitledsubclause1,,,,,,"This licence is non-transferable and the Supplier shall not assign, novate, or otherwise transfer its rights or obligations under this Schedule without Norton's prior written consent."
+667,7A455141,ScheduleUntitledsubclause1,,,,,,"Norton may assign, novate, or otherwise transfer its rights and obligations under this Schedule to any third party without the Supplier's consent."
+668,504B2E69,ScheduleUntitledsubclause1,,,,,,No waiver by Norton of any breach of this Schedule shall constitute a waiver of any subsequent breach.
+669,6F405F76,ScheduleUntitledsubclause1,,,,,,"All other terms of the main agreement shall apply to this licence except to the extent inconsistent with the express terms of this Schedule, in which case the terms of this Schedule shall prevail."

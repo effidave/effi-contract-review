@@ -1,0 +1,10 @@
+# Helper script to add Node.js to PATH for this session
+$env:PATH = "C:\Users\DavidSant\node-v25.2.1-win-x64;$env:PATH"
+Write-Host "Node.js added to PATH for this PowerShell session"
+Write-Host "Node version: $(node --version)"
+Write-Host "npm version: $(npm --version)"
+Write-Host ""
+Write-Host "You can now run:"
+Write-Host "  npm install"
+Write-Host "  npm run compile"
+Write-Host "  npm run watch"
