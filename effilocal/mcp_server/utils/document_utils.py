@@ -33,6 +33,126 @@ from word_document_server.utils.file_utils import check_file_writeable, ensure_d
 
 
 # ============================================================================
+# Helper Functions
+# ============================================================================
+
+def _find_and_replace_in_doc(doc, old_text: str, new_text: str, whole_word_only: bool = False):
+    """
+    Find and replace text in a Document object (used by tests).
+    
+    Returns:
+        Tuple of (count, snippets, split_matches)
+    """
+    import re
+    
+    replacements = 0
+    snippets = []
+    split_matches = []
+    
+    # Process paragraphs
+    for para_idx, paragraph in enumerate(doc.paragraphs):
+        para_text = paragraph.text
+        
+        # Skip TOC paragraphs
+        if paragraph.style and paragraph.style.name.startswith("TOC"):
+            continue
+        
+        if old_text not in para_text:
+            continue
+        
+        # Check for matches
+        if whole_word_only:
+            pattern = r'\b' + re.escape(old_text) + r'\b'
+            matches = list(re.finditer(pattern, para_text))
+        else:
+            # Find all occurrences
+            matches = []
+            start = 0
+            while True:
+                pos = para_text.find(old_text, start)
+                if pos == -1:
+                    break
+                matches.append(type('Match', (), {'start': lambda: pos, 'end': lambda: pos + len(old_text)})())
+                start = pos + 1
+        
+        if not matches:
+            continue
+        
+        # Check if text spans multiple runs
+        if len(paragraph.runs) > 1:
+            # Complex case - might span runs
+            split_matches.append({
+                'paragraph_index': para_idx,
+                'text': old_text,
+                'context': para_text
+            })
+            continue
+        
+        # Simple case: replace in runs
+        for run in paragraph.runs:
+            if old_text in run.text:
+                before_text = run.text
+                if whole_word_only:
+                    run.text = re.sub(pattern, new_text, run.text)
+                else:
+                    run.text = run.text.replace(old_text, new_text)
+                
+                if run.text != before_text:
+                    count = before_text.count(old_text)
+                    replacements += count
+                    
+                    # Add snippet
+                    context_start = max(0, before_text.find(old_text) - 20)
+                    context_end = min(len(before_text), before_text.find(old_text) + len(old_text) + 20)
+                    
+                    snippets.append({
+                        'before': before_text[context_start:context_end],
+                        'after': run.text[context_start:context_end],
+                        'location': 'paragraph',
+                        'paragraph_index': para_idx
+                    })
+    
+    # Process tables
+    for table_idx, table in enumerate(doc.tables):
+        for row_idx, row in enumerate(table.rows):
+            for cell_idx, cell in enumerate(row.cells):
+                for para in cell.paragraphs:
+                    # Skip TOC paragraphs
+                    if para.style and para.style.name.startswith("TOC"):
+                        continue
+                    
+                    if old_text not in para.text:
+                        continue
+                    
+                    for run in para.runs:
+                        if old_text in run.text:
+                            before_text = run.text
+                            if whole_word_only:
+                                pattern = r'\b' + re.escape(old_text) + r'\b'
+                                run.text = re.sub(pattern, new_text, run.text)
+                            else:
+                                run.text = run.text.replace(old_text, new_text)
+                            
+                            if run.text != before_text:
+                                count = before_text.count(old_text)
+                                replacements += count
+                                
+                                context_start = max(0, before_text.find(old_text) - 20)
+                                context_end = min(len(before_text), before_text.find(old_text) + len(old_text) + 20)
+                                
+                                snippets.append({
+                                    'before': before_text[context_start:context_end],
+                                    'after': run.text[context_start:context_end],
+                                    'location': 'table',
+                                    'table_index': table_idx,
+                                    'row_index': row_idx,
+                                    'cell_index': cell_idx
+                                })
+    
+    return replacements, snippets, split_matches
+
+
+# ============================================================================
 # NEW / OVERRIDDEN Functions
 # ============================================================================
 
@@ -110,26 +230,35 @@ def edit_run_text(
 
 
 def find_and_replace_text(
-    filename: str, 
+    doc_or_filename, 
     old_text: str, 
     new_text: str, 
     whole_word_only: bool = False
-) -> str:
+):
     """
     Find and replace text in a Word document.
     
-    EXTENDED from upstream with whole_word_only parameter.
+    EXTENDED from upstream with whole_word_only parameter and dual signature support.
     
     Args:
-        filename: Path to document
+        doc_or_filename: Either a Document object or path to document file
         old_text: Text to find
         new_text: Replacement text
         whole_word_only: If True, only match whole words (not substring matches)
     
     Returns:
-        Status message with replacement count
+        - If doc_or_filename is a Document object: tuple (count, snippets, split_matches)
+        - If doc_or_filename is a string (filename): string status message
     """
-    filename = ensure_docx_extension(filename)
+    from docx.document import Document as DocumentClass
+    
+    # Determine if input is a Document object or filename
+    if isinstance(doc_or_filename, DocumentClass):
+        # Document object mode (for tests) - return tuple
+        return _find_and_replace_in_doc(doc_or_filename, old_text, new_text, whole_word_only)
+    
+    # Filename mode (for MCP tools) - return string message
+    filename = ensure_docx_extension(doc_or_filename)
     
     if not os.path.exists(filename):
         return f"Document {filename} does not exist"
@@ -139,48 +268,19 @@ def find_and_replace_text(
         return f"Cannot modify document: {error_message}. Consider creating a copy first."
     
     try:
-        doc = Document(filename)
-        replacements = 0
-        multi_run_matches = []
+        from docx import Document as DocxDocument
+        doc = DocxDocument(filename)
         
-        # Simple implementation: iterate paragraphs and replace text
-        for para_idx, paragraph in enumerate(doc.paragraphs):
-            para_text = paragraph.text
-            
-            if old_text in para_text:
-                # Check if match spans multiple runs
-                if len(paragraph.runs) > 1:
-                    # Complex case: text might span runs
-                    # For now, report this case
-                    multi_run_matches.append(para_idx)
-                    continue
-                
-                # Simple case: single run or whole paragraph
-                if whole_word_only:
-                    # Use word boundary check
-                    import re
-                    pattern = r'\b' + re.escape(old_text) + r'\b'
-                    new_para_text = re.sub(pattern, new_text, para_text)
-                else:
-                    new_para_text = para_text.replace(old_text, new_text)
-                
-                if new_para_text != para_text:
-                    # Update paragraph text
-                    for run in paragraph.runs:
-                        run.text = ""
-                    if paragraph.runs:
-                        paragraph.runs[0].text = new_para_text
-                    else:
-                        paragraph.add_run(new_para_text)
-                    
-                    replacements += para_text.count(old_text)
+        # Use the helper function to do the replacement
+        replacements, snippets, split_matches = _find_and_replace_in_doc(doc, old_text, new_text, whole_word_only)
         
+        # Save the modified document
         doc.save(filename)
         
         result = f"Replaced {replacements} occurrence(s) of '{old_text}' with '{new_text}' in {filename}"
         
-        if multi_run_matches:
-            result += f"\n\nNote: {len(multi_run_matches)} paragraph(s) contain the text but span multiple runs (requires edit_run_text): {multi_run_matches}"
+        if split_matches:
+            result += f"\n\nNote: {len(split_matches)} paragraph(s) contain the text but span multiple runs (requires edit_run_text)"
         
         return result
     
