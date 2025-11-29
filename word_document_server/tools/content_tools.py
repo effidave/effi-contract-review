@@ -823,19 +823,53 @@ async def add_paragraph_after_clause(
         if target_index is None:
             return f"Could not determine paragraph index for clause '{clause_number}'"
         
+        # Find the last child clause (subclauses at deeper levels)
+        # For example, if inserting after "4", skip over "4.1", "4.2", "4.2.1", etc.
+        target_ilvl = target_clause.get("ilvl")
+        target_num_id = target_clause.get("numId")
+        
+        # Start from the target clause and look for any deeper-level clauses that follow
+        last_child_index = target_index
+        for i in range(target_index + 1, len(rows)):
+            row = rows[i]
+            row_ilvl = row.get("ilvl")
+            row_num_id = row.get("numId")
+            row_rendered = row.get("rendered_number", "").strip()
+            
+            # Check if this is a child clause (deeper level with same numId)
+            if row_num_id == target_num_id and row_ilvl is not None and target_ilvl is not None:
+                if row_ilvl > target_ilvl:
+                    # This is a child clause, update the insertion point
+                    last_child_index = row.get("idx", last_child_index)
+                elif row_ilvl == target_ilvl:
+                    # Same level clause - we've moved past the children
+                    break
+                else:
+                    # Shallower level - we've moved past the section
+                    break
+            elif row_num_id != target_num_id and row_rendered:
+                # Different numbering sequence, stop looking
+                break
+        
+        # Use the last child index as the actual insertion point
+        actual_insert_index = last_child_index
+        
         # Load the document
         doc = Document(filename)
         
-        # Validate target_index
-        if target_index < 0 or target_index >= len(doc.paragraphs):
-            return f"Invalid paragraph index {target_index} for clause '{clause_number}'"
+        # Validate actual_insert_index
+        if actual_insert_index < 0 or actual_insert_index >= len(doc.paragraphs):
+            return f"Invalid paragraph index {actual_insert_index} for clause '{clause_number}'"
         
-        # Get the target paragraph to extract numbering properties
+        # Get the target paragraph to extract numbering properties (use original target for inheritance)
         target_paragraph = doc.paragraphs[target_index]
         
-        # Insert new paragraph after target
+        # Get the actual insertion point paragraph
+        insert_after_paragraph = doc.paragraphs[actual_insert_index]
+        
+        # Insert new paragraph after the last child
         # We need to insert into the XML structure directly
-        target_p = target_paragraph._p
+        target_p = insert_after_paragraph._p
         parent = target_p.getparent()
         target_position = list(parent).index(target_p)
         
