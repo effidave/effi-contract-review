@@ -8,7 +8,7 @@ from pathlib import Path
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from word_document_server.tools.attachment_tools import (
+from effilocal.mcp_server.tools.attachment_tools import (
     add_paragraph_after_attachment,
     add_paragraphs_after_attachment
 )

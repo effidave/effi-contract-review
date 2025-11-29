@@ -8,8 +8,8 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from word_document_server.tools.content_tools import add_paragraph_after_clause
-from word_document_server.tools.attachment_tools import (
+from effilocal.mcp_server.tools.content_tools import add_paragraph_after_clause
+from effilocal.mcp_server.tools.attachment_tools import (
     add_new_attachment_after,
     add_paragraph_after_attachment,
     find_paragraph_by_id

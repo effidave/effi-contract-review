@@ -7,7 +7,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from word_document_server.tools.attachment_tools import (
+from effilocal.mcp_server.tools.attachment_tools import (
     add_new_attachment_after,
     find_paragraph_by_id
 )

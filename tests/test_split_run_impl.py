@@ -5,7 +5,7 @@ Test script to verify the split-run detection and edit_run_text implementation.
 import tempfile
 import os
 from docx import Document
-from word_document_server.utils.document_utils import find_and_replace_text, edit_run_text
+from effilocal.mcp_server.utils.document_utils import find_and_replace_text, edit_run_text
 
 
 def test_split_run_detection():

@@ -8,7 +8,7 @@ import sys
 # Add the project to path
 sys.path.insert(0, os.path.dirname(__file__))
 
-from word_document_server.tools import document_tools
+from effilocal.mcp_server.tools import document_tools
 
 async def main():
     directory = r"C:\Users\DavidSant\Contract Tools\SightWatcher"

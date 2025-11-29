@@ -4,7 +4,7 @@ import tempfile
 import shutil
 from pathlib import Path
 from docx import Document
-from word_document_server.tools.content_tools import (
+from effilocal.mcp_server.tools.content_tools import (
     add_paragraph_after_clause,
     add_paragraphs_after_clause,
 )

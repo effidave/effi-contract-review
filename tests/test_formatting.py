@@ -5,8 +5,8 @@ import asyncio
 import pytest
 from pathlib import Path
 from docx import Document
-from word_document_server.tools.content_tools import add_paragraph, add_heading
-from word_document_server.tools.document_tools import create_document
+from effilocal.mcp_server.tools.content_tools import add_paragraph, add_heading
+from effilocal.mcp_server.tools.document_tools import create_document
 
 
 @pytest.mark.asyncio

@@ -11,7 +11,7 @@ from pathlib import Path
 # Add the parent directory to the path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from word_document_server.core.comments import (
+from effilocal.mcp_server.core.comments import (
     extract_comment_status_map,
     merge_comment_status
 )

@@ -1,7 +1,7 @@
 """Test numbering analysis tools."""
 import pytest
 from pathlib import Path
-from word_document_server.tools.numbering_tools import (
+from effilocal.mcp_server.tools.numbering_tools import (
     analyze_document_numbering,
     get_numbering_summary,
     extract_outline_structure,

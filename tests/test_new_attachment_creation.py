@@ -7,7 +7,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from word_document_server.tools.attachment_tools import add_new_attachment_after
+from effilocal.mcp_server.tools.attachment_tools import add_new_attachment_after
 from effilocal.doc import direct_docx
 from docx import Document
 from docx.oxml.ns import qn

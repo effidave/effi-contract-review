@@ -11,8 +11,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from docx import Document
-from word_document_server.utils.document_utils import find_and_replace_text
-from word_document_server.tools.content_tools import search_and_replace
+from effilocal.mcp_server.utils.document_utils import find_and_replace_text
+from effilocal.mcp_server.tools.content_tools import search_and_replace
 
 
 class TestFindAndReplaceText:
