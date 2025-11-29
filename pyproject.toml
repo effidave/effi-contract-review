@@ -39,4 +39,5 @@ sources = ["."]
 
 [project.scripts]
 word_mcp_server = "word_document_server.main:run_server"
+effilocal_mcp_server = "effilocal.mcp_server.main:main"
 
