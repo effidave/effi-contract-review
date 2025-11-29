@@ -23,9 +23,21 @@ from effilocal.artifact_loader import ArtifactLoader
 
 def find_analysis_dir(project_name: str) -> Path:
     """Find analysis directory for a project."""
+    # If it's already a path to analysis directory, use it directly
+    project_path = Path(project_name)
+    if project_path.exists() and project_path.is_dir():
+        # Check if it's the analysis dir itself
+        if project_path.name == "analysis" and (project_path / "manifest.json").exists():
+            return project_path
+        # Check if it has an analysis subdirectory
+        analysis_dir = project_path / "analysis"
+        if analysis_dir.exists() and (analysis_dir / "manifest.json").exists():
+            return analysis_dir
+    
+    # Try as project name in EL_Projects
     base_dir = Path("EL_Projects")
     
-    # Try exact match first
+    # Try exact match
     project_dir = base_dir / project_name
     if project_dir.exists():
         analysis_dir = project_dir / "analysis"
@@ -33,9 +45,9 @@ def find_analysis_dir(project_name: str) -> Path:
             return analysis_dir
     
     # Try substring match
-    for project_path in base_dir.glob("*"):
-        if project_path.is_dir() and project_name.lower() in project_path.name.lower():
-            analysis_dir = project_path / "analysis"
+    for project_dir in base_dir.glob("*"):
+        if project_dir.is_dir() and project_name.lower() in project_dir.name.lower():
+            analysis_dir = project_dir / "analysis"
             if analysis_dir.exists():
                 return analysis_dir
     
