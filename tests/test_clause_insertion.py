@@ -55,21 +55,21 @@ async def test_add_paragraph_after_clause_simple(temp_numbered_doc):
 
 @pytest.mark.asyncio
 async def test_add_paragraph_after_nested_clause(temp_numbered_doc):
-    """Test adding a paragraph after a nested clause like 2.1."""
+    """Test adding a paragraph after a nested clause like 5.1."""
     result = await add_paragraph_after_clause(
         str(temp_numbered_doc),
-        "2.1",
-        "New content under 2.1",
+        "5.1",
+        "New content under 5.1",
         inherit_numbering=True
     )
     
-    assert "Paragraph added after clause '2.1'" in result
+    assert "Paragraph added after clause '5.1'" in result
     
     # Verify
     doc = Document(str(temp_numbered_doc))
     found = False
     for para in doc.paragraphs:
-        if "New content under 2.1" in para.text:
+        if "New content under 5.1" in para.text:
             found = True
             break
     assert found
@@ -77,15 +77,15 @@ async def test_add_paragraph_after_nested_clause(temp_numbered_doc):
 
 @pytest.mark.asyncio
 async def test_add_paragraph_after_deep_nested_clause(temp_numbered_doc):
-    """Test adding a paragraph after a deeply nested clause like 2.1.1."""
+    """Test adding a paragraph after a deeply nested clause like 5.1.1."""
     result = await add_paragraph_after_clause(
         str(temp_numbered_doc),
-        "2.1.1",
+        "5.1.1",
         "New deep nested content",
         inherit_numbering=True
     )
     
-    assert "Paragraph added after clause '2.1.1'" in result
+    assert "Paragraph added after clause '5.1.1'" in result
     
     # Verify
     doc = Document(str(temp_numbered_doc))
@@ -149,7 +149,7 @@ async def test_add_paragraphs_multiple(temp_numbered_doc):
     
     result = await add_paragraphs_after_clause(
         str(temp_numbered_doc),
-        "2.1",
+        "5.1",
         paragraphs,
         inherit_numbering=True
     )
@@ -225,7 +225,7 @@ async def test_numbering_inheritance_properties(temp_numbered_doc):
     """Test that numId and ilvl are properly inherited."""
     result = await add_paragraph_after_clause(
         str(temp_numbered_doc),
-        "2.1",
+        "5.1",
         "Test inheritance",
         inherit_numbering=True
     )
