@@ -6,14 +6,10 @@ Supports multiple transports: stdio, sse, and streamable-http using standalone F
 
 import os
 import sys
-import logging
 from dotenv import load_dotenv
 
-# Configure logging to stderr so MCP stdio parser isn't broken by plain prints
-logging.basicConfig(stream=sys.stderr, level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
-
-logger.info("Loading configuration from .env file...")
+# Load environment variables from .env file
+print("Loading configuration from .env file...")
 load_dotenv()
 # Set required environment variable for FastMCP 2.8.1+
 os.environ.setdefault('FASTMCP_LOG_LEVEL', 'INFO')
@@ -25,10 +21,10 @@ from word_document_server.tools import (
     protection_tools,
     footnote_tools,
     extended_document_tools,
-    comment_tools,
-    numbering_tools,
-    attachment_tools
+    comment_tools
 )
+from word_document_server.tools.content_tools import replace_paragraph_block_below_header_tool
+from word_document_server.tools.content_tools import replace_block_between_manual_anchors_tool
 
 def get_transport_config():
     """
@@ -92,10 +88,6 @@ mcp = FastMCP("Word Document Server")
 
 
 def register_tools():
-    @mcp.tool()
-    async def save_document_as_markdown(filename: str):
-        """Extract all text from a Word document and save as a Markdown (.md) file with the same base name."""
-        return await document_tools.save_document_as_markdown(filename)
     """Register all tools with the MCP server using FastMCP decorators."""
     
     # Document tools (create, copy, info, etc.)
@@ -172,8 +164,7 @@ def register_tools():
     @mcp.tool()
     def add_heading(filename: str, text: str, level: int = 1,
                     font_name: str = None, font_size: int = None,
-                    bold: bool = None, italic: bool = None,
-                    border_bottom: bool = False, color: str = None):
+                    bold: bool = None, italic: bool = None, border_bottom: bool = False):
         """Add a heading to a Word document with optional formatting.
 
         Args:
@@ -185,19 +176,8 @@ def register_tools():
             bold: Make heading bold
             italic: Make heading italic
             border_bottom: Add bottom border (for section headers)
-            color: Hex RGB text color (e.g., '#2F5496')
         """
-        return content_tools.add_heading(
-            filename,
-            text,
-            level,
-            font_name,
-            font_size,
-            bold,
-            italic,
-            border_bottom,
-            color=color,
-        )
+        return content_tools.add_heading(filename, text, level, font_name, font_size, bold, italic, border_bottom)
     
     @mcp.tool()
     def add_picture(filename: str, image_path: str, width: float = None):
@@ -244,24 +224,6 @@ def register_tools():
             filename, paragraph_index, start_pos, end_pos, bold, italic, 
             underline, color, font_size, font_name
         )
-    
-    @mcp.tool()
-    def edit_run_text(filename: str, paragraph_index: int, run_index: int, new_text: str, 
-                     start_offset: int = None, end_offset: int = None):
-        """Edit text within a specific run of a paragraph.
-        
-        Handles cases where text spans multiple formatting regions (runs).
-        Use this when search_and_replace detects text spans multiple runs.
-        
-        Args:
-            filename: Path to Word document
-            paragraph_index: Paragraph number (0-based)
-            run_index: Run number within paragraph (0-based)
-            new_text: Replacement text for the run
-            start_offset: Optional start position within the run (0-based)
-            end_offset: Optional end position within the run (0-based, exclusive)
-        """
-        return content_tools.edit_run_text_tool(filename, paragraph_index, run_index, new_text, start_offset, end_offset)
     
     @mcp.tool()
     def format_table(filename: str, table_index: int, has_header_row: bool = None,
@@ -427,15 +389,15 @@ def register_tools():
         """Convert a Word document to PDF format."""
         return extended_document_tools.convert_to_pdf(filename, output_filename)
 
-#    @mcp.tool()
-#    def replace_paragraph_block_below_header(filename: str, header_text: str, new_paragraphs: list, detect_block_end_fn=None):
-#        """Reemplaza el bloque de párrafos debajo de un encabezado, evitando modificar TOC."""
-#        return replace_paragraph_block_below_header_tool(filename, header_text, new_paragraphs, detect_block_end_fn)
+    @mcp.tool()
+    def replace_paragraph_block_below_header(filename: str, header_text: str, new_paragraphs: list, detect_block_end_fn=None):
+        """Reemplaza el bloque de párrafos debajo de un encabezado, evitando modificar TOC."""
+        return replace_paragraph_block_below_header_tool(filename, header_text, new_paragraphs, detect_block_end_fn)
 
     @mcp.tool()
     def replace_block_between_manual_anchors(filename: str, start_anchor_text: str, new_paragraphs: list, end_anchor_text: str = None, match_fn=None, new_paragraph_style: str = None):
         """Replace all content between start_anchor_text and end_anchor_text (or next logical header if not provided)."""
-        return content_tools.replace_block_between_manual_anchors_tool(filename, start_anchor_text, new_paragraphs, end_anchor_text, match_fn, new_paragraph_style)
+        return replace_block_between_manual_anchors_tool(filename, start_anchor_text, new_paragraphs, end_anchor_text, match_fn, new_paragraph_style)
 
     # Comment tools
     @mcp.tool()
@@ -452,114 +414,6 @@ def register_tools():
     def get_comments_for_paragraph(filename: str, paragraph_index: int):
         """Extract comments for a specific paragraph in a Word document."""
         return comment_tools.get_comments_for_paragraph(filename, paragraph_index)
-    
-    # Numbering analysis tools
-    @mcp.tool()
-    def analyze_document_numbering(filename: str, debug: bool = False, 
-                                   include_non_numbered: bool = False):
-        """
-        Analyze the numbering structure of a Word document.
-        
-        Uses effilocal's NumberingInspector to produce detailed analysis of:
-        - Numbered paragraphs (lists, outlines, etc.)
-        - Numbering formats (decimal, roman, bullets, etc.)
-        - Counter values and rendered numbers
-        - Numbering hierarchy and levels
-        """
-        return numbering_tools.analyze_document_numbering(filename, debug, include_non_numbered)
-    
-    @mcp.tool()
-    def get_numbering_summary(filename: str):
-        """
-        Get a high-level summary of numbering styles used in a document.
-        
-        Returns statistics on numbering formats, levels, and usage counts.
-        """
-        return numbering_tools.get_numbering_summary(filename)
-    
-    @mcp.tool()
-    def extract_outline_structure(filename: str, max_level: int = None):
-        """
-        Extract the document outline based on numbering structure.
-        
-        Creates a hierarchical view of numbered items for understanding
-        document structure and navigation.
-        """
-        return numbering_tools.extract_outline_structure(filename, max_level)
-    
-    # Clause-based paragraph insertion tools
-    @mcp.tool()
-    def add_paragraph_after_clause(filename: str, clause_number: str, text: str,
-                                   style: str = None, inherit_numbering: bool = True):
-        """
-        Add a paragraph after a specific clause number.
-        
-        Uses NumberingInspector to find clauses by rendered number (e.g., '1.2.3', '7.1(a)')
-        and inserts content after them. If inherit_numbering is True, the new paragraph
-        will inherit the numId and ilvl from the target clause, creating a sibling at the
-        same level (e.g., after 7.1(a), it becomes 7.1(b)).
-        """
-        return content_tools.add_paragraph_after_clause(filename, clause_number, text, style, inherit_numbering)
-    
-    @mcp.tool()
-    def add_paragraphs_after_clause(filename: str, clause_number: str, paragraphs: list,
-                                    style: str = None, inherit_numbering: bool = True):
-        """
-        Add multiple paragraphs after a specific clause number.
-        
-        Adds multiple paragraphs sequentially after a clause, each inheriting the same
-        numbering properties. Useful for adding multiple items at the same level
-        (e.g., adding 7.1(b), 7.1(c), 7.1(d) after 7.1(a)).
-        """
-        return content_tools.add_paragraphs_after_clause(filename, clause_number, paragraphs, style, inherit_numbering)
-    
-    # Attachment-based paragraph insertion tools
-    @mcp.tool()
-    def add_paragraph_after_attachment(filename: str, attachment_identifier: str, text: str,
-                                       style: str = None, inherit_numbering: bool = True):
-        """
-        Add a paragraph after a specific attachment (Schedule, Annex, Exhibit, etc.).
-        
-        Locates attachments by their identifier (e.g., "Schedule 1", "Annex A", "Exhibit B")
-        and inserts content after the entire attachment section.
-        
-        Examples:
-        - "Schedule 1" -> finds Schedule 1 and inserts after its content
-        - "Annex A" -> finds Annex A and inserts after its content
-        - "Exhibit B" -> finds Exhibit B and inserts after its content
-        """
-        return attachment_tools.add_paragraph_after_attachment(filename, attachment_identifier, text, style, inherit_numbering)
-    
-    @mcp.tool()
-    def add_paragraphs_after_attachment(filename: str, attachment_identifier: str, paragraphs: list,
-                                        style: str = None, inherit_numbering: bool = True):
-        """
-        Add multiple paragraphs after a specific attachment.
-        
-        Adds multiple paragraphs sequentially after an attachment section (Schedule, Annex, Exhibit).
-        Useful for adding multiple items after a schedule or annex.
-        """
-        return attachment_tools.add_paragraphs_after_attachment(filename, attachment_identifier, paragraphs, style, inherit_numbering)
-    
-    @mcp.tool()
-    def add_new_attachment_after(filename: str, after_attachment: str, new_attachment_text: str,
-                                 content: str = None):
-        """
-        Add a new attachment (Schedule, Annex, Exhibit) after an existing attachment.
-        
-        Creates a new attachment header with the same style and formatting as the reference
-        attachment. Use this when you need to add "Schedule 5" after "Schedule 4", or
-        "Annex B" after "Annex A", etc.
-        
-        The tool automatically copies the formatting (style, font, size, color) from the
-        reference attachment to ensure consistency.
-        
-        Examples:
-        - "Add Schedule 5 after Schedule 4" → add_new_attachment_after("doc.docx", "Schedule 4", "Schedule 5 - New Services")
-        - "Add Annex B after Annex A" → add_new_attachment_after("doc.docx", "Annex A", "Annex B - Additional Terms")
-        """
-        return attachment_tools.add_new_attachment_after(filename, after_attachment, new_attachment_text, content)
-    
     # New table column width tools
     @mcp.tool()
     def set_table_column_width(filename: str, table_index: int, col_index: int, 

@@ -39,7 +39,9 @@ from word_document_server.tools.content_tools import add_heading as upstream_add
 from word_document_server.tools.content_tools import add_paragraph as upstream_add_paragraph
 
 from word_document_server.utils.file_utils import check_file_writeable, ensure_docx_extension
-from word_document_server.utils.document_utils import edit_run_text
+
+# Import NEW functions from our own utils (not in upstream)
+from effilocal.mcp_server.utils.document_utils import edit_run_text
 
 
 # ============================================================================

@@ -7,8 +7,6 @@ from typing import Dict, List, Optional, Any
 from docx import Document
 
 from word_document_server.utils.file_utils import check_file_writeable, ensure_docx_extension, create_document_copy
-import os
-
 from word_document_server.utils.document_utils import get_document_properties, extract_document_text, get_document_structure, get_document_xml, insert_header_near_text, insert_line_or_paragraph_near_text
 from word_document_server.core.styles import ensure_heading_style, ensure_table_style
 
@@ -89,66 +87,7 @@ async def get_document_outline(filename: str) -> str:
     structure = get_document_structure(filename)
     return json.dumps(structure, indent=2)
 
-async def save_document_as_markdown(filename: str) -> str:
-    """Extract all text from a Word document and save as a Markdown (.md) file with the same base name."""
-    import os
-    filename = ensure_docx_extension(filename)
-    if not os.path.exists(filename):
-        return f"Document {filename} does not exist"
-    base_name = os.path.splitext(os.path.basename(filename))[0]
-    doc_dir = os.path.dirname(os.path.abspath(filename))
-    md_filename = os.path.join(doc_dir, base_name + ".md")
-    # If file exists, append a numeric suffix
-    if os.path.exists(md_filename):
-        suffix = 1
-        while True:
-            alt_md_filename = os.path.join(doc_dir, f"{base_name}_{suffix}.md")
-            if not os.path.exists(alt_md_filename):
-                md_filename = alt_md_filename
-                break
-            suffix += 1
-    try:
-        import json
-        # Get outline for headings/tables
-        outline_json = await get_document_outline(filename)
-        outline = json.loads(outline_json) if isinstance(outline_json, str) else outline_json
-        # Get full text content
-        text_content = await get_document_text(filename)
-        md_lines = []
-        # Add headings from outline
-        for para in outline.get("paragraphs", []):
-            style = para.get("style", "Normal")
-            text = para.get("text", "")
-            if style.startswith("Heading"):
-                try:
-                    level = int(style.split(" ")[-1])
-                except Exception:
-                    level = 1
-                md_lines.append("#" * level + " " + text)
-            elif style == "Title":
-                md_lines.append(f"# {text}")
-            elif style == "Subtitle":
-                md_lines.append(f"## {text}")
-        # Add main text content
-        md_lines.append(text_content)
-        # Add tables as Markdown
-        for table in outline.get("tables", []):
-            rows = table.get("rows", 0)
-            cols = table.get("columns", 0)
-            preview = table.get("preview", [])
-            if preview:
-                header = preview[0] if len(preview) > 0 else ["Header"] * cols
-                md_lines.append("| " + " | ".join(header) + " |")
-                md_lines.append("| " + " | ".join(["---"] * len(header)) + " |")
-                for row in preview[1:]:
-                    md_lines.append("| " + " | ".join(row) + " |")
-        md_text = "\n".join(md_lines)
-        with open(md_filename, "w", encoding="utf-8") as f:
-            f.write(md_text)
-        return f"Saved document text to {md_filename}"
-    except Exception as e:
-        return f"Failed to save markdown: {str(e)}"
-    
+
 async def list_available_documents(directory: str = ".") -> str:
     """List all .docx files in the specified directory.
     
