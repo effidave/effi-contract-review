@@ -80,13 +80,38 @@ def _find_and_replace_in_doc(doc, old_text: str, new_text: str, whole_word_only:
         
         # Check if text spans multiple runs
         if len(paragraph.runs) > 1:
-            # Complex case - might span runs
-            split_matches.append({
-                'paragraph_index': para_idx,
-                'text': old_text,
-                'context': para_text
-            })
-            continue
+            # Complex case - check if text actually spans runs
+            # Build run map to detect split matches
+            run_texts = [r.text for r in paragraph.runs]
+            combined = ''.join(run_texts)
+            
+            if old_text in combined:
+                # Text exists but might span runs - check each run individually
+                found_in_single_run = any(old_text in r.text for r in paragraph.runs)
+                
+                if not found_in_single_run:
+                    # Split across runs - find which runs contain the text
+                    # Rebuild the text accumulating run by run to find where the match occurs
+                    runs_info = []
+                    for run_idx, run in enumerate(paragraph.runs):
+                        # Check if this run contains any character from old_text by position matching
+                        run_start = sum(len(r.text) for r in paragraph.runs[:run_idx])
+                        run_end = run_start + len(run.text)
+                        match_start = combined.find(old_text)
+                        match_end = match_start + len(old_text)
+                        
+                        # If run overlaps with match
+                        if run_start < match_end and run_end > match_start:
+                            runs_info.append({'run_index': run_idx, 'text': run.text})
+                    
+                    split_matches.append({
+                        'paragraph_index': para_idx,
+                        'text': old_text,
+                        'full_match': old_text,
+                        'context': para_text,
+                        'runs': runs_info
+                    })
+                    continue
         
         # Simple case: replace in runs
         for run in paragraph.runs:
@@ -98,7 +123,9 @@ def _find_and_replace_in_doc(doc, old_text: str, new_text: str, whole_word_only:
                     run.text = run.text.replace(old_text, new_text)
                 
                 if run.text != before_text:
-                    count = before_text.count(old_text)
+                    # Count actual replacements (how many times new_text appears more than before)
+                    # OR count how many times old_text was in before but not in after
+                    count = before_text.count(old_text) - run.text.count(old_text)
                     replacements += count
                     
                     # Add snippet
@@ -134,7 +161,8 @@ def _find_and_replace_in_doc(doc, old_text: str, new_text: str, whole_word_only:
                                 run.text = run.text.replace(old_text, new_text)
                             
                             if run.text != before_text:
-                                count = before_text.count(old_text)
+                                # Count actual replacements
+                                count = before_text.count(old_text) - run.text.count(old_text)
                                 replacements += count
                                 
                                 context_start = max(0, before_text.find(old_text) - 20)
@@ -277,12 +305,30 @@ def find_and_replace_text(
         # Save the modified document
         doc.save(filename)
         
-        result = f"Replaced {replacements} occurrence(s) of '{old_text}' with '{new_text}' in {filename}"
+        # Build detailed result message
+        if replacements == 0:
+            return f"No occurrences of '{old_text}' found in {filename}"
+        
+        result_lines = [f"Replaced {replacements} occurrence(s) of '{old_text}' with '{new_text}' in {filename}"]
+        result_lines.append("")  # Blank line
+        
+        # Add detailed snippets
+        for i, snippet in enumerate(snippets, 1):
+            result_lines.append(f"Replacement {i}:")
+            result_lines.append(f"  Before: {snippet['before']}")
+            result_lines.append(f"  After: {snippet['after']}")
+            if snippet['location'] == 'table':
+                result_lines.append(f"  Location: Table {snippet['table_index']}, Row {snippet['row_index']}, Cell {snippet['cell_index']} (table)")
+            else:
+                result_lines.append(f"  Location: Paragraph {snippet.get('paragraph_index', '?')}")
+            result_lines.append("")  # Blank line between snippets
         
         if split_matches:
-            result += f"\n\nNote: {len(split_matches)} paragraph(s) contain the text but span multiple runs (requires edit_run_text)"
+            result_lines.append(f"Note: {len(split_matches)} paragraph(s) contain '{old_text}' but it spans multiple runs (requires edit_run_text):")
+            for match in split_matches:
+                result_lines.append(f"  - Paragraph {match['paragraph_index']}: {match['context'][:100]}")
         
-        return result
+        return "\n".join(result_lines)
     
     except Exception as e:
         return f"Failed to find and replace: {str(e)}"
