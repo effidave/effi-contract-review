@@ -74,7 +74,7 @@ def example_extract_comments_with_status():
         sample_doc_path.unlink(missing_ok=True)
         
     except Exception as e:
-        print(f"\n❌ Error: {e}")
+        print(f"\n[ERROR] Error: {e}")
         import traceback
         traceback.print_exc()
 

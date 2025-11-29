@@ -59,10 +59,10 @@ def print_clause(loader: ArtifactLoader, ordinal: str) -> None:
     clause = loader.find_clause_by_ordinal(ordinal)
     
     if not clause:
-        print(f"❌ Clause {ordinal} not found")
+        print(f"ERROR: Clause {ordinal} not found")
         return
     
-    print(f"\n📄 Clause {ordinal}")
+    print(f"\nClause {ordinal}")
     print(f"   ID: {clause['id']}")
     print(f"   Type: {clause.get('type', 'N/A')}")
     print(f"   Text: {clause.get('text', 'N/A')}")
@@ -155,10 +155,10 @@ def print_search_results(loader: ArtifactLoader, query: str) -> None:
     results = loader.search_blocks(text=query)
     
     if not results:
-        print(f"❌ No blocks found matching: {query}")
+        print(f"ERROR: No blocks found matching: {query}")
         return
     
-    print(f"\n🔍 Search Results ({len(results)} blocks)")
+    print(f"\nSearch Results ({len(results)} blocks)")
     for block in results[:10]:  # Limit to first 10
         ordinal = block.get('list', {}).get('ordinal', '')
         text = block.get('text', 'N/A')[:80]
@@ -225,10 +225,10 @@ def main():
         print()  # Final newline
         
     except FileNotFoundError as e:
-        print(f"❌ Error: {e}", file=sys.stderr)
+        print(f"ERROR: {e}", file=sys.stderr)
         return 1
     except Exception as e:
-        print(f"❌ Error: {e}", file=sys.stderr)
+        print(f"ERROR: {e}", file=sys.stderr)
         import traceback
         traceback.print_exc()
         return 1

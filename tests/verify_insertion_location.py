@@ -54,8 +54,8 @@ async def verify_insertion():
             
             # Check if it's our inserted text
             if "NEW CONTENT" in b.get('text', ''):
-                print("  ✓ This is our inserted paragraph!")
-                print("  ✓ It is NOT part of Schedule 1 (different attachment_id)")
+                print("  [OK] This is our inserted paragraph!")
+                print("  [OK] It is NOT part of Schedule 1 (different attachment_id)")
             else:
                 print("  ✗ This is NOT our inserted paragraph")
                 print(f"  ✗ Looking for 'NEW CONTENT', found: {b.get('text', '')[:60]}")

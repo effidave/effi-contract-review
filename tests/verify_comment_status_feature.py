@@ -37,11 +37,11 @@ def verify_implementation():
             filter_comments_by_author,
             get_comments_for_paragraph
         ]
-        print(f"✓ Successfully imported {len(functions)} functions")
+        print(f"[OK] Successfully imported {len(functions)} functions")
         for func in functions:
             print(f"  - {func.__name__}")
     except ImportError as e:
-        print(f"❌ Import failed: {e}")
+        print(f"[ERROR] Import failed: {e}")
         return False
     
     # Step 2: Create a test document
@@ -53,13 +53,13 @@ def verify_implementation():
     
     test_doc_path = Path(__file__).parent / "verify_doc.docx"
     doc.save(str(test_doc_path))
-    print(f"✓ Created test document: {test_doc_path}")
+    print(f"[OK] Created test document: {test_doc_path}")
     
     # Step 3: Test extract_all_comments
     print("\n[Step 3] Testing extract_all_comments()...")
     doc = Document(str(test_doc_path))
     comments = extract_all_comments(doc)
-    print(f"✓ Extracted {len(comments)} comments")
+    print(f"[OK] Extracted {len(comments)} comments")
     
     if comments:
         comment = comments[0]
@@ -68,7 +68,7 @@ def verify_implementation():
     # Step 4: Test extract_comment_status_map
     print("\n[Step 4] Testing extract_comment_status_map()...")
     status_map = extract_comment_status_map(doc)
-    print(f"✓ Extracted status map with {len(status_map)} entries")
+    print(f"[OK] Extracted status map with {len(status_map)} entries")
     
     # Step 5: Test merge_comment_status
     print("\n[Step 5] Testing merge_comment_status()...")
@@ -88,22 +88,22 @@ def verify_implementation():
     merged = merge_comment_status(test_comments, test_status_map)
     
     if merged[0]['status'] == 'resolved':
-        print(f"✓ Status merge working correctly")
+        print(f"[OK] Status merge working correctly")
         print(f"  - Before: status='active'")
         print(f"  - After: status='resolved'")
     else:
-        print(f"❌ Status merge failed")
+        print(f"[ERROR] Status merge failed")
         return False
     
     # Step 6: Test filter_comments_by_author
     print("\n[Step 6] Testing filter_comments_by_author()...")
     filtered = filter_comments_by_author(comments, "Unknown")
-    print(f"✓ Author filtering works: {len(filtered)} comments")
+    print(f"[OK] Author filtering works: {len(filtered)} comments")
     
     # Step 7: Test get_comments_for_paragraph
     print("\n[Step 7] Testing get_comments_for_paragraph()...")
     para_comments = get_comments_for_paragraph(comments, 0)
-    print(f"✓ Paragraph filtering works: {len(para_comments)} comments")
+    print(f"[OK] Paragraph filtering works: {len(para_comments)} comments")
     
     # Step 8: Verify comment structure
     print("\n[Step 8] Verifying comment data structure...")
@@ -128,13 +128,13 @@ def verify_implementation():
                     type_errors.append(f"{field}: expected {expected_type.__name__}, got {type(comment[field]).__name__}")
         
         if missing:
-            print(f"❌ Missing fields: {missing}")
+            print(f"[ERROR] Missing fields: {missing}")
             return False
         elif type_errors:
-            print(f"❌ Type errors: {type_errors}")
+            print(f"[ERROR] Type errors: {type_errors}")
             return False
         else:
-            print(f"✓ All required fields present with correct types")
+            print(f"[OK] All required fields present with correct types")
             for field in required_fields:
                 print(f"  - {field}: {type(comment[field]).__name__}")
     else:
@@ -148,9 +148,9 @@ def verify_implementation():
         all_flag_int = all(isinstance(c['done_flag'], int) and c['done_flag'] in [0, 1] for c in comments)
         
         if all_status_valid and all_resolved_bool and all_flag_int:
-            print(f"✓ All status fields have valid values")
+            print(f"[OK] All status fields have valid values")
         else:
-            print(f"❌ Invalid status field values")
+            print(f"[ERROR] Invalid status field values")
             return False
     else:
         print(f"ℹ No comments to validate (expected)")
@@ -159,7 +159,7 @@ def verify_implementation():
     print("\n[Step 10] Sample output format...")
     if comments:
         sample = comments[0]
-        print(f"✓ Sample comment structure:")
+        print(f"[OK] Sample comment structure:")
         print(json.dumps({
             'id': sample.get('id'),
             'author': sample.get('author'),
@@ -197,7 +197,7 @@ if __name__ == "__main__":
         success = verify_implementation()
         sys.exit(0 if success else 1)
     except Exception as e:
-        print(f"\n❌ Verification failed: {e}")
+        print(f"\n[ERROR] Verification failed: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)

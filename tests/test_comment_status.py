@@ -25,7 +25,7 @@ def test_extract_comment_status_from_fixtures():
     comments_extended_path = fixtures_dir / "commentsExtended.xml"
     
     if not comments_extended_path.exists():
-        print(f"❌ Fixture file not found: {comments_extended_path}")
+        print(f"[ERROR] Fixture file not found: {comments_extended_path}")
         assert False, f"Fixture file not found: {comments_extended_path}"
     
     try:
@@ -69,7 +69,7 @@ def test_extract_comment_status_from_fixtures():
         print("⚠ lxml not installed, trying with docx library instead")
         return test_with_docx_library()
     except Exception as e:
-        print(f"❌ Error parsing fixture: {e}")
+        print(f"[ERROR] Error parsing fixture: {e}")
         assert False, f"Error parsing fixture: {e}"
 
 
@@ -85,7 +85,7 @@ def test_with_docx_library():
         print("✓ Comment status extraction functions imported successfully")
         
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"[ERROR] Error: {e}")
         assert False, f"Error: {e}"
 
 
@@ -98,5 +98,5 @@ if __name__ == "__main__":
         print("\n✓ All tests passed!")
         sys.exit(0)
     else:
-        print("\n❌ Some tests failed")
+        print("\n[FAIL] Some tests failed")
         sys.exit(1)

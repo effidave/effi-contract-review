@@ -176,14 +176,14 @@ Each response will include:
 - ✅ **Tool used**: MCP tool name
 - 🧠 **Reason**: Why this tool was chosen
 - 📝 **Action**: What the tool did
-- 🔍 **Verification**: Confirmation that changes were made
+- **Verification**: Confirmation that changes were made
 - 📝 **Edit description**: Clear description for edit log
 
 **Example Response:**
 > ✅ Tool used: `add_paragraph_after_clause()`  
 > 🧠 Reason: You asked to add a confidentiality clause after section 3.2  
 > 📝 Action: Inserted new paragraph with inherit_numbering=true (creates clause 3.2.1)  
-> 🔍 Verification: Confirmed new clause appears with ordinal "3.2.1" via document outline  
+> Verification: Confirmed new clause appears with ordinal "3.2.1" via document outline  
 > 📝 Edit description: "Added confidentiality obligations to clause 3.2"
 
 ---
@@ -316,7 +316,7 @@ Agent executes:
 
 Agent reports:
 ✅ Tool used: add_paragraph_after_clause()
-🔍 Verification: Confirmed new clause 3.2.1 appears in outline
+Verification: Confirmed new clause 3.2.1 appears in outline
 📝 Edit description: "Added confidentiality obligations after clause 3.2"
 ```
 
@@ -369,7 +369,7 @@ Agent executes:
 - Filter blocks with list.ordinal (numbered clauses)
 
 Agent reports:
-📋 Definitions Section (clause 1):
+Definitions Section (clause 1):
   1.1 "Agreement" means...
   1.2 "Confidential Information" means...
   1.3 "Effective Date" means...
@@ -406,7 +406,7 @@ Agent reports:
 
 ## 8. Common Mistakes to Avoid (Anti-Patterns)
 
-### ❌ Don't Use the Wrong Tool
+### [X] Don't Use the Wrong Tool
 **Mistake:** Using `search_and_replace()` when you need `format_text()`
 - `search_and_replace()` changes **content** (text replacement)
 - `format_text()` changes **appearance** (bold, color, font)
@@ -415,7 +415,7 @@ Agent reports:
 
 ---
 
-### ❌ Don't Skip Verification After Modifications
+### [X] Don't Skip Verification After Modifications
 **Mistake:** Modifying a document without verifying the change
 
 ```
@@ -432,7 +432,7 @@ get_document_outline(filename="contract.docx")  # Confirm new clause appears
 
 ---
 
-### ❌ Don't Assume Paragraph Indices Are Stable
+### [X] Don't Assume Paragraph Indices Are Stable
 **Mistake:** Using cached paragraph indices after modifications
 
 ```

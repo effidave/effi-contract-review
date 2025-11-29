@@ -56,7 +56,7 @@ def test_integration():
         missing = [f for f in required_fields if f not in comment]
         
         if missing:
-            print(f"❌ Missing fields: {missing}")
+            print(f"[ERROR] Missing fields: {missing}")
             assert False, f"Missing fields: {missing}"
         else:
             print(f"✓ All required fields present: {required_fields}")
@@ -83,7 +83,7 @@ def test_integration():
     if all_have_status and all_have_resolved and all_have_flag:
         print("✓ All comments have complete status information")
     else:
-        print(f"❌ Status consistency check failed:")
+        print(f"[ERROR] Status consistency check failed:")
         print(f"   - has 'status': {all_have_status}")
         print(f"   - has 'is_resolved': {all_have_resolved}")
         print(f"   - has 'done_flag': {all_have_flag}")
@@ -102,7 +102,7 @@ if __name__ == "__main__":
         success = test_integration()
         sys.exit(0 if success else 1)
     except Exception as e:
-        print(f"\n❌ Test failed with error: {e}")
+        print(f"\n[ERROR] Test failed with error: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)

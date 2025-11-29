@@ -37,7 +37,7 @@ def test_split_run_detection():
         doc2 = Document(tmp_path)
         count, snippets, split_matches = find_and_replace_text(doc2, "WP", "Work Product")
         
-        print(f"✓ find_and_replace_text returned triple: count={count}, snippets={len(snippets)}, split_matches={len(split_matches)}")
+        print(f"[OK] find_and_replace_text returned triple: count={count}, snippets={len(snippets)}, split_matches={len(split_matches)}")
         
         if split_matches:
             print(f"\n✓ Split matches detected: {len(split_matches)}")
