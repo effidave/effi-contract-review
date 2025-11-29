@@ -29,3 +29,6 @@ htmlcov/
 
 # Generated files
 *.log
+
+# Project-specific ignores
+EL_Projects/Test Project/
