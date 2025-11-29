@@ -1,0 +1,35 @@
+{
+  "$id": "https://example.local/schemas/styles.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Styles",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["styles"],
+  "properties": {
+    "styles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "type", "count"],
+        "properties": {
+          "name": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["heading", "paragraph", "table_cell", "image_caption", "unknown"]
+          },
+          "count": { "type": "integer", "minimum": 0 },
+          "semantic_hint": {
+            "type": ["string", "null"],
+            "description": "Highest scoring semantic interpretation emitted by the strategy registry."
+          },
+          "hint_scores": {
+            "type": ["object", "null"],
+            "description": "Per-strategy scores or votes that contributed to the semantic hint.",
+            "additionalProperties": { "type": "number" }
+          }
+        }
+      }
+    }
+  }
+}

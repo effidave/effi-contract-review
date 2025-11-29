@@ -1,0 +1,50 @@
+{
+  "$id": "https://example.local/schemas/index.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Index",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "doc_id",
+    "doc_format",
+    "source_filename",
+    "char_count",
+    "block_count",
+    "section_count",
+    "ltu_count",
+    "max_section_depth",
+    "has_tag_ranges",
+    "schema_version",
+    "filemap"
+  ],
+  "properties": {
+    "version": { "type": "integer", "minimum": 1 },
+    "doc_id": {
+      "type": "string",
+      "description": "Logical UUID for the document",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+    },
+    "doc_format": { "type": "string", "const": "docx" },
+    "source_filename": { "type": "string", "minLength": 1 },
+    "char_count": { "type": "integer", "minimum": 0 },
+    "block_count": { "type": "integer", "minimum": 0 },
+    "section_count": { "type": "integer", "minimum": 0 },
+    "ltu_count": { "type": "integer", "minimum": 0 },
+    "max_section_depth": { "type": "integer", "minimum": 0 },
+    "has_tag_ranges": { "type": "boolean" },
+    "schema_version": { "type": "string", "minLength": 1 },
+
+    "filemap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["blocks", "sections", "styles"],
+      "properties": {
+        "blocks": { "type": "string", "minLength": 1 },
+        "sections": { "type": "string", "minLength": 1 },
+        "styles": { "type": "string", "minLength": 1 },
+        "tag_ranges": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

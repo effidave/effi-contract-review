@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "get_doc_outline.output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "doc_id",
+    "sections"
+  ],
+  "properties": {
+    "doc_id": {
+      "type": "string",
+      "description": "Identifier of the document for the returned outline."
+    },
+    "sections": {
+      "type": "array",
+      "description": "Ordered list of document sections.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "title",
+          "level",
+          "block_count",
+          "char_count"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Section identifier."
+          },
+          "title": {
+            "type": "string",
+            "description": "Section heading text."
+          },
+          "level": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Heading level where 0 corresponds to the top level."
+          },
+          "block_count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of blocks contained in the section."
+          },
+          "char_count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Total characters across the section's blocks."
+          }
+        }
+      }
+    }
+  }
+}

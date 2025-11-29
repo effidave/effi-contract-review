@@ -1,0 +1,105 @@
+{
+  "$id": "https://example.local/schemas/manifest.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "doc_id",
+    "v",
+    "created_at",
+    "tool_version",
+    "checksums",
+    "schema_checksums",
+    "doc_format",
+    "sdt_carrier",
+    "range_marker_carrier",
+    "range_marker_tag_prefix"
+  ],
+  "properties": {
+    "doc_id": {
+      "type": "string",
+      "description": "Logical UUID for the document",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+    },
+    "v": { "type": "integer", "minimum": 1, "description": "Monotonic JSON version used for optimistic concurrency" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "tool_version": { "type": "string" },
+    "doc_format": { "type": "string", "const": "docx" },
+    "sdt_carrier": {
+      "type": "string",
+      "enum": ["content-controls", "comments", "bookmarks"],
+      "description": "Where block UUIDs are persisted in the .docx"
+    },
+    "range_marker_carrier": {
+      "type": "string",
+      "enum": ["content-controls", "comments", "bookmarks"],
+      "default": "content-controls",
+      "description": "Where range markers (start/end points of arbitrary tag spans) are stored"
+    },
+    "range_marker_tag_prefix": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9._:-]+$",
+      "default": "marker:",
+      "description": "Prefix string for identifying range marker SDTs or comments (e.g., 'marker:' -> <w:tag w:val='marker:uuid'>)"
+    },
+    "fallback_heading_label": {
+      "type": "string",
+      "default": "Body (no heading)",
+      "description": "Label used for blocks without an explicit heading"
+    },
+    "checksums": {
+      "type": "object",
+      "description": "sha256 checksums of key artifacts",
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^sha256:[0-9a-f]{64}$"
+      }
+    },
+    "schema_checksums": {
+      "type": "object",
+      "description": "sha256 checksums of JSON schemas used during processing",
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^sha256:[0-9a-f]{64}$"
+      }
+    },
+    "attachments": {
+      "type": "array",
+      "description": "Summary of attachment anchors detected in the document.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["attachment_id", "type"],
+        "properties": {
+          "attachment_id": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+          },
+          "type": {
+            "type": "string"
+          },
+          "ordinal": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "parent_attachment_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+          }
+        }
+      }
+    }
+  }
+}

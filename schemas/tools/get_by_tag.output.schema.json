@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "get_by_tag.output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "doc_id",
+    "label",
+    "matches",
+    "blocks",
+    "truncated",
+    "next_page"
+  ],
+  "properties": {
+    "doc_id": {
+      "type": "string",
+      "description": "Identifier of the document that was inspected."
+    },
+    "label": {
+      "type": "string",
+      "description": "Tag label that was searched."
+    },
+    "matches": {
+      "type": "array",
+      "description": "Matching tag ranges with associated block identifiers.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "tag_id",
+          "block_ids",
+          "span"
+        ],
+        "properties": {
+          "tag_id": {
+            "type": "string",
+            "description": "Identifier of the tag range."
+          },
+          "block_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "span": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "Inclusive block indices indicating the span."
+          },
+          "attributes": {
+            "type": "object",
+            "description": "Original attributes stored with the tag range.",
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "blocks": {
+      "type": "array",
+      "description": "Unique block identifiers touched by the matches.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "truncated": {
+      "type": "boolean",
+      "description": "Always false; included for compatibility with other tools."
+    },
+    "next_page": {
+      "type": [
+        "null"
+      ],
+      "description": "Pagination is not supported for this tool."
+    }
+  }
+}

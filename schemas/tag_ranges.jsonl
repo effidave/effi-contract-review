@@ -1,0 +1,22 @@
+﻿{
+  "id": "11111111-2222-4333-8444-555555555555",
+  "label": "liability",
+  "start_marker_id": "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee",
+  "end_marker_id": "ffffffff-1111-4222-8333-444444444444",
+  "attributes": { "block_id": "99999999-aaaa-4bbb-8ccc-dddddddddddd" },
+  "anchors": {
+    "start": {
+      "text_hash": "sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+      "near_block_id": "99999999-aaaa-4bbb-8ccc-dddddddddddd",
+      "style_sig": "Normal|L0"
+    },
+    "end": {
+      "text_hash": "sha256:fedcba9876543210fedcba9876543210fedcba9876543210fedcba9876543210",
+      "near_block_id": "88888888-aaaa-4bbb-8ccc-dddddddddddd",
+      "style_sig": "Normal|L0"
+    }
+  },
+  "created_at": "2025-10-24T10:11:00Z",
+  "updated_at": "2025-10-24T10:11:00Z",
+  "status": "active"
+}

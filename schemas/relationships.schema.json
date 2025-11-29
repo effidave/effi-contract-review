@@ -1,0 +1,139 @@
+{
+  "$id": "https://example.local/schemas/relationships.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Relationships",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["doc_id", "relationships"],
+  "properties": {
+    "doc_id": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+    },
+    "relationships": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "block_id",
+          "parent_block_id",
+          "child_block_ids",
+          "sibling_ordinal",
+          "source",
+          "restart_group_id",
+          "list_meta",
+          "attachment_id"
+        ],
+        "properties": {
+          "block_id": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+          },
+          "parent_block_id": {
+            "type": ["string", "null"],
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+          },
+          "child_block_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+            }
+          },
+          "sibling_ordinal": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "source": {
+            "type": "string",
+            "enum": ["heading", "list", "mixed", "paragraph"]
+          },
+          "restart_group_id": {
+            "type": ["string", "null"],
+            "pattern": "^[a-z0-9-]{10,}$"
+          },
+          "list_meta": {
+            "type": ["object", "null"],
+            "additionalProperties": false,
+            "properties": {
+              "num_id": {
+                "anyOf": [
+                  {"type": "integer"},
+                  {"type": "string"}
+                ]
+              },
+              "abstract_num_id": {
+                "anyOf": [
+                  {"type": "integer"},
+                  {"type": "string"},
+                  {"type": "null"}
+                ]
+              },
+              "level": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "counters": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "ordinal": {
+                "type": "string"
+              },
+              "format": {
+                "type": "string"
+              },
+              "pattern": {
+                "type": "string"
+              },
+              "is_legal": {
+                "type": "boolean"
+              },
+              "restart_boundary": {
+                "type": "boolean"
+              },
+              "list_instance_id": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^listinst-[0-9a-f]{40}$"
+                  },
+                  { "type": "null" }
+                ]
+              },
+              "numbering_digest": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^num-[0-9a-f]{40}$"
+                  },
+                  { "type": "null" }
+                ]
+              },
+              "ordinal_at_parse": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "clause_group_id": {
+            "type": ["string", "null"],
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+          },
+          "continuation_of": {
+            "type": ["string", "null"],
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+          },
+          "attachment_id": {
+            "type": ["string", "null"],
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+          }
+        }
+      }
+    }
+  }
+}

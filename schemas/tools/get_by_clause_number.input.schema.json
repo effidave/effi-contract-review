@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "get_by_clause_number.input",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "doc_id",
+    "clause_number"
+  ],
+  "properties": {
+    "doc_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Identifier of the document to inspect."
+    },
+    "clause_number": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Clause number string to resolve."
+    }
+  }
+}

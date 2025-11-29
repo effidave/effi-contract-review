@@ -1,0 +1,188 @@
+{
+  "$id": "https://example.local/schemas/edit_plan.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "EditPlan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["plan_id", "target_version", "dry_run", "ops"],
+  "properties": {
+    "plan_id": { "type": "string", "minLength": 1 },
+    "target_version": { "type": "integer", "minimum": 1, "description": "Must equal manifest.v at apply time" },
+    "dry_run": { "type": "boolean", "default": true },
+    "ops": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/op" }
+    },
+    "notes": { "type": "string" }
+  },
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+    },
+    "anchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "text_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "style_sig": { "type": ["string", "null"] },
+        "context_before": { "$ref": "#/$defs/uuid" },
+        "context_after": { "$ref": "#/$defs/uuid" }
+      }
+    },
+    "op": {
+      "oneOf": [
+        {
+          "title": "replace_text",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "target_id", "replacement"],
+          "properties": {
+            "op": { "const": "replace_text" },
+            "target_id": { "$ref": "#/$defs/uuid" },
+            "target_anchor": { "$ref": "#/$defs/anchor" },
+            "replacement": { "type": "string" },
+            "note": { "type": "string" }
+          }
+        },
+        {
+          "title": "insert_after",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "target_id", "new_block"],
+          "properties": {
+            "op": { "const": "insert_after" },
+            "target_id": { "$ref": "#/$defs/uuid" },
+            "new_block": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["type", "text"],
+              "properties": {
+                "type": { "enum": ["heading", "paragraph", "list_item", "table_cell", "image_caption"] },
+                "text": { "type": "string" },
+                "level": { "type": ["integer", "null"], "minimum": 1, "maximum": 6 },
+                "style": { "type": ["string", "null"] }
+              }
+            },
+            "note": { "type": "string" }
+          }
+        },
+        {
+          "title": "delete_block",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "target_id"],
+          "properties": {
+            "op": { "const": "delete_block" },
+            "target_id": { "$ref": "#/$defs/uuid" },
+            "note": { "type": "string" }
+          }
+        },
+        {
+          "title": "change_heading_level",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "target_id", "new_level"],
+          "properties": {
+            "op": { "const": "change_heading_level" },
+            "target_id": { "$ref": "#/$defs/uuid" },
+            "new_level": { "type": "integer", "minimum": 1, "maximum": 6 },
+            "note": { "type": "string" }
+          }
+        },
+        {
+          "title": "move_block",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "target_id", "after_id"],
+          "properties": {
+            "op": { "const": "move_block" },
+            "target_id": { "$ref": "#/$defs/uuid" },
+            "after_id": { "$ref": "#/$defs/uuid" },
+            "note": { "type": "string" }
+          }
+        },
+        {
+          "title": "save_as",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "output_path"],
+          "properties": {
+            "op": { "const": "save_as" },
+            "output_path": { "type": "string", "minLength": 1 }
+          }
+        },
+        {
+          "title": "tag_add",
+          "description": "Create a new tag range by inserting start/end point markers (UUID SDTs) and recording the range.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "label", "start_ref", "end_ref"],
+          "properties": {
+            "op": { "const": "tag_add" },
+            "label": { "type": "string", "minLength": 1 },
+            "attributes": { "type": "object", "additionalProperties": true },
+            "start_ref": { "$ref": "#/$defs/ref" },
+            "end_ref":   { "$ref": "#/$defs/ref" },
+            "snap": { "type": "string", "enum": ["token", "word", "sentence", "clause", "block"], "default": "word" },
+            "note": { "type": "string" }
+          }
+        },
+        {
+          "title": "tag_remove",
+          "description": "Remove an existing tag range and its markers.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "tag_id"],
+          "properties": {
+            "op": { "const": "tag_remove" },
+            "tag_id": { "$ref": "#/$defs/tag_uuid" },
+            "note": { "type": "string" }
+          }
+        },
+        {
+          "title": "tag_move_start",
+          "description": "Move the start point-marker of an existing tag to a new block-relative position.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "tag_id", "new_start_ref"],
+          "properties": {
+            "op": { "const": "tag_move_start" },
+            "tag_id": { "$ref": "#/$defs/tag_uuid" },
+            "new_start_ref": { "$ref": "#/$defs/ref" },
+            "snap": { "type": "string", "enum": ["token", "word", "sentence", "clause", "block"], "default": "word" },
+            "note": { "type": "string" }
+          }
+        },
+        {
+          "title": "tag_move_end",
+          "description": "Move the end point-marker of an existing tag to a new block-relative position.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "tag_id", "new_end_ref"],
+          "properties": {
+            "op": { "const": "tag_move_end" },
+            "tag_id": { "$ref": "#/$defs/tag_uuid" },
+            "new_end_ref": { "$ref": "#/$defs/ref" },
+            "snap": { "type": "string", "enum": ["token", "word", "sentence", "clause", "block"], "default": "word" },
+            "note": { "type": "string" }
+          }
+        },
+        {
+          "title": "replace_in_tag",
+          "description": "Replace text strictly within the span identified by a tag range.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "tag_id", "replacement"],
+          "properties": {
+            "op": { "const": "replace_in_tag" },
+            "tag_id": { "$ref": "#/$defs/tag_uuid" },
+            "replacement": { "type": "string" },
+            "note": { "type": "string" }
+          }
+        }
+      ]
+    }
+  }
+}

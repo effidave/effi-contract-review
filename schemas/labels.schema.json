@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/schemas/labels.schema.json",
+  "title": "DocLabels",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["doc_id", "confidence", "labels"],
+  "properties": {
+    "doc_id": {
+      "type": "string",
+      "description": "Document identifier matching the analyzed dataset."
+    },
+    "confidence": {
+      "type": "number",
+      "description": "Overall confidence score for the labeling run.",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "labels": {
+      "type": "array",
+      "description": "Per-section labeling results.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["section_id", "role", "topics"],
+        "properties": {
+          "section_id": {
+            "type": "string",
+            "description": "Section identifier referenced in sections.json."
+          },
+          "role": {
+            "type": "string",
+            "description": "Primary role classification for the section.",
+            "enum": [
+              "title",
+              "abstract",
+              "intro",
+              "methods",
+              "results",
+              "discussion",
+              "conclusion",
+              "appendix",
+              "boilerplate",
+              "unsure"
+            ]
+          },
+          "topics": {
+            "type": "array",
+            "description": "Topic tags assigned to the section.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "entities": {
+            "type": "array",
+            "description": "Named entities referenced in the section.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "notes": {
+            "type": "string",
+            "description": "Free-form notes about the label (optional)."
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "get_by_clause_number.output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "doc_id",
+    "clause_number",
+    "block_ids",
+    "clauses",
+    "truncated",
+    "next_page"
+  ],
+  "properties": {
+    "doc_id": {
+      "type": "string",
+      "description": "Identifier of the document that was inspected."
+    },
+    "clause_number": {
+      "type": "string",
+      "description": "Clause number that was requested."
+    },
+    "block_ids": {
+      "type": "array",
+      "description": "Matching block identifiers in document order.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "clauses": {
+      "type": "array",
+      "description": "Clause metadata for each match.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "clause_group_id",
+          "anchor_block_id",
+          "block_ids",
+          "continuation_block_ids",
+          "blocks"
+        ],
+        "properties": {
+          "clause_group_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Clause group identifier associated with the match."
+          },
+          "anchor_block_id": {
+            "type": "string",
+            "description": "Block identifier that satisfied the clause number query."
+          },
+          "block_ids": {
+            "type": "array",
+            "description": "All block identifiers that belong to the clause group.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "continuation_block_ids": {
+            "type": "array",
+            "description": "Block identifiers that are continuations of the anchor clause.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "blocks": {
+            "type": "array",
+            "description": "Clause metadata for each block in the group.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "block_id",
+                "clause_group_id",
+                "continuation_of",
+                "attachment_id"
+              ],
+              "properties": {
+                "block_id": {
+                  "type": "string"
+                },
+                "clause_group_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "continuation_of": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "attachment_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "truncated": {
+      "type": "boolean",
+      "description": "Always false; included for compatibility with other tools."
+    },
+    "next_page": {
+      "type": [
+        "null"
+      ],
+      "description": "Pagination is not supported for this tool."
+    }
+  }
+}

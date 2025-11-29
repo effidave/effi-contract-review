@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "get_section.input",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "doc_id",
+    "section_id"
+  ],
+  "properties": {
+    "doc_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Identifier of the document to inspect."
+    },
+    "section_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Identifier of the section to retrieve."
+    },
+    "redact": {
+      "type": "boolean",
+      "description": "When true, sensitive data such as emails and phones are masked.",
+      "default": true
+    }
+  }
+}

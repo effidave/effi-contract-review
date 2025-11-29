@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "get_content_by_range.input",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "doc_id",
+    "start_block",
+    "end_block"
+  ],
+  "properties": {
+    "doc_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Identifier of the document to inspect."
+    },
+    "start_block": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Zero-based index of the first block to include."
+    },
+    "end_block": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Zero-based index of the last block to include (inclusive)."
+    },
+    "redact": {
+      "type": "boolean",
+      "description": "When true, sensitive data such as emails and phones are masked.",
+      "default": true
+    }
+  }
+}

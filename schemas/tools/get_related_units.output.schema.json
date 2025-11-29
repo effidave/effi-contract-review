@@ -1,0 +1,112 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "get_related_units.output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "doc_id",
+    "block_id",
+    "anchor_block",
+    "related_block_ids",
+    "related_blocks",
+    "truncated",
+    "next_page"
+  ],
+  "properties": {
+    "doc_id": {
+      "type": "string",
+      "description": "Identifier of the document that was inspected."
+    },
+    "block_id": {
+      "type": "string",
+      "description": "Identifier of the anchor block."
+    },
+    "anchor_block": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "block_id",
+        "clause_group_id",
+        "continuation_of",
+        "attachment_id"
+      ],
+      "properties": {
+        "block_id": {
+          "type": "string"
+        },
+        "clause_group_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "continuation_of": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "attachment_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "related_block_ids": {
+      "type": "array",
+      "description": "Ordered related block identifiers.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "related_blocks": {
+      "type": "array",
+      "description": "Ordered metadata for each related block.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "block_id",
+          "clause_group_id",
+          "continuation_of",
+          "attachment_id"
+        ],
+        "properties": {
+          "block_id": {
+            "type": "string"
+          },
+          "clause_group_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "continuation_of": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "attachment_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "truncated": {
+      "type": "boolean",
+      "description": "Always false; included for consistency with other tools."
+    },
+    "next_page": {
+      "type": [
+        "null"
+      ],
+      "description": "Pagination is not supported for this tool."
+    }
+  }
+}

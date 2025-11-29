@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "get_by_tag.input",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "doc_id",
+    "label"
+  ],
+  "properties": {
+    "doc_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Identifier of the document to inspect."
+    },
+    "label": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Tag label to search for."
+    }
+  }
+}

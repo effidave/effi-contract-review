@@ -1,0 +1,99 @@
+{
+  "$id": "https://example.local/schemas/sections.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Sections",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["doc_id", "root", "hierarchy_depth", "depth_max", "avg_blocks_per_section"],
+  "properties": {
+    "doc_id": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+    },
+    "depth_max": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "avg_blocks_per_section": {
+      "type": "number",
+      "minimum": 0
+    },
+    "hierarchy_depth": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "root": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["children"],
+      "properties": {
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/sectionNode" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sectionNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "level", "parent_id", "child_ids", "block_ids", "char_count", "children", "attachment_id"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "UUID for the section",
+          "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+        },
+        "ltu_id": {
+          "type": "string",
+          "description": "Provisional Legal Text Unit identifier linked to this section."
+        },
+        "parent_id": {
+          "type": ["string", "null"],
+          "description": "Parent section UUID when nested.",
+          "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+        },
+        "child_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+          }
+        },
+        "title": { "type": "string" },
+        "level": { "type": "integer", "minimum": 1, "maximum": 6 },
+        "block_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+          }
+        },
+        "char_count": { "type": "integer", "minimum": 0 },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/sectionNode" }
+        },
+        "attachment_id": {
+          "type": ["string", "null"],
+          "description": "Attachment context for this section (propagated from attachment tracker).",
+          "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+        },
+        "role": {
+          "type": ["string", "null"],
+          "enum": [
+            "main_body",
+            "front_matter",
+            "order_details",
+            "agreement_date",
+            "parties",
+            "signatures",
+            "definitions",
+            null
+          ]
+        }
+      }
+    }
+  }
+}

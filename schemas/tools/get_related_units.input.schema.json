@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "get_related_units.input",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "doc_id",
+    "block_id"
+  ],
+  "properties": {
+    "doc_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Identifier of the document to inspect."
+    },
+    "block_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Identifier of the anchor block."
+    },
+    "hops": {
+      "type": "integer",
+      "minimum": 1,
+      "default": 1,
+      "description": "Number of hierarchy hops to traverse."
+    },
+    "include_group": {
+      "type": "boolean",
+      "default": false,
+      "description": "Include all blocks that share the same restart_group_id."
+    }
+  }
+}

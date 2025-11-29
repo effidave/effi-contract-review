@@ -1,0 +1,1 @@
+# JSON Schemas placeholder for Sprint 1
