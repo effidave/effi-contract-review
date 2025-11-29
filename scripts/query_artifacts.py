@@ -88,7 +88,7 @@ def print_schedules(loader: ArtifactLoader) -> None:
         print("No schedules found")
         return
     
-    print(f"\n📋 Schedules ({len(schedules)})")
+    print(f"\nSchedules ({len(schedules)})")
     for schedule in schedules:
         label = schedule.get('label', 'Unnamed')
         attachment_id = schedule.get('attachment_id')
@@ -103,8 +103,8 @@ def print_schedules(loader: ArtifactLoader) -> None:
             print(f"   First block: {blocks[0].get('text', 'N/A')[:60]}...")
 
 
-def print_outline(loader: ArtifactLoader, max_depth: int = 2) -> None:
-    """Print document outline."""
+def print_outline(loader: ArtifactLoader, max_depth: int = 3) -> None:
+    """Print document outline with clause numbers."""
     sections = loader.sections.get('root', {}).get('children', [])
     
     def print_section(section: dict, depth: int = 0) -> None:
@@ -113,14 +113,39 @@ def print_outline(loader: ArtifactLoader, max_depth: int = 2) -> None:
         
         indent = "  " * depth
         title = section.get('title', 'Untitled')
-        block_count = len(section.get('block_ids', []))
+        block_ids = section.get('block_ids', [])
+        block_count = len(block_ids)
         
-        print(f"{indent}{'└─' if depth > 0 else '•'} {title} ({block_count} blocks)")
+        # Get first block to show clause number if available
+        prefix = ""
+        if block_ids:
+            first_block = loader.blocks_by_id.get(block_ids[0])
+            if first_block is not None:
+                list_info = first_block.get('list')
+                if list_info and isinstance(list_info, dict):
+                    ordinal = list_info.get('ordinal', '')
+                    if ordinal:
+                        prefix = f"[{ordinal}] "
+                # Show snippet of first block if title is generic
+                if title.startswith('Body (no heading)') and first_block.get('text'):
+                    snippet = first_block['text'][:50]
+                    # Remove any problematic characters
+                    snippet = snippet.encode('ascii', errors='replace').decode('ascii')
+                    title = f"{snippet}..." if len(first_block['text']) > 50 else snippet
+        
+        marker = '|--' if depth > 0 else '*'
+        try:
+            print(f"{indent}{marker} {prefix}{title} ({block_count} block{'s' if block_count != 1 else ''})")
+        except UnicodeEncodeError:
+            # Fallback to ASCII-only
+            safe_title = title.encode('ascii', errors='replace').decode('ascii')
+            print(f"{indent}{marker} {prefix}{safe_title} ({block_count} block{'s' if block_count != 1 else ''})")
         
         for child in section.get('children', []):
             print_section(child, depth + 1)
     
-    print("\n📚 Document Outline")
+    print("\nDocument Outline")
+    print("(Showing up to depth 3 with clause numbers and text snippets)\n")
     for section in sections:
         print_section(section)
 
@@ -150,7 +175,7 @@ def print_stats(loader: ArtifactLoader) -> None:
     """Print document statistics."""
     stats = loader.get_stats()
     
-    print("\n📊 Document Statistics")
+    print("\nDocument Statistics")
     print(f"   Document ID: {stats.get('doc_id', 'N/A')}")
     print(f"   Total blocks: {stats.get('block_count', 0)}")
     print(f"   Numbered blocks: {stats.get('numbered_blocks', 0)}")
