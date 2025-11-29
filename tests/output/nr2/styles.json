@@ -1,0 +1,20 @@
+{
+  "styles": [
+    {
+      "name": "List Bullet",
+      "type": "unknown",
+      "count": 1,
+      "semantic_hint": "list_item",
+      "hint_scores": {
+        "list_item": 1.0
+      }
+    },
+    {
+      "name": "Normal",
+      "type": "unknown",
+      "count": 4,
+      "semantic_hint": null,
+      "hint_scores": null
+    }
+  ]
+}

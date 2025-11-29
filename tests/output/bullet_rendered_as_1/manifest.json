@@ -1,0 +1,33 @@
+{
+  "doc_id": "bullet_test",
+  "v": 1,
+  "created_at": "2025-11-29T17:43:28+00:00",
+  "tool_version": "sprint2-dev",
+  "doc_format": "docx",
+  "sdt_carrier": "content-controls",
+  "range_marker_carrier": "content-controls",
+  "range_marker_tag_prefix": "marker:",
+  "fallback_heading_label": "Body (no heading)",
+  "checksums": {
+    "raw.docx": "sha256:c38a76d78333408ae4c4be06c6e93f2767d6253996ea6bf358b42a17fd16e861",
+    "blocks.jsonl": "sha256:30d96104d13ce1db2c7d83d46fc0930ea8adaf2ac4654062081a94fe5e0b4e10",
+    "sections.json": "sha256:b1ff5fd0fdfa3e2aaa14950bb50932680e145926885fa19975109af3e9ebe5e8",
+    "styles.json": "sha256:2a648e6b75cc0ab82710f9282759a7019d946504e2c4064e8b2ec8f035e50598",
+    "relationships.json": "sha256:2d78eede68d75d835b191cfe39df09118fe286e5a2f293471541e26a22444969",
+    "tag_ranges.jsonl": "sha256:79ad31aa8c4a4502424384f1d6e8b672fa5e14f3580dd9a634dfbf5e3a3751f6",
+    "index.json": "sha256:15344e8c86e74bde9f37c5734a338531e0974101911fa4b168cde203639cb5d5"
+  },
+  "schema_checksums": {
+    "block.schema.json": "sha256:a864e9b480aadbb4a980d651e55805a5edabdbdc14d3656a5035017923241973",
+    "edit_plan.schema.json": "sha256:99723778ddca26ca3e8a4fede0f6689de62b1f4d66bcbf6ab89f0f6be73fe76a",
+    "index.schema.json": "sha256:f305e73bdd196f01be5aba55a1bfe71dc0756218dbafc234fbd9e269c7f84557",
+    "labels.schema.json": "sha256:44e45c3f69aa8c9728872198061b34cbc23aa83a232a93debb3bce13f42e1052",
+    "manifest.schema.json": "sha256:6cc58c1427218e391205fc7abad10d31ff9ab9d709ac0e6a4cf42f4cb42e619a",
+    "relationships.schema.json": "sha256:0a6b82f199e7e009eb01866b591d10d35578bb937e794216a56a29c3f922246e",
+    "report.schema.json": "sha256:cc9454c8a3713921e540d0e7e1ce3fca7c8569e9704475ec39eae016541bf3be",
+    "sections.schema.json": "sha256:64d13ab3f694c5e4bcce3072c1d2823c614b2718aa50ba4850aea65c3b9fcdcc",
+    "styles.schema.json": "sha256:69bb206dd584e1ce1e19e6f752f510633761625ed9ba8905fa78c2bfdf731549",
+    "tag_range.schema.json": "sha256:38ae87688b3e7f53b0d7466d5699e6e741330b2da45ea6f784ae6da8bf002c3f"
+  },
+  "attachments": []
+}

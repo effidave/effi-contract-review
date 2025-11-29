@@ -1,0 +1,33 @@
+{
+  "doc_id": "test-123",
+  "v": 1,
+  "created_at": "2025-11-29T16:40:59+00:00",
+  "tool_version": "sprint2-dev",
+  "doc_format": "docx",
+  "sdt_carrier": "content-controls",
+  "range_marker_carrier": "content-controls",
+  "range_marker_tag_prefix": "marker:",
+  "fallback_heading_label": "Body (no heading)",
+  "checksums": {
+    "raw.docx": "sha256:543a517dffc01b57748cfcd0114ab0d7da87690957f7f1e6a9de87ae0e9b6abc",
+    "blocks.jsonl": "sha256:c3496918d306f913d457a629aee82467a06d4f06f22c6330a348573d7ab3aa4c",
+    "sections.json": "sha256:c9fd0ead43f5d84c8be4661de5e0f96bfc43d133ff7a9d3b5ee88175fb5f22da",
+    "styles.json": "sha256:b02ceed7005c938039b660e587a34ea43d737bb298ac6f387867ab57cb1ea0ae",
+    "relationships.json": "sha256:db33d98091f032ef38a20caca78686187def4431b7c9d668137cab5908c48f2e",
+    "tag_ranges.jsonl": "sha256:c4c5291247de882de33c3d98ba632fd2f14b2eeb3960cc0a67b8719e3f4f53d4",
+    "index.json": "sha256:7bfbe7b3b407959dbec82a7539985a888dce1d7bf8c5c31828c5434a18bb1300"
+  },
+  "schema_checksums": {
+    "block.schema.json": "sha256:a864e9b480aadbb4a980d651e55805a5edabdbdc14d3656a5035017923241973",
+    "edit_plan.schema.json": "sha256:99723778ddca26ca3e8a4fede0f6689de62b1f4d66bcbf6ab89f0f6be73fe76a",
+    "index.schema.json": "sha256:f305e73bdd196f01be5aba55a1bfe71dc0756218dbafc234fbd9e269c7f84557",
+    "labels.schema.json": "sha256:44e45c3f69aa8c9728872198061b34cbc23aa83a232a93debb3bce13f42e1052",
+    "manifest.schema.json": "sha256:6cc58c1427218e391205fc7abad10d31ff9ab9d709ac0e6a4cf42f4cb42e619a",
+    "relationships.schema.json": "sha256:0a6b82f199e7e009eb01866b591d10d35578bb937e794216a56a29c3f922246e",
+    "report.schema.json": "sha256:cc9454c8a3713921e540d0e7e1ce3fca7c8569e9704475ec39eae016541bf3be",
+    "sections.schema.json": "sha256:64d13ab3f694c5e4bcce3072c1d2823c614b2718aa50ba4850aea65c3b9fcdcc",
+    "styles.schema.json": "sha256:69bb206dd584e1ce1e19e6f752f510633761625ed9ba8905fa78c2bfdf731549",
+    "tag_range.schema.json": "sha256:38ae87688b3e7f53b0d7466d5699e6e741330b2da45ea6f784ae6da8bf002c3f"
+  },
+  "attachments": []
+}

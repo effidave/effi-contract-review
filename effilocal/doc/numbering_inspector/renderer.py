@@ -302,16 +302,14 @@ class NumberingSession:
         effective_abs_id = resolve_proxy_abstract(self._abstracts, abs_id)
         state = self._shared.setdefault(effective_abs_id, AbstractState([0] * 9))
         reset_due_to_new_num = False
+        # Note: We don't reset counters when numId changes because different numIds
+        # can share the same abstractNumId, and Word continues the counter sequence
+        # across them (e.g., numId 10 and 11 both referencing abstractNumId 101).
         if num_id is not None:
             if state.last_num_id is None:
                 state.last_num_id = num_id
             elif state.last_num_id != num_id:
-                if source == "paragraph":
-                    for k in range(ilvl, 9):
-                        state.counters[k] = 0
-                    state.prev_level = None
-                    state.last_num_id = num_id
-                    reset_due_to_new_num = True
+                state.last_num_id = num_id
         counters = state.counters
         prev_level = state.prev_level
         counters_before = counters.copy()

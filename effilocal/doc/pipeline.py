@@ -259,17 +259,16 @@ class AnalysisPipeline:
                 self._current_section_id = original_heading_section
 
         if isinstance(current_list, dict) and isinstance(fallback_list, dict):
-            if fallback_list.get("counters"):
-                current_list["counters"] = fallback_list["counters"]
-            if fallback_list.get("ordinal"):
-                current_list["ordinal"] = fallback_list["ordinal"]
-            if fallback_list.get("format"):
+            # When real numbering exists, trust the calculated counters/ordinal from NumberingInspector
+            # The TC field values are cached/hard-coded and may be outdated
+            # Only copy metadata fields, not the actual counter values
+            if fallback_list.get("format") and not current_list.get("format"):
                 current_list["format"] = fallback_list["format"]
-            if fallback_list.get("pattern"):
+            if fallback_list.get("pattern") and not current_list.get("pattern"):
                 current_list["pattern"] = fallback_list["pattern"]
-            if "is_legal" in fallback_list:
+            if "is_legal" in fallback_list and "is_legal" not in current_list:
                 current_list["is_legal"] = fallback_list["is_legal"]
-            if "restart_boundary" in fallback_list:
+            if "restart_boundary" in fallback_list and "restart_boundary" not in current_list:
                 current_list["restart_boundary"] = fallback_list["restart_boundary"]
             if "numbering_digest" in fallback_list:
                 current_list.setdefault("numbering_digest", fallback_list["numbering_digest"])

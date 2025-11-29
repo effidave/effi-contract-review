@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "doc_id": "nr2",
+  "doc_format": "docx",
+  "source_filename": "numbering_restart.docx",
+  "char_count": 46,
+  "block_count": 5,
+  "section_count": 5,
+  "ltu_count": 5,
+  "max_section_depth": 1,
+  "has_tag_ranges": true,
+  "schema_version": "1.0.0",
+  "filemap": {
+    "blocks": "blocks.jsonl",
+    "sections": "sections.json",
+    "styles": "styles.json",
+    "tag_ranges": "tag_ranges.jsonl"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "doc_id": "bullet_test",
+  "relationships": [
+    {
+      "block_id": "6769bcf9-a665-4179-be77-8af7a6a3e5f1",
+      "parent_block_id": null,
+      "child_block_ids": [],
+      "sibling_ordinal": 0,
+      "source": "list",
+      "restart_group_id": "listgrp-29463471087809001ed883ed1fbe7b74e312341a",
+      "list_meta": {
+        "num_id": 1,
+        "abstract_num_id": 0,
+        "level": 0,
+        "counters": [
+          1
+        ],
+        "ordinal": "1.",
+        "format": "decimal",
+        "pattern": "%1.",
+        "is_legal": false,
+        "restart_boundary": true,
+        "list_instance_id": "listinst-d78df568d91b9aa9bf309cec86efd05d069beb44",
+        "numbering_digest": "num-aff04085255c47e983ecf62062b687193688a8fa",
+        "ordinal_at_parse": 1
+      },
+      "attachment_id": null,
+      "clause_group_id": "6769bcf9-a665-4179-be77-8af7a6a3e5f1",
+      "continuation_of": null
+    }
+  ]
+}

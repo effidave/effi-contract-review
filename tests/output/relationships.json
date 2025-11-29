@@ -1,0 +1,140 @@
+{
+  "doc_id": "test-123",
+  "relationships": [
+    {
+      "block_id": "f73e84d7-743c-4274-b702-d5d7ca2faeaa",
+      "parent_block_id": null,
+      "child_block_ids": [],
+      "sibling_ordinal": 0,
+      "source": "list",
+      "restart_group_id": "listgrp-f5b1bc9d07479ddcb537fbe9a58332e47e1db2fa",
+      "list_meta": {
+        "num_id": 10,
+        "abstract_num_id": 101,
+        "level": 0,
+        "counters": [
+          1
+        ],
+        "ordinal": "1.",
+        "format": "decimal",
+        "pattern": "%1.",
+        "is_legal": false,
+        "restart_boundary": true,
+        "list_instance_id": "listinst-6c12175b71877b28b8c72cf00bb1f4206b31f28e",
+        "numbering_digest": "num-7705c91f00ae28cc894c1e9d0840ec17cb9fe4c3",
+        "ordinal_at_parse": 1
+      },
+      "attachment_id": null,
+      "clause_group_id": "f73e84d7-743c-4274-b702-d5d7ca2faeaa",
+      "continuation_of": null
+    },
+    {
+      "block_id": "83f5d66c-8220-4d41-80a6-20fe1748beac",
+      "parent_block_id": null,
+      "child_block_ids": [],
+      "sibling_ordinal": 1,
+      "source": "list",
+      "restart_group_id": "listgrp-f5b1bc9d07479ddcb537fbe9a58332e47e1db2fa",
+      "list_meta": {
+        "num_id": 10,
+        "abstract_num_id": 101,
+        "level": 0,
+        "counters": [
+          2
+        ],
+        "ordinal": "2.",
+        "format": "decimal",
+        "pattern": "%1.",
+        "is_legal": false,
+        "restart_boundary": false,
+        "list_instance_id": "listinst-6c12175b71877b28b8c72cf00bb1f4206b31f28e",
+        "numbering_digest": "num-7705c91f00ae28cc894c1e9d0840ec17cb9fe4c3",
+        "ordinal_at_parse": 2
+      },
+      "attachment_id": null,
+      "clause_group_id": "f73e84d7-743c-4274-b702-d5d7ca2faeaa",
+      "continuation_of": null
+    },
+    {
+      "block_id": "a2d20a1c-6f7c-46cb-ab52-b689cd203aa1",
+      "parent_block_id": null,
+      "child_block_ids": [],
+      "sibling_ordinal": 2,
+      "source": "list",
+      "restart_group_id": "listgrp-2c39f4e0f4a7bfb2effc8301ba817a6b2e14b494",
+      "list_meta": {
+        "num_id": 11,
+        "abstract_num_id": 101,
+        "level": 0,
+        "counters": [
+          1
+        ],
+        "ordinal": "1.",
+        "format": "decimal",
+        "pattern": "%1.",
+        "is_legal": false,
+        "restart_boundary": true,
+        "list_instance_id": "listinst-55e135a2c24cacd46e6be9ec6860b4d17aadb768",
+        "numbering_digest": "num-543ac194cd787ba5d0e21b2d4fcf57a7fb515ab4",
+        "ordinal_at_parse": 1
+      },
+      "attachment_id": null,
+      "clause_group_id": "f73e84d7-743c-4274-b702-d5d7ca2faeaa",
+      "continuation_of": null
+    },
+    {
+      "block_id": "57278011-e4b0-4557-bc06-6401415e0b7a",
+      "parent_block_id": null,
+      "child_block_ids": [],
+      "sibling_ordinal": 3,
+      "source": "list",
+      "restart_group_id": "listgrp-29463471087809001ed883ed1fbe7b74e312341a",
+      "list_meta": {
+        "num_id": 1,
+        "abstract_num_id": 8,
+        "level": 0,
+        "counters": [
+          1
+        ],
+        "ordinal": "•",
+        "format": "bullet",
+        "pattern": "•",
+        "is_legal": false,
+        "restart_boundary": true,
+        "list_instance_id": "listinst-50263c113b011f952cbdf9371423e14836dfeb5a",
+        "numbering_digest": "num-cd2655ca6a3b41c507129f04fa02681face07675",
+        "ordinal_at_parse": 1
+      },
+      "attachment_id": null,
+      "clause_group_id": "f73e84d7-743c-4274-b702-d5d7ca2faeaa",
+      "continuation_of": null
+    },
+    {
+      "block_id": "aeb5bf53-0b55-4a03-95b7-88cb6d9a8876",
+      "parent_block_id": null,
+      "child_block_ids": [],
+      "sibling_ordinal": 4,
+      "source": "list",
+      "restart_group_id": "listgrp-7f1397f75a952f2e9283f3bc862c004ddb1ba71e",
+      "list_meta": {
+        "num_id": 11,
+        "abstract_num_id": 101,
+        "level": 0,
+        "counters": [
+          2
+        ],
+        "ordinal": "2.",
+        "format": "decimal",
+        "pattern": "%1.",
+        "is_legal": false,
+        "restart_boundary": true,
+        "list_instance_id": "listinst-1ef56f99169bd6c9b82461779b738e4fd7b1a67f",
+        "numbering_digest": "num-543ac194cd787ba5d0e21b2d4fcf57a7fb515ab4",
+        "ordinal_at_parse": 1
+      },
+      "attachment_id": null,
+      "clause_group_id": "f73e84d7-743c-4274-b702-d5d7ca2faeaa",
+      "continuation_of": null
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "doc_id": "nr2",
+  "v": 1,
+  "created_at": "2025-11-29T18:13:37+00:00",
+  "tool_version": "sprint2-dev",
+  "doc_format": "docx",
+  "sdt_carrier": "content-controls",
+  "range_marker_carrier": "content-controls",
+  "range_marker_tag_prefix": "marker:",
+  "fallback_heading_label": "Body (no heading)",
+  "checksums": {
+    "blocks.jsonl": "sha256:76c0e9a5c2650248104d01ad9e0fed0b0235c2d72d21a5e5c6cf9cca71aa698a",
+    "sections.json": "sha256:b3b39d7f2f2b4cfbaf8f6bf405a9823c4e22da628319e20c8a5bef7776cc1f4d",
+    "styles.json": "sha256:b02ceed7005c938039b660e587a34ea43d737bb298ac6f387867ab57cb1ea0ae",
+    "relationships.json": "sha256:97eab7085880bf3249af984fac40c1853bc50ba9a5879cbfe55144753e12228e",
+    "tag_ranges.jsonl": "sha256:037d0cf2b8cadd6c6241c5a8ef28b84b1dfacfd85e6711d1842096a3196fee12",
+    "index.json": "sha256:7ec28da490f733e1e058811f24f130c1b426562476c943c21b73542c6bb391aa"
+  },
+  "schema_checksums": {
+    "block.schema.json": "sha256:a864e9b480aadbb4a980d651e55805a5edabdbdc14d3656a5035017923241973",
+    "edit_plan.schema.json": "sha256:99723778ddca26ca3e8a4fede0f6689de62b1f4d66bcbf6ab89f0f6be73fe76a",
+    "index.schema.json": "sha256:f305e73bdd196f01be5aba55a1bfe71dc0756218dbafc234fbd9e269c7f84557",
+    "labels.schema.json": "sha256:44e45c3f69aa8c9728872198061b34cbc23aa83a232a93debb3bce13f42e1052",
+    "manifest.schema.json": "sha256:6cc58c1427218e391205fc7abad10d31ff9ab9d709ac0e6a4cf42f4cb42e619a",
+    "relationships.schema.json": "sha256:0a6b82f199e7e009eb01866b591d10d35578bb937e794216a56a29c3f922246e",
+    "report.schema.json": "sha256:cc9454c8a3713921e540d0e7e1ce3fca7c8569e9704475ec39eae016541bf3be",
+    "sections.schema.json": "sha256:64d13ab3f694c5e4bcce3072c1d2823c614b2718aa50ba4850aea65c3b9fcdcc",
+    "styles.schema.json": "sha256:69bb206dd584e1ce1e19e6f752f510633761625ed9ba8905fa78c2bfdf731549",
+    "tag_range.schema.json": "sha256:38ae87688b3e7f53b0d7466d5699e6e741330b2da45ea6f784ae6da8bf002c3f"
+  },
+  "attachments": []
+}

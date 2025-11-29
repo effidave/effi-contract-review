@@ -1,0 +1,25 @@
+{
+  "doc_id": "bullet_test",
+  "hierarchy_depth": 1,
+  "depth_max": 1,
+  "avg_blocks_per_section": 1.0,
+  "root": {
+    "children": [
+      {
+        "id": "e48ba624-1974-42a5-8d25-c42915e76e08",
+        "ltu_id": "ltu_e48ba624-1974-42a5-8d25-c42915e76e08",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "6769bcf9-a665-4179-be77-8af7a6a3e5f1"
+        ],
+        "char_count": 46,
+        "children": [],
+        "role": "main_body",
+        "attachment_id": null,
+        "parent_id": null
+      }
+    ]
+  }
+}

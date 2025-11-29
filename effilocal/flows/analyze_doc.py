@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import shutil
+import zipfile
 from pathlib import Path
 from typing import Any, Iterable, Mapping, MutableMapping
 
@@ -65,9 +66,11 @@ def analyze(
 
     artifacts: dict[str, Path] = {}
 
-    raw_path = out_dir / "raw.docx"
-    shutil.copy2(docx_path, raw_path)
-    artifacts["raw.docx"] = raw_path
+    raw_dir = out_dir / "raw_docx"
+    raw_dir.mkdir(parents=True, exist_ok=True)
+    with zipfile.ZipFile(docx_path, 'r') as zip_ref:
+        zip_ref.extractall(raw_dir)
+    artifacts["raw_docx"] = raw_dir
 
     blocks = list(direct_docx.iter_blocks(docx_path))
     attachments = _collect_attachments(blocks)

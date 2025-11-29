@@ -25,7 +25,7 @@ class NumberingTracker:
         self._current_group: dict[int, str] = {}
         self._ordinal_counts: dict[str, int] = {}
         self._last_block_was_list: bool = False
-        self._previous_list_num_id: int | None = None
+        self._previous_abstract_num_id: int | None = None
         self._para_index = 0
 
     def reset_for_attachment(self) -> None:
@@ -55,7 +55,7 @@ class NumberingTracker:
         self._current_group.clear()
         self._ordinal_counts.clear()
         self._last_block_was_list = False
-        self._previous_list_num_id = None
+        self._previous_abstract_num_id = None
         self._para_index = 0
         if self._inspector is not None:
             self._inspector.reset()
@@ -133,8 +133,8 @@ class NumberingTracker:
         force_new_group = False
         if (
             self._last_block_was_list
-            and self._previous_list_num_id is not None
-            and self._previous_list_num_id != num_id
+            and self._previous_abstract_num_id is not None
+            and self._previous_abstract_num_id != abstract_num_id
         ):
             force_new_group = True
         if force_new_group:
@@ -160,7 +160,7 @@ class NumberingTracker:
             self._ordinal_counts[group_id] = ordinal_snapshot
 
         self._last_block_was_list = True
-        self._previous_list_num_id = num_id
+        self._previous_abstract_num_id = abstract_num_id
         self._previous_counters[num_id] = counters
 
         payload = {

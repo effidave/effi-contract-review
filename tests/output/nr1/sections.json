@@ -1,0 +1,85 @@
+{
+  "doc_id": "nr1",
+  "hierarchy_depth": 1,
+  "depth_max": 1,
+  "avg_blocks_per_section": 1.0,
+  "root": {
+    "children": [
+      {
+        "id": "7c2d2de5-c822-4efb-8ae9-3a261a5957af",
+        "ltu_id": "ltu_7c2d2de5-c822-4efb-8ae9-3a261a5957af",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "8b8d639e-aa78-4e72-be3e-b69b21694d95"
+        ],
+        "char_count": 7,
+        "children": [],
+        "role": "main_body",
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "0d2bd2ef-193a-4a16-b8b8-a1d94b4c1f10",
+        "ltu_id": "ltu_0d2bd2ef-193a-4a16-b8b8-a1d94b4c1f10",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "404de68f-caa6-47e6-9202-fe49360cdd2f"
+        ],
+        "char_count": 7,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "b4a55736-373d-4952-a567-001967d00f7c",
+        "ltu_id": "ltu_b4a55736-373d-4952-a567-001967d00f7c",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "06e2aff0-c95b-4fe9-b4aa-d7a8a5191fc4"
+        ],
+        "char_count": 7,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "1b90a364-9ff8-4d39-aa0c-ebb563c0d03d",
+        "ltu_id": "ltu_1b90a364-9ff8-4d39-aa0c-ebb563c0d03d",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "89572c53-49ba-4409-b6cf-c8aeb540788f"
+        ],
+        "char_count": 18,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "ea2ea02e-ec71-4a4c-8db9-8bb759baa942",
+        "ltu_id": "ltu_ea2ea02e-ec71-4a4c-8db9-8bb759baa942",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "206be19a-c056-4b3d-8ebe-ac006fbc7194"
+        ],
+        "char_count": 7,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      }
+    ]
+  }
+}
