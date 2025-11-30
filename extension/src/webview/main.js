@@ -6,6 +6,8 @@
 const vscode = acquireVsCodeApi();
 
 let currentData = null;
+let allBlocks = []; // Store all blocks from blocks.jsonl
+let activeTab = 'outline'; // Track active tab
 
 // Handle messages from extension
 window.addEventListener('message', event => {
@@ -14,6 +16,7 @@ window.addEventListener('message', event => {
     switch (message.command) {
         case 'updateData':
             currentData = message.data;
+            allBlocks = message.data.blocks || [];
             renderData(message.data);
             break;
         case 'noAnalysis':
@@ -26,6 +29,25 @@ window.addEventListener('message', event => {
             break;
     }
 });
+
+function setupChatControls() {
+    const clearBtn = document.getElementById('clear-selection');
+    const sendBtn = document.getElementById('send-to-chat');
+    
+    if (clearBtn) {
+        clearBtn.onclick = () => {
+            selectedClauses.clear();
+            document.querySelectorAll('.clause-checkbox').forEach(cb => cb.checked = false);
+            updateSelectionCount();
+        };
+    }
+    
+    if (sendBtn) {
+        sendBtn.onclick = () => {
+            sendToChat();
+        };
+    }
+}
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -60,8 +82,15 @@ function renderData(data) {
     // Render document info
     renderDocumentInfo(data);
     
-    // Render outline (will load separately via artifact loader)
-    renderOutlinePlaceholder(data);
+    // Set up tabs
+    setupTabs();
+    
+    // Render both views
+    renderOutlineView(data);
+    renderFullTextView(data);
+    
+    // Set up chat controls
+    setupChatControls();
     
     // Render schedules
     renderSchedulesPlaceholder(data);
@@ -103,14 +132,54 @@ function renderDocumentInfo(data) {
 
 const selectedClauses = new Set();
 
-function renderOutlinePlaceholder(data) {
-    const outlineEl = document.getElementById('outline');
-    if (!outlineEl) return;
+function setupTabs() {
+    const outlineTab = document.getElementById('outline-tab');
+    const fullTextTab = document.getElementById('fulltext-tab');
+    const outlineContent = document.getElementById('outline-content');
+    const fullTextContent = document.getElementById('fulltext-content');
+    
+    if (!outlineTab || !fullTextTab) return;
+    
+    outlineTab.addEventListener('click', () => {
+        activeTab = 'outline';
+        outlineTab.classList.add('active');
+        fullTextTab.classList.remove('active');
+        if (outlineContent) outlineContent.style.display = 'block';
+        if (fullTextContent) fullTextContent.style.display = 'none';
+    });
+    
+    fullTextTab.addEventListener('click', () => {
+        activeTab = 'fulltext';
+        fullTextTab.classList.add('active');
+        outlineTab.classList.remove('active');
+        if (outlineContent) outlineContent.style.display = 'none';
+        if (fullTextContent) fullTextContent.style.display = 'block';
+    });
+}
+
+function handleCheckboxChange(id, checked) {
+    if (checked) {
+        selectedClauses.add(id);
+    } else {
+        selectedClauses.delete(id);
+    }
+    
+    // Sync checkbox state across both views
+    document.querySelectorAll(`.clause-checkbox[data-id="${id}"]`).forEach(cb => {
+        cb.checked = checked;
+    });
+    
+    updateSelectionCount();
+}
+
+function renderOutlineView(data) {
+    const outlineContent = document.getElementById('outline-content');
+    if (!outlineContent) return;
     
     const outline = data.outline || [];
     
     if (outline.length === 0) {
-        outlineEl.innerHTML = `
+        outlineContent.innerHTML = `
             <div class="placeholder">
                 <p>📋 No outline items found</p>
                 <p class="hint">Analysis directory: ${escapeHtml(data.analysisDir)}</p>
@@ -133,17 +202,9 @@ function renderOutlinePlaceholder(data) {
         `;
     }).join('');
 
-    outlineEl.innerHTML = `
+    outlineContent.innerHTML = `
         <div class="outline-list">
             ${html}
-        </div>
-        <div class="chat-query-box">
-            <div class="selection-info">
-                <span id="selection-count">0 clauses selected</span>
-                <button id="clear-selection" class="secondary-button">Clear</button>
-            </div>
-            <textarea id="chat-query" placeholder="Ask a question about the selected clauses..."></textarea>
-            <button id="send-to-chat" class="primary-button">Send to Chat</button>
         </div>
         <div class="outline-count">
             ${outline.length} items
@@ -151,29 +212,63 @@ function renderOutlinePlaceholder(data) {
     `;
 
     // Add event listeners
-    document.querySelectorAll('.clause-checkbox').forEach(checkbox => {
+    outlineContent.querySelectorAll('.clause-checkbox').forEach(checkbox => {
         checkbox.addEventListener('change', (e) => {
-            const id = e.target.dataset.id;
-            if (e.target.checked) {
-                selectedClauses.add(id);
-            } else {
-                selectedClauses.delete(id);
-            }
-            updateSelectionCount();
+            handleCheckboxChange(e.target.dataset.id, e.target.checked);
         });
     });
+}
 
-    document.getElementById('clear-selection')?.addEventListener('click', () => {
-        selectedClauses.clear();
-        document.querySelectorAll('.clause-checkbox').forEach(cb => cb.checked = false);
-        updateSelectionCount();
+function renderFullTextView(data) {
+    const fullTextContent = document.getElementById('fulltext-content');
+    if (!fullTextContent) return;
+    
+    const blocks = allBlocks.filter(block => {
+        const listMeta = block.list || {};
+        return listMeta.ordinal; // Only show blocks with ordinals
     });
+    
+    if (blocks.length === 0) {
+        fullTextContent.innerHTML = `
+            <div class="placeholder">
+                <p>📋 No blocks found</p>
+            </div>
+        `;
+        return;
+    }
 
-    document.getElementById('send-to-chat')?.addEventListener('click', () => {
-        sendToChat();
+    // Render blocks with full text
+    const html = blocks.map(block => {
+        const listMeta = block.list || {};
+        const isSelected = selectedClauses.has(block.id);
+        const level = listMeta.level || 0;
+        return `
+            <div class="block-item" data-id="${block.id}">
+                <div class="block-header">
+                    <input type="checkbox" class="clause-checkbox" data-id="${block.id}" ${isSelected ? 'checked' : ''}>
+                    <span class="block-ordinal">${escapeHtml(listMeta.ordinal || '')}</span>
+                    <span class="block-meta">Level ${level}</span>
+                </div>
+                <div class="block-text">${escapeHtml(block.text || '')}</div>
+            </div>
+        `;
+    }).join('');
+
+    fullTextContent.innerHTML = `
+        <div class="block-list">
+            ${html}
+        </div>
+        <div class="block-count">
+            ${blocks.length} blocks
+        </div>
+    `;
+
+    // Add event listeners
+    fullTextContent.querySelectorAll('.clause-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', (e) => {
+            handleCheckboxChange(e.target.dataset.id, e.target.checked);
+        });
     });
-
-    updateSelectionCount();
 }
 
 function updateSelectionCount() {
@@ -195,7 +290,8 @@ function sendToChat() {
         return;
     }
 
-    // Send message to extension
+    // Send message to extension with clause IDs
+    // The extension will fetch full text from blocks.jsonl
     vscode.postMessage({
         command: 'sendToChat',
         clauseIds: Array.from(selectedClauses),

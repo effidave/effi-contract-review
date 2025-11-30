@@ -143,6 +143,38 @@ body {
     margin-top: 8px;
 }
 
+/* Tabs */
+.tabs {
+    display: flex;
+    gap: 2px;
+    border-bottom: 1px solid var(--vscode-panel-border);
+    margin-bottom: 16px;
+}
+
+.tab-button {
+    padding: 8px 16px;
+    background: none;
+    border: none;
+    color: var(--vscode-foreground);
+    cursor: pointer;
+    font-size: 13px;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+.tab-button:hover {
+    background-color: var(--vscode-list-hoverBackground);
+}
+
+.tab-button.active {
+    border-bottom-color: var(--vscode-focusBorder);
+    font-weight: 600;
+}
+
+.tab-content {
+    min-height: 200px;
+}
+
 /* Outline styling */
 .outline-list {
     font-family: var(--vscode-editor-font-family);
@@ -188,6 +220,61 @@ body {
 }
 
 .outline-count {
+    margin-top: 12px;
+    padding: 8px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--vscode-descriptionForeground);
+    border-top: 1px solid var(--vscode-panel-border);
+}
+
+/* Full Text View styling */
+.block-list {
+    font-family: var(--vscode-editor-font-family);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.block-item {
+    padding: 12px;
+    margin-bottom: 8px;
+    background-color: var(--vscode-input-background);
+    border: 1px solid var(--vscode-input-border);
+    border-radius: var(--border-radius);
+}
+
+.block-item:hover {
+    border-color: var(--vscode-focusBorder);
+}
+
+.block-header {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--vscode-panel-border);
+}
+
+.block-ordinal {
+    color: var(--vscode-symbolIcon-numberForeground);
+    font-weight: 600;
+    min-width: 60px;
+}
+
+.block-meta {
+    color: var(--vscode-descriptionForeground);
+    font-size: 11px;
+    margin-left: auto;
+}
+
+.block-text {
+    color: var(--vscode-foreground);
+    white-space: pre-wrap;
+    line-height: 1.5;
+}
+
+.block-count {
     margin-top: 12px;
     padding: 8px;
     text-align: center;

@@ -208,6 +208,21 @@ async function loadAnalysisFromDirectory(analysisDir: string, projectPath: strin
             console.error('Analysis dir:', analysisDir);
         }
 
+        // Load blocks.jsonl for full text view
+        let blocks = [];
+        const blocksPath = path.join(analysisDir, 'blocks.jsonl');
+        if (fs.existsSync(blocksPath)) {
+            try {
+                const blocksContent = fs.readFileSync(blocksPath, 'utf-8');
+                blocks = blocksContent.trim().split('\\n')
+                    .filter(line => line.trim())
+                    .map(line => JSON.parse(line));
+                console.log(`Loaded ${blocks.length} blocks from blocks.jsonl`);
+            } catch (error) {
+                console.error('Error loading blocks.jsonl:', error);
+            }
+        }
+
         webviewPanel?.webview.postMessage({
             command: 'updateData',
             data: {
@@ -215,7 +230,8 @@ async function loadAnalysisFromDirectory(analysisDir: string, projectPath: strin
                 index,
                 analysisDir,
                 documentPath: projectPath,
-                outline
+                outline,
+                blocks
             }
         });
 
@@ -258,13 +274,29 @@ async function loadAnalysisData(documentPath: string) {
         const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
         const index = JSON.parse(fs.readFileSync(indexPath, 'utf-8'));
 
+        // Load blocks.jsonl for full text view
+        let blocks = [];
+        const blocksPath = path.join(analysisDir, 'blocks.jsonl');
+        if (fs.existsSync(blocksPath)) {
+            try {
+                const blocksContent = fs.readFileSync(blocksPath, 'utf-8');
+                blocks = blocksContent.trim().split('\\n')
+                    .filter(line => line.trim())
+                    .map(line => JSON.parse(line));
+                console.log(`Loaded ${blocks.length} blocks from blocks.jsonl`);
+            } catch (error) {
+                console.error('Error loading blocks.jsonl:', error);
+            }
+        }
+
         webviewPanel?.webview.postMessage({
             command: 'updateData',
             data: {
                 manifest,
                 index,
                 analysisDir,
-                documentPath
+                documentPath,
+                blocks
             }
         });
 
@@ -397,8 +429,22 @@ function getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Web
                 </div>
                 
                 <div class="section">
-                    <h2>Outline</h2>
-                    <div id="outline"></div>
+                    <div class="tabs">
+                        <button id="outline-tab" class="tab-button active">Outline</button>
+                        <button id="fulltext-tab" class="tab-button">Full Text</button>
+                    </div>
+                    
+                    <div id="outline-content" class="tab-content"></div>
+                    <div id="fulltext-content" class="tab-content" style="display: none;"></div>
+                    
+                    <div class="chat-query-box">
+                        <div class="selection-info">
+                            <span id="selection-count">0 clauses selected</span>
+                            <button id="clear-selection" class="secondary-button">Clear</button>
+                        </div>
+                        <textarea id="chat-query" placeholder="Ask a question about the selected clauses..."></textarea>
+                        <button id="send-to-chat" class="primary-button">Send to Chat</button>
+                    </div>
                 </div>
                 
                 <div class="section">
