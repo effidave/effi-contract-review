@@ -1,4 +1,4 @@
-{
+/*{
   "servers": {
     "effi-local": {
       "type": "stdio",
@@ -7,4 +7,4 @@
       "cwd": "c:\\Users\\DavidSant\\effi-contract-review"
     }
   }
-}
+}*/

@@ -97,6 +97,14 @@ The server features a modular architecture that separates concerns into core fun
 - Flexible padding units with support for points and percentage-based measurements
 - Clear, readable table presentation with proper alignment and spacing
 
+### Clause Number Editing
+
+- List every clause ordinal detected by the NumberingInspector/ArtifactLoader pipeline
+- Retrieve a clause (and its continuations) by its rendered number like `5.2(a)`
+- Replace clause text by ordinal without needing internal paragraph IDs
+- Insert new paragraphs after a clause while optionally inheriting numbering
+- Delete clauses by ordinal, including follow-on continuation paragraphs
+
 ### Document Protection
 
 - Add password protection to documents
@@ -329,6 +337,16 @@ auto_fit_table_columns(filename, table_index)
 get_all_comments(filename)
 get_comments_by_author(filename, author)
 get_comments_for_paragraph(filename, paragraph_index)
+```
+
+### Clause Editing
+
+```python
+list_all_clause_numbers(filename, analysis_dir=None)
+get_clause_text_by_ordinal(filename, clause_number, include_continuations=True, analysis_dir=None)
+replace_clause_text_by_ordinal(filename, clause_number, new_text, analysis_dir=None)
+insert_paragraph_after_clause(filename, clause_number, text, style="Normal", inherit_numbering=False, analysis_dir=None)
+delete_clause_by_ordinal(filename, clause_number, analysis_dir=None)
 ```
 
 ## Troubleshooting

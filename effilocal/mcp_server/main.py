@@ -35,6 +35,7 @@ from effilocal.mcp_server.tools import (
     attachment_tools,
     numbering_tools,
     review_tools,
+    clause_editing_tools,
 )
 
 # Import directly from upstream for tools we don't override
@@ -237,10 +238,10 @@ def register_tools():
     @mcp.tool()
     async def replace_block_between_manual_anchors(filename: str, start_anchor_text: str, 
                                               new_paragraphs: list, end_anchor_text: str = None, 
-                                              match_fn=None, new_paragraph_style: str = None):
+                                              new_paragraph_style: str = None):
         """Replace all content between start and end anchor text."""
         return await content_tools.replace_block_between_manual_anchors_tool(
-            filename, start_anchor_text, new_paragraphs, end_anchor_text, match_fn, new_paragraph_style
+            filename, start_anchor_text, new_paragraphs, end_anchor_text, None, new_paragraph_style
         )
     
     # ========================================================================
@@ -453,6 +454,47 @@ def register_tools():
     async def convert_to_pdf(filename: str, output_filename: str = None):
         """Convert a Word document to PDF format."""
         return await extended_document_tools.convert_to_pdf(filename, output_filename)
+    
+    # ========================================================================
+    # Clause editing tools (ordinal-based editing with artifact loader)
+    # ========================================================================
+    
+    @mcp.tool()
+    async def replace_clause_text_by_ordinal(filename: str, clause_number: str, new_text: str, 
+                                       analysis_dir: str = None):
+        """Replace the text of a clause identified by its ordinal number (e.g., '3.2.1')."""
+        return clause_editing_tools.replace_clause_text_by_ordinal(
+            filename, clause_number, new_text, analysis_dir
+        )
+    
+    @mcp.tool()
+    async def insert_paragraph_after_clause(filename: str, clause_number: str, text: str,
+                                     style: str = "Normal", inherit_numbering: bool = False,
+                                     analysis_dir: str = None):
+        """Insert a new paragraph after a clause identified by ordinal (e.g., '8.2')."""
+        return clause_editing_tools.insert_paragraph_after_clause(
+            filename, clause_number, text, style, inherit_numbering, analysis_dir
+        )
+    
+    @mcp.tool()
+    async def delete_clause_by_ordinal(filename: str, clause_number: str, analysis_dir: str = None):
+        """Delete a clause and its continuations identified by ordinal (e.g., '12.5')."""
+        return clause_editing_tools.delete_clause_by_ordinal(
+            filename, clause_number, analysis_dir
+        )
+    
+    @mcp.tool()
+    async def get_clause_text_by_ordinal(filename: str, clause_number: str, 
+                                   include_continuations: bool = True, analysis_dir: str = None):
+        """Get the text of a clause by its ordinal number (e.g., '5.1')."""
+        return clause_editing_tools.get_clause_text_by_ordinal(
+            filename, clause_number, include_continuations, analysis_dir
+        )
+    
+    @mcp.tool()
+    async def list_all_clause_numbers(filename: str, analysis_dir: str = None):
+        """List all clause ordinals in the document for discovery."""
+        return clause_editing_tools.list_all_clause_numbers(filename, analysis_dir)
 
 
 def run_server():

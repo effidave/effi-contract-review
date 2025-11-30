@@ -44,15 +44,22 @@ MCP tools are referenced by their registered names from the Word Document Server
 - `convert_to_pdf` – convert Word document to PDF
 - `get_document_outline` – get hierarchical structure of document
 - `get_document_text` – extract all text from document
+- `list_all_clause_numbers` – enumerate every clause ordinal detected in analysis artifacts
 
 **Content Creation:**
 - `add_heading` – add a heading to a document
 - `add_paragraph` – add a paragraph with optional formatting
 - `add_paragraph_after_clause` – insert paragraph after specific clause number
 - `add_paragraphs_after_clause` – bulk insert multiple paragraphs after clause
+- `insert_paragraph_after_clause` – add unnumbered paragraph after clause using ordinal lookup
 - `add_table` – add a table to a document
 - `add_picture` – add an image to a document
 - `add_page_break` – insert a page break
+- `list_all_clause_numbers` – enumerate available clause ordinals for reference
+- `get_clause_text_by_ordinal` – fetch clause text (and continuations) by number, e.g., `5.2(a)`
+- `replace_clause_text_by_ordinal` – overwrite a clause directly via ordinal without needing para_id
+- `insert_paragraph_after_clause` – insert an unnumbered paragraph immediately after a clause
+- `delete_clause_by_ordinal` – remove a clause plus any continuation blocks
 
 **Text & Content Manipulation:**
 - `search_and_replace` – find and replace text throughout document
@@ -96,6 +103,7 @@ MCP tools are referenced by their registered names from the Word Document Server
 | User Request | Tool Name | Purpose |
 |--------------|-----------|---------|
 | "add a clause after 3.2" | `add_paragraph_after_clause()` | Insert numbered clause |
+| "list the clause ordinals" | `list_all_clause_numbers()` | Discovery of available clause references |
 | "find [text]" or "search for" | `find_text_in_document()` | Search document |
 | "bold this text" | `format_text()` | Apply formatting to text range |
 | "add a comment" | `add_comment_after_text()` | Attach comment to text |
@@ -297,7 +305,10 @@ add_paragraph_after_clause(
 
 **Workflow:**
 1. Identify target location (clause number)
-2. Execute `add_paragraph_after_clause()` with `inherit_numbering=true`
+2. Execute ordinal-aware tools as needed:
+   - Use `list_all_clause_numbers()` if the precise ordinal must be confirmed first
+   - Retrieve existing text with `get_clause_text_by_ordinal()` when context is needed
+   - Execute `add_paragraph_after_clause()` with `inherit_numbering=true` to add sibling clause
 3. Verify with `get_document_outline()`
 4. Provide edit description
 

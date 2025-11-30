@@ -147,7 +147,7 @@ class MCPToolTester:
     def start_mcp_server(self) -> bool:
         try:
             self.mcp_process = subprocess.Popen(
-                [sys.executable, "-m", "word_document_server.main"],
+                [sys.executable, "-m", "effilocal.mcp_server.main"],
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
