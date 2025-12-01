@@ -316,6 +316,11 @@ def register_tools():
             filename, paragraph_index, comment_text, author, initials
         )
     
+    @mcp.tool()
+    async def update_comment(filename: str, comment_id: str, new_text: str):
+        """Update the text of an existing comment."""
+        return await comment_tools.update_comment(filename, comment_id, new_text)
+    
     # ========================================================================
     # Numbering analysis tools (effilocal-specific)
     # ========================================================================
@@ -495,6 +500,20 @@ def register_tools():
     async def list_all_clause_numbers(filename: str, analysis_dir: str = None):
         """List all clause ordinals in the document for discovery."""
         return clause_editing_tools.list_all_clause_numbers(filename, analysis_dir)
+
+    # ========================================================================
+    # Para ID tools (retrieval and replacement by paraId)
+    # ========================================================================
+
+    @mcp.tool()
+    async def get_text_by_para_id(filename: str, para_id: str):
+        """Get the text content of a paragraph identified by its paraId."""
+        return await content_tools.get_text_by_para_id(filename, para_id)
+
+    @mcp.tool()
+    async def replace_text_by_para_id(filename: str, para_id: str, new_text: str):
+        """Replace the entire text content of a paragraph identified by its paraId."""
+        return await content_tools.replace_text_by_para_id(filename, para_id, new_text)
 
 
 def run_server():

@@ -17,6 +17,7 @@ from typing import Dict, List, Optional, Any
 from docx import Document
 from docx.document import Document as DocumentType
 from docx.text.paragraph import Paragraph
+from docx.oxml.ns import qn
 
 # Import upstream functions that we don't override (pass-through)
 from word_document_server.core.comments import (
@@ -41,6 +42,7 @@ def extract_all_comments(doc: DocumentType) -> List[Dict[str, Any]]:
     - Status extraction from commentsExtended.xml part
     - para_id linkage between comments.xml and commentsExtended.xml
     - Active/resolved status tracking
+    - Paragraph index mapping by scanning document body
     
     Args:
         doc: The Document object to extract comments from
@@ -48,7 +50,7 @@ def extract_all_comments(doc: DocumentType) -> List[Dict[str, Any]]:
     Returns:
         List of dictionaries containing comment information including status
     """
-    comments = []
+    comments_map = {}
     
     try:
         # Access comments through document part
@@ -61,20 +63,34 @@ def extract_all_comments(doc: DocumentType) -> List[Dict[str, Any]]:
         
         if comments_part:
             # Parse comments.xml for comment elements
-            comment_elements = comments_part.element.xpath(
-                './/w:comment',
-                namespaces={
-                    'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
-                }
-            )
+            comment_elements = comments_part.element.xpath('.//w:comment')
             
             for idx, comment_el in enumerate(comment_elements):
                 comment_data = extract_comment_data(comment_el, idx)
                 if comment_data:
-                    comments.append(comment_data)
+                    # Use comment_id as key for mapping
+                    cid = comment_data['comment_id']
+                    comments_map[cid] = comment_data
+        
+        # Scan paragraphs to map comments to locations
+        # This populates 'paragraph_index' for comments found in the body
+        for i, p in enumerate(doc.paragraphs):
+            p_element = p._element
+            # Find comment references
+            refs = p_element.xpath('.//w:commentReference')
+            for ref in refs:
+                cid = ref.get(qn('w:id'))
+                if cid in comments_map:
+                    comments_map[cid]['paragraph_index'] = i
+                    
+        # Also scan tables? (Optional, but good for completeness)
+        # For now, let's stick to main body paragraphs as that's what manage_notes.py needs
+        
+        comments = list(comments_map.values())
         
         if not comments:
-            # Fallback: scan paragraphs for comment references
+            # Fallback: scan paragraphs for comment references (upstream method)
+            # Note: upstream method doesn't extract text well, but it's a fallback
             comments = extract_comments_from_paragraphs(doc)
         
         # Extract comment status information from commentsExtended.xml
@@ -121,12 +137,13 @@ def extract_comment_data(comment_element, index: int) -> Optional[Dict[str, Any]
         if date_str:
             try:
                 date = datetime.datetime.fromisoformat(date_str.replace('Z', '+00:00'))
+                date = date.isoformat()
             except:
-                pass
+                date = date_str
         
         # Extract comment text content
         text = ''
-        for text_el in comment_element.xpath('.//w:t', namespaces={'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'}):
+        for text_el in comment_element.xpath('.//w:t'):
             text += text_el.text or ''
         
         return {
@@ -186,12 +203,7 @@ def extract_comment_status_map(doc: DocumentType) -> Dict[str, Dict[str, Any]]:
         if comments_extended_part:
             # Parse commentsExtended.xml for w15:commentEx elements
             # Namespace: http://schemas.microsoft.com/office/word/2012/wordml
-            comment_ex_elements = comments_extended_part.element.xpath(
-                './/w15:commentEx',
-                namespaces={
-                    'w15': 'http://schemas.microsoft.com/office/word/2012/wordml'
-                }
-            )
+            comment_ex_elements = comments_extended_part.element.xpath('.//w15:commentEx')
             
             for comment_ex in comment_ex_elements:
                 para_id = comment_ex.get(

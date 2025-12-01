@@ -213,6 +213,11 @@ async def add_comment_after_text(
             "initials": initials,
         }, indent=2)
 
+    except PermissionError:
+        return json.dumps({
+            "success": False, 
+            "error": f"Permission denied: The file '{os.path.basename(filename)}' is likely open in Word. Please close it and try again."
+        }, indent=2)
     except Exception as e:
         return json.dumps({"success": False, "error": f"Failed to add comment: {str(e)}"}, indent=2)
 
@@ -277,8 +282,99 @@ async def add_comment_for_paragraph(
             "initials": initials,
         }, indent=2)
 
+    except PermissionError:
+        return json.dumps({
+            "success": False, 
+            "error": f"Permission denied: The file '{os.path.basename(filename)}' is likely open in Word. Please close it and try again."
+        }, indent=2)
     except Exception as e:
         return json.dumps({"success": False, "error": f"Failed to add comment: {str(e)}"}, indent=2)
+
+
+async def update_comment(
+    filename: str,
+    comment_id: str,
+    new_text: str
+) -> str:
+    """Update the text of an existing comment.
+    
+    NEW function - updates comment content.
+    
+    Args:
+        filename: Path to the Word document
+        comment_id: The ID of the comment to update (hex string or int string)
+        new_text: New text content for the comment
+    
+    Returns:
+        JSON string with success flag
+    """
+    filename = ensure_docx_extension(filename)
+    if not os.path.exists(filename):
+        return json.dumps({"success": False, "error": f"Document {filename} does not exist"}, indent=2)
+
+    try:
+        doc = Document(filename)
+        comments_part = doc.part.part_related_by(RT.COMMENTS)
+        
+        # Find comment by ID
+        # comment_id might be passed as "1" or "0" or hex
+        # The XML expects the ID string exactly as it appears in w:id
+        
+        # Try exact match first
+        comment_els = comments_part.element.xpath(f'.//w:comment[@w:id="{comment_id}"]')
+        
+        if not comment_els:
+            return json.dumps({"success": False, "error": f"Comment with ID {comment_id} not found"}, indent=2)
+            
+        comment_el = comment_els[0]
+        
+        # Find w:t elements
+        t_els = comment_el.xpath('.//w:t')
+        if t_els:
+            # Update first text element
+            t_els[0].text = new_text
+            # Clear others if any (to avoid mixed content)
+            for t in t_els[1:]:
+                t.text = ''
+        else:
+            # If no text element exists (empty comment?), we need to add one
+            # Structure: w:comment -> w:p -> w:r -> w:t
+            # This is a bit complex to construct from scratch if missing, 
+            # but usually comments have at least a paragraph.
+            p_els = comment_el.xpath('.//w:p')
+            if p_els:
+                p = p_els[0]
+                # We can use python-docx wrappers if we wrap the element, 
+                # but here we are doing low-level XML.
+                # Let's just try to find a run or create one.
+                r_els = p.xpath('.//w:r')
+                if r_els:
+                    r = r_els[0]
+                else:
+                    r = OxmlElement('w:r')
+                    p.append(r)
+                
+                t = OxmlElement('w:t')
+                t.text = new_text
+                r.append(t)
+            else:
+                # Very empty comment
+                return json.dumps({"success": False, "error": "Comment structure too simple to update safely"}, indent=2)
+            
+        doc.save(filename)
+        return json.dumps({
+            "success": True, 
+            "action": "update_comment",
+            "comment_id": comment_id
+        }, indent=2)
+
+    except PermissionError:
+        return json.dumps({
+            "success": False, 
+            "error": f"Permission denied: The file '{os.path.basename(filename)}' is likely open in Word. Please close it and try again."
+        }, indent=2)
+    except Exception as e:
+        return json.dumps({"success": False, "error": f"Failed to update comment: {str(e)}"}, indent=2)
 
 
 # ============================================================================
@@ -294,4 +390,5 @@ __all__ = [
     # New functions (comment creation)
     'add_comment_after_text',
     'add_comment_for_paragraph',
+    'update_comment',
 ]

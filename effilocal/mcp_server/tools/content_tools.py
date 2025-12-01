@@ -41,7 +41,7 @@ from word_document_server.tools.content_tools import add_paragraph as upstream_a
 from word_document_server.utils.file_utils import check_file_writeable, ensure_docx_extension
 
 # Import NEW functions from our own utils (not in upstream)
-from effilocal.mcp_server.utils.document_utils import edit_run_text
+from effilocal.mcp_server.utils.document_utils import edit_run_text, get_paragraph_by_id
 
 
 # ============================================================================
@@ -486,6 +486,65 @@ async def add_paragraphs_after_clause(
     return result
 
 
+async def get_text_by_para_id(filename: str, para_id: str) -> str:
+    """Get the text content of a paragraph identified by its paraId.
+    
+    Args:
+        filename: Path to the Word document
+        para_id: The 8-character hex paragraph ID (e.g., "3DD8236A")
+    """
+    filename = ensure_docx_extension(filename)
+    
+    if not os.path.exists(filename):
+        return f"Document {filename} does not exist"
+    
+    try:
+        doc = Document(filename)
+        paragraph = get_paragraph_by_id(doc, para_id)
+        
+        if paragraph:
+            return paragraph.text
+        else:
+            return f"Paragraph with ID {para_id} not found in {filename}"
+            
+    except Exception as e:
+        return f"Failed to get text by para ID: {str(e)}"
+
+
+async def replace_text_by_para_id(filename: str, para_id: str, new_text: str) -> str:
+    """Replace the entire text content of a paragraph identified by its paraId.
+    
+    Args:
+        filename: Path to the Word document
+        para_id: The 8-character hex paragraph ID (e.g., "3DD8236A")
+        new_text: The new text to set for the paragraph
+    """
+    filename = ensure_docx_extension(filename)
+    
+    if not os.path.exists(filename):
+        return f"Document {filename} does not exist"
+    
+    is_writeable, error_message = check_file_writeable(filename)
+    if not is_writeable:
+        return f"Cannot modify document: {error_message}. Consider creating a copy first."
+    
+    try:
+        doc = Document(filename)
+        paragraph = get_paragraph_by_id(doc, para_id)
+        
+        if not paragraph:
+            return f"Paragraph with ID {para_id} not found in {filename}"
+        
+        old_text = paragraph.text
+        paragraph.text = new_text
+        
+        doc.save(filename)
+        return f"Replaced text in paragraph {para_id}.\nOld: {old_text[:50]}...\nNew: {new_text[:50]}..."
+            
+    except Exception as e:
+        return f"Failed to replace text by para ID: {str(e)}"
+
+
 # ============================================================================
 # Re-export all functions for compatibility
 # ============================================================================
@@ -511,6 +570,8 @@ __all__ = [
     'insert_str_content_near_text',
     'add_paragraph_after_clause',
     'add_paragraphs_after_clause',
+    'get_text_by_para_id',
+    'replace_text_by_para_id',
 ]
 
 # Re-export wrapper tools from upstream for compatibility

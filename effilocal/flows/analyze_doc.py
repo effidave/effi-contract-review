@@ -21,6 +21,8 @@ from effilocal.doc.manifest import build_manifest
 from effilocal.doc.styles import analyze_styles
 from effilocal.util.hash import sha256_file
 from effilocal.util.io import write_jsonl
+from effilocal.mcp_server.core.comments import extract_all_comments
+from docx import Document
 
 LOGGER = get_logger(__name__)
 SCHEMA_DIR = Path(__file__).resolve().parents[2] / "schemas"
@@ -153,6 +155,27 @@ def analyze(
     manifest_path = out_dir / "manifest.json"
     _write_json(manifest_path, manifest_payload)
     artifacts["manifest.json"] = manifest_path
+
+    # Extract EFFI_NOTES
+    try:
+        doc = Document(docx_path)
+        all_comments = extract_all_comments(doc)
+        notes = {}
+        for c in all_comments:
+            text = c.get('text', '')
+            if text.startswith('EFFI_NOTE:'):
+                note_content = text[len('EFFI_NOTE:'):].strip()
+                para_idx = c.get('paragraph_index')
+                if para_idx is not None:
+                    notes[str(para_idx)] = note_content
+        
+        if notes:
+            notes_path = out_dir / "notes.json"
+            _write_json(notes_path, notes)
+            artifacts["notes.json"] = notes_path
+            LOGGER.info("Extracted %d notes to %s", len(notes), notes_path)
+    except Exception as e:
+        LOGGER.warning("Failed to extract notes: %s", e)
 
     LOGGER.info("Document analysis completed successfully: doc_id=%s", doc_id)
     return artifacts

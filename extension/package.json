@@ -16,6 +16,23 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "effi-explorer",
+          "title": "Effi Projects",
+          "icon": "$(book)"
+        }
+      ]
+    },
+    "views": {
+      "effi-explorer": [
+        {
+          "id": "effiProjects",
+          "name": "Select a Project"
+        }
+      ]
+    },
     "commands": [
       {
         "command": "effi-contract-viewer.showWebview",
@@ -34,6 +51,10 @@
       {
         "command": "effi-contract-viewer.loadAnalysis",
         "title": "Effi: Load Analysis from Workspace"
+      },
+      {
+        "command": "effi-contract-viewer.analyzeAndLoad",
+        "title": "Effi: Analyze and Load Document"
       }
     ],
     "menus": {

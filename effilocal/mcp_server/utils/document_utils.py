@@ -36,6 +36,16 @@ from word_document_server.utils.file_utils import check_file_writeable, ensure_d
 # Helper Functions
 # ============================================================================
 
+def get_paragraph_by_id(doc, para_id: str):
+    """Find a paragraph by its w14:paraId (case-insensitive)."""
+    target_id = para_id.upper()
+    for p in doc.paragraphs:
+        # Try standard w14:paraId
+        pid = p._element.get('{http://schemas.microsoft.com/office/word/2010/wordml}paraId')
+        if pid and pid.upper() == target_id:
+            return p
+    return None
+
 def _find_and_replace_in_doc(doc, old_text: str, new_text: str, whole_word_only: bool = False):
     """
     Find and replace text in a Document object (used by tests).
@@ -439,4 +449,5 @@ __all__ = [
     'edit_run_text',
     'find_and_replace_text',
     'insert_numbered_list_near_text',
+    'get_paragraph_by_id',
 ]

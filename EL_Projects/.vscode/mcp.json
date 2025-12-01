@@ -1,10 +1,10 @@
-/*{
+{
   "servers": {
     "effi-local": {
       "type": "stdio",
-      "command": "python",
-      "args": ["-m", "word_document_server.main"],
-      "cwd": "c:\\Users\\DavidSant\\effi-contract-review"
+      "command": "c:/Users/DavidSant/effi-contract-review/.venv/Scripts/python.exe",
+      "args": ["-m", "effilocal.mcp_server.main"],
+      "cwd": "c:/Users/DavidSant/effi-contract-review"
     }
   }
-}*/
+}

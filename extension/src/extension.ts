@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { exec, spawn } from 'child_process';
 import { promisify } from 'util';
+import { ProjectProvider } from './projectProvider';
 
 const execAsync = promisify(exec);
 
@@ -60,7 +61,22 @@ export function activate(context: vscode.ExtensionContext) {
         }
     );
 
-    context.subscriptions.push(showWebviewCommand, analyzeCommand, refreshCommand, loadAnalysisCommand);
+    // Register Project Provider
+    const workspaceRoot = vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0 
+        ? vscode.workspace.workspaceFolders[0].uri.fsPath 
+        : undefined;
+    const projectProvider = new ProjectProvider(workspaceRoot);
+    vscode.window.registerTreeDataProvider('effiProjects', projectProvider);
+
+    // Register command to analyze and load
+    const analyzeAndLoadCommand = vscode.commands.registerCommand(
+        'effi-contract-viewer.analyzeAndLoad',
+        async (fileUri: vscode.Uri) => {
+            await analyzeAndLoadDocument(context, fileUri.fsPath);
+        }
+    );
+
+    context.subscriptions.push(showWebviewCommand, analyzeCommand, refreshCommand, loadAnalysisCommand, analyzeAndLoadCommand);
 
     // Auto-analyze on .docx file open if configured
     const autoAnalyze = vscode.workspace.getConfiguration('effiContractViewer').get<boolean>('autoAnalyze');
@@ -126,6 +142,9 @@ function showContractWebview(context: vscode.ExtensionContext) {
                             loadAnalysisData(currentDocumentPath);
                         }
                         break;
+                    case 'saveNote':
+                        await saveNote(message.blockId, message.paraIdx, message.text);
+                        break;
                 }
             },
             undefined,
@@ -161,13 +180,100 @@ async function analyzeDocument(documentPath: string) {
     await loadAnalysisData(documentPath);
 }
 
-async function loadAnalysisFromDirectory(analysisDir: string, projectPath: string) {
+async function analyzeAndLoadDocument(context: vscode.ExtensionContext, documentPath: string) {
+    currentDocumentPath = documentPath;
+    
+    // Calculate output directory: project/analysis/<filename_no_ext>
+    const docDir = path.dirname(documentPath); // drafts/current_drafts
+    const draftsDir = path.dirname(docDir); // drafts
+    const projectDir = path.dirname(draftsDir); // ProjectName
+    const filenameNoExt = path.basename(documentPath, '.docx');
+    const analysisDir = path.join(projectDir, 'analysis', filenameNoExt);
+    
+    vscode.window.withProgress({
+        location: vscode.ProgressLocation.Notification,
+        title: `Analyzing ${path.basename(documentPath)}...`,
+        cancellable: false
+    }, async (progress) => {
+        try {
+            const workspaceRoot = path.join(__dirname, '..', '..');
+            const pythonCmd = getPythonPath(workspaceRoot);
+            
+            // Generate a random UUID for doc-id (simple version)
+            const docId = '123e4567-e89b-12d3-a456-426614174000'; 
+            
+            const cmd = `cd "${workspaceRoot}" && "${pythonCmd}" -m effilocal.cli analyze "${documentPath}" --doc-id "${docId}" --out "${analysisDir}"`;
+            
+            await execAsync(cmd);
+            
+            // Load analysis
+            // Note: loadAnalysisFromDirectory expects projectPath (documentPath) as second arg now
+            await loadAnalysisFromDirectory(analysisDir, documentPath); 
+            
+            // Show webview
+            showContractWebview(context);
+            
+        } catch (error) {
+            vscode.window.showErrorMessage(`Analysis failed: ${error}`);
+        }
+    });
+}
+
+function getPythonPath(workspaceRoot: string): string {
+    // Check for .venv in workspace root
+    const venvPath = process.platform === 'win32' 
+        ? path.join(workspaceRoot, '.venv', 'Scripts', 'python.exe')
+        : path.join(workspaceRoot, '.venv', 'bin', 'python');
+        
+    if (fs.existsSync(venvPath)) {
+        return venvPath;
+    }
+    
+    // Fallback to system python
+    return process.platform === 'win32' ? 'python' : 'python3';
+}
+
+async function loadAnalysisFromDirectory(analysisDir: string, projectPathOrDocPath: string) {
     if (!fs.existsSync(analysisDir)) {
         webviewPanel?.webview.postMessage({
             command: 'noAnalysis',
             message: 'No analysis found in workspace.'
         });
         return;
+    }
+
+    // Determine document path
+    let documentPath = '';
+    if (fs.existsSync(projectPathOrDocPath) && fs.statSync(projectPathOrDocPath).isFile() && projectPathOrDocPath.endsWith('.docx')) {
+        documentPath = projectPathOrDocPath;
+    } else {
+        // It's a project directory, try to find the file
+        const projectPath = projectPathOrDocPath;
+        
+        // Strategy 1: Check drafts/current_drafts
+        const draftsDir = path.join(projectPath, 'drafts', 'current_drafts');
+        if (fs.existsSync(draftsDir)) {
+            const files = fs.readdirSync(draftsDir).filter(f => f.endsWith('.docx') && !f.startsWith('~$'));
+            if (files.length > 0) {
+                documentPath = path.join(draftsDir, files[0]);
+            }
+        }
+
+        // Strategy 2: Check root if not found
+        if (!documentPath) {
+            const files = fs.readdirSync(projectPath).filter(f => f.endsWith('.docx') && !f.startsWith('~$'));
+            if (files.length > 0) {
+                documentPath = path.join(projectPath, files[0]);
+            }
+        }
+    }
+
+    if (documentPath) {
+        currentDocumentPath = documentPath;
+        console.log(`Found document: ${documentPath}`);
+    } else {
+        console.warn('No .docx file found in project');
+        vscode.window.showWarningMessage('Could not find associated .docx file. Note saving may not work.');
     }
 
     // Check for required artifacts
@@ -185,16 +291,36 @@ async function loadAnalysisFromDirectory(analysisDir: string, projectPath: strin
     try {
         const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
         const index = JSON.parse(fs.readFileSync(indexPath, 'utf-8'));
+        const workspaceRoot = path.join(__dirname, '..', '..');
+        const pythonCmd = getPythonPath(workspaceRoot);
+
+        // Load notes from comments using Python script
+        let notes = {};
+        if (documentPath) {
+            try {
+                const scriptPath = path.join(__dirname, '..', 'scripts', 'manage_notes.py');
+                
+                // Call: manage_notes.py get_notes <filename> <analysis_dir>
+                const { stdout } = await execAsync(`cd "${workspaceRoot}" && "${pythonCmd}" "${scriptPath}" "get_notes" "${documentPath}" "${analysisDir}"`);
+                const result = JSON.parse(stdout);
+                
+                if (result.success) {
+                    notes = result.notes;
+                    console.log(`Loaded notes for ${Object.keys(notes).length} blocks`);
+                } else {
+                    console.error('Failed to load notes:', result.error);
+                }
+            } catch (error) {
+                console.error('Error executing manage_notes.py:', error);
+            }
+        }
 
         // Load outline data using Python script
         let outline = [];
         try {
             // __dirname is dist/ after compilation, so go up one level to reach scripts/
             const scriptPath = path.join(__dirname, '..', 'scripts', 'get_outline.py');
-            // Python needs to run from the workspace root to import effilocal
-            const workspaceRoot = path.join(__dirname, '..', '..');
-            const pythonCmd = process.platform === 'win32' ? 'python' : 'python3';
-            const { stdout } = await execAsync(`cd "${workspaceRoot}" && ${pythonCmd} "${scriptPath}" "${analysisDir}"`);
+            const { stdout } = await execAsync(`cd "${workspaceRoot}" && "${pythonCmd}" "${scriptPath}" "${analysisDir}"`);
             const outlineResult = JSON.parse(stdout);
             if (outlineResult.success) {
                 outline = outlineResult.outline;
@@ -214,12 +340,24 @@ async function loadAnalysisFromDirectory(analysisDir: string, projectPath: strin
         if (fs.existsSync(blocksPath)) {
             try {
                 const blocksContent = fs.readFileSync(blocksPath, 'utf-8');
-                blocks = blocksContent.trim().split('\\n')
+                blocks = blocksContent.trim().split('\n')
                     .filter(line => line.trim())
                     .map(line => JSON.parse(line));
                 console.log(`Loaded ${blocks.length} blocks from blocks.jsonl`);
             } catch (error) {
                 console.error('Error loading blocks.jsonl:', error);
+            }
+        }
+
+        // Load relationships.json for hierarchy
+        let relationships: any = {};
+        const relationshipsPath = path.join(analysisDir, 'relationships.json');
+        if (fs.existsSync(relationshipsPath)) {
+            try {
+                relationships = JSON.parse(fs.readFileSync(relationshipsPath, 'utf-8'));
+                console.log(`Loaded ${relationships.relationships?.length || 0} relationships`);
+            } catch (error) {
+                console.error('Error loading relationships.json:', error);
             }
         }
 
@@ -229,9 +367,11 @@ async function loadAnalysisFromDirectory(analysisDir: string, projectPath: strin
                 manifest,
                 index,
                 analysisDir,
-                documentPath: projectPath,
+                documentPath: documentPath || projectPathOrDocPath,
                 outline,
-                blocks
+                blocks,
+                relationships,
+                notes
             }
         });
 
@@ -274,18 +414,50 @@ async function loadAnalysisData(documentPath: string) {
         const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
         const index = JSON.parse(fs.readFileSync(indexPath, 'utf-8'));
 
+        // Load notes from comments using Python script (live from document)
+        let notes = {};
+        try {
+            const workspaceRoot = path.join(__dirname, '..', '..');
+            const pythonCmd = getPythonPath(workspaceRoot);
+            const scriptPath = path.join(__dirname, '..', 'scripts', 'manage_notes.py');
+            
+            const { stdout } = await execAsync(`cd "${workspaceRoot}" && "${pythonCmd}" "${scriptPath}" "get_notes" "${documentPath}" "${analysisDir}"`);
+            const result = JSON.parse(stdout);
+            
+            if (result.success) {
+                notes = result.notes;
+                console.log(`Loaded notes for ${Object.keys(notes).length} blocks`);
+            } else {
+                console.error('Failed to load notes:', result.error);
+            }
+        } catch (error) {
+            console.error('Error executing manage_notes.py:', error);
+        }
+
         // Load blocks.jsonl for full text view
         let blocks = [];
         const blocksPath = path.join(analysisDir, 'blocks.jsonl');
         if (fs.existsSync(blocksPath)) {
             try {
                 const blocksContent = fs.readFileSync(blocksPath, 'utf-8');
-                blocks = blocksContent.trim().split('\\n')
+                blocks = blocksContent.trim().split('\n')
                     .filter(line => line.trim())
                     .map(line => JSON.parse(line));
                 console.log(`Loaded ${blocks.length} blocks from blocks.jsonl`);
             } catch (error) {
                 console.error('Error loading blocks.jsonl:', error);
+            }
+        }
+
+        // Load relationships.json for hierarchy
+        let relationships: any = {};
+        const relationshipsPath = path.join(analysisDir, 'relationships.json');
+        if (fs.existsSync(relationshipsPath)) {
+            try {
+                relationships = JSON.parse(fs.readFileSync(relationshipsPath, 'utf-8'));
+                console.log(`Loaded ${relationships.relationships?.length || 0} relationships`);
+            } catch (error) {
+                console.error('Error loading relationships.json:', error);
             }
         }
 
@@ -296,7 +468,9 @@ async function loadAnalysisData(documentPath: string) {
                 index,
                 analysisDir,
                 documentPath,
-                blocks
+                blocks,
+                relationships,
+                notes
             }
         });
 
@@ -306,73 +480,66 @@ async function loadAnalysisData(documentPath: string) {
     }
 }
 
+async function saveNote(blockId: string, paraIdx: string, text: string) {
+    if (!currentDocumentPath) return;
+    
+    try {
+        const scriptPath = path.join(__dirname, '..', 'scripts', 'manage_notes.py');
+        const workspaceRoot = path.join(__dirname, '..', '..');
+        const pythonCmd = getPythonPath(workspaceRoot);
+        
+        // Call: manage_notes.py save_note <filename> <para_idx> <text>
+        // Use spawn to handle potentially long text safely
+        const proc = spawn(pythonCmd, [scriptPath, 'save_note', currentDocumentPath, paraIdx, text], {
+            cwd: workspaceRoot,
+            shell: false
+        });
+        
+        let stdout = '';
+        let stderr = '';
+        
+        proc.stdout.on('data', (data) => { stdout += data.toString(); });
+        proc.stderr.on('data', (data) => { stderr += data.toString(); });
+        
+        proc.on('close', (code) => {
+            if (code !== 0) {
+                console.error(`manage_notes.py failed: ${stderr}`);
+                vscode.window.showErrorMessage(`Failed to save note: ${stderr}`);
+            } else {
+                try {
+                    const result = JSON.parse(stdout);
+                    if (!result.success) {
+                        vscode.window.showErrorMessage(`Failed to save note: ${result.error}`);
+                    }
+                } catch (e) {
+                    console.error('Failed to parse output:', stdout);
+                }
+            }
+        });
+        
+    } catch (error) {
+        console.error('Error saving note:', error);
+        vscode.window.showErrorMessage(`Failed to save note: ${error}`);
+    }
+}
+
 function jumpToClause(paraId: string) {
     // TODO: Implement jumping to clause in Word document
     // This will require interacting with the Word document
     vscode.window.showInformationMessage(`Jump to clause: ${paraId}`);
 }
 
-async function sendClausesToChat(clauseIds: string[], query: string) {
+async function sendClausesToChat(paraIds: string[], query: string) {
     try {
-        // Get clause details using Python script
-        const workspaceRoot = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
-        if (!workspaceRoot) {
-            vscode.window.showErrorMessage('No workspace folder open');
-            return;
-        }
-
-        const analysisDir = path.join(workspaceRoot, 'analysis');
-        const scriptPath = path.join(__dirname, '..', 'scripts', 'get_clause_details.py');
-        const pythonCmd = process.platform === 'win32' ? 'python' : 'python3';
-        const workspaceRootForPython = path.join(__dirname, '..', '..');
-        
-        // Use spawn to pass clause IDs via stdin (avoids shell escaping issues)
-        const result = await new Promise<any>((resolve, reject) => {
-            const proc = spawn(pythonCmd, [scriptPath, analysisDir], {
-                cwd: workspaceRootForPython,
-                shell: false
-            });
-            
-            let stdout = '';
-            let stderr = '';
-            
-            proc.stdout.on('data', (data) => { stdout += data.toString(); });
-            proc.stderr.on('data', (data) => { stderr += data.toString(); });
-            
-            proc.on('close', (code) => {
-                if (code !== 0) {
-                    reject(new Error(`Python script exited with code ${code}: ${stderr}`));
-                } else {
-                    try {
-                        resolve(JSON.parse(stdout));
-                    } catch (e) {
-                        reject(new Error(`Failed to parse JSON: ${stdout}`));
-                    }
-                }
-            });
-            
-            // Write clause IDs to stdin
-            proc.stdin.write(JSON.stringify(clauseIds));
-            proc.stdin.end();
-        });
-        
-        if (!result.success) {
-            vscode.window.showErrorMessage(`Failed to get clause details: ${result.error}`);
-            return;
-        }
-
-        // Format context for chat
-        const clauseContext = result.clauses.map((clause: any) => 
-            `Clause ${clause.ordinal}: ${clause.text}`
-        ).join('\n\n');
-
-        const fullPrompt = `Context - Selected clauses from contract:\n\n${clauseContext}\n\nQuestion: ${query}`;
+        // Use para IDs as requested
+        const clauseContext = paraIds.map(id => `- ${id}`).join('\n');
+        const fullPrompt = `Context - Selected clauses from contract (Paragraph IDs):\n${clauseContext}\n\nQuestion: ${query}`;
 
         // Copy to clipboard and open chat
         await vscode.env.clipboard.writeText(fullPrompt);
         
         vscode.window.showInformationMessage(
-            `✓ Copied ${result.clauses.length} clause${result.clauses.length !== 1 ? 's' : ''} + question to clipboard`,
+            `✓ Copied ${paraIds.length} paragraph ID${paraIds.length !== 1 ? 's' : ''} + question to clipboard`,
             'Open Chat'
         ).then(action => {
             if (action === 'Open Chat') {
@@ -436,15 +603,6 @@ function getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Web
                     
                     <div id="outline-content" class="tab-content"></div>
                     <div id="fulltext-content" class="tab-content" style="display: none;"></div>
-                    
-                    <div class="chat-query-box">
-                        <div class="selection-info">
-                            <span id="selection-count">0 clauses selected</span>
-                            <button id="clear-selection" class="secondary-button">Clear</button>
-                        </div>
-                        <textarea id="chat-query" placeholder="Ask a question about the selected clauses..."></textarea>
-                        <button id="send-to-chat" class="primary-button">Send to Chat</button>
-                    </div>
                 </div>
                 
                 <div class="section">
@@ -452,6 +610,15 @@ function getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Web
                     <div id="schedules"></div>
                 </div>
             </div>
+        </div>
+
+        <div class="chat-query-box-fixed">
+            <div class="selection-info">
+                <span id="selection-count">0 clauses selected</span>
+                <button id="clear-selection" class="secondary-button">Clear</button>
+            </div>
+            <textarea id="chat-query" placeholder="Ask a question about the selected clauses..."></textarea>
+            <button id="send-to-chat" class="primary-button">Ask Copilot</button>
         </div>
     </div>
     

@@ -7,6 +7,8 @@ const vscode = acquireVsCodeApi();
 
 let currentData = null;
 let allBlocks = []; // Store all blocks from blocks.jsonl
+let relationshipsMap = new Map(); // Map of block_id -> relationship data
+let notesMap = new Map(); // Map of block_id -> note text
 let activeTab = 'outline'; // Track active tab
 
 // Handle messages from extension
@@ -17,6 +19,20 @@ window.addEventListener('message', event => {
         case 'updateData':
             currentData = message.data;
             allBlocks = message.data.blocks || [];
+            // Build relationships map
+            relationshipsMap.clear();
+            if (message.data.relationships && message.data.relationships.relationships) {
+                message.data.relationships.relationships.forEach(rel => {
+                    relationshipsMap.set(rel.block_id, rel);
+                });
+            }
+            // Build notes map
+            notesMap.clear();
+            if (message.data.notes) {
+                Object.entries(message.data.notes).forEach(([id, text]) => {
+                    notesMap.set(id, text);
+                });
+            }
             renderData(message.data);
             break;
         case 'noAnalysis':
@@ -158,10 +174,28 @@ function setupTabs() {
 }
 
 function handleCheckboxChange(id, checked) {
-    if (checked) {
-        selectedClauses.add(id);
+    // Check if this is a table checkbox
+    const checkbox = document.querySelector(`.clause-checkbox[data-id="${id}"][data-table-ids]`);
+    
+    if (checkbox) {
+        const tableIds = checkbox.dataset.tableIds.split(',');
+        tableIds.forEach(tid => {
+            if (checked) {
+                selectedClauses.add(tid);
+            } else {
+                selectedClauses.delete(tid);
+            }
+        });
     } else {
-        selectedClauses.delete(id);
+        if (checked) {
+            selectedClauses.add(id);
+            // Auto-check all descendants
+            checkAllDescendants(id, true);
+        } else {
+            selectedClauses.delete(id);
+            // Auto-uncheck all descendants
+            checkAllDescendants(id, false);
+        }
     }
     
     // Sync checkbox state across both views
@@ -170,6 +204,28 @@ function handleCheckboxChange(id, checked) {
     });
     
     updateSelectionCount();
+}
+
+function checkAllDescendants(blockId, checked) {
+    const rel = relationshipsMap.get(blockId);
+    if (!rel || !rel.child_block_ids) return;
+    
+    // Recursively check/uncheck all children
+    rel.child_block_ids.forEach(childId => {
+        if (checked) {
+            selectedClauses.add(childId);
+        } else {
+            selectedClauses.delete(childId);
+        }
+        
+        // Update checkboxes in DOM
+        document.querySelectorAll(`.clause-checkbox[data-id="${childId}"]`).forEach(cb => {
+            cb.checked = checked;
+        });
+        
+        // Recurse to grandchildren
+        checkAllDescendants(childId, checked);
+    });
 }
 
 function renderOutlineView(data) {
@@ -190,7 +246,10 @@ function renderOutlineView(data) {
 
     // Render hierarchical outline with checkboxes
     const html = outline.map(item => {
-        const indent = (item.level || 0) * 20;
+        // Level 0 gets no indent, level 1+ indents to align numbering with level 0 text
+        // Checkbox (20px) + gap (8px) + ordinal (50px) = 78px base offset
+        const baseOffset = 78;
+        const indent = item.level > 0 ? baseOffset + ((item.level - 1) * 20) : 0;
         const typeClass = item.type === 'heading' ? 'outline-heading' : 'outline-clause';
         const isSelected = selectedClauses.has(item.id);
         return `
@@ -223,10 +282,7 @@ function renderFullTextView(data) {
     const fullTextContent = document.getElementById('fulltext-content');
     if (!fullTextContent) return;
     
-    const blocks = allBlocks.filter(block => {
-        const listMeta = block.list || {};
-        return listMeta.ordinal; // Only show blocks with ordinals
-    });
+    const blocks = allBlocks; // Show ALL blocks
     
     if (blocks.length === 0) {
         fullTextContent.innerHTML = `
@@ -237,22 +293,30 @@ function renderFullTextView(data) {
         return;
     }
 
-    // Render blocks with full text
-    const html = blocks.map(block => {
-        const listMeta = block.list || {};
-        const isSelected = selectedClauses.has(block.id);
-        const level = listMeta.level || 0;
-        return `
-            <div class="block-item" data-id="${block.id}">
-                <div class="block-header">
-                    <input type="checkbox" class="clause-checkbox" data-id="${block.id}" ${isSelected ? 'checked' : ''}>
-                    <span class="block-ordinal">${escapeHtml(listMeta.ordinal || '')}</span>
-                    <span class="block-meta">Level ${level}</span>
-                </div>
-                <div class="block-text">${escapeHtml(block.text || '')}</div>
-            </div>
-        `;
-    }).join('');
+    let html = '';
+    let i = 0;
+    while (i < blocks.length) {
+        const block = blocks[i];
+        
+        // Check if this is a table cell
+        if (block.table) {
+            // Collect all consecutive table blocks
+            const tableBlocks = [block];
+            let j = i + 1;
+            while (j < blocks.length && blocks[j].table) {
+                tableBlocks.push(blocks[j]);
+                j++;
+            }
+            
+            // Render table
+            html += renderTable(tableBlocks);
+            i = j;
+        } else {
+            // Render normal block
+            html += renderBlock(block);
+            i++;
+        }
+    }
 
     fullTextContent.innerHTML = `
         <div class="block-list">
@@ -269,6 +333,109 @@ function renderFullTextView(data) {
             handleCheckboxChange(e.target.dataset.id, e.target.checked);
         });
     });
+
+    // Add event listeners for note boxes
+    fullTextContent.querySelectorAll('.note-box').forEach(textarea => {
+        textarea.addEventListener('change', (e) => {
+            const blockId = e.target.dataset.id;
+            const paraIdx = e.target.dataset.paraIdx;
+            const text = e.target.value;
+            notesMap.set(blockId, text);
+            vscode.postMessage({
+                command: 'saveNote',
+                blockId: blockId,
+                paraIdx: paraIdx,
+                text: text
+            });
+        });
+    });
+}
+
+function renderBlock(block) {
+    const listMeta = block.list || {};
+    const isSelected = selectedClauses.has(block.id);
+    const level = listMeta.level || 0;
+    
+    // Indentation logic
+    // Level 0: 0px
+    // Level 1: Aligns with Level 0 text (approx 54px)
+    // Level 2+: Add 15px per level for clearer nesting
+    let indent = 0;
+    if (level > 0) {
+        indent = 54 + ((level - 1) * 15);
+    }
+    
+    const ordinal = listMeta.ordinal || '';
+    const typeLabel = ''; 
+    const noteText = notesMap.get(block.id) || '';
+    const paraIdx = block.para_idx !== undefined ? block.para_idx : '';
+    
+    return `
+        <div class="block-wrapper" style="padding-left: ${indent}px;" data-id="${block.id}">
+            <input type="checkbox" class="clause-checkbox" data-id="${block.id}" ${isSelected ? 'checked' : ''}>
+            <div class="block-item">
+                <div class="block-header">
+                    <span class="block-ordinal">${escapeHtml(ordinal)}${escapeHtml(typeLabel)}</span>
+                    <span class="block-text-inline">${escapeHtml(block.text || '')}</span>
+                </div>
+            </div>
+            <textarea class="note-box" data-id="${block.id}" data-para-idx="${paraIdx}" placeholder="Add notes...">${escapeHtml(noteText)}</textarea>
+        </div>
+    `;
+}
+
+function renderTable(blocks) {
+    // Find dimensions
+    let maxRow = 0;
+    let maxCol = 0;
+    blocks.forEach(b => {
+        if (b.table.row > maxRow) maxRow = b.table.row;
+        if (b.table.col > maxCol) maxCol = b.table.col;
+    });
+    
+    // Create grid
+    const grid = Array(maxRow + 1).fill().map(() => Array(maxCol + 1).fill(null));
+    blocks.forEach(b => {
+        grid[b.table.row][b.table.col] = b;
+    });
+    
+    // Generate table HTML
+    let tableHtml = '<table class="block-table">';
+    for (let r = 0; r <= maxRow; r++) {
+        tableHtml += '<tr>';
+        for (let c = 0; c <= maxCol; c++) {
+            const cellBlock = grid[r][c];
+            tableHtml += `<td>${cellBlock ? escapeHtml(cellBlock.text || '') : ''}</td>`;
+        }
+        tableHtml += '</tr>';
+    }
+    tableHtml += '</table>';
+    
+    // Use the first block's ID for the checkbox, but store all IDs
+    const firstBlock = blocks[0];
+    const allIds = blocks.map(b => b.id).join(',');
+    const isSelected = selectedClauses.has(firstBlock.id);
+    
+    // Indentation (use first block's level)
+    const listMeta = firstBlock.list || {};
+    const level = listMeta.level || 0;
+    let indent = 0;
+    if (level > 0) {
+        indent = 54 + ((level - 1) * 15);
+    }
+
+    const noteText = notesMap.get(firstBlock.id) || '';
+    const paraIdx = firstBlock.para_idx !== undefined ? firstBlock.para_idx : '';
+    
+    return `
+        <div class="block-wrapper" style="padding-left: ${indent}px;" data-id="${firstBlock.id}">
+            <input type="checkbox" class="clause-checkbox" data-id="${firstBlock.id}" data-table-ids="${allIds}" ${isSelected ? 'checked' : ''}>
+            <div class="block-item">
+                ${tableHtml}
+            </div>
+            <textarea class="note-box" data-id="${firstBlock.id}" data-para-idx="${paraIdx}" placeholder="Add notes...">${escapeHtml(noteText)}</textarea>
+        </div>
+    `;
 }
 
 function updateSelectionCount() {
@@ -290,11 +457,24 @@ function sendToChat() {
         return;
     }
 
-    // Send message to extension with clause IDs
-    // The extension will fetch full text from blocks.jsonl
+    // Map selected block IDs to para_ids
+    const selectedParaIds = [];
+    selectedClauses.forEach(blockId => {
+        const block = allBlocks.find(b => b.id === blockId);
+        if (block && block.para_id) {
+            selectedParaIds.push(block.para_id);
+        }
+    });
+
+    if (selectedParaIds.length === 0) {
+        alert('Selected clauses do not have paragraph IDs (para_id).');
+        return;
+    }
+
+    // Send message to extension with para IDs
     vscode.postMessage({
         command: 'sendToChat',
-        clauseIds: Array.from(selectedClauses),
+        clauseIds: selectedParaIds,
         query: query
     });
 }
