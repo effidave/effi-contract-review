@@ -324,7 +324,7 @@ def save_blocks_to_docx(docx_path: Path, blocks: list) -> dict:
     
     Strategy:
     1. Load original document
-    2. Find each block by embedded UUID (or para_id fallback)
+    2. Find each block by para_id (native w14:paraId) or hash fallback
     3. Update paragraph text and formatting
     4. Preserve non-block content (headers, styles)
     5. Save document
@@ -332,12 +332,12 @@ def save_blocks_to_docx(docx_path: Path, blocks: list) -> dict:
     try:
         doc = Document(docx_path)
         
-        # Build UUID → paragraph mapping
-        uuid_map = extract_uuid_mapping(doc)
+        # Build para_id → paragraph mapping
+        para_id_map = extract_para_id_mapping(doc)
         
         updated = 0
         for block in blocks:
-            para = find_paragraph_for_block(doc, block, uuid_map)
+            para = find_paragraph_for_block(doc, block, para_id_map)
             if para:
                 update_paragraph(para, block)
                 updated += 1
@@ -468,7 +468,7 @@ if __name__ == '__main__':
 
 ## Dependencies
 
-- Sprint 1 complete (UUID embedding for save targeting)
+- Sprint 1 complete (para_id matching for save targeting)
 - No external editor libraries (custom implementation)
 
 ---

@@ -29,7 +29,7 @@
     "sdt_carrier": {
       "type": "string",
       "enum": ["content-controls", "comments", "bookmarks"],
-      "description": "Where block UUIDs are persisted in the .docx"
+      "description": "DEPRECATED - No longer used. Block IDs matched via native w14:paraId. Kept for backward compatibility."
     },
     "range_marker_carrier": {
       "type": "string",

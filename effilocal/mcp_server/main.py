@@ -35,6 +35,7 @@ from effilocal.mcp_server.tools import (
     attachment_tools,
     numbering_tools,
     review_tools,
+    relationship_tools,
     clause_editing_tools,
 )
 
@@ -341,6 +342,21 @@ def register_tools():
         """Extract the document outline based on numbering structure."""
         return numbering_tools.extract_outline_structure(filename, max_level)
     
+    # ========================================================================
+    # Relationship tools (artifact-level analysis)
+    # ========================================================================
+
+    @mcp.tool()
+    def get_relationship_metadata(
+        analysis_dir: str,
+        block_id: str,
+        include_block_details: bool = False,
+    ):
+        """Get relationship metadata for a block using precomputed artifacts."""
+        return relationship_tools.get_relationship_metadata(
+            analysis_dir, block_id, include_block_details
+        )
+
     # ========================================================================
     # Clause-based paragraph insertion tools (effilocal contract-specific)
     # ========================================================================

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash($env:PATH = 'C:\\Users\\DavidSant\\node-v25.2.1-win-x64;' + $env:PATH)",
+      "Bash(npm run compile:*)",
+      "Bash(export PATH=\"/c/Users/DavidSant/node-v25.2.1-win-x64:$PATH\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

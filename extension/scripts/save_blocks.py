@@ -211,7 +211,8 @@ def save_blocks_to_document(doc_path: str, blocks_path: str):
         # Debug: log what we received
         print(f"DEBUG: Received {len(blocks)} blocks to save", file=sys.stderr)
         if blocks:
-            print(f"DEBUG: First block ID: {blocks[0].get('id', 'NO ID')}", file=sys.stderr)
+            print(f"DEBUG: First block id: {blocks[0].get('id', 'NO ID')}", file=sys.stderr)
+            print(f"DEBUG: First block para_id: {blocks[0].get('para_id', 'NO PARA_ID')}", file=sys.stderr)
             print(f"DEBUG: First block text (first 50 chars): {blocks[0].get('text', '')[:50]}", file=sys.stderr)
         
         if not blocks:
@@ -229,31 +230,34 @@ def save_blocks_to_document(doc_path: str, blocks_path: str):
                 "error": "No paragraph IDs found in document."
             }
         
-        # Create block_id -> block mapping
-        blocks_by_id = {b['id']: b for b in blocks}
-        
         # Track updates
         updated_count = 0
         not_found = []
-        
+
         # Update paragraphs - find by para_id (w14:paraId)
-        for block_id, block in blocks_by_id.items():
-            # The block_id is the para_id (w14:paraId)
-            paragraph = get_paragraph_by_para_id(doc, block_id)
+        for block in blocks:
+            block_id = block.get('id', '')
+            para_id = block.get('para_id', '')
+
+            # Primary: look up by native Word para_id (8-char hex)
+            paragraph = None
+            if para_id:
+                paragraph = get_paragraph_by_para_id(doc, para_id)
+
             if paragraph:
                 update_paragraph_content(paragraph, block)
                 updated_count += 1
-            elif block_id in para_id_map:
+            elif para_id and para_id in para_id_map:
                 # Fall back to key-based lookup using position
-                key = para_id_map[block_id]
+                key = para_id_map[para_id]
                 paragraph = get_paragraph_by_key(doc, key)
                 if paragraph:
                     update_paragraph_content(paragraph, block)
                     updated_count += 1
                 else:
-                    not_found.append(f"{block_id} (key {key})")
+                    not_found.append(f"{block_id} (para_id={para_id}, key={key})")
             else:
-                not_found.append(block_id)
+                not_found.append(f"{block_id} (no para_id)")
         
         # Save document
         doc.save(doc_path)

@@ -408,14 +408,14 @@ Use custom ContentEditable implementation rather than a framework (Lexical, Pros
 
 See: [sprint-2-wysiwyg-editor.md](./sprint-2-wysiwyg-editor.md)
 
-### Sprint 1: UUID Persistence (Dec 2025)
+### Sprint 1: Block ID Persistence (Dec 2025)
 **Problem:** Document identity needed to survive external edits and re-analysis.
 
 **Changes Made:**
-1. **UUID embedding** - Paragraph tags (`w:pPr/w:tag`) store block IDs in .docx
-2. **Hash fallback** - SHA-256 matching when UUIDs lost
+1. **Para_id matching** - Native `w14:paraId` attributes used to match blocks to paragraphs
+2. **Hash fallback** - SHA-256 matching when para_ids are unavailable
 3. **Git integration** - Auto-commit on save with meaningful messages
-4. **Re-analysis stability** - UUIDs preserved when re-parsing document
+4. **Re-analysis stability** - Block IDs preserved when re-parsing document
 
 See: [sprint-1-uuid-persistence.md](./sprint-1-uuid-persistence.md)
 

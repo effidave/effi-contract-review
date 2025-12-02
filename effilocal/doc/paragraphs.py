@@ -16,6 +16,47 @@ from effilocal.doc.blocks import ParagraphBlock
 _HEADING_RE = re.compile(r"heading\s*(\d)", re.IGNORECASE)
 
 
+def has_page_break_before(paragraph: Paragraph) -> bool:
+    """Check if paragraph has a page break before it.
+    
+    Detects:
+    1. Explicit page breaks (<w:br w:type="page"/>) in preceding content
+    2. Word's lastRenderedPageBreak marker (soft page break from last render)
+    3. Page break before paragraph property (w:pageBreakBefore)
+    """
+    p_elem = paragraph._p
+    
+    # Check for pageBreakBefore in paragraph properties
+    pPr = p_elem.find(qn('w:pPr'))
+    if pPr is not None:
+        page_break_before = pPr.find(qn('w:pageBreakBefore'))
+        if page_break_before is not None:
+            # Check if it's not explicitly disabled (w:val="0" or w:val="false")
+            val = page_break_before.get(qn('w:val'))
+            if val not in ('0', 'false'):
+                return True
+    
+    # Check for lastRenderedPageBreak in runs (soft page break marker from Word)
+    # This indicates where Word calculated a page break when the doc was last saved
+    for run in p_elem.findall(qn('w:r')):
+        if run.find(qn('w:lastRenderedPageBreak')) is not None:
+            return True
+    
+    return False
+
+
+def has_explicit_page_break(paragraph: Paragraph) -> bool:
+    """Check if paragraph contains an explicit hard page break (<w:br w:type="page"/>)."""
+    p_elem = paragraph._p
+    
+    for run in p_elem.findall(qn('w:r')):
+        for br in run.findall(qn('w:br')):
+            if br.get(qn('w:type')) == 'page':
+                return True
+    
+    return False
+
+
 def extract_indent(paragraph: Paragraph) -> dict[str, int]:
     """Return a dictionary describing paragraph indent settings."""
 
@@ -71,6 +112,10 @@ def build_paragraph_block(
     para_id = paragraph._p.get(qn("w14:paraId")) or ""
     style_id = _style_id(paragraph)
     num_pr = _num_pr(paragraph)
+    
+    # Detect page breaks
+    page_break_before = has_page_break_before(paragraph)
+    page_break_after = has_explicit_page_break(paragraph)
 
     if as_dataclass:
         block_obj = ParagraphBlock(
@@ -86,6 +131,8 @@ def build_paragraph_block(
             para_id=para_id,
             style_id=style_id,
             num_pr=num_pr,
+            page_break_before=page_break_before if page_break_before else None,
+            page_break_after=page_break_after if page_break_after else None,
         )
         return block_obj, new_section_id
 
@@ -107,6 +154,8 @@ def build_paragraph_block(
         "restart_group_id": None,
         "heading": heading_meta,
         "indent": indent,
+        "page_break_before": page_break_before if page_break_before else None,
+        "page_break_after": page_break_after if page_break_after else None,
     }
     return block, new_section_id
 

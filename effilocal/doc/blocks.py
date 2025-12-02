@@ -30,6 +30,8 @@ class ParagraphBlock:
     metadata: Optional[Dict[str, Any]] = None
     restart_group_id: Optional[str] = None
     heading: Optional[Dict[str, Any]] = None
+    page_break_before: Optional[bool] = None
+    page_break_after: Optional[bool] = None
 
     def to_dict(self) -> Dict[str, Any]:
         """Return a dictionary representation compatible with legacy callers."""

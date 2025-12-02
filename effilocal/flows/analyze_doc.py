@@ -1,8 +1,8 @@
 """Document analysis flow that emits Sprint 1 JSON artifacts.
 
-Supports UUID preservation across re-analysis:
-- Extracts embedded UUIDs from content controls in .docx
-- Matches new blocks to previous analysis by UUID, hash, then position
+Supports block ID preservation across re-analysis:
+- Uses native w14:paraId attributes from Word paragraphs (no embedding needed)
+- Matches new blocks to previous analysis by para_id, hash, then position
 - Emits analysis_delta.json tracking what changed
 """
 

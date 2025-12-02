@@ -54,7 +54,7 @@ def validate_artifacts(
 
     report = ValidationReport()
 
-    _check_uuid_uniqueness(blocks, sections, tag_ranges, report)
+    _check_id_uniqueness(blocks, sections, tag_ranges, report)
     _check_cross_references(blocks, sections, tag_ranges, report)
     _check_list_payload(blocks, report)
 
@@ -67,12 +67,13 @@ def validate_artifacts(
     return report
 
 
-def _check_uuid_uniqueness(
+def _check_id_uniqueness(
     blocks: Sequence[Mapping[str, Any]],
     sections: Mapping[str, Any],
     tag_ranges: Sequence[Mapping[str, Any]] | None,
     report: ValidationReport,
 ) -> None:
+    """Check that block, section, and tag range IDs are unique."""
     seen: Counter[tuple[str, str]] = Counter()
 
     for block in blocks:
@@ -100,12 +101,12 @@ def _check_uuid_uniqueness(
     for (kind, identifier), count in seen.items():
         if count > 1:
             LOGGER.error(
-                "Duplicate UUID detected",
+                "Duplicate ID detected",
                 extra={"kind": kind, "id": identifier, "count": count},
             )
             report.add(
-                "duplicate_uuid",
-                f"Duplicate {kind} UUID detected: {identifier}",
+                "duplicate_id",
+                f"Duplicate {kind} ID detected: {identifier}",
                 {"id": identifier, "kind": kind, "count": count},
             )
 

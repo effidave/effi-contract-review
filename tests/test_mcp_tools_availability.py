@@ -2,6 +2,7 @@
 """Pytest suite verifying that every MCP tool in main.py responds via stdio."""
 
 import json
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -69,6 +70,7 @@ EXPECTED_TOOLS = {
     "analyze_document_numbering",
     "get_numbering_summary",
     "extract_outline_structure",
+    "get_relationship_metadata",
     "add_paragraph_after_clause",
     "add_paragraphs_after_clause",
 }
@@ -510,6 +512,102 @@ def test_numbering_tools(mcp_tester):
     finally:
         if test_file.exists():
             test_file.unlink()
+
+
+def test_relationship_tool(mcp_tester):
+    analysis_dir = Path(tempfile.mkdtemp(prefix="mcp_rel_"))
+
+    try:
+        manifest = {"doc_id": "test-doc", "attachments": []}
+        (analysis_dir / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+
+        sections = {
+            "root": {
+                "children": [
+                    {
+                        "id": "section-1",
+                        "title": "Section 1",
+                        "block_ids": ["block-1", "block-2"],
+                        "children": [],
+                    }
+                ]
+            }
+        }
+        (analysis_dir / "sections.json").write_text(json.dumps(sections), encoding="utf-8")
+
+        styles = {"styles": []}
+        (analysis_dir / "styles.json").write_text(json.dumps(styles), encoding="utf-8")
+
+        index = {"section_count": 1, "attachment_count": 0}
+        (analysis_dir / "index.json").write_text(json.dumps(index), encoding="utf-8")
+
+        relationships = {
+            "relationships": [
+                {
+                    "block_id": "block-1",
+                    "parent_block_id": None,
+                    "child_block_ids": ["block-2"],
+                    "sibling_ordinal": 0,
+                    "restart_group_id": None,
+                    "list_meta": None,
+                    "clause_group_id": "block-1",
+                    "continuation_of": None,
+                    "attachment_id": None,
+                },
+                {
+                    "block_id": "block-2",
+                    "parent_block_id": "block-1",
+                    "child_block_ids": [],
+                    "sibling_ordinal": 0,
+                    "restart_group_id": None,
+                    "list_meta": None,
+                    "clause_group_id": "block-2",
+                    "continuation_of": None,
+                    "attachment_id": None,
+                },
+            ]
+        }
+        (analysis_dir / "relationships.json").write_text(json.dumps(relationships), encoding="utf-8")
+
+        blocks = [
+            {
+                "id": "block-1",
+                "type": "heading",
+                "text": "Heading 1",
+                "para_id": "PARA001",
+                "section_id": "section-1",
+            },
+            {
+                "id": "block-2",
+                "type": "paragraph",
+                "text": "Paragraph 1",
+                "para_id": "PARA002",
+                "section_id": "section-1",
+            },
+        ]
+
+        with (analysis_dir / "blocks.jsonl").open("w", encoding="utf-8") as handle:
+            for entry in blocks:
+                handle.write(json.dumps(entry))
+                handle.write("\n")
+
+        result = mcp_tester.call_mcp_tool(
+            "get_relationship_metadata",
+            analysis_dir=str(analysis_dir),
+            block_id="block-2",
+        )
+        assert result["success"], f"get_relationship_metadata failed: {result.get('error')}"
+
+        response = result["result"]
+        assert isinstance(response, dict), "Unexpected MCP payload structure"
+        content_items = response.get("content") or []
+        assert content_items, "Relationship tool returned no content"
+        data = json.loads(content_items[0].get("text", "{}"))
+
+        assert data.get("success"), "Relationship tool payload indicates failure"
+        assert data.get("parent_block") == "block-1"
+    finally:
+        shutil.rmtree(analysis_dir, ignore_errors=True)
 
 
 def test_all_expected_tools_were_called(mcp_tester):

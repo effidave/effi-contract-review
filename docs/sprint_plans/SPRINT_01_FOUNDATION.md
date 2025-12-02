@@ -22,10 +22,10 @@
 **So that** my notes and LLM context remain attached to the right clauses.
 
 **Acceptance Criteria:**
-- [x] Each block gets a UUID embedded as a paragraph tag (`w:pPr/w:tag`)
-- [x] UUID survives save/close/reopen cycle in Word
-- [x] UUID survives copy/paste within same document
-- [x] Test: Create doc → add paragraph tags → save → reopen → verify UUIDs intact
+- [x] Each block is matched to its paragraph via Word's native `w14:paraId` attribute
+- [x] Para_id survives save/close/reopen cycle in Word
+- [x] Para_id survives copy/paste within same document
+- [x] Test: Create doc → Word assigns para_ids → save → reopen → verify para_ids intact
 
 ### US1.2: Hash Fallback Recovery
 **As a** lawyer who edited a contract in Word and accidentally removed formatting,  
@@ -65,34 +65,28 @@
 
 ## Technical Tasks
 
-### T1.1: Paragraph Tag UUID Implementation (3 days) ✅
+### T1.1: Paragraph ID Extraction Implementation (3 days) ✅
 **File:** `effilocal/doc/uuid_embedding.py`
 
 ```python
 # Core functions implemented:
-def embed_block_uuids(doc: Document, blocks: List[dict]) -> None:
-    """Add UUID tags to paragraph properties (w:pPr/w:tag)."""
+def extract_block_uuids(doc: Document) -> Dict[str, int]:
+    """Extract para_id → paragraph_index mapping from native w14:paraId attributes."""
     
-def extract_block_uuids(doc: Document) -> Dict[str, BlockKey]:
-    """Extract UUID → BlockKey mapping from paragraph tags."""
-    
-def remove_all_uuid_tags(doc: Document) -> int:
-    """Remove all effi paragraph tags (for testing/reset)."""
+def assign_block_ids(
+    blocks: List[dict], 
+    para_id_map: Dict[str, int],
+    old_blocks: List[dict]
+) -> Dict[str, int]:
+    """Assign IDs to blocks using para_id match > hash match > position match."""
 ```
 
 **Implementation Notes:**
-- Use `python-docx` OxmlElement for paragraph property manipulation
-- Paragraph tag structure (simple, doesn't wrap paragraph):
-  ```xml
-  <w:p>
-    <w:pPr>
-      <w:tag w:val="effi:block:uuid-here"/>
-    </w:pPr>
-    <!-- paragraph content -->
-  </w:p>
-  ```
-- Benefits over SDT approach: doesn't interfere with `doc.paragraphs` iteration
-- Handle edge cases: tables, existing tags
+- Word assigns `w14:paraId` to every paragraph automatically
+- Para_id is an 8-char hex string (e.g., "05C9333F")
+- No custom embedding needed - we just read what Word provides
+- Para_id is stable across save/close/reopen cycles
+- Handle edge cases: new paragraphs, deleted paragraphs, reordered content
 
 ### T1.2: Content Hash Implementation (1 day)
 **File:** `effilocal/doc/content_hash.py` (new)
@@ -261,6 +255,7 @@ def save_document(
 
 ## Notes
 
-- Paragraph tags (`w:pPr/w:tag`) are simpler than SDT content controls and don't interfere with `doc.paragraphs`
-- Consider adding a "repair UUIDs" command for recovery scenarios
-- Future: Could use `w14:paraId` as additional matching signal (already available)
+- Native `w14:paraId` attributes are used instead of custom paragraph tags
+- `w:tag` elements inside `w:pPr` violate OOXML schema - Word refused to open such documents
+- Word automatically assigns and maintains `w14:paraId` on every paragraph
+- Consider adding a "repair block IDs" command for recovery scenarios when content hash is needed

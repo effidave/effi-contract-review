@@ -76,7 +76,7 @@ export function activate(context: vscode.ExtensionContext) {
         }
     );
 
-    // Register command to save document with UUIDs
+    // Register command to save document (blocks matched via native w14:paraId)
     const saveDocumentCommand = vscode.commands.registerCommand(
         'effi-contract-viewer.saveDocument',
         async () => {
@@ -647,43 +647,29 @@ function getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Web
     <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource} 'unsafe-inline'; script-src 'nonce-${nonce}';">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="${styleUri}" rel="stylesheet">
-    <title>Contract Analysis</title>
+    <title>Document</title>
 </head>
 <body>
     <div id="app">
         <div class="header">
-            <h1>Contract Analysis</h1>
+            <h1 id="document-title">Document</h1>
             <div class="toolbar">
-                <button id="refresh-btn" class="icon-button" title="Refresh">
-                    <span class="codicon codicon-refresh"></span>
-                </button>
+                <button id="refresh-btn" class="icon-button" title="Refresh">↻</button>
             </div>
         </div>
-        
+
+        <!-- Toolbar - Outside document like Google Docs -->
+        <div id="main-toolbar" class="main-toolbar" style="display: none;"></div>
+
         <div class="content">
             <div id="loading" class="message">
-                <p>No analysis loaded. Open a .docx file and click the book icon to analyze.</p>
+                <p>No document loaded</p>
+                <p class="hint">Open a .docx file and click the book icon to analyze</p>
             </div>
-            
+
             <div id="data-view" style="display: none;">
-                <div class="section">
-                    <h2>Document Info</h2>
-                    <div id="doc-info"></div>
-                </div>
-                
-                <div class="section">
-                    <div class="tabs">
-                        <button id="outline-tab" class="tab-button active">Outline</button>
-                        <button id="fulltext-tab" class="tab-button">Full Text</button>
-                    </div>
-                    
-                    <div id="outline-content" class="tab-content"></div>
-                    <div id="fulltext-content" class="tab-content" style="display: none;"></div>
-                </div>
-                
-                <div class="section">
-                    <h2>Schedules</h2>
-                    <div id="schedules"></div>
+                <div class="pages-container">
+                    <div id="fulltext-content" class="tab-content"></div>
                 </div>
             </div>
         </div>
@@ -750,7 +736,7 @@ async function saveDocument(documentPath: string) {
             const result = JSON.parse(stdout);
             
             if (result.success) {
-                let message = `✓ Document saved with ${result.embedded_count} UUIDs embedded`;
+                let message = `✓ Document saved with ${result.embedded_count} blocks matched via para_id`;
                 if (result.commit_hash) {
                     message += ` (committed: ${result.commit_hash.substring(0, 8)})`;
                 }
@@ -862,46 +848,8 @@ async function saveBlocksToDocument(blocks: any[], documentPath: string, webview
             if (currentDocumentPath) {
                 await loadAnalysisData(currentDocumentPath);
             }
-        } else if (result.error && result.error.includes('No embedded UUIDs')) {
-            // Automatically embed UUIDs and retry save
-            const embedResult = await embedUuidsInDocument(documentPath, analysisDir);
-            if (embedResult.success) {
-                vscode.window.showInformationMessage(`Embedded ${embedResult.count} UUIDs. Retrying save...`);
-                // Retry save
-                const { stdout: retryStdout } = await execAsync(`cd "${workspaceRoot}" && "${pythonCmd}" "${scriptPath}" "${documentPath}" "${tempBlocksPath}"`);
-                const retryResult = JSON.parse(retryStdout);
-                
-                // Clean up temp file after retry
-                if (fs.existsSync(tempBlocksPath)) {
-                    fs.unlinkSync(tempBlocksPath);
-                }
-                
-                if (retryResult.success) {
-                    const message = `✓ Saved ${retryResult.block_count} block(s) to document`;
-                    if (webviewPanel) {
-                        webviewPanel.webview.postMessage({ command: 'saveComplete', message });
-                    }
-                    vscode.window.showInformationMessage(message);
-                    
-                    if (currentDocumentPath) {
-                        await loadAnalysisData(currentDocumentPath);
-                    }
-                } else {
-                    const errorMsg = `Save failed after embedding UUIDs: ${retryResult.error}`;
-                    if (webviewPanel) {
-                        webviewPanel.webview.postMessage({ command: 'saveError', message: errorMsg });
-                    }
-                    vscode.window.showErrorMessage(errorMsg);
-                }
-            } else {
-                const errorMsg = `Failed to embed UUIDs: ${embedResult.error}`;
-                if (webviewPanel) {
-                    webviewPanel.webview.postMessage({ command: 'saveError', message: errorMsg });
-                }
-                vscode.window.showErrorMessage(errorMsg);
-            }
-            return; // Already handled
         } else {
+            // Note: Old "No embedded UUIDs" error handling removed - we now use native w14:paraId
             const errorMsg = `Save failed: ${result.error}`;
             if (webviewPanel) {
                 webviewPanel.webview.postMessage({ command: 'saveError', message: errorMsg });

@@ -1,4 +1,10 @@
-"""Tools for inserting paragraphs after attachments (Schedules, Annexes, Exhibits, etc.)."""
+"""Tools for inserting paragraphs after attachments (Schedules, Annexes, Exhibits, etc.).
+
+Note on paragraph tracking:
+- For EXISTING paragraphs, we use Word's native w14:paraId for block matching (see uuid_embedding.py)
+- For NEWLY CREATED paragraphs, Word hasn't assigned a paraId yet, so we use a temporary
+  effi-para-id tag until the document is opened in Word. This is a different use case.
+"""
 import os
 import uuid
 from pathlib import Path
@@ -15,11 +21,14 @@ from word_document_server.utils.file_utils import (
 
 def add_custom_para_id(paragraph_element):
     """
-    Add a custom paragraph ID using w:tag element for tracking paragraphs we create.
+    Add a temporary tracking ID to a newly created paragraph.
     
-    Word doesn't assign w14:paraId until the document is opened and saved in Word.
-    We use w:tag (a custom XML tag) to store a UUID that we can use to find paragraphs
-    we've created before Word assigns them a paraId.
+    This is needed because Word doesn't assign w14:paraId until the document 
+    is opened and saved in Word. For paragraphs WE create programmatically, 
+    we need a way to find them before Word assigns a native paraId.
+    
+    Note: This is SEPARATE from the block matching system which uses native
+    w14:paraId. This is only for tracking newly inserted content.
     
     Args:
         paragraph_element: The w:p element to add the ID to

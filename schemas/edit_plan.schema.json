@@ -115,7 +115,7 @@
         },
         {
           "title": "tag_add",
-          "description": "Create a new tag range by inserting start/end point markers (UUID SDTs) and recording the range.",
+          "description": "Create a new tag range by inserting start/end point markers and recording the range.",
           "type": "object",
           "additionalProperties": false,
           "required": ["op", "label", "start_ref", "end_ref"],

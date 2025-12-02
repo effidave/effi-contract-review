@@ -15,7 +15,7 @@
   ],
   "properties": {
     "id": {
-      "description": "Runtime UUID for the block. When Sprint 5 writes carriers, this value is embedded in the .docx.",
+      "description": "Unique block ID. Matched to document paragraphs via native w14:paraId attribute.",
       "type": "string",
       "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
     },
@@ -416,6 +416,20 @@
           ]
         }
       }
+    },
+    "page_break_before": {
+      "description": "True if this paragraph has a page break before it (explicit or from Word's lastRenderedPageBreak).",
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "page_break_after": {
+      "description": "True if this paragraph contains an explicit hard page break.",
+      "type": [
+        "boolean",
+        "null"
+      ]
     }
   }
 }

@@ -1,0 +1,17 @@
+﻿git : warning: in the working copy of 'C:/Users/DAVIDS~1/AppData/Local/Temp/diff_hj4/_rels/.rels', LF will be replaced by CRLF 
+the next time Git touches it
+At line:1 char:1
++ git diff --no-index --no-color "$env:TEMP\diff_hj3\_rels\.rels" "$env ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (warning: in the... Git touches it:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+diff --git a/C:/Users/DAVIDS~1/AppData/Local/Temp/diff_hj3/_rels/.rels b/C:/Users/DAVIDS~1/AppData/Local/Temp/diff_hj4/_rels/.rels
+index 57be328..80d1e43 100644
+--- a/C:/Users/DAVIDS~1/AppData/Local/Temp/diff_hj3/_rels/.rels
++++ b/C:/Users/DAVIDS~1/AppData/Local/Temp/diff_hj4/_rels/.rels
+@@ -1,2 +1,2 @@
+-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
++<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+ <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" Target="docProps/app.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/><Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/custom-properties" Target="docProps/custom.xml"/></Relationships>
+\ No newline at end of file

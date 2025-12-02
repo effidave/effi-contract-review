@@ -35,8 +35,8 @@ Build a VS Code extension that serves as a lightweight Word-like editor for cont
 ├─────────────────────────────────────────────────────────────────┤
 │                    MCP Server (Python)                           │
 │  - Document read/write (.docx ↔ JSON ↔ .docx)                   │
-│  - UUID management (embedded + hash fallback)                    │
-│  - Precedent indexing & search                                   │
+│  - Block ID management (para_id + hash fallback)                  │
+│  - Precedent indexing & search                                    │
 │  - LLM orchestration (multi-phase workflow)                      │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -100,8 +100,8 @@ See: [SPRINT_07_PROJECT_UX.md](./SPRINT_07_PROJECT_UX.md)
 
 ## Key Technical Decisions
 
-### 1. UUID Embedding Strategy
-- **Primary:** Paragraph tags (`<w:pPr>/<w:tag>`) with UUID in `w:val`
+### 1. Block ID Matching Strategy
+- **Primary:** Native `w14:paraId` attribute on each paragraph (8-char hex, Word-assigned)
 - **Fallback:** SHA-256 content hash for matching after external edits
 - **Recovery:** Position + neighbor heuristics when hash fails
 
@@ -164,9 +164,9 @@ clauses:
 ## Success Metrics
 
 ### Sprint 1 Complete When:
-- [ ] UUIDs embedded in .docx survive Word edits
-- [ ] Re-analysis matches 95%+ of blocks by UUID
-- [ ] Git commits on save with meaningful messages
+- [x] Block IDs matched via `w14:paraId` survive Word edits
+- [x] Re-analysis matches 95%+ of blocks by para_id
+- [x] Git commits on save with meaningful messages
 
 ### Sprint 2 Complete When:
 - [ ] User can edit text directly in webview

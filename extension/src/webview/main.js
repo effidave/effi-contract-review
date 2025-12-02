@@ -8,19 +8,21 @@ const vscode = acquireVsCodeApi();
 let currentData = null;
 let allBlocks = []; // Store all blocks from blocks.jsonl
 let relationshipsMap = new Map(); // Map of block_id -> relationship data
-let notesMap = new Map(); // Map of block_id -> note text
-let activeTab = 'outline'; // Track active tab
 
 // Editor components (Sprint 2)
 let blockEditor = null;
 let toolbar = null;
 let shortcutManager = null;
 let isEditMode = false; // Toggle between view and edit mode
+let pageBreakBeforeSet = new Set();
+let pageBreakAfterSet = new Set();
+const PAGE_HEIGHT_PX = 1000; // Automatic page break threshold
+let paginationRequestId = null;
 
 // Handle messages from extension
 window.addEventListener('message', event => {
     const message = event.data;
-    
+
     switch (message.command) {
         case 'updateData':
             currentData = message.data;
@@ -30,13 +32,6 @@ window.addEventListener('message', event => {
             if (message.data.relationships && message.data.relationships.relationships) {
                 message.data.relationships.relationships.forEach(rel => {
                     relationshipsMap.set(rel.block_id, rel);
-                });
-            }
-            // Build notes map
-            notesMap.clear();
-            if (message.data.notes) {
-                Object.entries(message.data.notes).forEach(([id, text]) => {
-                    notesMap.set(id, text);
                 });
             }
             renderData(message.data);
@@ -109,87 +104,26 @@ function showMessage(message) {
 function renderData(data) {
     const loadingEl = document.getElementById('loading');
     const dataViewEl = document.getElementById('data-view');
-    
+
     if (loadingEl) loadingEl.style.display = 'none';
     if (dataViewEl) dataViewEl.style.display = 'block';
-    
-    // Render document info
-    renderDocumentInfo(data);
-    
-    // Set up tabs
-    setupTabs();
-    
-    // Render both views
-    renderOutlineView(data);
+
+    // Set document title in header
+    const titleEl = document.getElementById('document-title');
+    if (titleEl && data.documentPath) {
+        titleEl.textContent = getFileName(data.documentPath).replace('.docx', '');
+    }
+
+    // Render document view
     renderFullTextView(data);
-    
+
     // Set up chat controls
     setupChatControls();
-    
-    // Render schedules
-    renderSchedulesPlaceholder(data);
 }
 
-function renderDocumentInfo(data) {
-    const docInfoEl = document.getElementById('doc-info');
-    if (!docInfoEl) return;
-    
-    const { manifest, index, documentPath } = data;
-    
-    const html = `
-        <div class="info-grid">
-            <div class="info-item">
-                <span class="label">Document:</span>
-                <span class="value">${escapeHtml(getFileName(documentPath))}</span>
-            </div>
-            <div class="info-item">
-                <span class="label">Blocks:</span>
-                <span class="value">${index.block_count || 0}</span>
-            </div>
-            <div class="info-item">
-                <span class="label">Sections:</span>
-                <span class="value">${index.section_count || 0}</span>
-            </div>
-            <div class="info-item">
-                <span class="label">Attachments:</span>
-                <span class="value">${index.attachment_count || 0}</span>
-            </div>
-            <div class="info-item">
-                <span class="label">Analyzed:</span>
-                <span class="value">${manifest.timestamp ? new Date(manifest.timestamp).toLocaleString() : 'Unknown'}</span>
-            </div>
-        </div>
-    `;
-    
-    docInfoEl.innerHTML = html;
-}
 
 const selectedClauses = new Set();
 
-function setupTabs() {
-    const outlineTab = document.getElementById('outline-tab');
-    const fullTextTab = document.getElementById('fulltext-tab');
-    const outlineContent = document.getElementById('outline-content');
-    const fullTextContent = document.getElementById('fulltext-content');
-    
-    if (!outlineTab || !fullTextTab) return;
-    
-    outlineTab.addEventListener('click', () => {
-        activeTab = 'outline';
-        outlineTab.classList.add('active');
-        fullTextTab.classList.remove('active');
-        if (outlineContent) outlineContent.style.display = 'block';
-        if (fullTextContent) fullTextContent.style.display = 'none';
-    });
-    
-    fullTextTab.addEventListener('click', () => {
-        activeTab = 'fulltext';
-        fullTextTab.classList.add('active');
-        outlineTab.classList.remove('active');
-        if (outlineContent) outlineContent.style.display = 'none';
-        if (fullTextContent) fullTextContent.style.display = 'block';
-    });
-}
 
 function handleCheckboxChange(id, checked) {
     // Check if this is a table checkbox
@@ -246,220 +180,347 @@ function checkAllDescendants(blockId, checked) {
     });
 }
 
-function renderOutlineView(data) {
-    const outlineContent = document.getElementById('outline-content');
-    if (!outlineContent) return;
-    
-    const outline = data.outline || [];
-    
-    if (outline.length === 0) {
-        outlineContent.innerHTML = `
-            <div class="placeholder">
-                <p>📋 No outline items found</p>
-                <p class="hint">Analysis directory: ${escapeHtml(data.analysisDir)}</p>
-            </div>
-        `;
-        return;
-    }
-
-    // Render hierarchical outline with checkboxes
-    const html = outline.map(item => {
-        // Level 0 gets no indent, level 1+ indents to align numbering with level 0 text
-        // Checkbox (20px) + gap (8px) + ordinal (50px) = 78px base offset
-        const baseOffset = 78;
-        const indent = item.level > 0 ? baseOffset + ((item.level - 1) * 20) : 0;
-        const typeClass = item.type === 'heading' ? 'outline-heading' : 
-                          item.type === 'table_cell' ? 'outline-clause table-cell' : 'outline-clause';
-        const numberedClass = item.is_numbered ? '' : 'unnumbered';
-        const isSelected = selectedClauses.has(item.id);
-        return `
-            <div class="outline-item ${typeClass} ${numberedClass}" style="padding-left: ${indent}px;" data-id="${item.id}">
-                <input type="checkbox" class="clause-checkbox" data-id="${item.id}" ${isSelected ? 'checked' : ''}>
-                <span class="ordinal">${item.ordinal}</span>
-                <span class="text">${escapeHtml(item.text)}</span>
-            </div>
-        `;
-    }).join('');
-
-    outlineContent.innerHTML = `
-        <div class="outline-list">
-            ${html}
-        </div>
-        <div class="outline-count">
-            ${outline.length} items
-        </div>
-    `;
-
-    // Add event listeners
-    outlineContent.querySelectorAll('.clause-checkbox').forEach(checkbox => {
-        checkbox.addEventListener('change', (e) => {
-            handleCheckboxChange(e.target.dataset.id, e.target.checked);
-        });
-    });
-}
 
 function renderFullTextView(data) {
     const fullTextContent = document.getElementById('fulltext-content');
+    const mainToolbar = document.getElementById('main-toolbar');
     if (!fullTextContent) return;
-    
-    const blocks = allBlocks; // Show ALL blocks
-    
+
+    if (shortcutManager) {
+        shortcutManager.detach();
+        shortcutManager = null;
+    }
+
+    const blocks = allBlocks;
+
     if (blocks.length === 0) {
         fullTextContent.innerHTML = `
-            <div class="placeholder">
-                <p>📋 No blocks found</p>
+            <div class="document-page">
+                <div class="placeholder">
+                    <p>No blocks found</p>
+                </div>
             </div>
         `;
         return;
     }
 
-    // Check if we're in edit mode
-    if (isEditMode && window.BlockEditor && window.Toolbar && window.ShortcutManager) {
-        renderEditableFullTextView(fullTextContent, blocks);
-        return;
-    }
+    // Always render the main toolbar with mode toggle
+    renderMainToolbar(mainToolbar);
 
-    // Read-only view (original implementation)
-    let html = '';
-    let i = 0;
-    while (i < blocks.length) {
-        const block = blocks[i];
-        
-        // Check if this is a table cell
-        if (block.table) {
-            // Collect all consecutive table blocks
-            const tableBlocks = [block];
-            let j = i + 1;
-            while (j < blocks.length && blocks[j].table) {
-                tableBlocks.push(blocks[j]);
-                j++;
-            }
-            
-            // Render table
-            html += renderTable(tableBlocks);
-            i = j;
-        } else {
-            // Render normal block
-            html += renderBlock(block);
-            i++;
+    // Prepare page break metadata sets
+    pageBreakBeforeSet = new Set();
+    pageBreakAfterSet = new Set();
+    blocks.forEach((block, index) => {
+        if (block.page_break_before) {
+            pageBreakBeforeSet.add(index);
         }
-    }
-
-    fullTextContent.innerHTML = `
-        <div class="fulltext-controls">
-            <button id="edit-toggle" class="edit-toggle-btn" title="Switch to Edit Mode">✏️ Edit Mode</button>
-        </div>
-        <div class="block-list">
-            ${html}
-        </div>
-        <div class="block-count">
-            ${blocks.length} blocks
-        </div>
-    `;
-
-    // Add edit toggle listener
-    document.getElementById('edit-toggle')?.addEventListener('click', toggleEditMode);
-
-    // Add event listeners
-    fullTextContent.querySelectorAll('.clause-checkbox').forEach(checkbox => {
-        checkbox.addEventListener('change', (e) => {
-            handleCheckboxChange(e.target.dataset.id, e.target.checked);
-        });
+        if (block.page_break_after) {
+            pageBreakAfterSet.add(index);
+            if (index + 1 < blocks.length) {
+                pageBreakBeforeSet.add(index + 1);
+            }
+        }
     });
 
-    // Add event listeners for note boxes
-    fullTextContent.querySelectorAll('.note-box').forEach(textarea => {
-        textarea.addEventListener('change', (e) => {
-            const blockId = e.target.dataset.id;
-            const paraIdx = e.target.dataset.paraIdx;
-            const text = e.target.value;
-            notesMap.set(blockId, text);
-            vscode.postMessage({
-                command: 'saveNote',
-                blockId: blockId,
-                paraIdx: paraIdx,
-                text: text
-            });
+    // Always use BlockEditor - toggle readOnly based on mode
+    if (window.BlockEditor) {
+        renderEditorPages(fullTextContent, blocks, !isEditMode);
+    } else {
+        // Fallback if BlockEditor not loaded
+        const fallbackPages = buildFallbackPages(blocks, pageBreakBeforeSet, pageBreakAfterSet);
+        renderViewPages(fullTextContent, fallbackPages);
+    }
+}
+
+/**
+ * Render the main toolbar with formatting tools and mode toggle
+ */
+function renderMainToolbar(mainToolbar) {
+    if (!mainToolbar) return;
+    
+    mainToolbar.style.display = 'flex';
+    mainToolbar.innerHTML = `
+        <div id="editor-toolbar-container" class="editor-toolbar"></div>
+        <div class="mode-toggle">
+            <button class="mode-toggle-btn ${!isEditMode ? 'active' : ''}" data-mode="view" title="View Mode">
+                📖 View
+            </button>
+            <button class="mode-toggle-btn ${isEditMode ? 'active' : ''}" data-mode="edit" title="Edit Mode">
+                ✏️ Edit
+            </button>
+        </div>
+    `;
+    
+    // Set up mode toggle listeners
+    mainToolbar.querySelectorAll('.mode-toggle-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const newMode = e.target.dataset.mode === 'edit';
+            if (newMode !== isEditMode) {
+                isEditMode = newMode;
+                // Toggle readOnly on existing editor instead of re-rendering
+                if (blockEditor) {
+                    blockEditor.setReadOnly(!isEditMode);
+                    updateToolbarState(!isEditMode);
+                    updateModeToggleButtons(mainToolbar);
+                    schedulePagination();
+                }
+            }
         });
     });
 }
 
 /**
- * Render the editable full text view using BlockEditor
+ * Update mode toggle button states
  */
-function renderEditableFullTextView(container, blocks) {
-    // Create structure for editable view
-    container.innerHTML = `
-        <div class="fulltext-controls">
-            <button id="edit-toggle" class="edit-toggle-btn active" title="Switch to View Mode">📖 View Mode</button>
-        </div>
-        <div id="editor-toolbar-container" class="editor-toolbar-container"></div>
-        <div id="editor-container" class="editor-container"></div>
-        <div class="block-count">
-            ${blocks.length} blocks (Edit Mode)
-        </div>
-    `;
-    
-    // Add edit toggle listener
-    document.getElementById('edit-toggle')?.addEventListener('click', toggleEditMode);
-    
+function updateModeToggleButtons(mainToolbar) {
+    mainToolbar.querySelectorAll('.mode-toggle-btn').forEach(btn => {
+        const btnMode = btn.dataset.mode === 'edit';
+        btn.classList.toggle('active', btnMode === isEditMode);
+    });
+}
+
+/**
+ * Update toolbar button states based on readOnly mode
+ */
+function updateToolbarState(readOnly) {
     const toolbarContainer = document.getElementById('editor-toolbar-container');
-    const editorContainer = document.getElementById('editor-container');
+    if (!toolbarContainer) return;
     
-    if (!toolbarContainer || !editorContainer) return;
-    
-    // Initialize BlockEditor
-    blockEditor = new window.BlockEditor(editorContainer, blocks, {
+    const buttons = toolbarContainer.querySelectorAll('.toolbar-btn');
+    buttons.forEach(btn => {
+        btn.disabled = readOnly;
+    });
+}
+
+/**
+ * Render read-only view pages (fallback if BlockEditor not loaded)
+ */
+function renderViewPages(container, pages) {
+    let pagesHtml = pages.map((pageBlocks, pageIndex) => {
+        let pageContent = '';
+        let i = 0;
+        while (i < pageBlocks.length) {
+            const block = pageBlocks[i];
+            if (block.table) {
+                const tableBlocks = [block];
+                let j = i + 1;
+                while (j < pageBlocks.length && pageBlocks[j].table) {
+                    tableBlocks.push(pageBlocks[j]);
+                    j++;
+                }
+                pageContent += renderTable(tableBlocks);
+                i = j;
+            } else {
+                pageContent += renderBlock(block);
+                i++;
+            }
+        }
+        return `
+            <div class="document-page">
+                <div class="block-list">${pageContent}</div>
+                <div class="page-number">${pageIndex + 1}</div>
+            </div>
+        `;
+    }).join('');
+
+    container.innerHTML = pagesHtml;
+
+    // Add event listeners for checkboxes
+    container.querySelectorAll('.clause-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', (e) => {
+            handleCheckboxChange(e.target.dataset.id, e.target.checked);
+        });
+    });
+}
+
+/**
+ * Render pages with BlockEditor (used for both view and edit modes)
+ * @param {HTMLElement} container 
+ * @param {Array} pages 
+ * @param {Array} blocks 
+ * @param {boolean} readOnly - true for view mode, false for edit mode
+ */
+function renderEditorPages(container, blocks, readOnly) {
+    container.innerHTML = '<div id="editor-pages-host" class="editor-pages-host"></div>';
+
+    const pagesHost = document.getElementById('editor-pages-host');
+    if (!pagesHost) return;
+
+    const toolbarContainer = document.getElementById('editor-toolbar-container');
+
+    // Initialize BlockEditor with checkbox support and readOnly option
+    blockEditor = new window.BlockEditor(pagesHost, blocks, {
         onChange: () => {
             if (toolbar) {
                 toolbar.setSaveStatus('unsaved');
             }
-        }
+            schedulePagination();
+        },
+        showCheckboxes: true,
+        selectedClauses: selectedClauses,
+        onCheckboxChange: handleCheckboxChange,
+        readOnly: readOnly
     });
     blockEditor.render();
-    
-    // Initialize Toolbar
-    toolbar = new window.Toolbar(toolbarContainer, blockEditor, {
-        onSave: saveEdits
+
+    // Initialize Toolbar in main toolbar area (always shown, disabled in view mode)
+    if (toolbarContainer && window.Toolbar) {
+        toolbar = new window.Toolbar(toolbarContainer, blockEditor, {
+            onSave: saveEdits
+        });
+        toolbar.render();
+        updateToolbarState(readOnly);
+    }
+
+    // Initialize ShortcutManager (only in edit mode)
+    if (!readOnly && window.ShortcutManager) {
+        shortcutManager = new window.ShortcutManager(blockEditor, {
+            onSave: saveEdits
+        });
+        shortcutManager.attach(pagesHost);
+    }
+
+    // Apply pagination after layout to respect explicit and automatic page breaks
+    schedulePagination();
+}
+
+function schedulePagination() {
+    if (!blockEditor || !blockEditor.container) {
+        return;
+    }
+    if (paginationRequestId !== null) {
+        cancelAnimationFrame(paginationRequestId);
+    }
+    paginationRequestId = requestAnimationFrame(() => {
+        paginationRequestId = null;
+        paginateEditorContent(blockEditor.container, pageBreakBeforeSet, pageBreakAfterSet);
     });
-    toolbar.render();
-    
-    // Initialize ShortcutManager
-    shortcutManager = new window.ShortcutManager(blockEditor, {
-        onSave: saveEdits
+}
+
+function paginateEditorContent(pagesHost, breakBeforeSet, breakAfterSet) {
+    if (!pagesHost) return;
+
+    const blockElements = Array.from(pagesHost.querySelectorAll('.editor-block-wrapper'));
+    if (blockElements.length === 0) return;
+
+    const blockHeights = blockElements.map(el => {
+        const rect = el.getBoundingClientRect();
+        return rect && rect.height ? rect.height : el.offsetHeight || 0;
     });
-    shortcutManager.attach(editorContainer);
+
+    // Remove existing content but keep block elements in memory
+    blockElements.forEach(el => el.remove());
+    pagesHost.innerHTML = '';
+
+    let currentPage = createDocumentPage();
+    pagesHost.appendChild(currentPage);
+    let currentContent = currentPage.querySelector('.editor-page-content');
+    let currentHeight = 0;
+    let pendingBreakAfter = false;
+
+    blockElements.forEach((blockEl, index) => {
+        const blockHeight = blockHeights[index] || 0;
+        const hasBreakBefore = breakBeforeSet.has(index) && currentContent.childElementCount > 0;
+        const exceedsHeight = (currentHeight + blockHeight) > PAGE_HEIGHT_PX && currentContent.childElementCount > 0;
+
+        if (hasBreakBefore || exceedsHeight || pendingBreakAfter) {
+            currentPage = createDocumentPage();
+            pagesHost.appendChild(currentPage);
+            currentContent = currentPage.querySelector('.editor-page-content');
+            currentHeight = 0;
+            pendingBreakAfter = false;
+        }
+
+        currentContent.appendChild(blockEl);
+        currentHeight += blockHeight;
+
+        if (breakAfterSet.has(index)) {
+            pendingBreakAfter = true;
+        }
+    });
+
+    updatePageNumbers(pagesHost);
+}
+
+function createDocumentPage() {
+    const page = document.createElement('div');
+    page.className = 'document-page';
+
+    const content = document.createElement('div');
+    content.className = 'editor-page-content';
+    page.appendChild(content);
+
+    const pageNumber = document.createElement('div');
+    pageNumber.className = 'page-number';
+    page.appendChild(pageNumber);
+
+    return page;
+}
+
+function updatePageNumbers(pagesHost) {
+    const pages = Array.from(pagesHost.querySelectorAll('.document-page'));
+    pages.forEach((pageEl, index) => {
+        const numberEl = pageEl.querySelector('.page-number');
+        if (numberEl) {
+            numberEl.textContent = `${index + 1}`;
+        }
+    });
+}
+
+function buildFallbackPages(blocks, breakBeforeSet, breakAfterSet) {
+    const pages = [];
+    let currentPage = [];
+    let currentHeight = 0;
+    const averageBlockHeight = 32; // rough estimate when actual layout isn't available
+
+    blocks.forEach((block, index) => {
+        if (breakBeforeSet.has(index) && currentPage.length > 0) {
+            pages.push(currentPage);
+            currentPage = [];
+            currentHeight = 0;
+        }
+
+        currentPage.push(block);
+        currentHeight += averageBlockHeight;
+
+        if (breakAfterSet.has(index)) {
+            pages.push(currentPage);
+            currentPage = [];
+            currentHeight = 0;
+            return;
+        }
+
+        if (currentHeight >= PAGE_HEIGHT_PX) {
+            pages.push(currentPage);
+            currentPage = [];
+            currentHeight = 0;
+        }
+    });
+
+    if (currentPage.length > 0) {
+        pages.push(currentPage);
+    }
+
+    return pages;
 }
 
 function renderBlock(block) {
     const listMeta = block.list || {};
     const isSelected = selectedClauses.has(block.id);
     const level = listMeta.level || 0;
-    
-    // Indentation logic
-    // Level 0: 0px
-    // Level 1: Aligns with Level 0 text (approx 54px)
-    // Level 2+: Add 15px per level for clearer nesting
-    let indent = 0;
-    if (level > 0) {
-        indent = 54 + ((level - 1) * 15);
-    }
-    
+
+    // Text indentation based on level (for nested lists)
+    let textIndent = level > 0 ? (level * 24) : 0;
+
     const ordinal = listMeta.ordinal || '';
-    const typeLabel = ''; 
-    const noteText = notesMap.get(block.id) || '';
-    const paraIdx = block.para_idx !== undefined ? block.para_idx : '';
-    
+
     return `
-        <div class="block-wrapper" style="padding-left: ${indent}px;" data-id="${block.id}">
-            <input type="checkbox" class="clause-checkbox" data-id="${block.id}" ${isSelected ? 'checked' : ''}>
-            <div class="block-item">
-                <div class="block-header">
-                    <span class="block-ordinal">${escapeHtml(ordinal)}${escapeHtml(typeLabel)}</span>
-                    <span class="block-text-inline">${escapeHtml(block.text || '')}</span>
-                </div>
+        <div class="block-row" data-id="${block.id}">
+            <input type="checkbox" class="clause-checkbox row-checkbox" data-id="${block.id}" ${isSelected ? 'checked' : ''}>
+            <div class="block-content" style="padding-left: ${textIndent}px;">
+                <span class="block-ordinal">${escapeHtml(ordinal)}</span>
+                <span class="block-text-inline">${escapeHtml(block.text || '')}</span>
             </div>
-            <textarea class="note-box" data-id="${block.id}" data-para-idx="${paraIdx}" placeholder="Add notes...">${escapeHtml(noteText)}</textarea>
         </div>
     `;
 }
@@ -504,16 +565,12 @@ function renderTable(blocks) {
         indent = 54 + ((level - 1) * 15);
     }
 
-    const noteText = notesMap.get(firstBlock.id) || '';
-    const paraIdx = firstBlock.para_idx !== undefined ? firstBlock.para_idx : '';
-    
     return `
         <div class="block-wrapper" style="padding-left: ${indent}px;" data-id="${firstBlock.id}">
             <input type="checkbox" class="clause-checkbox" data-id="${firstBlock.id}" data-table-ids="${allIds}" ${isSelected ? 'checked' : ''}>
             <div class="block-item">
                 ${tableHtml}
             </div>
-            <textarea class="note-box" data-id="${firstBlock.id}" data-para-idx="${paraIdx}" placeholder="Add notes...">${escapeHtml(noteText)}</textarea>
         </div>
     `;
 }
@@ -592,34 +649,6 @@ function saveEdits() {
         blocks: dirtyBlocks,
         documentPath: currentData?.documentPath || ''
     });
-}
-
-/**
- * Toggle between view mode and edit mode
- */
-function toggleEditMode() {
-    isEditMode = !isEditMode;
-    
-    const editToggle = document.getElementById('edit-toggle');
-    if (editToggle) {
-        editToggle.textContent = isEditMode ? '📖 View Mode' : '✏️ Edit Mode';
-        editToggle.classList.toggle('active', isEditMode);
-    }
-    
-    if (currentData) {
-        renderFullTextView(currentData);
-    }
-}
-
-function renderSchedulesPlaceholder(data) {
-    const schedulesEl = document.getElementById('schedules');
-    if (!schedulesEl) return;
-    
-    schedulesEl.innerHTML = `
-        <div class="placeholder">
-            <p>📎 ${data.index.attachment_count || 0} attachments found</p>
-        </div>
-    `;
 }
 
 function getFileName(path) {

@@ -1,7 +1,11 @@
-"""Document save flow with UUID embedding and git integration.
+"""Document save flow with git integration.
 
-This module handles saving documents back to .docx format while:
-1. Embedding block UUIDs as content controls
+Note: UUID embedding into paragraphs is no longer performed. We use Word's native
+w14:paraId attributes for block matching. The embedding functions are kept as
+no-ops for backward compatibility.
+
+This module handles:
+1. Loading blocks from blocks.jsonl
 2. Auto-committing changes to git with meaningful messages
 3. Preserving document formatting and structure
 """

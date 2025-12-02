@@ -52,7 +52,7 @@ def iter_document_paragraphs(doc: DocxDocument) -> Iterator[Paragraph]:
     paragraphs. This function unwraps them to yield the inner paragraphs.
     This is needed because doc.paragraphs doesn't see paragraphs wrapped in SDT elements.
     
-    Note: We no longer CREATE SDT wrappers for UUID embedding (we use w:tag instead),
+    Note: We use native w14:paraId for block matching (not custom SDT wrappers),
     but we still need to READ documents that may contain SDTs from other sources.
     """
     body = doc.element.body
@@ -71,7 +71,7 @@ def iter_document_paragraphs(doc: DocxDocument) -> Iterator[Paragraph]:
 def iter_document_tables(doc: DocxDocument) -> Iterator[Table]:
     """Iterate over all tables in a document, including those inside SDT content controls.
     
-    Note: We no longer CREATE SDT wrappers for UUID embedding (we use w:tag instead),
+    Note: We use native w14:paraId for block matching (not custom SDT wrappers),
     but we still need to READ documents that may contain SDTs from other sources.
     """
     body = doc.element.body

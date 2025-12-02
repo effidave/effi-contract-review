@@ -32,7 +32,7 @@
 
 
 
-* **Persistent UUID-based identities embedded in the `.docx` using paragraph tags (`w:pPr/w:tag`)**
+* **Persistent block identities using Word's native `w14:paraId` attribute**
 
 
 
@@ -102,19 +102,19 @@
 
 
 
-### **B. Persistent UUIDs in Word**
+### **B. Persistent Block Identities in Word**
 
 
 
-* **Each block gets a UUID (`uuid4`) and is rendered with that UUID persisted in Word using paragraph properties: `<w:p><w:pPr><w:tag w:val="effi:block:<uuid>"/></w:pPr>...</w:p>`.**
+* **Each block is matched to its paragraph using Word's native `w14:paraId` attribute (8-char hex, e.g., "05C9333F") — no custom embedding required.**
 
 
 
-* **Range tags use paired point markers (start/end) for arbitrary spans. Block UUIDs stored in paragraph tags don't interfere with `doc.paragraphs` iteration.**
+* **Range tags use paired point markers (start/end) for arbitrary spans. Block matching via `w14:paraId` doesn't interfere with `doc.paragraphs` iteration.**
 
 
 
-* **On re-parse, identities are recovered from these carriers; if a carrier is missing, the system falls back to text/neighbor anchors and the stored content hash to gauge drift.**
+* **On re-parse, identities are recovered by matching `w14:paraId`; if missing, the system falls back to SHA-256 content hash, then position heuristics.**
 
 
 
@@ -215,7 +215,7 @@
 
 **In summary:**  
 
-**Effi-Local converts `.docx` into a durable, UUID-anchored JSON corpus. Block identities are embedded in Word paragraphs via `w:tag` elements; arbitrary, overlapping spans use paired start/end markers. The LLM reasons on JSON, proposes structured edit/tag plans, and the system re-applies them deterministically with reconciliation and versioning—ready for future MCP hosting but fully operable today via Responses API tool-calling.**
+**Effi-Local converts `.docx` into a durable, para_id-anchored JSON corpus. Block identities are matched via Word's native `w14:paraId` attribute; arbitrary, overlapping spans use paired start/end markers. The LLM reasons on JSON, proposes structured edit/tag plans, and the system re-applies them deterministically with reconciliation and versioning—ready for future MCP hosting but fully operable today via Responses API tool-calling.**
 
 
 

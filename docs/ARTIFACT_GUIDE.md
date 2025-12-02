@@ -62,7 +62,7 @@ Word .docx
   "content_hash": "sha256:e8afd63f...",
   "style": "Intro Default",                      // Word style name
   "style_id": "IntroDefault",
-  "para_id": "3DD8236A",                         // Word's internal paragraph ID
+  "para_id": "3DD8236A",                         // Word's native w14:paraId (used for block matching)
   "para_idx": 0,                                 // 0-based paragraph index
   "list": {                                      // Only if numbered/bulleted
     "ordinal": "1.2.3",                          // Rendered clause number

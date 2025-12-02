@@ -46,6 +46,10 @@ class BlockEditor {
         this.options = {
             onDirtyChange: options.onDirtyChange || (() => {}),
             onSave: options.onSave || (() => {}),
+            showCheckboxes: options.showCheckboxes || false,
+            selectedClauses: options.selectedClauses || new Set(),
+            onCheckboxChange: options.onCheckboxChange || (() => {}),
+            readOnly: options.readOnly || false,
             ...options
         };
         
@@ -113,44 +117,59 @@ class BlockEditor {
         wrapper.className = 'editor-block-wrapper';
         wrapper.dataset.blockId = block.id;
         wrapper.dataset.blockIndex = String(index);
-        
-        // Calculate indentation
+
+        // Text indentation based on level (no checkbox indent)
         const listMeta = block.list || {};
         const level = listMeta.level || 0;
-        let indent = 0;
-        if (level > 0) {
-            indent = 54 + ((level - 1) * 15);
+        const textIndent = level > 0 ? (level * 45) : 0;
+
+        // Add checkbox if enabled
+        if (this.options.showCheckboxes) {
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.className = 'clause-checkbox editor-checkbox';
+            checkbox.dataset.id = block.id;
+            checkbox.checked = this.options.selectedClauses.has(block.id);
+            checkbox.addEventListener('change', (e) => {
+                this.options.onCheckboxChange(block.id, e.target.checked);
+            });
+            wrapper.appendChild(checkbox);
         }
-        wrapper.style.paddingLeft = `${indent}px`;
-        
+
+        // Content container with indentation
+        const contentEl = document.createElement('div');
+        contentEl.className = 'editor-block-content';
+        contentEl.style.paddingLeft = `${textIndent}px`;
+
         // Ordinal/number
         const ordinal = listMeta.ordinal || '';
         if (ordinal) {
             const ordinalEl = document.createElement('span');
             ordinalEl.className = 'editor-ordinal';
             ordinalEl.textContent = ordinal;
-            wrapper.appendChild(ordinalEl);
+            contentEl.appendChild(ordinalEl);
         }
-        
-        // Editable text content
+
+        // Text content (editable based on readOnly option)
         const textEl = document.createElement('div');
         textEl.className = 'editor-block-text';
-        textEl.contentEditable = 'true';
+        textEl.contentEditable = this.options.readOnly ? 'false' : 'true';
         textEl.dataset.blockId = block.id;
-        textEl.spellcheck = true;
-        
+        textEl.spellcheck = !this.options.readOnly;
+
         // Render formatted content
         textEl.innerHTML = this._renderFormattedText(block);
-        
+
         // Apply heading styles
         if (block.type === 'heading') {
             textEl.classList.add('editor-heading');
             const headingLevel = block.level || 1;
             textEl.classList.add(`editor-heading-${Math.min(headingLevel, 4)}`);
         }
-        
-        wrapper.appendChild(textEl);
-        
+
+        contentEl.appendChild(textEl);
+        wrapper.appendChild(contentEl);
+
         return wrapper;
     }
     
@@ -195,6 +214,9 @@ class BlockEditor {
      * Set up all event listeners
      */
     _setupEventListeners() {
+        // Skip edit-related listeners in readOnly mode
+        if (this.options.readOnly) return;
+        
         // Input events on contenteditable elements
         this.container.addEventListener('input', this._handleInput);
         
@@ -206,6 +228,42 @@ class BlockEditor {
         
         // Paste handling
         this.container.addEventListener('paste', this._handlePaste);
+    }
+    
+    /**
+     * Set read-only mode without re-rendering
+     * @param {boolean} readOnly
+     */
+    setReadOnly(readOnly) {
+        this.options.readOnly = readOnly;
+        
+        // Update all contenteditable elements
+        const textElements = this.container.querySelectorAll('.editor-block-text');
+        textElements.forEach(el => {
+            el.contentEditable = readOnly ? 'false' : 'true';
+            el.spellcheck = !readOnly;
+        });
+        
+        // Add/remove event listeners
+        if (readOnly) {
+            this.container.removeEventListener('input', this._handleInput);
+            this.container.removeEventListener('keydown', this._handleKeydown);
+            document.removeEventListener('selectionchange', this._handleSelectionChange);
+            this.container.removeEventListener('paste', this._handlePaste);
+        } else {
+            this.container.addEventListener('input', this._handleInput);
+            this.container.addEventListener('keydown', this._handleKeydown);
+            document.addEventListener('selectionchange', this._handleSelectionChange);
+            this.container.addEventListener('paste', this._handlePaste);
+        }
+    }
+    
+    /**
+     * Check if editor is in read-only mode
+     * @returns {boolean}
+     */
+    isReadOnly() {
+        return this.options.readOnly;
     }
     
     /**
