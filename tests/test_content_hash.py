@@ -51,21 +51,21 @@ class TestMatchResult:
     def test_method_counts(self):
         """Test counting matches by method."""
         matches = [
-            BlockMatch("old1", "new1", "uuid", 1.0),
+            BlockMatch("old1", "new1", "para_id", 1.0),
             BlockMatch("old2", "new2", "hash", 0.95),
             BlockMatch("old3", "new3", "hash", 0.9),
             BlockMatch("old4", "new4", "position", 0.6),
         ]
         result = MatchResult(matches=matches, unmatched_old=[], unmatched_new=[])
         
-        assert result.matched_by_uuid == 1
+        assert result.matched_by_para_id == 1
         assert result.matched_by_hash == 2
         assert result.matched_by_position == 1
 
     def test_to_delta_dict(self):
         """Test conversion to delta dictionary."""
         matches = [
-            BlockMatch("old1", "new1", "uuid", 1.0),
+            BlockMatch("old1", "new1", "para_id", 1.0),
             BlockMatch("old2", "new2", "hash", 0.95),
         ]
         result = MatchResult(
@@ -76,7 +76,7 @@ class TestMatchResult:
         
         delta = result.to_delta_dict()
         
-        assert delta["matched_by_uuid"] == 1
+        assert delta["matched_by_para_id"] == 1
         assert delta["matched_by_hash"] == 1
         assert delta["matched_by_position"] == 0
         assert delta["new_blocks"] == ["new3", "new4"]
@@ -112,59 +112,59 @@ class TestMatchBlocksByHash:
         assert len(result.matches) == 2
         assert result.matched_by_hash == 2
 
-    def test_uuid_matching_with_embedded_uuids(self):
-        """Test UUID matching when embedded UUIDs are provided."""
+    def test_para_id_matching_with_para_id_map(self):
+        """Test para_id matching when para_id map is provided."""
         from effilocal.doc.uuid_embedding import ParaKey
         
         old_blocks = [
-            {"id": "uuid-001", "text": "First paragraph", "para_idx": 0},
-            {"id": "uuid-002", "text": "Second paragraph", "para_idx": 1},
+            {"id": "block-001", "text": "First paragraph", "para_idx": 0},
+            {"id": "block-002", "text": "Second paragraph", "para_idx": 1},
         ]
         new_blocks = [
             {"id": "new-001", "text": "First paragraph", "para_idx": 0},
             {"id": "new-002", "text": "Second paragraph", "para_idx": 1},
         ]
-        embedded_uuids = {
-            "uuid-001": ParaKey(0),  # Embedded UUID at para_idx 0
-            "uuid-002": ParaKey(1),  # Embedded UUID at para_idx 1
+        para_id_map = {
+            "block-001": ParaKey(0),  # Para_id at para_idx 0
+            "block-002": ParaKey(1),  # Para_id at para_idx 1
         }
         
         result = match_blocks_by_hash(
             old_blocks, 
             new_blocks,
-            embedded_uuids=embedded_uuids,
+            para_id_map=para_id_map,
         )
         
-        assert result.matched_by_uuid == 2
+        assert result.matched_by_para_id == 2
         assert result.matched_by_hash == 0
 
-    def test_uuid_matching_with_table_cells(self):
-        """Test UUID matching for table cell blocks."""
+    def test_para_id_matching_with_table_cells(self):
+        """Test para_id matching for table cell blocks."""
         from effilocal.doc.uuid_embedding import ParaKey, TableCellKey
         
         old_blocks = [
-            {"id": "uuid-para", "text": "Intro paragraph", "para_idx": 0},
-            {"id": "uuid-cell-00", "text": "Cell 0,0", "table": {"table_id": "tbl_0", "row": 0, "col": 0}},
-            {"id": "uuid-cell-11", "text": "Cell 1,1", "table": {"table_id": "tbl_0", "row": 1, "col": 1}},
+            {"id": "block-para", "text": "Intro paragraph", "para_idx": 0},
+            {"id": "block-cell-00", "text": "Cell 0,0", "table": {"table_id": "tbl_0", "row": 0, "col": 0}},
+            {"id": "block-cell-11", "text": "Cell 1,1", "table": {"table_id": "tbl_0", "row": 1, "col": 1}},
         ]
         new_blocks = [
             {"id": "new-para", "text": "Intro paragraph", "para_idx": 0},
             {"id": "new-cell-00", "text": "Cell 0,0", "table": {"table_id": "tbl_0", "row": 0, "col": 0}},
             {"id": "new-cell-11", "text": "Cell 1,1", "table": {"table_id": "tbl_0", "row": 1, "col": 1}},
         ]
-        embedded_uuids = {
-            "uuid-para": ParaKey(0),
-            "uuid-cell-00": TableCellKey(0, 0, 0),
-            "uuid-cell-11": TableCellKey(0, 1, 1),
+        para_id_map = {
+            "block-para": ParaKey(0),
+            "block-cell-00": TableCellKey(0, 0, 0),
+            "block-cell-11": TableCellKey(0, 1, 1),
         }
         
         result = match_blocks_by_hash(
             old_blocks,
             new_blocks,
-            embedded_uuids=embedded_uuids,
+            para_id_map=para_id_map,
         )
         
-        assert result.matched_by_uuid == 3
+        assert result.matched_by_para_id == 3
         assert result.matched_by_hash == 0
         assert len(result.unmatched_old) == 0
         assert len(result.unmatched_new) == 0

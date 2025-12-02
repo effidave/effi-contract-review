@@ -79,7 +79,7 @@ class BlockMatch:
 
     old_id: str
     new_id: str
-    method: str  # "uuid", "hash", "position"
+    method: str  # "para_id", "hash", "position"
     confidence: float  # 0.0-1.0
 
 
@@ -92,9 +92,14 @@ class MatchResult:
     unmatched_new: list[str]  # IDs of new blocks that couldn't be matched
 
     @property
+    def matched_by_para_id(self) -> int:
+        """Count of blocks matched by para_id."""
+        return sum(1 for m in self.matches if m.method == "para_id")
+
+    @property
     def matched_by_uuid(self) -> int:
-        """Count of blocks matched by UUID."""
-        return sum(1 for m in self.matches if m.method == "uuid")
+        """Count of blocks matched by para_id (deprecated alias)."""
+        return self.matched_by_para_id
 
     @property
     def matched_by_hash(self) -> int:
@@ -109,7 +114,7 @@ class MatchResult:
     def to_delta_dict(self) -> dict[str, Any]:
         """Convert to dictionary format for analysis_delta.json."""
         return {
-            "matched_by_uuid": self.matched_by_uuid,
+            "matched_by_para_id": self.matched_by_para_id,
             "matched_by_hash": self.matched_by_hash,
             "matched_by_position": self.matched_by_position,
             "new_blocks": self.unmatched_new,
@@ -121,48 +126,57 @@ def match_blocks_by_hash(
     old_blocks: list[dict],
     new_blocks: list[dict],
     *,
-    uuid_field: str = "id",
+    id_field: str = "id",
     hash_field: str = "content_hash",
     text_field: str = "text",
+    para_id_map: dict[str, BlockKey] | None = None,
+    # Deprecated parameter names (backward compat)
+    uuid_field: str | None = None,
     embedded_uuids: dict[str, BlockKey] | None = None,
 ) -> MatchResult:
-    """Match blocks using UUID, hash, and position heuristics.
+    """Match blocks using para_id, hash, and position heuristics.
 
     Matching priority:
-    1. UUID match: If new block's position matches an embedded UUID's BlockKey
+    1. Para_id match: If new block's position matches a para_id's BlockKey
     2. Hash match: If content hashes match (unique match preferred)
     3. Position match: For remaining unmatched, use position proximity
 
     Args:
         old_blocks: Blocks from previous analysis
         new_blocks: Blocks from current analysis
-        uuid_field: Field name for block ID
+        id_field: Field name for block ID
         hash_field: Field name for content hash
         text_field: Field name for text content
-        embedded_uuids: Optional mapping of UUID → BlockKey from document
+        para_id_map: Optional mapping of para_id → BlockKey from document
+        uuid_field: Deprecated, use id_field
+        embedded_uuids: Deprecated, use para_id_map
 
     Returns:
         MatchResult with matched pairs and unmatched blocks
     """
+    # Handle deprecated parameter names
+    effective_id_field = uuid_field if uuid_field is not None else id_field
+    effective_para_id_map = embedded_uuids if embedded_uuids is not None else para_id_map
+    
     matches: list[BlockMatch] = []
     matched_old: set[str] = set()
     matched_new: set[str] = set()
 
     # Build lookup structures
-    old_by_id: dict[str, dict] = {b[uuid_field]: b for b in old_blocks if uuid_field in b}
+    old_by_id: dict[str, dict] = {b[effective_id_field]: b for b in old_blocks if effective_id_field in b}
     old_by_hash: dict[str, list[dict]] = defaultdict(list)
     for block in old_blocks:
         h = block.get(hash_field) or (compute_block_hash(block.get(text_field, "")) if text_field in block else None)
         if h:
             old_by_hash[h].append(block)
 
-    # Phase 1: UUID matching (if embedded UUIDs provided)
-    if embedded_uuids:
-        # Build reverse lookup: BlockKey → embedded UUID
-        key_to_uuid: dict[BlockKey, str] = {v: k for k, v in embedded_uuids.items()}
+    # Phase 1: Para_id matching (if para_id map provided)
+    if effective_para_id_map:
+        # Build reverse lookup: BlockKey → para_id
+        key_to_para_id: dict[BlockKey, str] = {v: k for k, v in effective_para_id_map.items()}
         
         for new_block in new_blocks:
-            new_id = new_block.get(uuid_field)
+            new_id = new_block.get(effective_id_field)
             if new_id is None or new_id in matched_new:
                 continue
 
@@ -171,23 +185,23 @@ def match_blocks_by_hash(
             if new_key is None:
                 continue
 
-            # Check if this position has an embedded UUID
-            embedded_uuid = key_to_uuid.get(new_key)
-            if embedded_uuid and embedded_uuid in old_by_id:
+            # Check if this position has a para_id
+            para_id = key_to_para_id.get(new_key)
+            if para_id and para_id in old_by_id:
                 matches.append(
                     BlockMatch(
-                        old_id=embedded_uuid,
+                        old_id=para_id,
                         new_id=new_id,
-                        method="uuid",
+                        method="para_id",
                         confidence=1.0,
                     )
                 )
-                matched_old.add(embedded_uuid)
+                matched_old.add(para_id)
                 matched_new.add(new_id)
 
     # Phase 2: Hash matching
     for new_block in new_blocks:
-        new_id = new_block.get(uuid_field)
+        new_id = new_block.get(effective_id_field)
         if new_id is None or new_id in matched_new:
             continue
 
@@ -198,11 +212,11 @@ def match_blocks_by_hash(
             continue
 
         candidates = old_by_hash.get(new_hash, [])
-        unmatched_candidates = [c for c in candidates if c[uuid_field] not in matched_old]
+        unmatched_candidates = [c for c in candidates if c[effective_id_field] not in matched_old]
 
         if len(unmatched_candidates) == 1:
             # Unique hash match - high confidence
-            old_id = unmatched_candidates[0][uuid_field]
+            old_id = unmatched_candidates[0][effective_id_field]
             matches.append(
                 BlockMatch(
                     old_id=old_id,
@@ -229,7 +243,7 @@ def match_blocks_by_hash(
                     best_candidate = candidate
 
             if best_candidate is not None:
-                old_id = best_candidate[uuid_field]
+                old_id = best_candidate[effective_id_field]
                 # Lower confidence due to ambiguity
                 confidence = max(0.7, 0.95 - (best_distance * 0.05))
                 matches.append(
@@ -244,8 +258,8 @@ def match_blocks_by_hash(
                 matched_new.add(new_id)
 
     # Phase 3: Position-based matching for remaining blocks
-    remaining_old = [b for b in old_blocks if b.get(uuid_field) not in matched_old]
-    remaining_new = [b for b in new_blocks if b.get(uuid_field) not in matched_new]
+    remaining_old = [b for b in old_blocks if b.get(effective_id_field) not in matched_old]
+    remaining_new = [b for b in new_blocks if b.get(effective_id_field) not in matched_new]
 
     # Sort by position index
     remaining_old_sorted = sorted(remaining_old, key=lambda b: _get_position_index(_block_to_key(b)))
@@ -254,7 +268,7 @@ def match_blocks_by_hash(
     # Simple positional alignment for remaining blocks
     # Only match if positions are close and text is similar
     for old_block in remaining_old_sorted:
-        old_id = old_block.get(uuid_field)
+        old_id = old_block.get(effective_id_field)
         if old_id is None or old_id in matched_old:
             continue
 
@@ -266,7 +280,7 @@ def match_blocks_by_hash(
         best_score = 0.0
 
         for new_block in remaining_new_sorted:
-            new_id = new_block.get(uuid_field)
+            new_id = new_block.get(effective_id_field)
             if new_id is None or new_id in matched_new:
                 continue
 
@@ -292,7 +306,7 @@ def match_blocks_by_hash(
                 best_match = new_block
 
         if best_match is not None:
-            new_id = best_match.get(uuid_field)
+            new_id = best_match.get(effective_id_field)
             matches.append(
                 BlockMatch(
                     old_id=old_id,
@@ -305,8 +319,8 @@ def match_blocks_by_hash(
             matched_new.add(new_id)
 
     # Collect unmatched blocks
-    unmatched_old = [b[uuid_field] for b in old_blocks if b.get(uuid_field) not in matched_old]
-    unmatched_new = [b[uuid_field] for b in new_blocks if b.get(uuid_field) not in matched_new]
+    unmatched_old = [b[effective_id_field] for b in old_blocks if b.get(effective_id_field) not in matched_old]
+    unmatched_new = [b[effective_id_field] for b in new_blocks if b.get(effective_id_field) not in matched_new]
 
     return MatchResult(
         matches=matches,
