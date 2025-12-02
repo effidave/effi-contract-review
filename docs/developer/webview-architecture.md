@@ -188,10 +188,16 @@ extension/
 │   ├── extension.ts           # Extension host (Node.js)
 │   └── webview/
 │       ├── main.js            # Webview logic (sandboxed browser)
+│       ├── editor.js          # BlockEditor class (Sprint 2)
+│       ├── toolbar.js         # Formatting toolbar (Sprint 2)
+│       ├── shortcuts.js       # Keyboard shortcuts (Sprint 2)
 │       └── style.css          # VS Code theme-aware styles
 ├── scripts/
 │   ├── get_outline.py         # Generate outline from artifacts
-│   └── get_clause_details.py # Fetch full text for clause IDs
+│   ├── get_clause_details.py  # Fetch full text for clause IDs
+│   ├── save_blocks.py         # Save edited blocks to .docx (Sprint 2)
+│   ├── save_document.py       # Save with UUID embedding (Sprint 1)
+│   └── get_history.py         # Git version history (Sprint 1)
 └── dist/                      # Compiled output
 ```
 
@@ -384,9 +390,36 @@ webview.onDidReceiveMessage(async (message) => {
 });
 ```
 
-## Recent Changes (Nov 2025)
+## Recent Changes (Nov-Dec 2025)
 
-### Dual-Tab Implementation
+### Sprint 2: WYSIWYG Editor (Dec 2025)
+**Problem:** Users needed to edit documents directly in the webview, not just view them.
+
+**Changes Made:**
+1. **BlockEditor class** (`editor.js`) - ContentEditable-based editing
+2. **Toolbar component** (`toolbar.js`) - B/I/U formatting, undo/redo, save
+3. **Keyboard shortcuts** (`shortcuts.js`) - Ctrl+B/I/U/S/Z/Y
+4. **Edit mode toggle** - Switch between view and edit modes
+5. **Save flow** - Webview → Extension → Python → .docx update
+6. **Run-based formatting** - Text formatting stored as runs with start/end positions
+
+**Key Design Decision:**
+Use custom ContentEditable implementation rather than a framework (Lexical, ProseMirror) since our editing needs are block-based and relatively simple.
+
+See: [sprint-2-wysiwyg-editor.md](./sprint-2-wysiwyg-editor.md)
+
+### Sprint 1: UUID Persistence (Dec 2025)
+**Problem:** Document identity needed to survive external edits and re-analysis.
+
+**Changes Made:**
+1. **UUID embedding** - Content controls store block IDs in .docx
+2. **Hash fallback** - SHA-256 matching when UUIDs lost
+3. **Git integration** - Auto-commit on save with meaningful messages
+4. **Re-analysis stability** - UUIDs preserved when re-parsing document
+
+See: [sprint-1-uuid-persistence.md](./sprint-1-uuid-persistence.md)
+
+### Dual-Tab Implementation (Nov 2025)
 **Problem:** Users needed to see both compact outline and full text, with synchronized selection state.
 
 **Changes Made:**
