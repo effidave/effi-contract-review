@@ -254,7 +254,7 @@ Tools for inserting content relative to specific clause numbers in contracts:
 - Inserts new paragraph immediately after the target clause
 - `inherit_numbering=True`: Creates sibling clause at same level (inherits numId and ilvl)
 - `inherit_numbering=False`: Creates unnumbered paragraph after the clause
-- Returns custom paragraph ID (UUID) for tracking inserted content
+- Returns the native `w14:paraId` for tracking inserted content
 
 **`add_paragraphs_after_clause(filename, clause_number, paragraphs, inherit_numbering)`**
 - Bulk version - inserts multiple paragraphs after a clause
@@ -265,12 +265,12 @@ Tools for inserting content relative to specific clause numbers in contracts:
 - Uses `effilocal.doc.numbering_inspector.NumberingInspector` to parse numbering.xml
 - Matches clause numbers against rendered paragraph numbers
 - Handles complex numbering formats (multi-level, legal style, lettered)
-- Tags inserted paragraphs with `add_custom_para_id()` for tracking
+- Inserted paragraphs get native `w14:paraId` attributes automatically from Word
 
 #### **Attachment Insertion**
-- **`add_custom_para_id(paragraph_element)`**: Tags paragraphs with UUIDs in custom XML properties
-- Used for tracking schedules, annexes, exhibits inserted into contracts
-- Returns UUID for reference in external systems
+- Schedules, annexes, and exhibits are inserted as standard paragraphs
+- Paragraphs are tracked via their native `w14:paraId` attribute
+- No custom tagging needed - Word maintains stable IDs automatically
 
 #### **Enhanced Search/Replace**
 - **`whole_word_only`** parameter: Only match complete words (uses regex `\b` boundaries)
@@ -283,20 +283,29 @@ Tools for inserting content relative to specific clause numbers in contracts:
 - Links comments to status via `w14:paraId` / `w15:paraId` matching
 - Returns structured comment data with `status`, `is_resolved`, `done_flag` fields
 
-#### **UUID Embedding & Block Identity (Sprint 1)**
-Block UUIDs are embedded directly into .docx documents for persistent tracking:
+#### **Block Identity via Native w14:paraId**
+Block identification uses the native `w14:paraId` attribute that Word provides on every paragraph:
 
-**UUID Embedding** (`effilocal/doc/uuid_embedding.py`):
-- **`embed_block_uuids(doc, blocks)`**: Adds UUID tags to paragraph properties (`w:pPr/w:tag`)
-- **`extract_block_uuids(doc)`**: Extracts UUID → BlockKey mapping from document
-- **`remove_all_uuid_tags(doc)`**: Removes effi tags while preserving paragraphs
-- Tag format: `<w:p><w:pPr><w:tag w:val="effi:block:<uuid>"/></w:pPr>...</w:p>`
-- UUIDs survive Word save/close/reopen cycles
-- Uses standard WordprocessingML elements that don't interfere with `doc.paragraphs`
+**Native Paragraph IDs** (`effilocal/doc/uuid_embedding.py`):
+- **`get_paragraph_para_id(para_elem)`**: Reads native `w14:paraId` (8-char hex, e.g., "05C9333F")
+- **`find_paragraph_by_para_id(doc, para_id)`**: Locates paragraph by its para_id
+- **`extract_block_uuids(doc)`**: Returns para_id → BlockKey mapping from document
+- **`assign_block_ids(blocks, para_id_map, old_blocks)`**: Assigns IDs with priority:
+  1. Match by para_id (from previous analysis)
+  2. Match by content hash
+  3. Match by position heuristics
+  4. Generate new ID from para_id
+- No custom embedding needed - Word maintains these IDs automatically
+- 100% schema-compliant, survives all Word operations
+
+**Why w14:paraId (not custom tags)**:
+- `w:tag` elements inside `w:pPr` violate OOXML schema (only valid in `w:sdtPr`)
+- Custom tags caused Word to refuse to open documents
+- Native `w14:paraId` is always present, stable, and schema-compliant
 
 **Content Hash Fallback** (`effilocal/doc/content_hash.py`):
 - **`match_blocks_by_hash(old_blocks, new_blocks)`**: Three-phase matching:
-  1. UUID match (from embedded paragraph tags)
+  1. Para_id match (from document's native attributes)
   2. Hash match (SHA-256 of normalized text)
   3. Position match (proximity heuristics)
 - Returns `MatchResult` with matched pairs and unmatched lists
@@ -307,13 +316,13 @@ Block UUIDs are embedded directly into .docx documents for persistent tracking:
 - **`get_file_history(repo, file)`**: Retrieve commit history for a file
 - Supports checkpoint commits for explicit save points
 
-**Analysis with UUID Preservation** (`effilocal/flows/analyze_doc.py`):
-- Re-analysis extracts embedded UUIDs and matches to previous blocks
+**Analysis with Para_id Matching** (`effilocal/flows/analyze_doc.py`):
+- Re-analysis extracts native para_ids and matches to previous blocks
 - Emits `analysis_delta.json` tracking matched/new/deleted/modified blocks
-- Use `preserve_uuids=True` (default) for incremental analysis
+- Stats include `from_para_id`, `from_hash`, `from_position` counts
 
 **Save Flow** (`effilocal/flows/save_doc.py`):
-- **`save_with_uuids(docx_path, blocks_path)`**: Embed UUIDs and optionally git commit
+- **`save_blocks(docx_path, blocks_path)`**: Save edited blocks back to document
 - **`create_checkpoint(docx_path, note)`**: Create named checkpoint commit
 
 ### Building/Packaging
@@ -370,11 +379,11 @@ Note: After migration, `word_document_server` is pristine upstream. All customiz
 
 ## Testing Notes
 
-**Test Suite**: 146 tests (100% passing)
+**Test Suite**: 162 tests (100% passing)
 - Framework: pytest 9.0.1
 - Run: `cd tests; pytest -v`
 - Coverage:
-  - `test_uuid_embedding.py` - UUID embedding/extraction via paragraph tags
+  - `test_uuid_embedding.py` - Paragraph identification via native w14:paraId
   - `test_content_hash.py` - Block matching by hash with fallback strategies
   - `test_git_ops.py` - Git commit, history, and checkpoint operations
   - `test_search_and_replace.py` - find_and_replace_text with whole_word_only, split-run detection

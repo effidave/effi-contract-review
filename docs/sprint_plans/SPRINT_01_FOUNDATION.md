@@ -203,29 +203,29 @@ def save_document(
 ## Testing Plan
 
 ### Unit Tests
-- `test_uuid_embedding.py`: Paragraph tag UUID creation/extraction
+- `test_uuid_embedding.py`: Para_id extraction and block ID assignment (27 tests)
 - `test_content_hash.py`: Hash computation and matching
 - `test_git_ops.py`: Commit generation (mock git)
 
 ### Integration Tests
-- `test_analyze_with_uuid_preservation.py`:
+- `test_analyze_with_para_id_matching.py`:
   1. Analyze fresh document
   2. Modify document externally
   3. Re-analyze
-  4. Verify UUID continuity
+  4. Verify block ID continuity via para_id matching
 
 ### Manual Tests
 1. **Round-trip test:**
    - Create document in extension
    - Open in Word, make edits
    - Re-open in extension
-   - Verify blocks matched correctly
+   - Verify blocks matched correctly via para_id
 
-2. **UUID loss recovery:**
-   - Create document with UUIDs
-   - Strip paragraph tags (manual or tool)
+2. **Hash fallback recovery:**
+   - Create document
+   - Make significant structural changes (reorder paragraphs)
    - Re-analyze
-   - Verify hash fallback worked
+   - Verify hash fallback matched blocks correctly
 
 ---
 
