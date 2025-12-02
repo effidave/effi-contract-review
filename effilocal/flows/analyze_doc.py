@@ -86,15 +86,15 @@ def analyze(
         zip_ref.extractall(raw_dir)
     artifacts["raw_docx"] = raw_dir
 
-    # Extract embedded UUIDs from content controls
-    embedded_uuids: dict[str, int] = {}
+    # Extract para_id map from document's native w14:paraId attributes
+    para_id_map: dict[str, int] = {}
     if preserve_uuids:
         try:
-            embedded_uuids = extract_block_uuids(docx_path)
-            if embedded_uuids:
-                LOGGER.info("Extracted %d embedded UUIDs from document", len(embedded_uuids))
+            para_id_map = extract_block_uuids(docx_path)
+            if para_id_map:
+                LOGGER.info("Extracted %d para_ids from document", len(para_id_map))
         except Exception as e:
-            LOGGER.warning("Failed to extract embedded UUIDs: %s", e)
+            LOGGER.warning("Failed to extract para_ids: %s", e)
 
     # Load previous blocks for matching
     old_blocks: list[dict] = []
@@ -119,7 +119,7 @@ def analyze(
     # Priority: para_id match > hash match with old blocks > position match > generate new
     id_stats = assign_block_ids(
         blocks,
-        embedded_uuids=embedded_uuids if preserve_uuids else None,
+        para_id_map=para_id_map if preserve_uuids else None,
         old_blocks=old_blocks if preserve_uuids else None,
     )
     LOGGER.info(

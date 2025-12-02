@@ -361,9 +361,11 @@ remove_all_uuid_controls = remove_all_uuid_tags
 
 def assign_block_ids(
     blocks: list[dict],
-    embedded_uuids: dict[str, BlockKey] | None = None,
+    para_id_map: dict[str, BlockKey] | None = None,
     old_blocks: list[dict] | None = None,
     position_threshold: int = 5,
+    # Deprecated parameter (backward compat)
+    embedded_uuids: dict[str, BlockKey] | None = None,
 ) -> dict[str, str]:
     """Assign IDs to blocks that have id=None.
     
@@ -378,9 +380,10 @@ def assign_block_ids(
     
     Args:
         blocks: List of block dicts. Blocks with id=None will be assigned IDs.
-        embedded_uuids: DEPRECATED - ignored (we use para_id directly)
+        para_id_map: Optional para_id → BlockKey mapping (currently unused).
         old_blocks: Previous blocks.jsonl content for matching.
         position_threshold: Maximum distance for position matching.
+        embedded_uuids: DEPRECATED - use para_id_map instead.
     
     Returns:
         Stats dict with counts: {"from_para_id": N, "from_hash": N, 
@@ -388,6 +391,10 @@ def assign_block_ids(
     
     Mutates blocks in place to set the "id" field.
     """
+    # Handle deprecated parameter
+    effective_para_id_map = embedded_uuids if embedded_uuids is not None else para_id_map
+    _ = effective_para_id_map  # Currently unused but kept for interface consistency
+    
     stats = {"from_para_id": 0, "from_hash": 0, "from_position": 0, "generated": 0}
     
     # Build mappings from old blocks for matching
