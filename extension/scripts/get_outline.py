@@ -17,28 +17,45 @@ from effilocal.artifact_loader import ArtifactLoader
 
 
 def get_outline_json(analysis_dir: str) -> str:
-    """Load analysis and return outline as JSON."""
+    """Load analysis and return outline as JSON.
+    
+    Returns ALL blocks with checkboxes, showing ordinal for numbered blocks
+    and type/style info for unnumbered blocks.
+    """
     try:
         loader = ArtifactLoader(analysis_dir)
         
-        # Get outline data using artifact loader queries
+        # Get ALL blocks for the outline
         outline_items = []
         
-        # Query for heading blocks with ordinals
         for block in loader.blocks:
-            if block.get('type') in ('heading', 'list_item'):
-                list_meta = block.get('list')
-                
-                # Only include blocks with list numbering
-                if list_meta and list_meta.get('ordinal'):
-                    outline_items.append({
-                        'id': block['id'],
-                        'ordinal': list_meta['ordinal'],
-                        'text': block.get('text', '')[:100],  # Limit to 100 chars
-                        'level': list_meta.get('level', 0),
-                        'type': block.get('type'),
-                        'section_id': block.get('section_id'),
-                    })
+            list_meta = block.get('list') or {}
+            ordinal = list_meta.get('ordinal', '')
+            level = list_meta.get('level', 0)
+            block_type = block.get('type', 'paragraph')
+            text = block.get('text', '')[:100]  # Limit to 100 chars
+            
+            # For unnumbered blocks, show style or type as label
+            if not ordinal:
+                style = block.get('style', '')
+                if block_type == 'heading':
+                    ordinal = f'[{style or "Heading"}]'
+                elif block_type == 'table_cell':
+                    table_info = block.get('table', {})
+                    ordinal = f'[Table R{table_info.get("row", 0)+1}C{table_info.get("col", 0)+1}]'
+                else:
+                    # No label for regular paragraphs - just show the text
+                    ordinal = ''
+            
+            outline_items.append({
+                'id': block['id'],
+                'ordinal': ordinal,
+                'text': text,
+                'level': level,
+                'type': block_type,
+                'section_id': block.get('section_id'),
+                'is_numbered': bool(list_meta.get('ordinal')),
+            })
         
         return json.dumps({
             'success': True,

@@ -268,10 +268,12 @@ function renderOutlineView(data) {
         // Checkbox (20px) + gap (8px) + ordinal (50px) = 78px base offset
         const baseOffset = 78;
         const indent = item.level > 0 ? baseOffset + ((item.level - 1) * 20) : 0;
-        const typeClass = item.type === 'heading' ? 'outline-heading' : 'outline-clause';
+        const typeClass = item.type === 'heading' ? 'outline-heading' : 
+                          item.type === 'table_cell' ? 'outline-clause table-cell' : 'outline-clause';
+        const numberedClass = item.is_numbered ? '' : 'unnumbered';
         const isSelected = selectedClauses.has(item.id);
         return `
-            <div class="outline-item ${typeClass}" style="padding-left: ${indent}px;" data-id="${item.id}">
+            <div class="outline-item ${typeClass} ${numberedClass}" style="padding-left: ${indent}px;" data-id="${item.id}">
                 <input type="checkbox" class="clause-checkbox" data-id="${item.id}" ${isSelected ? 'checked' : ''}>
                 <span class="ordinal">${item.ordinal}</span>
                 <span class="text">${escapeHtml(item.text)}</span>
@@ -567,6 +569,11 @@ function saveEdits() {
     }
     
     const dirtyBlocks = blockEditor.getDirtyBlocks();
+    console.log('DEBUG saveEdits: dirtyBlocks count:', dirtyBlocks.length);
+    console.log('DEBUG saveEdits: dirtyBlockIds:', Array.from(blockEditor.dirtyBlockIds || []));
+    if (dirtyBlocks.length > 0) {
+        console.log('DEBUG saveEdits: first dirty block:', JSON.stringify(dirtyBlocks[0]).substring(0, 200));
+    }
     
     if (dirtyBlocks.length === 0) {
         if (toolbar) {

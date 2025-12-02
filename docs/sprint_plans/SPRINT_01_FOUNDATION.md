@@ -22,10 +22,10 @@
 **So that** my notes and LLM context remain attached to the right clauses.
 
 **Acceptance Criteria:**
-- [ ] Each block gets a UUID embedded as a content control tag
-- [ ] UUID survives save/close/reopen cycle in Word
-- [ ] UUID survives copy/paste within same document
-- [ ] Test: Create doc → add content controls → save → reopen → verify UUIDs intact
+- [x] Each block gets a UUID embedded as a paragraph tag (`w:pPr/w:tag`)
+- [x] UUID survives save/close/reopen cycle in Word
+- [x] UUID survives copy/paste within same document
+- [x] Test: Create doc → add paragraph tags → save → reopen → verify UUIDs intact
 
 ### US1.2: Hash Fallback Recovery
 **As a** lawyer who edited a contract in Word and accidentally removed formatting,  
@@ -35,8 +35,8 @@
 **Acceptance Criteria:**
 - [ ] Each block stores a `content_hash` (SHA-256 of normalized text)
 - [ ] Re-analysis first tries UUID match, then hash match
-- [ ] Position heuristics used when hash matches multiple candidates
-- [ ] Test: Remove content controls → re-analyze → verify 90%+ blocks matched
+- [x] Position heuristics used when hash matches multiple candidates
+- [x] Test: Remove paragraph tags → re-analyze → verify 90%+ blocks matched
 
 ### US1.3: Hybrid Git Integration
 **As a** lawyer saving my work,  
@@ -65,36 +65,34 @@
 
 ## Technical Tasks
 
-### T1.1: Content Control Implementation (3 days)
-**File:** `effilocal/doc/uuid_embedding.py` (new)
+### T1.1: Paragraph Tag UUID Implementation (3 days) ✅
+**File:** `effilocal/doc/uuid_embedding.py`
 
 ```python
-# Core functions needed:
+# Core functions implemented:
 def embed_block_uuids(doc: Document, blocks: List[dict]) -> None:
-    """Insert content controls with UUID tags into document."""
+    """Add UUID tags to paragraph properties (w:pPr/w:tag)."""
     
-def extract_block_uuids(doc: Document) -> Dict[str, str]:
-    """Extract UUID → paragraph mapping from content controls."""
+def extract_block_uuids(doc: Document) -> Dict[str, BlockKey]:
+    """Extract UUID → BlockKey mapping from paragraph tags."""
     
-def remove_all_uuid_controls(doc: Document) -> int:
-    """Remove all effi content controls (for testing/reset)."""
+def remove_all_uuid_tags(doc: Document) -> int:
+    """Remove all effi paragraph tags (for testing/reset)."""
 ```
 
 **Implementation Notes:**
-- Use `python-docx` OxmlElement for content control manipulation
-- Content control structure:
+- Use `python-docx` OxmlElement for paragraph property manipulation
+- Paragraph tag structure (simple, doesn't wrap paragraph):
   ```xml
-  <w:sdt>
-    <w:sdtPr>
+  <w:p>
+    <w:pPr>
       <w:tag w:val="effi:block:uuid-here"/>
-      <w:id w:val="12345"/>
-    </w:sdtPr>
-    <w:sdtContent>
-      <w:p>...</w:p>
-    </w:sdtContent>
-  </w:sdt>
+    </w:pPr>
+    <!-- paragraph content -->
+  </w:p>
   ```
-- Handle edge cases: tables, nested structures
+- Benefits over SDT approach: doesn't interfere with `doc.paragraphs` iteration
+- Handle edge cases: tables, existing tags
 
 ### T1.2: Content Hash Implementation (1 day)
 **File:** `effilocal/doc/content_hash.py` (new)
@@ -205,7 +203,7 @@ def save_document(
 ## Testing Plan
 
 ### Unit Tests
-- `test_uuid_embedding.py`: Content control creation/extraction
+- `test_uuid_embedding.py`: Paragraph tag UUID creation/extraction
 - `test_content_hash.py`: Hash computation and matching
 - `test_git_ops.py`: Commit generation (mock git)
 
@@ -225,7 +223,7 @@ def save_document(
 
 2. **UUID loss recovery:**
    - Create document with UUIDs
-   - Strip content controls (manual or tool)
+   - Strip paragraph tags (manual or tool)
    - Re-analyze
    - Verify hash fallback worked
 
@@ -246,7 +244,7 @@ def save_document(
 
 ## Dependencies
 
-- **python-docx:** Content control XML manipulation
+- **python-docx:** Paragraph properties XML manipulation
 - **gitpython:** Git operations (or subprocess calls)
 
 ---
@@ -255,7 +253,7 @@ def save_document(
 
 | Risk | Likelihood | Impact | Mitigation |
 |------|------------|--------|------------|
-| Content controls break Word compatibility | Low | High | Test with multiple Word versions |
+| Paragraph tags conflict with existing tags | Low | Medium | Check for existing tags before overwriting |
 | Hash collisions on similar clauses | Medium | Medium | Add position weight to matching |
 | Git conflicts with external tools | Low | Low | Document git workflow |
 
@@ -263,6 +261,6 @@ def save_document(
 
 ## Notes
 
-- Content controls are the most robust embedding method, but fall back gracefully
+- Paragraph tags (`w:pPr/w:tag`) are simpler than SDT content controls and don't interfere with `doc.paragraphs`
 - Consider adding a "repair UUIDs" command for recovery scenarios
 - Future: Could use `w14:paraId` as additional matching signal (already available)

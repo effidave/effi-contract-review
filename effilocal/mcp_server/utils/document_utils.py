@@ -5,6 +5,7 @@ This module extends word_document_server.utils.document_utils with:
 1. Run-level text editing (edit_run_text)
 2. Enhanced find_and_replace with whole_word_only support
 3. Extended numbered list insertion
+4. SDT-aware document iteration (for reading documents with content controls)
 
 Override Pattern:
 - Import all upstream functions
@@ -13,9 +14,14 @@ Override Pattern:
 """
 
 import os
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional, Any, Iterator
 from docx import Document
+from docx.document import Document as DocxDocument
+from docx.oxml.table import CT_Tbl
+from docx.oxml.text.paragraph import CT_P
 from docx.oxml.ns import qn
+from docx.table import Table
+from docx.text.paragraph import Paragraph
 
 # Import upstream functions (pass-through where not overridden)
 from word_document_server.utils.document_utils import (
@@ -30,6 +36,55 @@ from word_document_server.utils.document_utils import (
 )
 
 from word_document_server.utils.file_utils import check_file_writeable, ensure_docx_extension
+
+
+# ============================================================================
+# SDT-Aware Iteration Functions
+# ============================================================================
+# These functions handle documents that may contain SDT (Structured Document Tag)
+# content controls. SDTs can wrap paragraphs/tables, hiding them from 
+# doc.paragraphs/doc.tables. These iterators ensure we can read all content.
+
+def iter_document_paragraphs(doc: DocxDocument) -> Iterator[Paragraph]:
+    """Iterate over all paragraphs in a document, including those inside SDT content controls.
+    
+    SDT (Structured Document Tag) elements are content controls that may wrap
+    paragraphs. This function unwraps them to yield the inner paragraphs.
+    This is needed because doc.paragraphs doesn't see paragraphs wrapped in SDT elements.
+    
+    Note: We no longer CREATE SDT wrappers for UUID embedding (we use w:tag instead),
+    but we still need to READ documents that may contain SDTs from other sources.
+    """
+    body = doc.element.body
+    for child in body.iterchildren():
+        if isinstance(child, CT_P):
+            yield Paragraph(child, doc)
+        elif child.tag == qn('w:sdt'):
+            # SDT content control - look inside for paragraphs
+            sdt_content = child.find(qn('w:sdtContent'))
+            if sdt_content is not None:
+                for inner in sdt_content.iterchildren():
+                    if isinstance(inner, CT_P):
+                        yield Paragraph(inner, doc)
+
+
+def iter_document_tables(doc: DocxDocument) -> Iterator[Table]:
+    """Iterate over all tables in a document, including those inside SDT content controls.
+    
+    Note: We no longer CREATE SDT wrappers for UUID embedding (we use w:tag instead),
+    but we still need to READ documents that may contain SDTs from other sources.
+    """
+    body = doc.element.body
+    for child in body.iterchildren():
+        if isinstance(child, CT_Tbl):
+            yield Table(child, doc)
+        elif child.tag == qn('w:sdt'):
+            # SDT content control - look inside for tables
+            sdt_content = child.find(qn('w:sdtContent'))
+            if sdt_content is not None:
+                for inner in sdt_content.iterchildren():
+                    if isinstance(inner, CT_Tbl):
+                        yield Table(inner, doc)
 
 
 # ============================================================================
@@ -444,6 +499,10 @@ __all__ = [
     'insert_line_or_paragraph_near_text',
     'replace_paragraph_block_below_header',
     'replace_block_between_manual_anchors',
+    
+    # SDT-aware iteration (for reading documents with content controls)
+    'iter_document_paragraphs',
+    'iter_document_tables',
     
     # New / overridden functions
     'edit_run_text',

@@ -437,11 +437,9 @@ async function loadAnalysisFromDirectory(analysisDir: string, projectPathOrDocPa
 async function loadAnalysisData(documentPath: string) {
     // Determine analysis directory based on document path
     // Expected: EL_Projects/<project>/drafts/current_drafts/<file>.docx
-    //        -> EL_Projects/<project>/analysis/
+    //        -> EL_Projects/<project>/analysis/<filename_no_ext>/
     
-    const docDir = path.dirname(documentPath);
-    const projectDir = path.dirname(path.dirname(docDir)); // Go up two levels
-    const analysisDir = path.join(projectDir, 'analysis');
+    const analysisDir = getAnalysisDir(documentPath);
 
     if (!fs.existsSync(analysisDir)) {
         webviewPanel?.webview.postMessage({
@@ -466,12 +464,12 @@ async function loadAnalysisData(documentPath: string) {
     try {
         const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
         const index = JSON.parse(fs.readFileSync(indexPath, 'utf-8'));
+        const workspaceRoot = path.join(__dirname, '..', '..');
+        const pythonCmd = getPythonPath(workspaceRoot);
 
         // Load notes from comments using Python script (live from document)
         let notes = {};
         try {
-            const workspaceRoot = path.join(__dirname, '..', '..');
-            const pythonCmd = getPythonPath(workspaceRoot);
             const scriptPath = path.join(__dirname, '..', 'scripts', 'manage_notes.py');
             
             const { stdout } = await execAsync(`cd "${workspaceRoot}" && "${pythonCmd}" "${scriptPath}" "get_notes" "${documentPath}" "${analysisDir}"`);
@@ -485,6 +483,22 @@ async function loadAnalysisData(documentPath: string) {
             }
         } catch (error) {
             console.error('Error executing manage_notes.py:', error);
+        }
+
+        // Load outline data using Python script
+        let outline = [];
+        try {
+            const scriptPath = path.join(__dirname, '..', 'scripts', 'get_outline.py');
+            const { stdout } = await execAsync(`cd "${workspaceRoot}" && "${pythonCmd}" "${scriptPath}" "${analysisDir}"`);
+            const outlineResult = JSON.parse(stdout);
+            if (outlineResult.success) {
+                outline = outlineResult.outline;
+                console.log(`Loaded ${outline.length} outline items`);
+            } else {
+                console.error('Failed to load outline:', outlineResult.error);
+            }
+        } catch (error) {
+            console.error('Error executing get_outline.py:', error);
         }
 
         // Load blocks.jsonl for full text view
@@ -521,6 +535,7 @@ async function loadAnalysisData(documentPath: string) {
                 index,
                 analysisDir,
                 documentPath,
+                outline,
                 blocks,
                 relationships,
                 notes
@@ -829,10 +844,10 @@ async function saveBlocksToDocument(blocks: any[], documentPath: string, webview
         
         const { stdout } = await execAsync(`cd "${workspaceRoot}" && "${pythonCmd}" "${scriptPath}" "${documentPath}" "${tempBlocksPath}"`);
         
-        // Clean up temp file
-        if (fs.existsSync(tempBlocksPath)) {
-            fs.unlinkSync(tempBlocksPath);
-        }
+        // DEBUG: Keep temp file for inspection
+        // if (fs.existsSync(tempBlocksPath)) {
+        //     fs.unlinkSync(tempBlocksPath);
+        // }
         
         const result = JSON.parse(stdout);
         
@@ -847,6 +862,45 @@ async function saveBlocksToDocument(blocks: any[], documentPath: string, webview
             if (currentDocumentPath) {
                 await loadAnalysisData(currentDocumentPath);
             }
+        } else if (result.error && result.error.includes('No embedded UUIDs')) {
+            // Automatically embed UUIDs and retry save
+            const embedResult = await embedUuidsInDocument(documentPath, analysisDir);
+            if (embedResult.success) {
+                vscode.window.showInformationMessage(`Embedded ${embedResult.count} UUIDs. Retrying save...`);
+                // Retry save
+                const { stdout: retryStdout } = await execAsync(`cd "${workspaceRoot}" && "${pythonCmd}" "${scriptPath}" "${documentPath}" "${tempBlocksPath}"`);
+                const retryResult = JSON.parse(retryStdout);
+                
+                // Clean up temp file after retry
+                if (fs.existsSync(tempBlocksPath)) {
+                    fs.unlinkSync(tempBlocksPath);
+                }
+                
+                if (retryResult.success) {
+                    const message = `✓ Saved ${retryResult.block_count} block(s) to document`;
+                    if (webviewPanel) {
+                        webviewPanel.webview.postMessage({ command: 'saveComplete', message });
+                    }
+                    vscode.window.showInformationMessage(message);
+                    
+                    if (currentDocumentPath) {
+                        await loadAnalysisData(currentDocumentPath);
+                    }
+                } else {
+                    const errorMsg = `Save failed after embedding UUIDs: ${retryResult.error}`;
+                    if (webviewPanel) {
+                        webviewPanel.webview.postMessage({ command: 'saveError', message: errorMsg });
+                    }
+                    vscode.window.showErrorMessage(errorMsg);
+                }
+            } else {
+                const errorMsg = `Failed to embed UUIDs: ${embedResult.error}`;
+                if (webviewPanel) {
+                    webviewPanel.webview.postMessage({ command: 'saveError', message: errorMsg });
+                }
+                vscode.window.showErrorMessage(errorMsg);
+            }
+            return; // Already handled
         } else {
             const errorMsg = `Save failed: ${result.error}`;
             if (webviewPanel) {
@@ -860,6 +914,34 @@ async function saveBlocksToDocument(blocks: any[], documentPath: string, webview
             webviewPanel.webview.postMessage({ command: 'saveError', message: errorMsg });
         }
         vscode.window.showErrorMessage(errorMsg);
+    }
+}
+
+/**
+ * Embed UUIDs from blocks.jsonl into the document.
+ * This enables the save flow to identify which paragraphs to update.
+ */
+async function embedUuidsInDocument(documentPath: string, analysisDir: string): Promise<{success: boolean, count?: number, error?: string}> {
+    try {
+        const workspaceRoot = path.join(__dirname, '..', '..');
+        const pythonCmd = getPythonPath(workspaceRoot);
+        const scriptPath = path.join(__dirname, '..', 'scripts', 'embed_uuids.py');
+        const blocksPath = path.join(analysisDir, 'blocks.jsonl');
+        
+        if (!fs.existsSync(blocksPath)) {
+            return { success: false, error: 'blocks.jsonl not found' };
+        }
+        
+        const { stdout } = await execAsync(`cd "${workspaceRoot}" && "${pythonCmd}" "${scriptPath}" "${documentPath}" "${blocksPath}"`);
+        const result = JSON.parse(stdout);
+        
+        if (result.success) {
+            return { success: true, count: result.embedded_count };
+        } else {
+            return { success: false, error: result.error };
+        }
+    } catch (error) {
+        return { success: false, error: String(error) };
     }
 }
 

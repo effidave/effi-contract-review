@@ -15,19 +15,19 @@ Sprint 1 established stable document identity that survives external edits and r
 
 **Location:** `effilocal/doc/uuid_embedding.py`
 
-Block UUIDs are embedded directly into .docx documents using Word's Structured Document Tag (SDT) content controls. This allows the system to track which paragraph is which, even after the document is edited in Microsoft Word.
+Block UUIDs are embedded directly into .docx documents using Word's `w:tag` element within paragraph properties (`w:pPr`). This allows the system to track which paragraph is which, even after the document is edited in Microsoft Word.
 
 **Key Functions:**
 
 ```python
-# Wrap paragraphs in SDT content controls with UUID tags
+# Add UUID tags to paragraph properties
 embed_block_uuids(doc: Document, blocks: List[dict]) -> dict[str, str]
 
 # Extract UUID → BlockKey mapping from document
 extract_block_uuids(doc: Document) -> Dict[str, BlockKey]
 
-# Remove all effi SDTs while preserving content
-remove_all_uuid_controls(doc: Document) -> int
+# Remove all effi paragraph tags while preserving content
+remove_all_uuid_tags(doc: Document) -> int
 
 # Legacy: Extract UUID → paragraph index (paragraphs only)
 extract_block_uuids_legacy(doc: Document) -> Dict[str, int]
@@ -50,26 +50,23 @@ class TableCellKey:
 BlockKey = ParaKey | TableCellKey
 ```
 
-**Content Control Structure:**
+**Paragraph Tag Structure:**
 ```xml
-<w:sdt>
-  <w:sdtPr>
+<w:p>
+  <w:pPr>
     <w:tag w:val="effi:block:uuid-here"/>
-    <w:id w:val="12345"/>
-  </w:sdtPr>
-  <w:sdtContent>
-    <w:p><!-- paragraph content --></w:p>
-  </w:sdtContent>
-</w:sdt>
+  </w:pPr>
+  <!-- paragraph content -->
+</w:p>
 ```
 
 **Key Behaviors:**
 - UUIDs survive Word save/close/reopen cycles
 - UUIDs survive copy/paste within same document
 - Tag format: `effi:block:<uuid>`
+- **Benefits over SDT approach:** Doesn't interfere with `doc.paragraphs` iteration
 - **Supported locations:**
   - Top-level body paragraphs (matched by `para_idx`)
-  - Paragraphs inside SDT content controls
   - Paragraphs inside table cells (matched by `table: {table_id, row, col}`)
 - **Not currently supported:** headers, footers, text boxes
 
@@ -82,7 +79,7 @@ Blocks are matched to document positions using:
 
 **Location:** `effilocal/doc/content_hash.py`
 
-When UUIDs are lost (e.g., content control stripped by Word or another editor), the system falls back to matching blocks by content hash.
+When UUIDs are lost (e.g., paragraph tag stripped by Word or another editor), the system falls back to matching blocks by content hash.
 
 **Key Functions:**
 
@@ -96,7 +93,7 @@ match_blocks_by_hash(old_blocks: List[dict], new_blocks: List[dict],
 ```
 
 **Matching Strategy (in priority order):**
-1. **UUID match** - Extracted from embedded content controls (paragraphs and table cells)
+1. **UUID match** - Extracted from embedded paragraph tags (paragraphs and table cells)
 2. **Hash match** - SHA-256 of normalized text (lowercase, collapsed whitespace)
 3. **Position match** - Proximity heuristics when hash matches multiple candidates
 
@@ -213,7 +210,7 @@ create_checkpoint(docx_path: Path, note: str = "") -> dict
 ```
 effilocal/
 ├── doc/
-│   ├── uuid_embedding.py   # Content control manipulation
+│   ├── uuid_embedding.py   # Paragraph tag UUID manipulation
 │   └── content_hash.py     # Hash-based matching
 ├── util/
 │   └── git_ops.py          # Git commit/history operations
@@ -305,10 +302,10 @@ commit_hash = auto_commit(repo, message, ["contract.docx", "analysis/"])
 
 ## Known Limitations
 
-1. **Nested Content Controls**: Word may strip nested SDTs; use flat structure
+1. **Existing Non-Effi Tags**: If a paragraph already has a `w:tag` with a different purpose, we don't overwrite it
 2. **Hash Collisions**: Very similar clauses may match incorrectly; position heuristics help
 3. **Headers/Footers**: Content in headers and footers is not tracked
-4. **Multi-Paragraph Table Cells**: When a table cell contains multiple paragraphs, they are combined into a single block in `blocks.jsonl`. The UUID content control is wrapped around the first paragraph only.
+4. **Multi-Paragraph Table Cells**: When a table cell contains multiple paragraphs, they are combined into a single block in `blocks.jsonl`. The UUID tag is added to the first paragraph only.
 
 ---
 

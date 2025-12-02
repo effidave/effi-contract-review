@@ -221,6 +221,24 @@ body {
     font-weight: 700;
 }
 
+/* Unnumbered blocks in outline - more subtle styling */
+.outline-item.unnumbered .ordinal {
+    color: var(--vscode-descriptionForeground);
+    font-weight: 400;
+    font-size: 0.9em;
+}
+
+.outline-item.unnumbered .text {
+    color: var(--vscode-descriptionForeground);
+}
+
+/* Table cells in outline */
+.outline-item.table-cell .ordinal {
+    color: var(--vscode-symbolIcon-propertyForeground);
+    font-weight: 400;
+    font-size: 0.85em;
+}
+
 .outline-count {
     margin-top: 12px;
     padding: 8px;
@@ -556,7 +574,95 @@ body {
     min-height: 400px;
 }
 
-/* Editable Blocks */
+/* Block Editor wrapper */
+.block-editor {
+    font-family: 'Aptos', 'Segoe UI', var(--vscode-editor-font-family);
+    font-size: 11pt;
+    line-height: 1.6;
+}
+
+.editor-content {
+    /* Match view mode block-list styling */
+}
+
+/* Editor Block Wrapper - matches View Mode .block-wrapper */
+.editor-block-wrapper {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    margin-bottom: 8px;
+    padding: 12px;
+    background-color: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    transition: border-color 0.1s ease;
+}
+
+.editor-block-wrapper:hover {
+    border-color: var(--vscode-focusBorder);
+}
+
+.editor-block-wrapper:focus-within {
+    border-color: #0078d4;
+    box-shadow: 0 0 0 1px #0078d4;
+}
+
+.editor-block-wrapper.dirty {
+    background-color: #fffde7;
+}
+
+/* Editor Ordinal - matches View Mode .block-ordinal */
+.editor-ordinal {
+    min-width: 80px;
+    flex-shrink: 0;
+    font-weight: 600;
+    color: #000000;
+    user-select: none;
+}
+
+/* Editor Block Text - matches View Mode .block-text-inline */
+.editor-block-text {
+    flex: 1;
+    min-height: 1.5em;
+    color: #000000;
+    line-height: 1.5;
+    outline: none;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.editor-block-text:focus {
+    background-color: #f8f9fa;
+}
+
+.editor-block-text:empty::before {
+    content: 'Enter text...';
+    color: #999;
+    font-style: italic;
+}
+
+/* Heading styles in editor */
+.editor-heading {
+    font-weight: 700;
+}
+
+.editor-heading-1 {
+    font-size: 1.4em;
+}
+
+.editor-heading-2 {
+    font-size: 1.2em;
+}
+
+.editor-heading-3 {
+    font-size: 1.1em;
+}
+
+.editor-heading-4 {
+    font-size: 1em;
+}
+
+/* Editable Blocks - DEPRECATED, use .editor-block-wrapper */
 .editor-block {
     display: flex;
     gap: 12px;

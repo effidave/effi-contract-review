@@ -107,6 +107,23 @@ Note: effilocal selectively implements layers - only overrides/extends what's ne
 
 ---
 
+## Development Environment
+
+### Node.js Location (for extension compilation)
+Node.js is installed at: `C:\Users\DavidSant\node-v25.2.1-win-x64`
+
+To compile the VS Code extension:
+```powershell
+$env:PATH = 'C:\Users\DavidSant\node-v25.2.1-win-x64;' + $env:PATH
+cd extension
+npm run compile
+```
+
+### Python Virtual Environment
+Python venv is at: `.venv\Scripts\python.exe`
+
+---
+
 ## Critical Developer Workflows
 
 ### Run the Server
@@ -270,15 +287,16 @@ Tools for inserting content relative to specific clause numbers in contracts:
 Block UUIDs are embedded directly into .docx documents for persistent tracking:
 
 **UUID Embedding** (`effilocal/doc/uuid_embedding.py`):
-- **`embed_block_uuids(doc, blocks)`**: Wraps paragraphs in SDT content controls with UUID tags
-- **`extract_block_uuids(doc)`**: Extracts UUID → paragraph index mapping from document
-- **`remove_all_uuid_controls(doc)`**: Strips effi SDTs while preserving content
-- Tag format: `<w:tag w:val="effi:block:<uuid>"/>`
+- **`embed_block_uuids(doc, blocks)`**: Adds UUID tags to paragraph properties (`w:pPr/w:tag`)
+- **`extract_block_uuids(doc)`**: Extracts UUID → BlockKey mapping from document
+- **`remove_all_uuid_tags(doc)`**: Removes effi tags while preserving paragraphs
+- Tag format: `<w:p><w:pPr><w:tag w:val="effi:block:<uuid>"/></w:pPr>...</w:p>`
 - UUIDs survive Word save/close/reopen cycles
+- Uses standard WordprocessingML elements that don't interfere with `doc.paragraphs`
 
 **Content Hash Fallback** (`effilocal/doc/content_hash.py`):
 - **`match_blocks_by_hash(old_blocks, new_blocks)`**: Three-phase matching:
-  1. UUID match (from embedded content controls)
+  1. UUID match (from embedded paragraph tags)
   2. Hash match (SHA-256 of normalized text)
   3. Position match (proximity heuristics)
 - Returns `MatchResult` with matched pairs and unmatched lists
@@ -356,7 +374,7 @@ Note: After migration, `word_document_server` is pristine upstream. All customiz
 - Framework: pytest 9.0.1
 - Run: `cd tests; pytest -v`
 - Coverage:
-  - `test_uuid_embedding.py` - UUID embedding/extraction via content controls
+  - `test_uuid_embedding.py` - UUID embedding/extraction via paragraph tags
   - `test_content_hash.py` - Block matching by hash with fallback strategies
   - `test_git_ops.py` - Git commit, history, and checkpoint operations
   - `test_search_and_replace.py` - find_and_replace_text with whole_word_only, split-run detection

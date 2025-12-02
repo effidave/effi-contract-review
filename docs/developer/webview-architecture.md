@@ -412,7 +412,7 @@ See: [sprint-2-wysiwyg-editor.md](./sprint-2-wysiwyg-editor.md)
 **Problem:** Document identity needed to survive external edits and re-analysis.
 
 **Changes Made:**
-1. **UUID embedding** - Content controls store block IDs in .docx
+1. **UUID embedding** - Paragraph tags (`w:pPr/w:tag`) store block IDs in .docx
 2. **Hash fallback** - SHA-256 matching when UUIDs lost
 3. **Git integration** - Auto-commit on save with meaningful messages
 4. **Re-analysis stability** - UUIDs preserved when re-parsing document

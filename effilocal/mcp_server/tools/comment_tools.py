@@ -22,6 +22,7 @@ from docx.opc.constants import RELATIONSHIP_TYPE as RT
 from docx.parts.comments import CommentsPart
 
 from word_document_server.utils.file_utils import ensure_docx_extension
+from effilocal.mcp_server.utils.document_utils import iter_document_paragraphs
 
 # Import from effilocal core.comments (which has status support)
 from effilocal.mcp_server.core.comments import (
@@ -249,13 +250,15 @@ async def add_comment_for_paragraph(
 
     try:
         doc = Document(filename)
-        if paragraph_index < 0 or paragraph_index >= len(doc.paragraphs):
+        # Use SDT-aware iterator to get all paragraphs including those in content controls
+        all_paragraphs = list(iter_document_paragraphs(doc))
+        if paragraph_index < 0 or paragraph_index >= len(all_paragraphs):
             return json.dumps({
                 "success": False,
-                "error": f"Paragraph index {paragraph_index} is out of range (0..{len(doc.paragraphs)-1})."
+                "error": f"Paragraph index {paragraph_index} is out of range (0..{len(all_paragraphs)-1})."
             }, indent=2)
 
-        p = doc.paragraphs[paragraph_index]
+        p = all_paragraphs[paragraph_index]
         # If paragraph has no runs, create an empty run so we have an anchor
         if not p.runs:
             r = p.add_run("")

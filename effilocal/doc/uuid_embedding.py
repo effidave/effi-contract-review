@@ -1,15 +1,16 @@
-"""UUID embedding via Word content controls (SDT elements).
+"""UUID embedding via Word paragraph tags (w:tag elements).
 
 This module provides functions to embed and extract UUIDs from Word documents
-using Structured Document Tags (SDTs / content controls). UUIDs are stored as
+using the w:tag element within paragraph properties (w:pPr). UUIDs are stored as
 tag values in the format "effi:block:<uuid>".
 
-Content controls survive save/close/reopen cycles in Word and can persist
-through copy/paste operations within the same document.
+This approach uses standard WordprocessingML elements that:
+- Survive save/close/reopen cycles in Word
+- Don't interfere with python-docx's doc.paragraphs iteration
+- Are simpler and less intrusive than SDT content controls
 
 Supports embedding UUIDs in:
 - Top-level body paragraphs (matched by para_idx)
-- Paragraphs inside existing SDT content controls
 - Paragraphs inside table cells (matched by table position: table_idx, row, col)
 """
 
@@ -20,6 +21,7 @@ from typing import TYPE_CHECKING, Iterator, Union
 from uuid import uuid4
 
 from docx import Document
+from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from lxml import etree
 
@@ -30,16 +32,18 @@ __all__ = [
     "embed_block_uuids",
     "extract_block_uuids",
     "extract_block_uuids_legacy",
-    "remove_all_uuid_controls",
+    "remove_all_uuid_tags",
+    "remove_all_uuid_controls",  # Backward compatibility alias
     "get_paragraph_uuid",
     "set_paragraph_uuid",
+    "assign_block_ids",
     "EFFI_TAG_PREFIX",
     "BlockKey",
     "ParaKey",
     "TableCellKey",
 ]
 
-# Prefix for effi block tags in content controls
+# Prefix for effi block tags in paragraph properties
 EFFI_TAG_PREFIX = "effi:block:"
 
 # Word XML namespaces
@@ -65,79 +69,55 @@ class TableCellKey:
 BlockKey = Union[ParaKey, TableCellKey]
 
 
-def _make_sdt_element(uuid_value: str, inner_xml: etree._Element) -> etree._Element:
-    """Create an SDT (content control) element wrapping the given content.
-
-    The SDT structure is:
-    <w:sdt>
-        <w:sdtPr>
-            <w:tag w:val="effi:block:uuid-here"/>
-            <w:id w:val="123456"/>
-        </w:sdtPr>
-        <w:sdtContent>
-            <!-- paragraph or other content -->
-        </w:sdtContent>
-    </w:sdt>
+def _get_or_create_pPr(paragraph_element: etree._Element) -> etree._Element:
+    """Get or create paragraph properties element.
 
     Args:
-        uuid_value: The UUID to embed as the tag value
-        inner_xml: The XML element to wrap (typically a paragraph)
+        paragraph_element: A w:p element
 
     Returns:
-        The constructed SDT element
+        The w:pPr element (created if it didn't exist)
     """
-    # Create SDT structure
-    sdt = etree.Element(qn("w:sdt"))
-
-    # SDT properties
-    sdt_pr = etree.SubElement(sdt, qn("w:sdtPr"))
-
-    # Tag with UUID
-    tag = etree.SubElement(sdt_pr, qn("w:tag"))
-    tag.set(qn("w:val"), f"{EFFI_TAG_PREFIX}{uuid_value}")
-
-    # Unique ID (use hash of UUID for consistency)
-    sdt_id = etree.SubElement(sdt_pr, qn("w:id"))
-    sdt_id.set(qn("w:val"), str(abs(hash(uuid_value)) % 2147483647))
-
-    # SDT content wrapper
-    sdt_content = etree.SubElement(sdt, qn("w:sdtContent"))
-
-    # Move the inner content into the SDT
-    sdt_content.append(inner_xml)
-
-    return sdt
+    pPr = paragraph_element.find(qn("w:pPr"))
+    if pPr is None:
+        pPr = OxmlElement("w:pPr")
+        # Insert pPr as first child
+        paragraph_element.insert(0, pPr)
+    return pPr
 
 
-def _extract_tag_value(sdt_element: etree._Element) -> str | None:
-    """Extract the tag value from an SDT element.
+def _get_tag_element(paragraph_element: etree._Element) -> etree._Element | None:
+    """Get the w:tag element from a paragraph if it exists.
 
     Args:
-        sdt_element: An SDT element
+        paragraph_element: A w:p element
 
     Returns:
-        The tag value if it's an effi block tag, else None
+        The w:tag element or None
     """
-    sdt_pr = sdt_element.find(qn("w:sdtPr"))
-    if sdt_pr is None:
+    pPr = paragraph_element.find(qn("w:pPr"))
+    if pPr is None:
         return None
+    return pPr.find(qn("w:tag"))
 
-    tag = sdt_pr.find(qn("w:tag"))
-    if tag is None:
+
+def _extract_uuid_from_tag(tag_element: etree._Element | None) -> str | None:
+    """Extract UUID from a w:tag element if it has our prefix.
+
+    Args:
+        tag_element: A w:tag element or None
+
+    Returns:
+        The UUID string if the tag has our prefix, else None
+    """
+    if tag_element is None:
         return None
-
-    val = tag.get(qn("w:val"), "")
+    
+    val = tag_element.get(qn("w:val"), "")
     if val.startswith(EFFI_TAG_PREFIX):
-        return val[len(EFFI_TAG_PREFIX) :]
-
+        return val[len(EFFI_TAG_PREFIX):]
+    
     return None
-
-
-def _iter_sdt_elements(document: Document) -> Iterator[etree._Element]:
-    """Iterate over all SDT elements in the document body."""
-    body = document.element.body
-    for sdt in body.iter(qn("w:sdt")):
-        yield sdt
 
 
 def _iter_paragraphs_with_index(document: Document) -> Iterator[tuple[int, etree._Element]]:
@@ -152,13 +132,6 @@ def _iter_paragraphs_with_index(document: Document) -> Iterator[tuple[int, etree
         if child.tag == qn("w:p"):
             yield idx, child
             idx += 1
-        elif child.tag == qn("w:sdt"):
-            # Check if SDT contains a paragraph
-            sdt_content = child.find(qn("w:sdtContent"))
-            if sdt_content is not None:
-                for p in sdt_content.findall(qn("w:p")):
-                    yield idx, p
-                    idx += 1
 
 
 def _iter_all_blocks(document: Document) -> Iterator[tuple[BlockKey, etree._Element]]:
@@ -169,9 +142,8 @@ def _iter_all_blocks(document: Document) -> Iterator[tuple[BlockKey, etree._Elem
     - TableCellKey(table_idx, row, col) for paragraphs inside table cells
     
     This traverses:
-    - Top-level body paragraphs (including those inside SDT content controls)
+    - Top-level body paragraphs
     - Tables → rows → cells → paragraphs
-    - SDT content controls containing tables or paragraphs
     
     Note: Table cells may contain multiple paragraphs. Only the FIRST paragraph
     in each cell is yielded with the cell's key, as blocks.jsonl captures
@@ -191,18 +163,6 @@ def _iter_all_blocks(document: Document) -> Iterator[tuple[BlockKey, etree._Elem
             # Table - iterate rows and cells
             yield from _iter_table_cells(child, table_idx)
             table_idx += 1
-            
-        elif child.tag == qn("w:sdt"):
-            # SDT content control - may contain paragraphs or tables
-            sdt_content = child.find(qn("w:sdtContent"))
-            if sdt_content is not None:
-                for sdt_child in sdt_content:
-                    if sdt_child.tag == qn("w:p"):
-                        yield ParaKey(para_idx), sdt_child
-                        para_idx += 1
-                    elif sdt_child.tag == qn("w:tbl"):
-                        yield from _iter_table_cells(sdt_child, table_idx)
-                        table_idx += 1
 
 
 def _iter_table_cells(
@@ -226,15 +186,6 @@ def _iter_table_cells(
             first_para = cell.find(qn("w:p"))
             if first_para is not None:
                 yield TableCellKey(table_idx, row_idx, col_idx), first_para
-            else:
-                # Check for nested SDT containing paragraph
-                for sdt in cell.findall(qn("w:sdt")):
-                    sdt_content = sdt.find(qn("w:sdtContent"))
-                    if sdt_content is not None:
-                        first_para = sdt_content.find(qn("w:p"))
-                        if first_para is not None:
-                            yield TableCellKey(table_idx, row_idx, col_idx), first_para
-                            break
 
 
 def _block_to_key(block: dict) -> BlockKey | None:
@@ -275,25 +226,16 @@ def _block_to_key(block: dict) -> BlockKey | None:
 
 
 def get_paragraph_uuid(paragraph_element: etree._Element) -> str | None:
-    """Get the UUID from a paragraph's parent SDT if present.
+    """Get the UUID from a paragraph's w:tag element if present.
 
     Args:
         paragraph_element: A w:p element
 
     Returns:
-        The UUID string if the paragraph is wrapped in an effi SDT, else None
+        The UUID string if the paragraph has an effi tag, else None
     """
-    parent = paragraph_element.getparent()
-    if parent is None:
-        return None
-
-    # Check if parent is sdtContent
-    if parent.tag == qn("w:sdtContent"):
-        sdt = parent.getparent()
-        if sdt is not None and sdt.tag == qn("w:sdt"):
-            return _extract_tag_value(sdt)
-
-    return None
+    tag = _get_tag_element(paragraph_element)
+    return _extract_uuid_from_tag(tag)
 
 
 def set_paragraph_uuid(
@@ -301,49 +243,41 @@ def set_paragraph_uuid(
     paragraph_element: etree._Element,
     uuid_value: str,
 ) -> bool:
-    """Wrap a paragraph in an SDT with the given UUID.
+    """Set a UUID on a paragraph using the w:tag element.
 
-    If the paragraph is already wrapped in an effi SDT, updates the tag value.
+    If the paragraph already has an effi tag, updates the value.
+    Otherwise, creates a new w:tag element.
 
     Args:
-        document: The Document object (for context)
-        paragraph_element: The w:p element to wrap
+        document: The Document object (for context, not currently used)
+        paragraph_element: The w:p element to tag
         uuid_value: The UUID to embed
 
     Returns:
-        True if successful, False if the paragraph couldn't be wrapped
+        True if successful
     """
-    parent = paragraph_element.getparent()
-    if parent is None:
-        return False
-
-    # Check if already wrapped in an effi SDT
-    if parent.tag == qn("w:sdtContent"):
-        sdt = parent.getparent()
-        if sdt is not None and sdt.tag == qn("w:sdt"):
-            existing_uuid = _extract_tag_value(sdt)
-            if existing_uuid is not None:
-                # Update existing tag
-                sdt_pr = sdt.find(qn("w:sdtPr"))
-                if sdt_pr is not None:
-                    tag = sdt_pr.find(qn("w:tag"))
-                    if tag is not None:
-                        tag.set(qn("w:val"), f"{EFFI_TAG_PREFIX}{uuid_value}")
-                        return True
-        return False
-
-    # Create new SDT wrapper
-    index = list(parent).index(paragraph_element)
-
-    # Remove paragraph from parent
-    parent.remove(paragraph_element)
-
-    # Create SDT wrapping the paragraph
-    sdt = _make_sdt_element(uuid_value, paragraph_element)
-
-    # Insert SDT at original position
-    parent.insert(index, sdt)
-
+    pPr = _get_or_create_pPr(paragraph_element)
+    
+    # Check for existing tag
+    existing_tag = pPr.find(qn("w:tag"))
+    
+    if existing_tag is not None:
+        # Check if it's our tag
+        existing_val = existing_tag.get(qn("w:val"), "")
+        if existing_val.startswith(EFFI_TAG_PREFIX):
+            # Update existing effi tag
+            existing_tag.set(qn("w:val"), f"{EFFI_TAG_PREFIX}{uuid_value}")
+            return True
+        else:
+            # There's a non-effi tag - don't overwrite it
+            # Could potentially use a different mechanism here
+            return False
+    
+    # Create new tag
+    tag = OxmlElement("w:tag")
+    tag.set(qn("w:val"), f"{EFFI_TAG_PREFIX}{uuid_value}")
+    pPr.append(tag)
+    
     return True
 
 
@@ -480,16 +414,16 @@ def extract_block_uuids_legacy(doc_or_path: Document | str | "Path") -> dict[str
     return uuid_to_idx
 
 
-def remove_all_uuid_controls(doc_or_path: Document | str | "Path") -> int:
-    """Remove all effi content controls from the document.
+def remove_all_uuid_tags(doc_or_path: Document | str | "Path") -> int:
+    """Remove all effi UUID tags from the document.
 
-    The content inside the controls is preserved; only the SDT wrapper is removed.
+    Only removes w:tag elements that have the effi:block: prefix.
 
     Args:
         doc_or_path: Document object or path to .docx file
 
     Returns:
-        Number of controls removed
+        Number of tags removed
     """
     from pathlib import Path
 
@@ -501,37 +435,152 @@ def remove_all_uuid_controls(doc_or_path: Document | str | "Path") -> int:
         save_path = None
 
     removed = 0
-    body = document.element.body
-
-    # Find all effi SDTs
-    effi_sdts = []
-    for sdt in list(body.iter(qn("w:sdt"))):
-        if _extract_tag_value(sdt) is not None:
-            effi_sdts.append(sdt)
-
-    for sdt in effi_sdts:
-        parent = sdt.getparent()
-        if parent is None:
-            continue
-
-        # Get the content inside the SDT
-        sdt_content = sdt.find(qn("w:sdtContent"))
-        if sdt_content is None:
-            continue
-
-        # Find position of SDT in parent
-        index = list(parent).index(sdt)
-
-        # Move all children of sdtContent to parent
-        for child in list(sdt_content):
-            parent.insert(index, child)
-            index += 1
-
-        # Remove the now-empty SDT
-        parent.remove(sdt)
-        removed += 1
+    
+    # Iterate all paragraphs (including in tables)
+    for key, para_elem in _iter_all_blocks(document):
+        tag = _get_tag_element(para_elem)
+        if tag is not None:
+            val = tag.get(qn("w:val"), "")
+            if val.startswith(EFFI_TAG_PREFIX):
+                # Remove the tag element
+                pPr = para_elem.find(qn("w:pPr"))
+                if pPr is not None:
+                    pPr.remove(tag)
+                    removed += 1
 
     if save_path is not None:
         document.save(str(save_path))
 
     return removed
+
+
+# Keep old name as alias for backward compatibility
+remove_all_uuid_controls = remove_all_uuid_tags
+
+
+def assign_block_ids(
+    blocks: list[dict],
+    embedded_uuids: dict[str, BlockKey] | None = None,
+    old_blocks: list[dict] | None = None,
+    position_threshold: int = 5,
+) -> dict[str, str]:
+    """Assign IDs to blocks that have id=None.
+    
+    This is the single point of ID assignment for blocks. IDs are assigned
+    using the following priority:
+    
+    1. Embedded UUID: If the block's position matches an embedded UUID from
+       a content control in the document, use that UUID.
+    2. Hash match: If old_blocks is provided, match by content_hash to preserve
+       IDs for blocks with identical content.
+    3. Position match: For unmatched blocks, match to nearby old blocks by
+       position (within position_threshold paragraphs).
+    4. Generate new: For truly new blocks, generate a fresh UUID.
+    
+    Args:
+        blocks: List of block dicts. Blocks with id=None will be assigned IDs.
+        embedded_uuids: Mapping of UUID -> BlockKey from extract_block_uuids().
+            If provided, blocks matching these positions get the embedded UUID.
+        old_blocks: Previous blocks.jsonl content for hash-based matching.
+            Used as fallback for blocks without embedded UUIDs.
+        position_threshold: Maximum distance (in paragraph indices) for position
+            matching. Default is 5.
+    
+    Returns:
+        Stats dict with counts: {"from_embedded": N, "from_hash": N, 
+                                  "from_position": N, "generated": N}
+    
+    Mutates blocks in place to set the "id" field.
+    """
+    stats = {"from_embedded": 0, "from_hash": 0, "from_position": 0, "generated": 0}
+    
+    # Build reverse mapping: BlockKey -> UUID from embedded
+    key_to_uuid: dict[BlockKey, str] = {}
+    if embedded_uuids:
+        for uuid_val, key in embedded_uuids.items():
+            key_to_uuid[key] = uuid_val
+    
+    # Build hash -> ID mapping from old blocks for fallback matching
+    hash_to_old_id: dict[str, str] = {}
+    # Build position -> old block mapping for position-based fallback
+    old_blocks_by_position: dict[int, dict] = {}
+    if old_blocks:
+        for old_block in old_blocks:
+            old_id = old_block.get("id")
+            old_hash = old_block.get("content_hash")
+            if old_id and old_hash and old_hash not in hash_to_old_id:
+                hash_to_old_id[old_hash] = old_id
+            # Index by para_idx for position matching
+            para_idx = old_block.get("para_idx")
+            if para_idx is not None and old_id:
+                old_blocks_by_position[para_idx] = old_block
+    
+    # Track which old IDs have been used (to avoid duplicates)
+    used_ids: set[str] = set()
+    
+    # First pass: assign embedded UUIDs and hash matches
+    unmatched_blocks: list[dict] = []
+    for block in blocks:
+        # Skip blocks that already have an ID
+        if block.get("id") is not None:
+            continue
+        
+        # Priority 1: Check embedded UUIDs
+        block_key = _block_to_key(block)
+        if block_key and block_key in key_to_uuid:
+            block["id"] = key_to_uuid[block_key]
+            used_ids.add(block["id"])
+            stats["from_embedded"] += 1
+            continue
+        
+        # Priority 2: Check hash match with old blocks
+        content_hash = block.get("content_hash")
+        if content_hash and content_hash in hash_to_old_id:
+            old_id = hash_to_old_id[content_hash]
+            if old_id not in used_ids:
+                block["id"] = old_id
+                used_ids.add(old_id)
+                stats["from_hash"] += 1
+                continue
+        
+        # Couldn't match yet - add to unmatched for position matching
+        unmatched_blocks.append(block)
+    
+    # Second pass: position-based matching for remaining unmatched blocks
+    for block in unmatched_blocks:
+        if block.get("id") is not None:
+            continue  # Already assigned in first pass
+        
+        para_idx = block.get("para_idx")
+        if para_idx is not None and old_blocks_by_position:
+            # Look for nearby old blocks within threshold
+            best_match = None
+            best_distance = position_threshold + 1
+            
+            for offset in range(position_threshold + 1):
+                for check_idx in [para_idx + offset, para_idx - offset]:
+                    if check_idx in old_blocks_by_position:
+                        old_block = old_blocks_by_position[check_idx]
+                        old_id = old_block.get("id")
+                        # Only match if same type and ID not already used
+                        if (old_id and 
+                            old_id not in used_ids and
+                            old_block.get("type") == block.get("type")):
+                            distance = abs(check_idx - para_idx)
+                            if distance < best_distance:
+                                best_match = old_block
+                                best_distance = distance
+            
+            if best_match:
+                block["id"] = best_match["id"]
+                used_ids.add(block["id"])
+                stats["from_position"] += 1
+                continue
+        
+        # Priority 4: Generate new UUID
+        new_id = str(uuid4())
+        block["id"] = new_id
+        used_ids.add(new_id)
+        stats["generated"] += 1
+    
+    return stats

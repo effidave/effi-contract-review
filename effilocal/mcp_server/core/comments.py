@@ -19,6 +19,8 @@ from docx.document import Document as DocumentType
 from docx.text.paragraph import Paragraph
 from docx.oxml.ns import qn
 
+from effilocal.mcp_server.utils.document_utils import iter_document_paragraphs
+
 # Import upstream functions that we don't override (pass-through)
 from word_document_server.core.comments import (
     extract_comments_from_paragraphs,
@@ -74,7 +76,8 @@ def extract_all_comments(doc: DocumentType) -> List[Dict[str, Any]]:
         
         # Scan paragraphs to map comments to locations
         # This populates 'paragraph_index' for comments found in the body
-        for i, p in enumerate(doc.paragraphs):
+        # Use iter_document_paragraphs to include SDT-wrapped paragraphs
+        for i, p in enumerate(iter_document_paragraphs(doc)):
             p_element = p._element
             # Find comment references
             refs = p_element.xpath('.//w:commentReference')

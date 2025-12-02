@@ -74,7 +74,7 @@ def build_paragraph_block(
 
     if as_dataclass:
         block_obj = ParagraphBlock(
-            id=str(uuid4()),
+            id=None,  # ID assigned later by assign_block_ids()
             type=block_type,
             content_hash=hash_provider(text),
             text=text,
@@ -90,7 +90,7 @@ def build_paragraph_block(
         return block_obj, new_section_id
 
     block: dict[str, Any] = {
-        "id": str(uuid4()),
+        "id": None,  # ID assigned later by assign_block_ids()
         "type": block_type,
         "content_hash": hash_provider(text),
         "text": text,

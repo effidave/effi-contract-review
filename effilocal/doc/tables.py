@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 from typing import Any, Callable
-from uuid import uuid4
 
 from docx.table import Table
 
@@ -40,13 +39,13 @@ def build_table_rows(
                 else None
             )
             block = {
-                "id": str(uuid4()),
+                "id": None,  # ID assigned later by assign_block_ids()
                 "type": "table_cell",
                 "content_hash": hash_provider(text),
                 "text": text,
                 "style": style_name or "",
                 "level": None,
-                "section_id": section_id or str(uuid4()),
+                "section_id": section_id,  # None if not provided; caller handles
                 "list": None,
                 "table": {
                     "table_id": table_id,

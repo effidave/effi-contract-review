@@ -101,7 +101,7 @@ See: [SPRINT_07_PROJECT_UX.md](./SPRINT_07_PROJECT_UX.md)
 ## Key Technical Decisions
 
 ### 1. UUID Embedding Strategy
-- **Primary:** Content controls (`<w:sdt>`) with UUID in `<w:tag>`
+- **Primary:** Paragraph tags (`<w:pPr>/<w:tag>`) with UUID in `w:val`
 - **Fallback:** SHA-256 content hash for matching after external edits
 - **Recovery:** Position + neighbor heuristics when hash fails
 
@@ -147,7 +147,7 @@ clauses:
 ## Dependencies & Risks
 
 ### Technical Dependencies
-- **python-docx:** Content control manipulation (may need XML-level access)
+- **python-docx:** Paragraph property manipulation (XML-level access for w:tag)
 - **VS Code Chat API:** For triggering Copilot from webview
 - **ContentEditable:** Browser quirks with rich text editing
 

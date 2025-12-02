@@ -32,7 +32,7 @@
 
 
 
-* **Persistent UUID-based identities embedded in the `.docx` using content controls (or comments/bookmarks, as configured)**
+* **Persistent UUID-based identities embedded in the `.docx` using paragraph tags (`w:pPr/w:tag`)**
 
 
 
@@ -86,7 +86,7 @@
 
 
 
-  * **`sdt_carrier`: where block UUIDs are written (`content-controls` | `comments` | `bookmarks`)**
+  * **`uuid_carrier`: where block UUIDs are written (`paragraph-tags` | `comments` | `bookmarks`)**
 
 
 
@@ -106,11 +106,11 @@
 
 
 
-* **Each block gets a UUID (`uuid4`) and is rendered with that UUID persisted in Word (preferred: content control / SDT with `<w:tag w:val="<uuid>">`).**
+* **Each block gets a UUID (`uuid4`) and is rendered with that UUID persisted in Word using paragraph properties: `<w:p><w:pPr><w:tag w:val="effi:block:<uuid>"/></w:pPr>...</w:p>`.**
 
 
 
-* **Range tags use paired point markers (start/end), each an inline zero-width SDT whose tag encodes a marker UUID (e.g., `<w:tag w:val="marker:<uuid>">`). Overlaps are trivial because markers are points, not enclosing ranges.**
+* **Range tags use paired point markers (start/end) for arbitrary spans. Block UUIDs stored in paragraph tags don't interfere with `doc.paragraphs` iteration.**
 
 
 
@@ -135,7 +135,7 @@
 
 
 
-4. **Render new `.docx` (write block UUID SDTs; insert/update range markers).**
+4. **Render new `.docx` (write block UUID paragraph tags; insert/update range markers).**
 
 
 
@@ -215,7 +215,7 @@
 
 **In summary:**  
 
-**Effi-Local converts `.docx` into a durable, UUID-anchored JSON corpus. Block identities live inside Word via content controls; arbitrary, overlapping spans use paired start/end markers. The LLM reasons on JSON, proposes structured edit/tag plans, and the system re-applies them deterministically with reconciliation and versioning—ready for future MCP hosting but fully operable today via Responses API tool-calling.**
+**Effi-Local converts `.docx` into a durable, UUID-anchored JSON corpus. Block identities are embedded in Word paragraphs via `w:tag` elements; arbitrary, overlapping spans use paired start/end markers. The LLM reasons on JSON, proposes structured edit/tag plans, and the system re-applies them deterministically with reconciliation and versioning—ready for future MCP hosting but fully operable today via Responses API tool-calling.**
 
 
 

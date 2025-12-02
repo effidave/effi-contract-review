@@ -111,12 +111,31 @@ def _create_pipeline(
     )
 
 
+
+
 def _iter_document_elements(document: DocxDocument) -> Iterator[Paragraph | Table]:
+    """Iterate over document elements, including those inside SDT content controls.
+    
+    SDT (Structured Document Tag) elements are content controls that may wrap
+    paragraphs and tables. This function unwraps them to yield the inner content.
+    """
+    from docx.oxml.ns import qn
+    
     body = document.element.body
     for child in body.iterchildren():
         if isinstance(child, CT_P):
             yield Paragraph(child, document)
         elif isinstance(child, CT_Tbl):
             yield Table(child, document)
+        elif child.tag == qn('w:sdt'):
+            # SDT content control - look inside for paragraphs/tables
+            sdt_content = child.find(qn('w:sdtContent'))
+            if sdt_content is not None:
+                for inner in sdt_content.iterchildren():
+                    if isinstance(inner, CT_P):
+                        yield Paragraph(inner, document)
+                    elif isinstance(inner, CT_Tbl):
+                        yield Table(inner, document)
+
 
 

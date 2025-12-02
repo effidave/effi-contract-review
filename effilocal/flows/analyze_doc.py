@@ -23,11 +23,10 @@ from effilocal.doc import (
     relationships,
     sections as section_builder,
 )
-from effilocal.doc.content_hash import match_blocks_by_hash
 from effilocal.doc.indexer import build_index
 from effilocal.doc.manifest import build_manifest
 from effilocal.doc.styles import analyze_styles
-from effilocal.doc.uuid_embedding import extract_block_uuids
+from effilocal.doc.uuid_embedding import extract_block_uuids, embed_block_uuids, assign_block_ids
 from effilocal.util.hash import sha256_file
 from effilocal.util.io import write_jsonl
 from effilocal.mcp_server.core.comments import extract_all_comments
@@ -113,36 +112,26 @@ def analyze(
 
     blocks = list(direct_docx.iter_blocks(docx_path))
     attachments = _collect_attachments(blocks)
-    hierarchy.infer_block_hierarchy(blocks)
     if not blocks:
         LOGGER.warning("No textual blocks detected in document: path=%s", docx_path)
 
-    # Match blocks to previous analysis and preserve UUIDs
-    match_result = None
-    if preserve_uuids and old_blocks:
-        match_result = match_blocks_by_hash(
-            old_blocks,
-            blocks,
-            embedded_uuids=embedded_uuids,
-        )
-        
-        # Build mapping of new_id -> old_id for matched blocks
-        id_mapping = {m.new_id: m.old_id for m in match_result.matches}
-        
-        # Update block IDs to preserve old UUIDs
-        for block in blocks:
-            new_id = block.get("id")
-            if new_id in id_mapping:
-                block["id"] = id_mapping[new_id]
-        
-        LOGGER.info(
-            "Block matching: uuid=%d, hash=%d, position=%d, new=%d, deleted=%d",
-            match_result.matched_by_uuid,
-            match_result.matched_by_hash,
-            match_result.matched_by_position,
-            len(match_result.unmatched_new),
-            len(match_result.unmatched_old),
-        )
+    # Assign IDs to blocks (they start with id=None)
+    # Priority: embedded UUIDs > hash match with old blocks > position match > generate new
+    id_stats = assign_block_ids(
+        blocks,
+        embedded_uuids=embedded_uuids if preserve_uuids else None,
+        old_blocks=old_blocks if preserve_uuids else None,
+    )
+    LOGGER.info(
+        "Block IDs assigned: from_embedded=%d, from_hash=%d, from_position=%d, generated=%d",
+        id_stats["from_embedded"],
+        id_stats["from_hash"],
+        id_stats.get("from_position", 0),
+        id_stats["generated"],
+    )
+
+    # Infer hierarchy AFTER ID assignment so parent/child references use final IDs
+    hierarchy.infer_block_hierarchy(blocks)
 
     sections_payload = section_builder.assign_sections(blocks, doc_id)
     styles_payload = analyze_styles(blocks)
@@ -220,27 +209,38 @@ def analyze(
     _write_json(manifest_path, manifest_payload)
     artifacts["manifest.json"] = manifest_path
 
-    # Emit analysis_delta.json if we did UUID matching
-    if match_result is not None:
-        # Find modified blocks (matched but content changed)
+    # Emit analysis_delta.json tracking what changed
+    if preserve_uuids and old_blocks:
+        # Find new blocks (generated IDs, not matched to old)
+        new_block_ids = []
+        old_ids = {b.get("id") for b in old_blocks}
+        for block in blocks:
+            if block.get("id") not in old_ids:
+                new_block_ids.append(block.get("id"))
+        
+        # Find deleted blocks (old IDs not in new)
+        new_ids = {b.get("id") for b in blocks}
+        deleted_block_ids = [b.get("id") for b in old_blocks if b.get("id") not in new_ids]
+        
+        # Find modified blocks (same ID but different hash)
         modified_block_ids = []
-        old_blocks_by_id = {b["id"]: b for b in old_blocks}
-        for match in match_result.matches:
-            old_block = old_blocks_by_id.get(match.old_id)
-            new_block = next((b for b in blocks if b.get("id") == match.old_id), None)
-            if old_block and new_block:
-                old_hash = old_block.get("content_hash", "")
-                new_hash = new_block.get("content_hash", "")
+        old_blocks_by_id = {b.get("id"): b for b in old_blocks}
+        for block in blocks:
+            block_id = block.get("id")
+            if block_id in old_blocks_by_id:
+                old_hash = old_blocks_by_id[block_id].get("content_hash", "")
+                new_hash = block.get("content_hash", "")
                 if old_hash != new_hash:
-                    modified_block_ids.append(match.old_id)
+                    modified_block_ids.append(block_id)
         
         delta_payload = {
             "timestamp": datetime.now(timezone.utc).isoformat(),
-            "matched_by_uuid": match_result.matched_by_uuid,
-            "matched_by_hash": match_result.matched_by_hash,
-            "matched_by_position": match_result.matched_by_position,
-            "new_blocks": match_result.unmatched_new,
-            "deleted_blocks": match_result.unmatched_old,
+            "matched_from_embedded": id_stats["from_embedded"],
+            "matched_from_hash": id_stats["from_hash"],
+            "matched_from_position": id_stats.get("from_position", 0),
+            "generated_new": id_stats["generated"],
+            "new_blocks": new_block_ids,
+            "deleted_blocks": deleted_block_ids,
             "modified_blocks": modified_block_ids,
         }
         delta_path = out_dir / "analysis_delta.json"
@@ -268,6 +268,14 @@ def analyze(
             LOGGER.info("Extracted %d notes to %s", len(notes), notes_path)
     except Exception as e:
         LOGGER.warning("Failed to extract notes: %s", e)
+
+    # Embed UUIDs into the document for edit tracking
+    # This allows the save flow to identify which paragraphs to update
+    try:
+        embedded = embed_block_uuids(docx_path, blocks, overwrite=False)
+        LOGGER.info("Embedded %d UUIDs into document: %s", len(embedded), docx_path)
+    except Exception as e:
+        LOGGER.warning("Failed to embed UUIDs into document: %s", e)
 
     LOGGER.info("Document analysis completed successfully: doc_id=%s", doc_id)
     return artifacts
