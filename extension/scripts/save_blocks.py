@@ -49,49 +49,29 @@ from docx.shared import Pt
 from docx.oxml.ns import qn
 from docx.text.paragraph import Paragraph
 
-from effilocal.doc.uuid_embedding import extract_block_uuids, ParaKey, TableCellKey, EFFI_TAG_PREFIX
+from effilocal.doc.uuid_embedding import (
+    extract_block_uuids, 
+    find_paragraph_by_para_id,
+    ParaKey, 
+    TableCellKey,
+)
 
 
-def get_paragraph_by_uuid(doc, uuid: str):
+def get_paragraph_by_para_id(doc, para_id: str):
     """
-    Get a paragraph element from the document by its embedded UUID.
+    Get a paragraph element from the document by its w14:paraId.
     
-    Searches for paragraphs with a w:tag element containing the UUID
-    in their paragraph properties (w:pPr).
+    This uses Word's native paragraph IDs which are preserved across
+    save/close/reopen cycles.
     
     Args:
         doc: Document object
-        uuid: The UUID to find
+        para_id: The 8-character hex paraId to find
         
     Returns:
         Paragraph object or None if not found
     """
-    target_tag = f"{EFFI_TAG_PREFIX}{uuid}"
-    
-    # Search all paragraphs for matching w:tag
-    for para in doc.paragraphs:
-        pPr = para._element.find(qn('w:pPr'))
-        if pPr is not None:
-            tag = pPr.find(qn('w:tag'))
-            if tag is not None:
-                tag_val = tag.get(qn('w:val'), '')
-                if tag_val == target_tag:
-                    return para
-    
-    # Also search table cells
-    for table in doc.tables:
-        for row in table.rows:
-            for cell in row.cells:
-                for para in cell.paragraphs:
-                    pPr = para._element.find(qn('w:pPr'))
-                    if pPr is not None:
-                        tag = pPr.find(qn('w:tag'))
-                        if tag is not None:
-                            tag_val = tag.get(qn('w:val'), '')
-                            if tag_val == target_tag:
-                                return para
-    
-    return None
+    return find_paragraph_by_para_id(doc, para_id)
 
 
 def get_paragraph_by_key(doc, key):
@@ -240,13 +220,13 @@ def save_blocks_to_document(doc_path: str, blocks_path: str):
         # Load document
         doc = Document(doc_path)
         
-        # Extract UUID -> paragraph mapping
-        uuid_map = extract_block_uuids(doc)
+        # Extract para_id -> paragraph mapping (uses native Word w14:paraId)
+        para_id_map = extract_block_uuids(doc)
         
-        if not uuid_map:
+        if not para_id_map:
             return {
                 "success": False,
-                "error": "No embedded UUIDs found in document. Run analysis first."
+                "error": "No paragraph IDs found in document."
             }
         
         # Create block_id -> block mapping
@@ -256,23 +236,22 @@ def save_blocks_to_document(doc_path: str, blocks_path: str):
         updated_count = 0
         not_found = []
         
-        # Update paragraphs - find by UUID directly
+        # Update paragraphs - find by para_id (w14:paraId)
         for block_id, block in blocks_by_id.items():
-            if block_id in uuid_map:
-                # Try to find paragraph by UUID (searches w:tag in paragraph properties)
-                paragraph = get_paragraph_by_uuid(doc, block_id)
+            # The block_id is the para_id (w14:paraId)
+            paragraph = get_paragraph_by_para_id(doc, block_id)
+            if paragraph:
+                update_paragraph_content(paragraph, block)
+                updated_count += 1
+            elif block_id in para_id_map:
+                # Fall back to key-based lookup using position
+                key = para_id_map[block_id]
+                paragraph = get_paragraph_by_key(doc, key)
                 if paragraph:
                     update_paragraph_content(paragraph, block)
                     updated_count += 1
                 else:
-                    # Fall back to key-based lookup
-                    key = uuid_map[block_id]
-                    paragraph = get_paragraph_by_key(doc, key)
-                    if paragraph:
-                        update_paragraph_content(paragraph, block)
-                        updated_count += 1
-                    else:
-                        not_found.append(f"{block_id} (key {key})")
+                    not_found.append(f"{block_id} (key {key})")
             else:
                 not_found.append(block_id)
         

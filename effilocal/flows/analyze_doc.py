@@ -116,18 +116,18 @@ def analyze(
         LOGGER.warning("No textual blocks detected in document: path=%s", docx_path)
 
     # Assign IDs to blocks (they start with id=None)
-    # Priority: embedded UUIDs > hash match with old blocks > position match > generate new
+    # Priority: para_id match > hash match with old blocks > position match > generate new
     id_stats = assign_block_ids(
         blocks,
         embedded_uuids=embedded_uuids if preserve_uuids else None,
         old_blocks=old_blocks if preserve_uuids else None,
     )
     LOGGER.info(
-        "Block IDs assigned: from_embedded=%d, from_hash=%d, from_position=%d, generated=%d",
-        id_stats["from_embedded"],
-        id_stats["from_hash"],
+        "Block IDs assigned: from_para_id=%d, from_hash=%d, from_position=%d, generated=%d",
+        id_stats.get("from_para_id", 0),
+        id_stats.get("from_hash", 0),
         id_stats.get("from_position", 0),
-        id_stats["generated"],
+        id_stats.get("generated", 0),
     )
 
     # Infer hierarchy AFTER ID assignment so parent/child references use final IDs
@@ -235,10 +235,10 @@ def analyze(
         
         delta_payload = {
             "timestamp": datetime.now(timezone.utc).isoformat(),
-            "matched_from_embedded": id_stats["from_embedded"],
-            "matched_from_hash": id_stats["from_hash"],
+            "matched_from_para_id": id_stats.get("from_para_id", 0),
+            "matched_from_hash": id_stats.get("from_hash", 0),
             "matched_from_position": id_stats.get("from_position", 0),
-            "generated_new": id_stats["generated"],
+            "generated_new": id_stats.get("generated", 0),
             "new_blocks": new_block_ids,
             "deleted_blocks": deleted_block_ids,
             "modified_blocks": modified_block_ids,

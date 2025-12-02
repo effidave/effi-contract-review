@@ -1,17 +1,20 @@
-"""UUID embedding via Word paragraph tags (w:tag elements).
+"""Paragraph identification via native Word w14:paraId.
 
-This module provides functions to embed and extract UUIDs from Word documents
-using the w:tag element within paragraph properties (w:pPr). UUIDs are stored as
-tag values in the format "effi:block:<uuid>".
+This module provides functions to work with Word's native paragraph IDs
+(w14:paraId) for block tracking and matching. These are 8-character hex 
+values that Word assigns to every paragraph and preserves across edits.
 
-This approach uses standard WordprocessingML elements that:
-- Survive save/close/reopen cycles in Word
-- Don't interfere with python-docx's doc.paragraphs iteration
-- Are simpler and less intrusive than SDT content controls
+Key advantages of w14:paraId over custom embedding:
+- Already present on all paragraphs - no embedding needed
+- 100% schema-compliant - no corruption risk
+- Preserved by Word across save/close/reopen cycles
+- Works with python-docx without modification
 
-Supports embedding UUIDs in:
-- Top-level body paragraphs (matched by para_idx)
-- Paragraphs inside table cells (matched by table position: table_idx, row, col)
+The block "id" field in blocks.jsonl stores the w14:paraId directly.
+When matching blocks between analysis runs, we use:
+1. w14:paraId match (primary - most reliable)
+2. Content hash match (fallback for modified content)
+3. Position match (last resort for heavily modified documents)
 """
 
 from __future__ import annotations
@@ -21,7 +24,6 @@ from typing import TYPE_CHECKING, Iterator, Union
 from uuid import uuid4
 
 from docx import Document
-from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from lxml import etree
 
@@ -29,21 +31,25 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 __all__ = [
-    "embed_block_uuids",
-    "extract_block_uuids",
+    "extract_block_para_ids",
+    "extract_block_uuids",  # Backward compatibility alias
     "extract_block_uuids_legacy",
-    "remove_all_uuid_tags",
-    "remove_all_uuid_controls",  # Backward compatibility alias
-    "get_paragraph_uuid",
-    "set_paragraph_uuid",
+    "get_paragraph_para_id",
+    "get_paragraph_uuid",  # Backward compatibility alias
+    "find_paragraph_by_para_id",
     "assign_block_ids",
-    "EFFI_TAG_PREFIX",
     "BlockKey",
     "ParaKey",
     "TableCellKey",
+    # Deprecated functions (no-ops, kept for backward compatibility)
+    "embed_block_uuids",
+    "remove_all_uuid_tags",
+    "remove_all_uuid_controls",
+    "set_paragraph_uuid",
+    "EFFI_TAG_PREFIX",
 ]
 
-# Prefix for effi block tags in paragraph properties
+# Legacy prefix kept for backward compatibility (no longer used)
 EFFI_TAG_PREFIX = "effi:block:"
 
 # Word XML namespaces
@@ -69,53 +75,48 @@ class TableCellKey:
 BlockKey = Union[ParaKey, TableCellKey]
 
 
-def _get_or_create_pPr(paragraph_element: etree._Element) -> etree._Element:
-    """Get or create paragraph properties element.
+def get_paragraph_para_id(paragraph_element: etree._Element) -> str | None:
+    """Get the w14:paraId from a paragraph element.
 
     Args:
         paragraph_element: A w:p element
 
     Returns:
-        The w:pPr element (created if it didn't exist)
+        The 8-character hex paraId if present, else None
     """
-    pPr = paragraph_element.find(qn("w:pPr"))
-    if pPr is None:
-        pPr = OxmlElement("w:pPr")
-        # Insert pPr as first child
-        paragraph_element.insert(0, pPr)
-    return pPr
+    return paragraph_element.get(qn("w14:paraId"))
 
 
-def _get_tag_element(paragraph_element: etree._Element) -> etree._Element | None:
-    """Get the w:tag element from a paragraph if it exists.
-
-    Args:
-        paragraph_element: A w:p element
-
-    Returns:
-        The w:tag element or None
-    """
-    pPr = paragraph_element.find(qn("w:pPr"))
-    if pPr is None:
-        return None
-    return pPr.find(qn("w:tag"))
+# Backward compatibility alias
+get_paragraph_uuid = get_paragraph_para_id
 
 
-def _extract_uuid_from_tag(tag_element: etree._Element | None) -> str | None:
-    """Extract UUID from a w:tag element if it has our prefix.
-
-    Args:
-        tag_element: A w:tag element or None
-
-    Returns:
-        The UUID string if the tag has our prefix, else None
-    """
-    if tag_element is None:
-        return None
+def find_paragraph_by_para_id(doc: Document, para_id: str):
+    """Find a paragraph by its w14:paraId.
     
-    val = tag_element.get(qn("w:val"), "")
-    if val.startswith(EFFI_TAG_PREFIX):
-        return val[len(EFFI_TAG_PREFIX):]
+    Args:
+        doc: Document object
+        para_id: The 8-character hex paraId to find
+        
+    Returns:
+        Paragraph object or None if not found
+    """
+    target_id = para_id.upper()
+    
+    # Search body paragraphs
+    for para in doc.paragraphs:
+        pid = para._element.get(qn("w14:paraId"))
+        if pid and pid.upper() == target_id:
+            return para
+    
+    # Search table cells
+    for table in doc.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                for para in cell.paragraphs:
+                    pid = para._element.get(qn("w14:paraId"))
+                    if pid and pid.upper() == target_id:
+                        return para
     
     return None
 
@@ -225,131 +226,6 @@ def _block_to_key(block: dict) -> BlockKey | None:
     return None
 
 
-def get_paragraph_uuid(paragraph_element: etree._Element) -> str | None:
-    """Get the UUID from a paragraph's w:tag element if present.
-
-    Args:
-        paragraph_element: A w:p element
-
-    Returns:
-        The UUID string if the paragraph has an effi tag, else None
-    """
-    tag = _get_tag_element(paragraph_element)
-    return _extract_uuid_from_tag(tag)
-
-
-def set_paragraph_uuid(
-    document: Document,
-    paragraph_element: etree._Element,
-    uuid_value: str,
-) -> bool:
-    """Set a UUID on a paragraph using the w:tag element.
-
-    If the paragraph already has an effi tag, updates the value.
-    Otherwise, creates a new w:tag element.
-
-    Args:
-        document: The Document object (for context, not currently used)
-        paragraph_element: The w:p element to tag
-        uuid_value: The UUID to embed
-
-    Returns:
-        True if successful
-    """
-    pPr = _get_or_create_pPr(paragraph_element)
-    
-    # Check for existing tag
-    existing_tag = pPr.find(qn("w:tag"))
-    
-    if existing_tag is not None:
-        # Check if it's our tag
-        existing_val = existing_tag.get(qn("w:val"), "")
-        if existing_val.startswith(EFFI_TAG_PREFIX):
-            # Update existing effi tag
-            existing_tag.set(qn("w:val"), f"{EFFI_TAG_PREFIX}{uuid_value}")
-            return True
-        else:
-            # There's a non-effi tag - don't overwrite it
-            # Could potentially use a different mechanism here
-            return False
-    
-    # Create new tag
-    tag = OxmlElement("w:tag")
-    tag.set(qn("w:val"), f"{EFFI_TAG_PREFIX}{uuid_value}")
-    pPr.append(tag)
-    
-    return True
-
-
-def embed_block_uuids(
-    doc_or_path: Document | str | "Path",
-    blocks: list[dict],
-    *,
-    overwrite: bool = False,
-) -> dict[str, str]:
-    """Embed UUIDs from blocks into the document as content controls.
-
-    Each block's "id" field is used as the UUID. Blocks are matched to
-    paragraphs by their location:
-    - Top-level paragraphs: matched by "para_idx" field
-    - Table cells: matched by "table" field (table_id, row, col)
-
-    Args:
-        doc_or_path: Document object or path to .docx file
-        blocks: List of block dicts with "id" and either "para_idx" or "table" fields
-        overwrite: If True, overwrite existing UUIDs; if False, skip already-wrapped paragraphs
-
-    Returns:
-        Mapping of block_id to location string for successfully embedded blocks
-        (location is "para_N" for paragraphs or "tbl_T_r_R_c_C" for table cells)
-    """
-    from pathlib import Path
-
-    if isinstance(doc_or_path, (str, Path)):
-        document = Document(str(doc_or_path))
-        save_path = Path(doc_or_path)
-    else:
-        document = doc_or_path
-        save_path = None
-
-    # Build index of BlockKey -> paragraph element
-    key_to_element: dict[BlockKey, etree._Element] = {}
-    for key, elem in _iter_all_blocks(document):
-        key_to_element[key] = elem
-
-    embedded: dict[str, str] = {}
-
-    for block in blocks:
-        block_id = block.get("id")
-        if block_id is None:
-            continue
-
-        # Convert block to key
-        block_key = _block_to_key(block)
-        if block_key is None:
-            continue
-
-        para_elem = key_to_element.get(block_key)
-        if para_elem is None:
-            continue
-
-        # Check if already has UUID
-        existing = get_paragraph_uuid(para_elem)
-        if existing is not None and not overwrite:
-            embedded[block_id] = _key_to_location_string(block_key)
-            continue
-
-        # Embed UUID
-        if set_paragraph_uuid(document, para_elem, block_id):
-            embedded[block_id] = _key_to_location_string(block_key)
-
-    # Save if we loaded from path
-    if save_path is not None:
-        document.save(str(save_path))
-
-    return embedded
-
-
 def _key_to_location_string(key: BlockKey) -> str:
     """Convert a BlockKey to a human-readable location string."""
     if isinstance(key, ParaKey):
@@ -359,14 +235,16 @@ def _key_to_location_string(key: BlockKey) -> str:
     return "unknown"
 
 
-def extract_block_uuids(doc_or_path: Document | str | "Path") -> dict[str, BlockKey]:
-    """Extract UUID → BlockKey mapping from embedded content controls.
+def extract_block_para_ids(doc_or_path: Document | str | "Path") -> dict[str, BlockKey]:
+    """Extract para_id → BlockKey mapping from document.
+
+    This reads the native w14:paraId from each paragraph.
 
     Args:
         doc_or_path: Document object or path to .docx file
 
     Returns:
-        Mapping of UUID string to BlockKey (ParaKey or TableCellKey)
+        Mapping of para_id string to BlockKey (ParaKey or TableCellKey)
     """
     from pathlib import Path
 
@@ -375,27 +253,31 @@ def extract_block_uuids(doc_or_path: Document | str | "Path") -> dict[str, Block
     else:
         document = doc_or_path
 
-    uuid_to_key: dict[str, BlockKey] = {}
+    para_id_to_key: dict[str, BlockKey] = {}
 
     for key, para_elem in _iter_all_blocks(document):
-        uuid_val = get_paragraph_uuid(para_elem)
-        if uuid_val is not None:
-            uuid_to_key[uuid_val] = key
+        para_id = get_paragraph_para_id(para_elem)
+        if para_id:
+            para_id_to_key[para_id] = key
 
-    return uuid_to_key
+    return para_id_to_key
+
+
+# Backward compatibility alias
+extract_block_uuids = extract_block_para_ids
 
 
 def extract_block_uuids_legacy(doc_or_path: Document | str | "Path") -> dict[str, int]:
-    """Extract UUID → paragraph index mapping from embedded content controls.
+    """Extract para_id → paragraph index mapping from document.
     
     Legacy function for backward compatibility. Only returns top-level paragraphs.
-    For full support including table cells, use extract_block_uuids().
+    For full support including table cells, use extract_block_para_ids().
 
     Args:
         doc_or_path: Document object or path to .docx file
 
     Returns:
-        Mapping of UUID string to paragraph index (0-based)
+        Mapping of para_id string to paragraph index (0-based)
     """
     from pathlib import Path
 
@@ -404,57 +286,76 @@ def extract_block_uuids_legacy(doc_or_path: Document | str | "Path") -> dict[str
     else:
         document = doc_or_path
 
-    uuid_to_idx: dict[str, int] = {}
+    para_id_to_idx: dict[str, int] = {}
 
     for idx, para_elem in _iter_paragraphs_with_index(document):
-        uuid_val = get_paragraph_uuid(para_elem)
-        if uuid_val is not None:
-            uuid_to_idx[uuid_val] = idx
+        para_id = get_paragraph_para_id(para_elem)
+        if para_id:
+            para_id_to_idx[para_id] = idx
 
-    return uuid_to_idx
+    return para_id_to_idx
+
+
+# ============================================================================
+# Deprecated functions - kept for backward compatibility (no-ops)
+# ============================================================================
+
+def embed_block_uuids(
+    doc_or_path: Document | str | "Path",
+    blocks: list[dict],
+    *,
+    overwrite: bool = False,
+) -> dict[str, str]:
+    """DEPRECATED: No longer needed - we use native w14:paraId instead.
+    
+    This function now just returns a mapping of block IDs to their para_ids,
+    without modifying the document.
+    """
+    from pathlib import Path
+
+    if isinstance(doc_or_path, (str, Path)):
+        document = Document(str(doc_or_path))
+    else:
+        document = doc_or_path
+
+    # Build index of BlockKey -> paragraph element
+    key_to_element: dict[BlockKey, etree._Element] = {}
+    for key, elem in _iter_all_blocks(document):
+        key_to_element[key] = elem
+
+    result: dict[str, str] = {}
+
+    for block in blocks:
+        block_id = block.get("id")
+        para_id = block.get("para_id")
+        if block_id and para_id:
+            result[block_id] = para_id
+
+    return result
+
+
+def set_paragraph_uuid(
+    document: Document,
+    paragraph_element: etree._Element,
+    uuid_value: str,
+) -> bool:
+    """DEPRECATED: No longer needed - we use native w14:paraId instead.
+    
+    This is a no-op kept for backward compatibility.
+    """
+    return True
 
 
 def remove_all_uuid_tags(doc_or_path: Document | str | "Path") -> int:
-    """Remove all effi UUID tags from the document.
-
-    Only removes w:tag elements that have the effi:block: prefix.
-
-    Args:
-        doc_or_path: Document object or path to .docx file
-
-    Returns:
-        Number of tags removed
-    """
-    from pathlib import Path
-
-    if isinstance(doc_or_path, (str, Path)):
-        document = Document(str(doc_or_path))
-        save_path = Path(doc_or_path)
-    else:
-        document = doc_or_path
-        save_path = None
-
-    removed = 0
+    """DEPRECATED: No longer needed - we use native w14:paraId instead.
     
-    # Iterate all paragraphs (including in tables)
-    for key, para_elem in _iter_all_blocks(document):
-        tag = _get_tag_element(para_elem)
-        if tag is not None:
-            val = tag.get(qn("w:val"), "")
-            if val.startswith(EFFI_TAG_PREFIX):
-                # Remove the tag element
-                pPr = para_elem.find(qn("w:pPr"))
-                if pPr is not None:
-                    pPr.remove(tag)
-                    removed += 1
-
-    if save_path is not None:
-        document.save(str(save_path))
-
-    return removed
+    This is a no-op kept for backward compatibility.
+    Returns 0 (nothing removed).
+    """
+    return 0
 
 
-# Keep old name as alias for backward compatibility
+# Backward compatibility alias
 remove_all_uuid_controls = remove_all_uuid_tags
 
 
@@ -466,74 +367,76 @@ def assign_block_ids(
 ) -> dict[str, str]:
     """Assign IDs to blocks that have id=None.
     
-    This is the single point of ID assignment for blocks. IDs are assigned
-    using the following priority:
+    Since we now use w14:paraId as the block ID, this function simply
+    copies para_id to id for each block that doesn't have one.
     
-    1. Embedded UUID: If the block's position matches an embedded UUID from
-       a content control in the document, use that UUID.
-    2. Hash match: If old_blocks is provided, match by content_hash to preserve
-       IDs for blocks with identical content.
-    3. Position match: For unmatched blocks, match to nearby old blocks by
-       position (within position_threshold paragraphs).
-    4. Generate new: For truly new blocks, generate a fresh UUID.
+    For matching between analysis runs:
+    1. para_id match: If block has same para_id as old block, reuse old ID
+    2. Content hash match: If block has same content_hash, reuse old ID
+    3. Position match: Match nearby blocks with same type
+    4. Generate new: Use para_id as the new ID (or generate UUID as fallback)
     
     Args:
         blocks: List of block dicts. Blocks with id=None will be assigned IDs.
-        embedded_uuids: Mapping of UUID -> BlockKey from extract_block_uuids().
-            If provided, blocks matching these positions get the embedded UUID.
-        old_blocks: Previous blocks.jsonl content for hash-based matching.
-            Used as fallback for blocks without embedded UUIDs.
-        position_threshold: Maximum distance (in paragraph indices) for position
-            matching. Default is 5.
+        embedded_uuids: DEPRECATED - ignored (we use para_id directly)
+        old_blocks: Previous blocks.jsonl content for matching.
+        position_threshold: Maximum distance for position matching.
     
     Returns:
-        Stats dict with counts: {"from_embedded": N, "from_hash": N, 
+        Stats dict with counts: {"from_para_id": N, "from_hash": N, 
                                   "from_position": N, "generated": N}
     
     Mutates blocks in place to set the "id" field.
     """
-    stats = {"from_embedded": 0, "from_hash": 0, "from_position": 0, "generated": 0}
+    stats = {"from_para_id": 0, "from_hash": 0, "from_position": 0, "generated": 0}
     
-    # Build reverse mapping: BlockKey -> UUID from embedded
-    key_to_uuid: dict[BlockKey, str] = {}
-    if embedded_uuids:
-        for uuid_val, key in embedded_uuids.items():
-            key_to_uuid[key] = uuid_val
-    
-    # Build hash -> ID mapping from old blocks for fallback matching
+    # Build mappings from old blocks for matching
+    old_para_id_to_block: dict[str, dict] = {}
     hash_to_old_id: dict[str, str] = {}
-    # Build position -> old block mapping for position-based fallback
     old_blocks_by_position: dict[int, dict] = {}
+    
     if old_blocks:
         for old_block in old_blocks:
             old_id = old_block.get("id")
+            old_para_id = old_block.get("para_id")
             old_hash = old_block.get("content_hash")
+            
+            # Index by para_id for primary matching
+            if old_para_id:
+                old_para_id_to_block[old_para_id] = old_block
+            
+            # Index by hash for content matching
             if old_id and old_hash and old_hash not in hash_to_old_id:
                 hash_to_old_id[old_hash] = old_id
-            # Index by para_idx for position matching
+            
+            # Index by position for fallback matching
             para_idx = old_block.get("para_idx")
             if para_idx is not None and old_id:
                 old_blocks_by_position[para_idx] = old_block
     
-    # Track which old IDs have been used (to avoid duplicates)
+    # Track which old IDs have been used
     used_ids: set[str] = set()
     
-    # First pass: assign embedded UUIDs and hash matches
+    # First pass: para_id and hash matching
     unmatched_blocks: list[dict] = []
     for block in blocks:
         # Skip blocks that already have an ID
         if block.get("id") is not None:
             continue
         
-        # Priority 1: Check embedded UUIDs
-        block_key = _block_to_key(block)
-        if block_key and block_key in key_to_uuid:
-            block["id"] = key_to_uuid[block_key]
-            used_ids.add(block["id"])
-            stats["from_embedded"] += 1
-            continue
+        para_id = block.get("para_id")
         
-        # Priority 2: Check hash match with old blocks
+        # Priority 1: Match by para_id
+        if para_id and para_id in old_para_id_to_block:
+            old_block = old_para_id_to_block[para_id]
+            old_id = old_block.get("id")
+            if old_id and old_id not in used_ids:
+                block["id"] = old_id
+                used_ids.add(old_id)
+                stats["from_para_id"] += 1
+                continue
+        
+        # Priority 2: Match by content hash
         content_hash = block.get("content_hash")
         if content_hash and content_hash in hash_to_old_id:
             old_id = hash_to_old_id[content_hash]
@@ -543,13 +446,13 @@ def assign_block_ids(
                 stats["from_hash"] += 1
                 continue
         
-        # Couldn't match yet - add to unmatched for position matching
+        # Couldn't match yet
         unmatched_blocks.append(block)
     
-    # Second pass: position-based matching for remaining unmatched blocks
+    # Second pass: position-based matching
     for block in unmatched_blocks:
         if block.get("id") is not None:
-            continue  # Already assigned in first pass
+            continue
         
         para_idx = block.get("para_idx")
         if para_idx is not None and old_blocks_by_position:
@@ -562,7 +465,6 @@ def assign_block_ids(
                     if check_idx in old_blocks_by_position:
                         old_block = old_blocks_by_position[check_idx]
                         old_id = old_block.get("id")
-                        # Only match if same type and ID not already used
                         if (old_id and 
                             old_id not in used_ids and
                             old_block.get("type") == block.get("type")):
@@ -577,10 +479,17 @@ def assign_block_ids(
                 stats["from_position"] += 1
                 continue
         
-        # Priority 4: Generate new UUID
-        new_id = str(uuid4())
-        block["id"] = new_id
-        used_ids.add(new_id)
-        stats["generated"] += 1
+        # Priority 4: Use para_id as the ID, or generate new UUID
+        para_id = block.get("para_id")
+        if para_id and para_id not in used_ids:
+            block["id"] = para_id
+            used_ids.add(para_id)
+            stats["generated"] += 1
+        else:
+            # Fallback: generate UUID
+            new_id = str(uuid4())
+            block["id"] = new_id
+            used_ids.add(new_id)
+            stats["generated"] += 1
     
     return stats

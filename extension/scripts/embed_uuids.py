@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """
-embed_uuids.py - Embed block UUIDs into a Word document
+embed_uuids.py - DEPRECATED: No longer needed
 
-This script reads blocks.jsonl and embeds the UUIDs as paragraph tags
-(w:pPr/w:tag) in the corresponding .docx document. This enables the 
-save flow to identify which paragraphs to update.
+Block identification now uses Word's native w14:paraId attribute, which is 
+already present on every paragraph. No embedding is required.
+
+This script is kept for backward compatibility but is effectively a no-op.
+It reads blocks.jsonl and reports success without modifying the document.
 
 Usage:
     python embed_uuids.py <document_path> <blocks_jsonl_path>
@@ -13,7 +15,7 @@ Output JSON format:
     {
         "success": true,
         "embedded_count": 45,
-        "message": "Embedded 45 UUIDs into document"
+        "message": "Using native w14:paraId - no embedding required (45 blocks)"
     }
 """
 
@@ -61,13 +63,14 @@ def main():
             }))
             sys.exit(1)
         
-        # Embed UUIDs
-        result = embed_block_uuids(doc_path, blocks)
+        # No embedding needed - we use native w14:paraId
+        # Just report the number of blocks with para_ids
+        blocks_with_para_id = sum(1 for b in blocks if b.get("para_id"))
         
         print(json.dumps({
             "success": True,
-            "embedded_count": len(result),
-            "message": f"Embedded {len(result)} UUIDs into document"
+            "embedded_count": blocks_with_para_id,
+            "message": f"Using native w14:paraId - no embedding required ({blocks_with_para_id} blocks)"
         }))
         sys.exit(0)
         
