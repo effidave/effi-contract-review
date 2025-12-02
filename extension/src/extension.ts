@@ -194,6 +194,10 @@ function showContractWebview(context: vscode.ExtensionContext) {
                     case 'saveNote':
                         await saveNote(message.blockId, message.paraIdx, message.text);
                         break;
+                    case 'saveBlocks':
+                        // Sprint 2: Save edited blocks to document
+                        await saveBlocksToDocument(message.blocks, message.documentPath, webviewPanel);
+                        break;
                 }
             },
             undefined,
@@ -606,9 +610,17 @@ function getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Web
     const htmlPath = path.join(context.extensionPath, 'src', 'webview', 'index.html');
     const scriptPath = path.join(context.extensionPath, 'src', 'webview', 'main.js');
     const stylePath = path.join(context.extensionPath, 'src', 'webview', 'style.css');
+    
+    // Sprint 2: Editor scripts
+    const editorPath = path.join(context.extensionPath, 'src', 'webview', 'editor.js');
+    const toolbarPath = path.join(context.extensionPath, 'src', 'webview', 'toolbar.js');
+    const shortcutsPath = path.join(context.extensionPath, 'src', 'webview', 'shortcuts.js');
 
     const scriptUri = webview.asWebviewUri(vscode.Uri.file(scriptPath));
     const styleUri = webview.asWebviewUri(vscode.Uri.file(stylePath));
+    const editorUri = webview.asWebviewUri(vscode.Uri.file(editorPath));
+    const toolbarUri = webview.asWebviewUri(vscode.Uri.file(toolbarPath));
+    const shortcutsUri = webview.asWebviewUri(vscode.Uri.file(shortcutsPath));
 
     // Use CSP nonce for security
     const nonce = getNonce();
@@ -671,6 +683,10 @@ function getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Web
         </div>
     </div>
     
+    <!-- Sprint 2: Load editor scripts before main.js -->
+    <script nonce="${nonce}" src="${editorUri}"></script>
+    <script nonce="${nonce}" src="${toolbarUri}"></script>
+    <script nonce="${nonce}" src="${shortcutsUri}"></script>
     <script nonce="${nonce}" src="${scriptUri}"></script>
 </body>
 </html>`;
@@ -778,6 +794,73 @@ interface CommitInfo {
     author: string;
     date: string;
     message: string;
+}
+
+/**
+ * Sprint 2: Save edited blocks to the document via Python script
+ */
+async function saveBlocksToDocument(blocks: any[], documentPath: string, webviewPanel: vscode.WebviewPanel | undefined) {
+    if (!documentPath) {
+        const errorMsg = 'No document path provided';
+        if (webviewPanel) {
+            webviewPanel.webview.postMessage({ command: 'saveError', message: errorMsg });
+        }
+        vscode.window.showErrorMessage(errorMsg);
+        return;
+    }
+    
+    if (!blocks || blocks.length === 0) {
+        const errorMsg = 'No blocks to save';
+        if (webviewPanel) {
+            webviewPanel.webview.postMessage({ command: 'saveError', message: errorMsg });
+        }
+        return;
+    }
+    
+    try {
+        const analysisDir = getAnalysisDir(documentPath);
+        const workspaceRoot = path.join(__dirname, '..', '..');
+        const pythonCmd = getPythonPath(workspaceRoot);
+        const scriptPath = path.join(__dirname, '..', 'scripts', 'save_blocks.py');
+        
+        // Write blocks to a temp file to pass to Python
+        const tempBlocksPath = path.join(analysisDir, '.temp_blocks.json');
+        fs.writeFileSync(tempBlocksPath, JSON.stringify(blocks, null, 2));
+        
+        const { stdout } = await execAsync(`cd "${workspaceRoot}" && "${pythonCmd}" "${scriptPath}" "${documentPath}" "${tempBlocksPath}"`);
+        
+        // Clean up temp file
+        if (fs.existsSync(tempBlocksPath)) {
+            fs.unlinkSync(tempBlocksPath);
+        }
+        
+        const result = JSON.parse(stdout);
+        
+        if (result.success) {
+            const message = `✓ Saved ${result.block_count} block(s) to document`;
+            if (webviewPanel) {
+                webviewPanel.webview.postMessage({ command: 'saveComplete', message });
+            }
+            vscode.window.showInformationMessage(message);
+            
+            // Reload analysis data to reflect changes
+            if (currentDocumentPath) {
+                await loadAnalysisData(currentDocumentPath);
+            }
+        } else {
+            const errorMsg = `Save failed: ${result.error}`;
+            if (webviewPanel) {
+                webviewPanel.webview.postMessage({ command: 'saveError', message: errorMsg });
+            }
+            vscode.window.showErrorMessage(errorMsg);
+        }
+    } catch (error) {
+        const errorMsg = `Save failed: ${error}`;
+        if (webviewPanel) {
+            webviewPanel.webview.postMessage({ command: 'saveError', message: errorMsg });
+        }
+        vscode.window.showErrorMessage(errorMsg);
+    }
 }
 
 async function showVersionHistory(documentPath: string) {

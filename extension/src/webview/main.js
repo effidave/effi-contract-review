@@ -11,6 +11,12 @@ let relationshipsMap = new Map(); // Map of block_id -> relationship data
 let notesMap = new Map(); // Map of block_id -> note text
 let activeTab = 'outline'; // Track active tab
 
+// Editor components (Sprint 2)
+let blockEditor = null;
+let toolbar = null;
+let shortcutManager = null;
+let isEditMode = false; // Toggle between view and edit mode
+
 // Handle messages from extension
 window.addEventListener('message', event => {
     const message = event.data;
@@ -41,6 +47,18 @@ window.addEventListener('message', event => {
         case 'refresh':
             if (currentData) {
                 renderData(currentData);
+            }
+            break;
+        case 'saveComplete':
+            // Handle save completion from extension
+            if (toolbar) {
+                toolbar.setSaveStatus('saved', message.message || 'Saved ✓');
+            }
+            break;
+        case 'saveError':
+            // Handle save error from extension
+            if (toolbar) {
+                toolbar.setSaveStatus('error', message.message || 'Save failed');
             }
             break;
     }
@@ -293,6 +311,13 @@ function renderFullTextView(data) {
         return;
     }
 
+    // Check if we're in edit mode
+    if (isEditMode && window.BlockEditor && window.Toolbar && window.ShortcutManager) {
+        renderEditableFullTextView(fullTextContent, blocks);
+        return;
+    }
+
+    // Read-only view (original implementation)
     let html = '';
     let i = 0;
     while (i < blocks.length) {
@@ -319,6 +344,9 @@ function renderFullTextView(data) {
     }
 
     fullTextContent.innerHTML = `
+        <div class="fulltext-controls">
+            <button id="edit-toggle" class="edit-toggle-btn" title="Switch to Edit Mode">✏️ Edit Mode</button>
+        </div>
         <div class="block-list">
             ${html}
         </div>
@@ -326,6 +354,9 @@ function renderFullTextView(data) {
             ${blocks.length} blocks
         </div>
     `;
+
+    // Add edit toggle listener
+    document.getElementById('edit-toggle')?.addEventListener('click', toggleEditMode);
 
     // Add event listeners
     fullTextContent.querySelectorAll('.clause-checkbox').forEach(checkbox => {
@@ -349,6 +380,53 @@ function renderFullTextView(data) {
             });
         });
     });
+}
+
+/**
+ * Render the editable full text view using BlockEditor
+ */
+function renderEditableFullTextView(container, blocks) {
+    // Create structure for editable view
+    container.innerHTML = `
+        <div class="fulltext-controls">
+            <button id="edit-toggle" class="edit-toggle-btn active" title="Switch to View Mode">📖 View Mode</button>
+        </div>
+        <div id="editor-toolbar-container" class="editor-toolbar-container"></div>
+        <div id="editor-container" class="editor-container"></div>
+        <div class="block-count">
+            ${blocks.length} blocks (Edit Mode)
+        </div>
+    `;
+    
+    // Add edit toggle listener
+    document.getElementById('edit-toggle')?.addEventListener('click', toggleEditMode);
+    
+    const toolbarContainer = document.getElementById('editor-toolbar-container');
+    const editorContainer = document.getElementById('editor-container');
+    
+    if (!toolbarContainer || !editorContainer) return;
+    
+    // Initialize BlockEditor
+    blockEditor = new window.BlockEditor(editorContainer, blocks, {
+        onChange: () => {
+            if (toolbar) {
+                toolbar.setSaveStatus('unsaved');
+            }
+        }
+    });
+    blockEditor.render();
+    
+    // Initialize Toolbar
+    toolbar = new window.Toolbar(toolbarContainer, blockEditor, {
+        onSave: saveEdits
+    });
+    toolbar.render();
+    
+    // Initialize ShortcutManager
+    shortcutManager = new window.ShortcutManager(blockEditor, {
+        onSave: saveEdits
+    });
+    shortcutManager.attach(editorContainer);
 }
 
 function renderBlock(block) {
@@ -477,6 +555,53 @@ function sendToChat() {
         clauseIds: selectedParaIds,
         query: query
     });
+}
+
+/**
+ * Save edited blocks to the document
+ */
+function saveEdits() {
+    if (!blockEditor) {
+        console.error('No editor instance');
+        return;
+    }
+    
+    const dirtyBlocks = blockEditor.getDirtyBlocks();
+    
+    if (dirtyBlocks.length === 0) {
+        if (toolbar) {
+            toolbar.setSaveStatus('saved', 'No changes to save');
+        }
+        return;
+    }
+    
+    if (toolbar) {
+        toolbar.setSaveStatus('saving');
+    }
+    
+    // Send dirty blocks to extension for saving
+    vscode.postMessage({
+        command: 'saveBlocks',
+        blocks: dirtyBlocks,
+        documentPath: currentData?.documentPath || ''
+    });
+}
+
+/**
+ * Toggle between view mode and edit mode
+ */
+function toggleEditMode() {
+    isEditMode = !isEditMode;
+    
+    const editToggle = document.getElementById('edit-toggle');
+    if (editToggle) {
+        editToggle.textContent = isEditMode ? '📖 View Mode' : '✏️ Edit Mode';
+        editToggle.classList.toggle('active', isEditMode);
+    }
+    
+    if (currentData) {
+        renderFullTextView(currentData);
+    }
 }
 
 function renderSchedulesPlaceholder(data) {
