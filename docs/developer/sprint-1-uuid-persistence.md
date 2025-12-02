@@ -1,7 +1,7 @@
 # Sprint 1: UUID Persistence & Git Integration
 
-**Completed:** December 2025  
-**Status:** ✅ All 146 tests passing
+**Completed:** December 2025
+**Status:** ✅ All tests passing
 
 ---
 
@@ -21,13 +21,33 @@ Block UUIDs are embedded directly into .docx documents using Word's Structured D
 
 ```python
 # Wrap paragraphs in SDT content controls with UUID tags
-embed_block_uuids(doc: Document, blocks: List[dict]) -> int
+embed_block_uuids(doc: Document, blocks: List[dict]) -> dict[str, str]
 
-# Extract UUID → paragraph index mapping from document
-extract_block_uuids(doc: Document) -> Dict[str, int]
+# Extract UUID → BlockKey mapping from document
+extract_block_uuids(doc: Document) -> Dict[str, BlockKey]
 
 # Remove all effi SDTs while preserving content
 remove_all_uuid_controls(doc: Document) -> int
+
+# Legacy: Extract UUID → paragraph index (paragraphs only)
+extract_block_uuids_legacy(doc: Document) -> Dict[str, int]
+```
+
+**Block Key Types:**
+```python
+@dataclass(frozen=True)
+class ParaKey:
+    """Key for a top-level paragraph block."""
+    para_idx: int
+
+@dataclass(frozen=True)
+class TableCellKey:
+    """Key for a table cell block."""
+    table_idx: int
+    row: int
+    col: int
+
+BlockKey = ParaKey | TableCellKey
 ```
 
 **Content Control Structure:**
@@ -47,7 +67,16 @@ remove_all_uuid_controls(doc: Document) -> int
 - UUIDs survive Word save/close/reopen cycles
 - UUIDs survive copy/paste within same document
 - Tag format: `effi:block:<uuid>`
-- Only body paragraphs are wrapped (not headers, footers)
+- **Supported locations:**
+  - Top-level body paragraphs (matched by `para_idx`)
+  - Paragraphs inside SDT content controls
+  - Paragraphs inside table cells (matched by `table: {table_id, row, col}`)
+- **Not currently supported:** headers, footers, text boxes
+
+**Block Matching:**
+Blocks are matched to document positions using:
+- `ParaKey(para_idx)` for top-level paragraphs - uses `para_idx` field
+- `TableCellKey(table_idx, row, col)` for table cells - uses `table: {table_id: "tbl_N", row: int, col: int}` field
 
 ### 2. Content Hash Fallback
 
@@ -62,11 +91,12 @@ When UUIDs are lost (e.g., content control stripped by Word or another editor), 
 compute_block_hash(text: str) -> str
 
 # Three-phase matching: UUID → hash → position
-match_blocks_by_hash(old_blocks: List[dict], new_blocks: List[dict]) -> MatchResult
+match_blocks_by_hash(old_blocks: List[dict], new_blocks: List[dict], 
+                     embedded_uuids: Dict[str, BlockKey] = None) -> MatchResult
 ```
 
 **Matching Strategy (in priority order):**
-1. **UUID match** - Extracted from embedded content controls
+1. **UUID match** - Extracted from embedded content controls (paragraphs and table cells)
 2. **Hash match** - SHA-256 of normalized text (lowercase, collapsed whitespace)
 3. **Position match** - Proximity heuristics when hash matches multiple candidates
 
@@ -74,12 +104,10 @@ match_blocks_by_hash(old_blocks: List[dict], new_blocks: List[dict]) -> MatchRes
 ```python
 @dataclass
 class MatchResult:
-    matched: List[Tuple[str, str]]  # (old_id, new_id) pairs
+    matches: List[BlockMatch]       # Matched pairs with method and confidence
     unmatched_old: List[str]        # Deleted blocks
     unmatched_new: List[str]        # New blocks
-```
-
-### 3. Git Integration
+```### 3. Git Integration
 
 **Location:** `effilocal/util/git_ops.py`
 
@@ -224,30 +252,42 @@ All tests in `tests/` directory:
 
 ```python
 from docx import Document
-from effilocal.doc.uuid_embedding import embed_block_uuids, extract_block_uuids
+from effilocal.doc.uuid_embedding import embed_block_uuids, extract_block_uuids, ParaKey, TableCellKey
 
-# Load document and blocks
+# Load document and blocks (paragraphs and table cells)
 doc = Document("contract.docx")
-blocks = [{"id": "uuid1", "para_idx": 0}, {"id": "uuid2", "para_idx": 1}]
+blocks = [
+    {"id": "uuid1", "para_idx": 0},  # Top-level paragraph
+    {"id": "uuid2", "para_idx": 1},
+    {"id": "cell-uuid", "table": {"table_id": "tbl_0", "row": 0, "col": 0}},  # Table cell
+]
 
 # Embed UUIDs
-count = embed_block_uuids(doc, blocks)
+result = embed_block_uuids(doc, blocks)
 doc.save("contract.docx")
 
 # Later, extract them back
-uuid_map = extract_block_uuids(doc)  # {"uuid1": 0, "uuid2": 1}
+uuid_map = extract_block_uuids(doc)
+# {
+#   "uuid1": ParaKey(para_idx=0),
+#   "uuid2": ParaKey(para_idx=1),
+#   "cell-uuid": TableCellKey(table_idx=0, row=0, col=0)
+# }
 ```
 
 ### Matching Blocks After External Edit
 
 ```python
 from effilocal.doc.content_hash import match_blocks_by_hash
+from effilocal.doc.uuid_embedding import ParaKey, TableCellKey
 
 old_blocks = [{"id": "a", "text": "Original clause"}, ...]
 new_blocks = [{"id": "temp1", "text": "Original clause"}, ...]
 
-result = match_blocks_by_hash(old_blocks, new_blocks)
-# result.matched = [("a", "temp1")]  # Old ID 'a' matches new block
+# With embedded UUIDs (paragraphs and table cells)
+embedded = {"a": ParaKey(0), "cell-a": TableCellKey(0, 1, 2)}
+result = match_blocks_by_hash(old_blocks, new_blocks, embedded_uuids=embedded)
+# result.matches contains BlockMatch objects with old_id, new_id, method, confidence
 ```
 
 ### Auto-Commit on Save
@@ -265,9 +305,10 @@ commit_hash = auto_commit(repo, message, ["contract.docx", "analysis/"])
 
 ## Known Limitations
 
-1. **Content Controls in Tables**: UUIDs for table cells require special handling
-2. **Nested Content Controls**: Word may strip nested SDTs; use flat structure
-3. **Hash Collisions**: Very similar clauses may match incorrectly; position heuristics help
+1. **Nested Content Controls**: Word may strip nested SDTs; use flat structure
+2. **Hash Collisions**: Very similar clauses may match incorrectly; position heuristics help
+3. **Headers/Footers**: Content in headers and footers is not tracked
+4. **Multi-Paragraph Table Cells**: When a table cell contains multiple paragraphs, they are combined into a single block in `blocks.jsonl`. The UUID content control is wrapped around the first paragraph only.
 
 ---
 

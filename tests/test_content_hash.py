@@ -114,6 +114,8 @@ class TestMatchBlocksByHash:
 
     def test_uuid_matching_with_embedded_uuids(self):
         """Test UUID matching when embedded UUIDs are provided."""
+        from effilocal.doc.uuid_embedding import ParaKey
+        
         old_blocks = [
             {"id": "uuid-001", "text": "First paragraph", "para_idx": 0},
             {"id": "uuid-002", "text": "Second paragraph", "para_idx": 1},
@@ -123,8 +125,8 @@ class TestMatchBlocksByHash:
             {"id": "new-002", "text": "Second paragraph", "para_idx": 1},
         ]
         embedded_uuids = {
-            "uuid-001": 0,  # Embedded UUID at para_idx 0
-            "uuid-002": 1,  # Embedded UUID at para_idx 1
+            "uuid-001": ParaKey(0),  # Embedded UUID at para_idx 0
+            "uuid-002": ParaKey(1),  # Embedded UUID at para_idx 1
         }
         
         result = match_blocks_by_hash(
@@ -135,6 +137,37 @@ class TestMatchBlocksByHash:
         
         assert result.matched_by_uuid == 2
         assert result.matched_by_hash == 0
+
+    def test_uuid_matching_with_table_cells(self):
+        """Test UUID matching for table cell blocks."""
+        from effilocal.doc.uuid_embedding import ParaKey, TableCellKey
+        
+        old_blocks = [
+            {"id": "uuid-para", "text": "Intro paragraph", "para_idx": 0},
+            {"id": "uuid-cell-00", "text": "Cell 0,0", "table": {"table_id": "tbl_0", "row": 0, "col": 0}},
+            {"id": "uuid-cell-11", "text": "Cell 1,1", "table": {"table_id": "tbl_0", "row": 1, "col": 1}},
+        ]
+        new_blocks = [
+            {"id": "new-para", "text": "Intro paragraph", "para_idx": 0},
+            {"id": "new-cell-00", "text": "Cell 0,0", "table": {"table_id": "tbl_0", "row": 0, "col": 0}},
+            {"id": "new-cell-11", "text": "Cell 1,1", "table": {"table_id": "tbl_0", "row": 1, "col": 1}},
+        ]
+        embedded_uuids = {
+            "uuid-para": ParaKey(0),
+            "uuid-cell-00": TableCellKey(0, 0, 0),
+            "uuid-cell-11": TableCellKey(0, 1, 1),
+        }
+        
+        result = match_blocks_by_hash(
+            old_blocks,
+            new_blocks,
+            embedded_uuids=embedded_uuids,
+        )
+        
+        assert result.matched_by_uuid == 3
+        assert result.matched_by_hash == 0
+        assert len(result.unmatched_old) == 0
+        assert len(result.unmatched_new) == 0
 
     def test_new_block_detection(self):
         """Test detection of new blocks."""

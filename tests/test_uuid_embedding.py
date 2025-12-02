@@ -11,8 +11,12 @@ from docx import Document
 
 from effilocal.doc.uuid_embedding import (
     EFFI_TAG_PREFIX,
+    BlockKey,
+    ParaKey,
+    TableCellKey,
     embed_block_uuids,
     extract_block_uuids,
+    extract_block_uuids_legacy,
     get_paragraph_uuid,
     remove_all_uuid_controls,
     set_paragraph_uuid,
@@ -44,6 +48,46 @@ def sample_blocks() -> list[dict]:
         {"id": str(uuid4()), "para_idx": 0, "text": "First paragraph"},
         {"id": str(uuid4()), "para_idx": 1, "text": "Second paragraph"},
         {"id": str(uuid4()), "para_idx": 2, "text": "Third paragraph"},
+    ]
+
+
+@pytest.fixture
+def doc_with_table() -> Document:
+    """Create a document with paragraphs and a table."""
+    doc = Document()
+    doc.add_paragraph("Intro paragraph")
+    
+    # Add a 2x3 table
+    table = doc.add_table(rows=2, cols=3)
+    table.cell(0, 0).text = "Cell 0,0"
+    table.cell(0, 1).text = "Cell 0,1"
+    table.cell(0, 2).text = "Cell 0,2"
+    table.cell(1, 0).text = "Cell 1,0"
+    table.cell(1, 1).text = "Cell 1,1"
+    table.cell(1, 2).text = "Cell 1,2"
+    
+    doc.add_paragraph("Closing paragraph")
+    return doc
+
+
+@pytest.fixture
+def doc_with_table_path(doc_with_table: Document) -> Path:
+    """Save document with table to temp file and return path."""
+    with tempfile.NamedTemporaryFile(suffix=".docx", delete=False) as f:
+        doc_with_table.save(f.name)
+        return Path(f.name)
+
+
+@pytest.fixture
+def table_cell_blocks() -> list[dict]:
+    """Create sample blocks including table cells."""
+    return [
+        {"id": "para-intro", "para_idx": 0, "text": "Intro paragraph"},
+        {"id": "cell-0-0", "table": {"table_id": "tbl_0", "row": 0, "col": 0}, "text": "Cell 0,0"},
+        {"id": "cell-0-1", "table": {"table_id": "tbl_0", "row": 0, "col": 1}, "text": "Cell 0,1"},
+        {"id": "cell-1-0", "table": {"table_id": "tbl_0", "row": 1, "col": 0}, "text": "Cell 1,0"},
+        {"id": "cell-1-2", "table": {"table_id": "tbl_0", "row": 1, "col": 2}, "text": "Cell 1,2"},
+        {"id": "para-closing", "para_idx": 1, "text": "Closing paragraph"},
     ]
 
 
@@ -132,8 +176,8 @@ class TestExtractBlockUuids:
         extracted = extract_block_uuids(sample_docx_path)
         assert len(extracted) == 0
 
-    def test_extract_returns_para_indices(self, sample_docx_path: Path, sample_blocks: list[dict]):
-        """Test that extraction returns correct paragraph indices."""
+    def test_extract_returns_para_keys(self, sample_docx_path: Path, sample_blocks: list[dict]):
+        """Test that extraction returns correct ParaKey objects."""
         embed_block_uuids(sample_docx_path, sample_blocks)
         extracted = extract_block_uuids(sample_docx_path)
 
@@ -141,7 +185,19 @@ class TestExtractBlockUuids:
             uuid = block["id"]
             para_idx = block["para_idx"]
             assert uuid in extracted
+            assert extracted[uuid] == ParaKey(para_idx)
+
+    def test_legacy_extract_returns_int(self, sample_docx_path: Path, sample_blocks: list[dict]):
+        """Test that legacy extraction returns integer indices."""
+        embed_block_uuids(sample_docx_path, sample_blocks)
+        extracted = extract_block_uuids_legacy(sample_docx_path)
+
+        for block in sample_blocks:
+            uuid = block["id"]
+            para_idx = block["para_idx"]
+            assert uuid in extracted
             assert extracted[uuid] == para_idx
+            assert isinstance(extracted[uuid], int)
 
 
 class TestRemoveAllUuidControls:
@@ -197,8 +253,8 @@ class TestRoundTrip:
         
         # Extract
         extracted = extract_block_uuids(sample_docx_path)
-        assert extracted.get("uuid-001") == 0
-        assert extracted.get("uuid-002") == 1
+        assert extracted.get("uuid-001") == ParaKey(0)
+        assert extracted.get("uuid-002") == ParaKey(1)
 
     def test_partial_embedding(self, sample_docx_path: Path):
         """Test embedding only some paragraphs."""
@@ -213,3 +269,126 @@ class TestRoundTrip:
         assert "uuid-first" in extracted
         assert "uuid-third" in extracted
         assert len(extracted) == 2
+
+
+class TestTableCellUuids:
+    """Tests for UUID embedding in table cells."""
+
+    def test_embed_table_cell_uuids(self, doc_with_table_path: Path, table_cell_blocks: list[dict]):
+        """Test embedding UUIDs in table cells."""
+        embedded = embed_block_uuids(doc_with_table_path, table_cell_blocks)
+        
+        # Should embed all blocks
+        assert len(embedded) == len(table_cell_blocks)
+        for block in table_cell_blocks:
+            assert block["id"] in embedded
+
+    def test_extract_table_cell_uuids(self, doc_with_table_path: Path, table_cell_blocks: list[dict]):
+        """Test extracting UUIDs from table cells."""
+        embed_block_uuids(doc_with_table_path, table_cell_blocks)
+        extracted = extract_block_uuids(doc_with_table_path)
+        
+        # Check paragraph blocks
+        assert extracted.get("para-intro") == ParaKey(0)
+        assert extracted.get("para-closing") == ParaKey(1)
+        
+        # Check table cell blocks
+        assert extracted.get("cell-0-0") == TableCellKey(0, 0, 0)
+        assert extracted.get("cell-0-1") == TableCellKey(0, 0, 1)
+        assert extracted.get("cell-1-0") == TableCellKey(0, 1, 0)
+        assert extracted.get("cell-1-2") == TableCellKey(0, 1, 2)
+
+    def test_table_cell_uuids_survive_save(self, doc_with_table_path: Path, table_cell_blocks: list[dict]):
+        """Test that table cell UUIDs survive save/reload cycle."""
+        embed_block_uuids(doc_with_table_path, table_cell_blocks)
+        
+        # Reload and extract
+        extracted = extract_block_uuids(doc_with_table_path)
+        
+        for block in table_cell_blocks:
+            assert block["id"] in extracted
+
+    def test_remove_table_cell_uuids(self, doc_with_table_path: Path, table_cell_blocks: list[dict]):
+        """Test removing UUIDs from table cells."""
+        embed_block_uuids(doc_with_table_path, table_cell_blocks)
+        
+        removed = remove_all_uuid_controls(doc_with_table_path)
+        
+        # Should remove all embedded controls
+        assert removed == len(table_cell_blocks)
+        
+        # No UUIDs should remain
+        extracted = extract_block_uuids(doc_with_table_path)
+        assert len(extracted) == 0
+
+    def test_table_content_preserved_after_removal(self, doc_with_table_path: Path, table_cell_blocks: list[dict]):
+        """Test that table cell content is preserved after UUID removal."""
+        embed_block_uuids(doc_with_table_path, table_cell_blocks)
+        remove_all_uuid_controls(doc_with_table_path)
+        
+        # Reload and check content
+        doc = Document(str(doc_with_table_path))
+        
+        # Check paragraphs
+        assert doc.paragraphs[0].text == "Intro paragraph"
+        assert doc.paragraphs[1].text == "Closing paragraph"
+        
+        # Check table cells
+        table = doc.tables[0]
+        assert table.cell(0, 0).text == "Cell 0,0"
+        assert table.cell(0, 1).text == "Cell 0,1"
+        assert table.cell(1, 0).text == "Cell 1,0"
+        assert table.cell(1, 2).text == "Cell 1,2"
+
+    def test_mixed_paragraph_and_table_blocks(self, doc_with_table_path: Path):
+        """Test embedding UUIDs in both paragraphs and table cells."""
+        blocks = [
+            {"id": "intro", "para_idx": 0, "text": "Intro"},
+            {"id": "cell-middle", "table": {"table_id": "tbl_0", "row": 0, "col": 1}, "text": "Middle"},
+            {"id": "closing", "para_idx": 1, "text": "Closing"},
+        ]
+        
+        embedded = embed_block_uuids(doc_with_table_path, blocks)
+        assert len(embedded) == 3
+        
+        extracted = extract_block_uuids(doc_with_table_path)
+        assert extracted.get("intro") == ParaKey(0)
+        assert extracted.get("cell-middle") == TableCellKey(0, 0, 1)
+        assert extracted.get("closing") == ParaKey(1)
+
+    def test_multiple_tables(self):
+        """Test embedding UUIDs in multiple tables."""
+        doc = Document()
+        doc.add_paragraph("Intro")
+        
+        # First table
+        table1 = doc.add_table(rows=1, cols=2)
+        table1.cell(0, 0).text = "T1 Cell 0,0"
+        table1.cell(0, 1).text = "T1 Cell 0,1"
+        
+        doc.add_paragraph("Middle")
+        
+        # Second table
+        table2 = doc.add_table(rows=1, cols=2)
+        table2.cell(0, 0).text = "T2 Cell 0,0"
+        table2.cell(0, 1).text = "T2 Cell 0,1"
+        
+        with tempfile.NamedTemporaryFile(suffix=".docx", delete=False) as f:
+            doc.save(f.name)
+            path = Path(f.name)
+        
+        blocks = [
+            {"id": "intro", "para_idx": 0, "text": "Intro"},
+            {"id": "t1-cell-0-0", "table": {"table_id": "tbl_0", "row": 0, "col": 0}, "text": "T1 Cell"},
+            {"id": "middle", "para_idx": 1, "text": "Middle"},
+            {"id": "t2-cell-0-1", "table": {"table_id": "tbl_1", "row": 0, "col": 1}, "text": "T2 Cell"},
+        ]
+        
+        embedded = embed_block_uuids(path, blocks)
+        assert len(embedded) == 4
+        
+        extracted = extract_block_uuids(path)
+        assert extracted.get("intro") == ParaKey(0)
+        assert extracted.get("t1-cell-0-0") == TableCellKey(0, 0, 0)
+        assert extracted.get("middle") == ParaKey(1)
+        assert extracted.get("t2-cell-0-1") == TableCellKey(1, 0, 1)

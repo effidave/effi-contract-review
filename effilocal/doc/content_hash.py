@@ -11,8 +11,9 @@ from __future__ import annotations
 
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Union
 
+from effilocal.doc.uuid_embedding import BlockKey, ParaKey, TableCellKey
 from effilocal.util.hash import norm_text_hash
 
 __all__ = [
@@ -35,6 +36,41 @@ def compute_block_hash(text: str) -> str:
         Hash in format "sha256:<hex>"
     """
     return norm_text_hash(text)
+
+
+def _block_to_key(block: dict) -> BlockKey | None:
+    """Convert a block dict to its corresponding BlockKey.
+    
+    Args:
+        block: A block dict from blocks.jsonl
+        
+    Returns:
+        ParaKey for paragraphs, TableCellKey for table cells, None if invalid
+    """
+    # Check for table cell block
+    table_info = block.get("table")
+    if table_info is not None:
+        table_id = table_info.get("table_id", "")
+        if table_id.startswith("tbl_"):
+            try:
+                table_idx = int(table_id[4:])
+            except ValueError:
+                return None
+        else:
+            return None
+        
+        row = table_info.get("row")
+        col = table_info.get("col")
+        if row is not None and col is not None:
+            return TableCellKey(table_idx, row, col)
+        return None
+    
+    # Check for paragraph block
+    para_idx = block.get("para_idx")
+    if para_idx is not None:
+        return ParaKey(para_idx)
+    
+    return None
 
 
 @dataclass(frozen=True, slots=True)
@@ -88,12 +124,12 @@ def match_blocks_by_hash(
     uuid_field: str = "id",
     hash_field: str = "content_hash",
     text_field: str = "text",
-    embedded_uuids: dict[str, int] | None = None,
+    embedded_uuids: dict[str, BlockKey] | None = None,
 ) -> MatchResult:
     """Match blocks using UUID, hash, and position heuristics.
 
     Matching priority:
-    1. UUID match: If new block's embedded UUID matches an old block's ID
+    1. UUID match: If new block's position matches an embedded UUID's BlockKey
     2. Hash match: If content hashes match (unique match preferred)
     3. Position match: For remaining unmatched, use position proximity
 
@@ -103,7 +139,7 @@ def match_blocks_by_hash(
         uuid_field: Field name for block ID
         hash_field: Field name for content hash
         text_field: Field name for text content
-        embedded_uuids: Optional mapping of UUID → paragraph index from document
+        embedded_uuids: Optional mapping of UUID → BlockKey from document
 
     Returns:
         MatchResult with matched pairs and unmatched blocks
@@ -122,27 +158,32 @@ def match_blocks_by_hash(
 
     # Phase 1: UUID matching (if embedded UUIDs provided)
     if embedded_uuids:
+        # Build reverse lookup: BlockKey → embedded UUID
+        key_to_uuid: dict[BlockKey, str] = {v: k for k, v in embedded_uuids.items()}
+        
         for new_block in new_blocks:
             new_id = new_block.get(uuid_field)
-            para_idx = new_block.get("para_idx")
-
-            if new_id is None or para_idx is None:
+            if new_id is None or new_id in matched_new:
                 continue
 
-            # Check if this paragraph position has an embedded UUID
-            for embedded_uuid, emb_idx in embedded_uuids.items():
-                if emb_idx == para_idx and embedded_uuid in old_by_id:
-                    matches.append(
-                        BlockMatch(
-                            old_id=embedded_uuid,
-                            new_id=new_id,
-                            method="uuid",
-                            confidence=1.0,
-                        )
+            # Convert new block to its key
+            new_key = _block_to_key(new_block)
+            if new_key is None:
+                continue
+
+            # Check if this position has an embedded UUID
+            embedded_uuid = key_to_uuid.get(new_key)
+            if embedded_uuid and embedded_uuid in old_by_id:
+                matches.append(
+                    BlockMatch(
+                        old_id=embedded_uuid,
+                        new_id=new_id,
+                        method="uuid",
+                        confidence=1.0,
                     )
-                    matched_old.add(embedded_uuid)
-                    matched_new.add(new_id)
-                    break
+                )
+                matched_old.add(embedded_uuid)
+                matched_new.add(new_id)
 
     # Phase 2: Hash matching
     for new_block in new_blocks:
@@ -174,13 +215,14 @@ def match_blocks_by_hash(
             matched_new.add(new_id)
         elif len(unmatched_candidates) > 1:
             # Multiple candidates - use position to disambiguate
-            new_idx = new_block.get("para_idx", 0)
+            new_key = _block_to_key(new_block)
+            new_idx = _get_position_index(new_key)
             best_candidate = None
             best_distance = float("inf")
 
             for candidate in unmatched_candidates:
-                # Try to find position from old analysis
-                old_idx = candidate.get("para_idx", 0)
+                old_key = _block_to_key(candidate)
+                old_idx = _get_position_index(old_key)
                 distance = abs(old_idx - new_idx)
                 if distance < best_distance:
                     best_distance = distance
@@ -205,9 +247,9 @@ def match_blocks_by_hash(
     remaining_old = [b for b in old_blocks if b.get(uuid_field) not in matched_old]
     remaining_new = [b for b in new_blocks if b.get(uuid_field) not in matched_new]
 
-    # Sort by position
-    remaining_old_sorted = sorted(remaining_old, key=lambda b: b.get("para_idx", 0))
-    remaining_new_sorted = sorted(remaining_new, key=lambda b: b.get("para_idx", 0))
+    # Sort by position index
+    remaining_old_sorted = sorted(remaining_old, key=lambda b: _get_position_index(_block_to_key(b)))
+    remaining_new_sorted = sorted(remaining_new, key=lambda b: _get_position_index(_block_to_key(b)))
 
     # Simple positional alignment for remaining blocks
     # Only match if positions are close and text is similar
@@ -216,7 +258,8 @@ def match_blocks_by_hash(
         if old_id is None or old_id in matched_old:
             continue
 
-        old_idx = old_block.get("para_idx", 0)
+        old_key = _block_to_key(old_block)
+        old_idx = _get_position_index(old_key)
         old_text = old_block.get(text_field, "")
 
         best_match = None
@@ -227,7 +270,8 @@ def match_blocks_by_hash(
             if new_id is None or new_id in matched_new:
                 continue
 
-            new_idx = new_block.get("para_idx", 0)
+            new_key = _block_to_key(new_block)
+            new_idx = _get_position_index(new_key)
             new_text = new_block.get(text_field, "")
 
             # Calculate position proximity score
@@ -269,6 +313,23 @@ def match_blocks_by_hash(
         unmatched_old=unmatched_old,
         unmatched_new=unmatched_new,
     )
+
+
+def _get_position_index(key: BlockKey | None) -> int:
+    """Get a numeric position index from a BlockKey for sorting/comparison.
+    
+    For paragraphs, returns the para_idx.
+    For table cells, returns a composite index that accounts for table, row, col.
+    """
+    if key is None:
+        return 0
+    if isinstance(key, ParaKey):
+        return key.para_idx
+    if isinstance(key, TableCellKey):
+        # Composite index: table_idx * 10000 + row * 100 + col
+        # This keeps table cells grouped and ordered
+        return key.table_idx * 10000 + key.row * 100 + key.col
+    return 0
 
 
 def _text_similarity(text1: str, text2: str) -> float:
