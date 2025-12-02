@@ -55,6 +55,21 @@
       {
         "command": "effi-contract-viewer.analyzeAndLoad",
         "title": "Effi: Analyze and Load Document"
+      },
+      {
+        "command": "effi-contract-viewer.saveDocument",
+        "title": "Effi: Save Document",
+        "icon": "$(save)"
+      },
+      {
+        "command": "effi-contract-viewer.saveCheckpoint",
+        "title": "Effi: Save Checkpoint",
+        "icon": "$(milestone)"
+      },
+      {
+        "command": "effi-contract-viewer.showHistory",
+        "title": "Effi: Show Version History",
+        "icon": "$(history)"
       }
     ],
     "menus": {
@@ -100,6 +115,11 @@
           "type": "boolean",
           "default": false,
           "description": "Show detailed numbering metadata (numId, counters, etc.)"
+        },
+        "effiContractViewer.autoCommit": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically commit changes to git when saving documents"
         }
       }
     }

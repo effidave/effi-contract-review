@@ -76,7 +76,56 @@ export function activate(context: vscode.ExtensionContext) {
         }
     );
 
-    context.subscriptions.push(showWebviewCommand, analyzeCommand, refreshCommand, loadAnalysisCommand, analyzeAndLoadCommand);
+    // Register command to save document with UUIDs
+    const saveDocumentCommand = vscode.commands.registerCommand(
+        'effi-contract-viewer.saveDocument',
+        async () => {
+            if (!currentDocumentPath) {
+                vscode.window.showWarningMessage('No document loaded');
+                return;
+            }
+            await saveDocument(currentDocumentPath);
+        }
+    );
+
+    // Register command to create checkpoint
+    const saveCheckpointCommand = vscode.commands.registerCommand(
+        'effi-contract-viewer.saveCheckpoint',
+        async () => {
+            if (!currentDocumentPath) {
+                vscode.window.showWarningMessage('No document loaded');
+                return;
+            }
+            const note = await vscode.window.showInputBox({
+                prompt: 'Enter checkpoint note (optional)',
+                placeHolder: 'e.g., Completed liability section review'
+            });
+            await saveCheckpoint(currentDocumentPath, note || '');
+        }
+    );
+
+    // Register command to show version history
+    const showHistoryCommand = vscode.commands.registerCommand(
+        'effi-contract-viewer.showHistory',
+        async () => {
+            if (!currentDocumentPath) {
+                vscode.window.showWarningMessage('No document loaded');
+                return;
+            }
+            await showVersionHistory(currentDocumentPath);
+        }
+    );
+
+    context.subscriptions.push(
+        showWebviewCommand, 
+        analyzeCommand, 
+        refreshCommand, 
+        loadAnalysisCommand, 
+        analyzeAndLoadCommand,
+        saveDocumentCommand,
+        saveCheckpointCommand,
+        showHistoryCommand
+    );
 
     // Auto-analyze on .docx file open if configured
     const autoAnalyze = vscode.workspace.getConfiguration('effiContractViewer').get<boolean>('autoAnalyze');
@@ -635,3 +684,161 @@ function getNonce() {
     }
     return text;
 }
+
+function getAnalysisDir(documentPath: string): string {
+    // Determine analysis directory based on document path
+    // Expected: EL_Projects/<project>/drafts/current_drafts/<file>.docx
+    //        -> EL_Projects/<project>/analysis/<filename_no_ext>/
+    const docDir = path.dirname(documentPath);
+    const draftsDir = path.dirname(docDir);
+    const projectDir = path.dirname(draftsDir);
+    const filenameNoExt = path.basename(documentPath, '.docx');
+    return path.join(projectDir, 'analysis', filenameNoExt);
+}
+
+async function saveDocument(documentPath: string) {
+    const analysisDir = getAnalysisDir(documentPath);
+    const autoCommit = vscode.workspace.getConfiguration('effiContractViewer').get<boolean>('autoCommit', true);
+    
+    await vscode.window.withProgress({
+        location: vscode.ProgressLocation.Notification,
+        title: 'Saving document...',
+        cancellable: false
+    }, async (progress) => {
+        try {
+            const workspaceRoot = path.join(__dirname, '..', '..');
+            const pythonCmd = getPythonPath(workspaceRoot);
+            const scriptPath = path.join(__dirname, '..', 'scripts', 'save_document.py');
+            
+            const args = ['save', documentPath, analysisDir];
+            if (!autoCommit) {
+                args.push('--no-commit');
+            }
+            
+            const { stdout } = await execAsync(`cd "${workspaceRoot}" && "${pythonCmd}" "${scriptPath}" ${args.map(a => `"${a}"`).join(' ')}`);
+            const result = JSON.parse(stdout);
+            
+            if (result.success) {
+                let message = `✓ Document saved with ${result.embedded_count} UUIDs embedded`;
+                if (result.commit_hash) {
+                    message += ` (committed: ${result.commit_hash.substring(0, 8)})`;
+                }
+                vscode.window.showInformationMessage(message);
+            } else {
+                vscode.window.showErrorMessage(`Save failed: ${result.error}`);
+            }
+        } catch (error) {
+            vscode.window.showErrorMessage(`Save failed: ${error}`);
+        }
+    });
+}
+
+async function saveCheckpoint(documentPath: string, note: string) {
+    const analysisDir = getAnalysisDir(documentPath);
+    
+    await vscode.window.withProgress({
+        location: vscode.ProgressLocation.Notification,
+        title: 'Creating checkpoint...',
+        cancellable: false
+    }, async (progress) => {
+        try {
+            const workspaceRoot = path.join(__dirname, '..', '..');
+            const pythonCmd = getPythonPath(workspaceRoot);
+            const scriptPath = path.join(__dirname, '..', 'scripts', 'save_document.py');
+            
+            const args = ['checkpoint', documentPath, analysisDir];
+            if (note) {
+                args.push('--note', note);
+            }
+            
+            const { stdout } = await execAsync(`cd "${workspaceRoot}" && "${pythonCmd}" "${scriptPath}" ${args.map(a => `"${a}"`).join(' ')}`);
+            const result = JSON.parse(stdout);
+            
+            if (result.success) {
+                let message = `✓ Checkpoint created`;
+                if (result.commit_hash) {
+                    message += ` (${result.commit_hash.substring(0, 8)})`;
+                }
+                if (note) {
+                    message += `: ${note}`;
+                }
+                vscode.window.showInformationMessage(message);
+            } else {
+                vscode.window.showErrorMessage(`Checkpoint failed: ${result.error}`);
+            }
+        } catch (error) {
+            vscode.window.showErrorMessage(`Checkpoint failed: ${error}`);
+        }
+    });
+}
+
+interface CommitInfo {
+    hash: string;
+    short_hash: string;
+    author: string;
+    date: string;
+    message: string;
+}
+
+async function showVersionHistory(documentPath: string) {
+    try {
+        const workspaceRoot = path.join(__dirname, '..', '..');
+        const pythonCmd = getPythonPath(workspaceRoot);
+        const scriptPath = path.join(__dirname, '..', 'scripts', 'get_history.py');
+        
+        const { stdout } = await execAsync(`cd "${workspaceRoot}" && "${pythonCmd}" "${scriptPath}" "${documentPath}"`);
+        const result = JSON.parse(stdout);
+        
+        if (!result.success) {
+            vscode.window.showErrorMessage(`Failed to get history: ${result.error}`);
+            return;
+        }
+        
+        const commits: CommitInfo[] = result.commits;
+        if (commits.length === 0) {
+            vscode.window.showInformationMessage('No version history found for this document');
+            return;
+        }
+        
+        // Show quick pick with commit history
+        const items = commits.map(c => ({
+            label: `$(git-commit) ${c.short_hash}`,
+            description: c.message,
+            detail: `${c.author} • ${new Date(c.date).toLocaleString()}`,
+            commit: c
+        }));
+        
+        const selected = await vscode.window.showQuickPick(items, {
+            placeHolder: 'Select a version to view details',
+            title: 'Version History'
+        });
+        
+        if (selected) {
+            const action = await vscode.window.showQuickPick([
+                { label: '$(eye) View Details', action: 'view' },
+                { label: '$(history) Restore This Version', action: 'restore' },
+            ], {
+                placeHolder: `Commit ${selected.commit.short_hash}: ${selected.commit.message}`
+            });
+            
+            if (action?.action === 'restore') {
+                const confirm = await vscode.window.showWarningMessage(
+                    `Restore document to version ${selected.commit.short_hash}? A backup will be created.`,
+                    'Restore',
+                    'Cancel'
+                );
+                if (confirm === 'Restore') {
+                    vscode.window.showInformationMessage('Restore functionality coming soon');
+                    // TODO: Implement restore via Python script
+                }
+            } else if (action?.action === 'view') {
+                vscode.window.showInformationMessage(
+                    `Commit: ${selected.commit.hash}\nAuthor: ${selected.commit.author}\nDate: ${selected.commit.date}\nMessage: ${selected.commit.message}`
+                );
+            }
+        }
+    } catch (error) {
+        vscode.window.showErrorMessage(`Failed to get history: ${error}`);
+    }
+}
+

@@ -266,6 +266,38 @@ Tools for inserting content relative to specific clause numbers in contracts:
 - Links comments to status via `w14:paraId` / `w15:paraId` matching
 - Returns structured comment data with `status`, `is_resolved`, `done_flag` fields
 
+#### **UUID Embedding & Block Identity (Sprint 1)**
+Block UUIDs are embedded directly into .docx documents for persistent tracking:
+
+**UUID Embedding** (`effilocal/doc/uuid_embedding.py`):
+- **`embed_block_uuids(doc, blocks)`**: Wraps paragraphs in SDT content controls with UUID tags
+- **`extract_block_uuids(doc)`**: Extracts UUID → paragraph index mapping from document
+- **`remove_all_uuid_controls(doc)`**: Strips effi SDTs while preserving content
+- Tag format: `<w:tag w:val="effi:block:<uuid>"/>`
+- UUIDs survive Word save/close/reopen cycles
+
+**Content Hash Fallback** (`effilocal/doc/content_hash.py`):
+- **`match_blocks_by_hash(old_blocks, new_blocks)`**: Three-phase matching:
+  1. UUID match (from embedded content controls)
+  2. Hash match (SHA-256 of normalized text)
+  3. Position match (proximity heuristics)
+- Returns `MatchResult` with matched pairs and unmatched lists
+
+**Git Integration** (`effilocal/util/git_ops.py`):
+- **`auto_commit(repo, message, files)`**: Stage and commit if changes exist
+- **`generate_commit_message(action, details)`**: Format: `[effi] <action>: <summary>`
+- **`get_file_history(repo, file)`**: Retrieve commit history for a file
+- Supports checkpoint commits for explicit save points
+
+**Analysis with UUID Preservation** (`effilocal/flows/analyze_doc.py`):
+- Re-analysis extracts embedded UUIDs and matches to previous blocks
+- Emits `analysis_delta.json` tracking matched/new/deleted/modified blocks
+- Use `preserve_uuids=True` (default) for incremental analysis
+
+**Save Flow** (`effilocal/flows/save_doc.py`):
+- **`save_with_uuids(docx_path, blocks_path)`**: Embed UUIDs and optionally git commit
+- **`create_checkpoint(docx_path, note)`**: Create named checkpoint commit
+
 ### Building/Packaging
 ```bash
 hatch build        # Wheel + sdist
@@ -320,10 +352,13 @@ Note: After migration, `word_document_server` is pristine upstream. All customiz
 
 ## Testing Notes
 
-**Test Suite**: 78 tests (100% passing)
+**Test Suite**: 146 tests (100% passing)
 - Framework: pytest 9.0.1
 - Run: `cd tests; pytest -v`
 - Coverage:
+  - `test_uuid_embedding.py` - UUID embedding/extraction via content controls
+  - `test_content_hash.py` - Block matching by hash with fallback strategies
+  - `test_git_ops.py` - Git commit, history, and checkpoint operations
   - `test_search_and_replace.py` - find_and_replace_text with whole_word_only, split-run detection
   - `test_comment_status*.py` - Comment extraction with status tracking
   - `test_local_mcp.py` - MCP protocol integration via HTTP transport

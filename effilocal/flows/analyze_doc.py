@@ -1,10 +1,17 @@
-"""Document analysis flow that emits Sprint 1 JSON artifacts."""
+"""Document analysis flow that emits Sprint 1 JSON artifacts.
+
+Supports UUID preservation across re-analysis:
+- Extracts embedded UUIDs from content controls in .docx
+- Matches new blocks to previous analysis by UUID, hash, then position
+- Emits analysis_delta.json tracking what changed
+"""
 
 from __future__ import annotations
 
 import json
 import shutil
 import zipfile
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable, Mapping, MutableMapping
 
@@ -16,9 +23,11 @@ from effilocal.doc import (
     relationships,
     sections as section_builder,
 )
+from effilocal.doc.content_hash import match_blocks_by_hash
 from effilocal.doc.indexer import build_index
 from effilocal.doc.manifest import build_manifest
 from effilocal.doc.styles import analyze_styles
+from effilocal.doc.uuid_embedding import extract_block_uuids
 from effilocal.util.hash import sha256_file
 from effilocal.util.io import write_jsonl
 from effilocal.mcp_server.core.comments import extract_all_comments
@@ -41,6 +50,7 @@ def analyze(
     emit_block_ranges: bool = True,
     emit_ltu_tree: bool = False,
     tool_version: str = DEFAULT_TOOL_VERSION,
+    preserve_uuids: bool = True,
 ) -> dict[str, Path]:
     """
     Parse a ``.docx`` document into the JSON artifacts defined in Sprint 1.
@@ -52,6 +62,8 @@ def analyze(
         emit_block_ranges: When ``True`` (default) write per-block tag ranges.
         emit_ltu_tree: When ``True`` emit ``ltu_tree.json`` as a section summary.
         tool_version: Version string recorded in the manifest.
+        preserve_uuids: When ``True`` (default), match new blocks to previous
+            analysis by UUID/hash and preserve block IDs where possible.
 
     Returns:
         Mapping of artifact names to their absolute paths.
@@ -64,7 +76,8 @@ def analyze(
         raise AnalyzeError(f"Source document not found: {docx_path}")
 
     out_dir.mkdir(parents=True, exist_ok=True)
-    LOGGER.info("Analyzing document path=%s doc_id=%s out_dir=%s", docx_path, doc_id, out_dir)
+    LOGGER.info("Analyzing document path=%s doc_id=%s out_dir=%s preserve_uuids=%s", 
+                docx_path, doc_id, out_dir, preserve_uuids)
 
     artifacts: dict[str, Path] = {}
 
@@ -74,11 +87,62 @@ def analyze(
         zip_ref.extractall(raw_dir)
     artifacts["raw_docx"] = raw_dir
 
+    # Extract embedded UUIDs from content controls
+    embedded_uuids: dict[str, int] = {}
+    if preserve_uuids:
+        try:
+            embedded_uuids = extract_block_uuids(docx_path)
+            if embedded_uuids:
+                LOGGER.info("Extracted %d embedded UUIDs from document", len(embedded_uuids))
+        except Exception as e:
+            LOGGER.warning("Failed to extract embedded UUIDs: %s", e)
+
+    # Load previous blocks for matching
+    old_blocks: list[dict] = []
+    old_blocks_path = out_dir / "blocks.jsonl"
+    if preserve_uuids and old_blocks_path.exists():
+        try:
+            with old_blocks_path.open("r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if line:
+                        old_blocks.append(json.loads(line))
+            LOGGER.info("Loaded %d blocks from previous analysis", len(old_blocks))
+        except Exception as e:
+            LOGGER.warning("Failed to load previous blocks: %s", e)
+
     blocks = list(direct_docx.iter_blocks(docx_path))
     attachments = _collect_attachments(blocks)
     hierarchy.infer_block_hierarchy(blocks)
     if not blocks:
         LOGGER.warning("No textual blocks detected in document: path=%s", docx_path)
+
+    # Match blocks to previous analysis and preserve UUIDs
+    match_result = None
+    if preserve_uuids and old_blocks:
+        match_result = match_blocks_by_hash(
+            old_blocks,
+            blocks,
+            embedded_uuids=embedded_uuids,
+        )
+        
+        # Build mapping of new_id -> old_id for matched blocks
+        id_mapping = {m.new_id: m.old_id for m in match_result.matches}
+        
+        # Update block IDs to preserve old UUIDs
+        for block in blocks:
+            new_id = block.get("id")
+            if new_id in id_mapping:
+                block["id"] = id_mapping[new_id]
+        
+        LOGGER.info(
+            "Block matching: uuid=%d, hash=%d, position=%d, new=%d, deleted=%d",
+            match_result.matched_by_uuid,
+            match_result.matched_by_hash,
+            match_result.matched_by_position,
+            len(match_result.unmatched_new),
+            len(match_result.unmatched_old),
+        )
 
     sections_payload = section_builder.assign_sections(blocks, doc_id)
     styles_payload = analyze_styles(blocks)
@@ -155,6 +219,34 @@ def analyze(
     manifest_path = out_dir / "manifest.json"
     _write_json(manifest_path, manifest_payload)
     artifacts["manifest.json"] = manifest_path
+
+    # Emit analysis_delta.json if we did UUID matching
+    if match_result is not None:
+        # Find modified blocks (matched but content changed)
+        modified_block_ids = []
+        old_blocks_by_id = {b["id"]: b for b in old_blocks}
+        for match in match_result.matches:
+            old_block = old_blocks_by_id.get(match.old_id)
+            new_block = next((b for b in blocks if b.get("id") == match.old_id), None)
+            if old_block and new_block:
+                old_hash = old_block.get("content_hash", "")
+                new_hash = new_block.get("content_hash", "")
+                if old_hash != new_hash:
+                    modified_block_ids.append(match.old_id)
+        
+        delta_payload = {
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "matched_by_uuid": match_result.matched_by_uuid,
+            "matched_by_hash": match_result.matched_by_hash,
+            "matched_by_position": match_result.matched_by_position,
+            "new_blocks": match_result.unmatched_new,
+            "deleted_blocks": match_result.unmatched_old,
+            "modified_blocks": modified_block_ids,
+        }
+        delta_path = out_dir / "analysis_delta.json"
+        _write_json(delta_path, delta_payload)
+        artifacts["analysis_delta.json"] = delta_path
+        LOGGER.info("Analysis delta emitted to %s", delta_path)
 
     # Extract EFFI_NOTES
     try:
