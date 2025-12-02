@@ -5,7 +5,7 @@ save_blocks.py - Save edited blocks back to a Word document
 Sprint 2: WYSIWYG Editor save functionality
 
 This script takes edited blocks from the webview editor and applies
-the changes to the original .docx document using the embedded UUIDs
+the changes to the original .docx document using native w14:paraId
 to identify which paragraphs to update.
 
 Usage:

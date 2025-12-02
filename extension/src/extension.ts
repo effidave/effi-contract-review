@@ -918,8 +918,10 @@ async function saveBlocksToDocument(blocks: any[], documentPath: string, webview
 }
 
 /**
- * Embed UUIDs from blocks.jsonl into the document.
- * This enables the save flow to identify which paragraphs to update.
+ * DEPRECATED: No longer needed - we use native w14:paraId.
+ * 
+ * This function is kept for backward compatibility but the underlying
+ * script is now a no-op that just reports the number of blocks with para_ids.
  */
 async function embedUuidsInDocument(documentPath: string, analysisDir: string): Promise<{success: boolean, count?: number, error?: string}> {
     try {

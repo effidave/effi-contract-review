@@ -1,5 +1,8 @@
 #!/usr/bin/env python
-"""Script to save document with UUID embedding and optional git commit.
+"""Script to save document and create git commits.
+
+Note: UUID embedding is no longer needed - we use native w14:paraId.
+This script now focuses on saving changes and git integration.
 
 Usage:
     save_document.py <docx_path> <analysis_dir> [--no-commit] [--message <msg>]
@@ -22,11 +25,11 @@ from effilocal.flows.save_doc import save_with_uuids, create_checkpoint
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Save document with UUIDs")
+    parser = argparse.ArgumentParser(description="Save document and commit changes")
     subparsers = parser.add_subparsers(dest="command", help="Commands")
 
     # Save command
-    save_parser = subparsers.add_parser("save", help="Save document with UUIDs")
+    save_parser = subparsers.add_parser("save", help="Save document changes")
     save_parser.add_argument("docx_path", type=Path, help="Path to .docx file")
     save_parser.add_argument("analysis_dir", type=Path, help="Path to analysis directory")
     save_parser.add_argument("--no-commit", action="store_true", help="Skip git commit")
