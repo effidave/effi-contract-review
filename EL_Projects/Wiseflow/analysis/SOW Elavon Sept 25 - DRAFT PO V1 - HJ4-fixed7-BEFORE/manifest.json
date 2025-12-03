@@ -1,7 +1,7 @@
 {
   "doc_id": "123e4567-e89b-12d3-a456-426614174000",
   "v": 1,
-  "created_at": "2025-12-02T18:08:34+00:00",
+  "created_at": "2025-12-02T21:58:30+00:00",
   "tool_version": "sprint2-dev",
   "doc_format": "docx",
   "sdt_carrier": "content-controls",
@@ -9,15 +9,15 @@
   "range_marker_tag_prefix": "marker:",
   "fallback_heading_label": "Body (no heading)",
   "checksums": {
-    "blocks.jsonl": "sha256:ea86450b97301badeb6a9c76e5bff261f559b45012f4fb991d80e879144420f6",
-    "sections.json": "sha256:fed788f654cf06ede6aa12108eb6d191c932b87e3da172bd328fdbaaa7991cbd",
+    "blocks.jsonl": "sha256:596fee5a1e0631dc72cb8d6e501de751549cc58a3285745cf13624e8aec345ad",
+    "sections.json": "sha256:2e6cdcb0f5090a4eb96c846244669830016efaa87cc5eb20a9174e285df98ccb",
     "styles.json": "sha256:ff0c1a11e636b61fbde4c6b0ff54e5db4fc34a6ac1af2dbe7a909a8fa4d8b72e",
-    "relationships.json": "sha256:0b7a12a364916d371d3a44fd2dea392c5f236b874fcf33cc4a12b650b3cf4e51",
-    "tag_ranges.jsonl": "sha256:a853fe70db6535707ec422565adbf50bd40119aecd441615c43c6b1e934c2dcd",
+    "relationships.json": "sha256:cee9b61794b4ae3966e222347c79fa81c5f33d58d5c0905cfc4973bf2d81c7af",
+    "tag_ranges.jsonl": "sha256:934057baab11ab375e74a79b3df6d24b1130585f31fddfa6e5068f5fa845e15d",
     "index.json": "sha256:71b8989a96ea9cde93cc18ed1a89285a2e2aa2979fab979043dd250e4aad662d"
   },
   "schema_checksums": {
-    "block.schema.json": "sha256:fa22734739fa3f65dfe9e789d7ccca75c1f9e685dc8cdd680e9d5b86c0250bbe",
+    "block.schema.json": "sha256:a79c29ccec8330bef4e2ed057adee57e544a0749ee71c8aac86b8f8e13d1550e",
     "edit_plan.schema.json": "sha256:4d9432a9d9b1b61675f527817c7dfdd608ffa20a63f2c1f50d9f0cba9ac367b1",
     "index.schema.json": "sha256:f305e73bdd196f01be5aba55a1bfe71dc0756218dbafc234fbd9e269c7f84557",
     "labels.schema.json": "sha256:44e45c3f69aa8c9728872198061b34cbc23aa83a232a93debb3bce13f42e1052",
@@ -30,32 +30,32 @@
   },
   "attachments": [
     {
-      "attachment_id": "8b6c1b13-3b3c-46c9-a4a2-86b19f31b78a",
+      "attachment_id": "54a08f57-b4ac-4af9-9094-ce97eedb2b7c",
       "type": "appendix",
       "ordinal": "A",
       "title": "Technology Scope Document",
       "parent_attachment_id": null
     },
     {
-      "attachment_id": "4533aeab-7139-4072-9611-78a039b40313",
+      "attachment_id": "fe86ef78-528d-4a5b-ac8d-e54e7d2fda06",
       "type": "appendix",
       "ordinal": "B",
       "title": "Workflow Diagram",
-      "parent_attachment_id": "8b6c1b13-3b3c-46c9-a4a2-86b19f31b78a"
+      "parent_attachment_id": "54a08f57-b4ac-4af9-9094-ce97eedb2b7c"
     },
     {
-      "attachment_id": "c55f82c4-3d2b-4d28-bc9c-551447210a1c",
+      "attachment_id": "165a5a01-fac6-4921-a6f1-c15d298452af",
       "type": "appendix",
       "ordinal": "C",
       "title": "Pricing Details",
-      "parent_attachment_id": "4533aeab-7139-4072-9611-78a039b40313"
+      "parent_attachment_id": "fe86ef78-528d-4a5b-ac8d-e54e7d2fda06"
     },
     {
-      "attachment_id": "e8cf618f-9d15-4bcc-9252-847cb704abb1",
+      "attachment_id": "bf81f050-99d6-43c8-9563-105cd662df20",
       "type": "appendix",
       "ordinal": "D",
       "title": "Success Criteria & Performance Measurement (Phase 1)",
-      "parent_attachment_id": "c55f82c4-3d2b-4d28-bc9c-551447210a1c"
+      "parent_attachment_id": "165a5a01-fac6-4921-a6f1-c15d298452af"
     }
   ]
 }

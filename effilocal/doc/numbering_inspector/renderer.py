@@ -287,7 +287,11 @@ class NumberingSession:
             abs_id = binding.abs_id
 
         style_id = para.style_id
-        is_style_linked = self._abstracts[abs_id]["styleLink"].get(style_id) == ilvl
+        effective_abs_id = resolve_proxy_abstract(self._abstracts, abs_id)
+        style_link_map = self._abstracts.get(effective_abs_id, {}).get("styleLink", {})
+        if not style_link_map and effective_abs_id != abs_id:
+            style_link_map = self._abstracts.get(abs_id, {}).get("styleLink", {})
+        is_style_linked = style_link_map.get(style_id) == ilvl
         if source == "style" and not is_style_linked:
             self._log(
                 "numbering.style_link_mismatch",
@@ -295,11 +299,10 @@ class NumberingSession:
                 styleId=style_id,
                 numId=num_id,
                 ilvl=ilvl,
-                expected_level=self._abstracts[abs_id]["styleLink"].get(style_id),
+                expected_level=style_link_map.get(style_id),
             )
             return NumberingResult(row=row, debug_row=debug_row if self._debug_enabled else None)
 
-        effective_abs_id = resolve_proxy_abstract(self._abstracts, abs_id)
         state = self._shared.setdefault(effective_abs_id, AbstractState([0] * 9))
         reset_due_to_new_num = False
         # Note: We don't reset counters when numId changes because different numIds

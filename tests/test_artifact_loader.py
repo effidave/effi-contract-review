@@ -122,24 +122,28 @@ def sample_artifacts_dir(tmp_path: Path) -> Path:
                 "parent_block_id": None,
                 "child_block_ids": ["block-2"],
                 "sibling_ordinal": 0,
+                "hierarchy_depth": 0,
             },
             {
                 "block_id": "block-2",
                 "parent_block_id": "block-1",
                 "child_block_ids": [],
                 "sibling_ordinal": 0,
+                "hierarchy_depth": 1,
             },
             {
                 "block_id": "block-3",
                 "parent_block_id": None,
                 "child_block_ids": [],
                 "sibling_ordinal": 1,
+                "hierarchy_depth": 0,
             },
             {
                 "block_id": "block-4",
                 "parent_block_id": None,
                 "child_block_ids": [],
                 "sibling_ordinal": 0,
+                "hierarchy_depth": 0,
             },
         ],
     }

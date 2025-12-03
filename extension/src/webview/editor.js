@@ -94,10 +94,18 @@ class BlockEditor {
         const editorContent = document.createElement('div');
         editorContent.className = 'editor-content';
         
-        this.blocks.forEach((block, index) => {
-            const blockEl = this._renderBlock(block, index);
-            editorContent.appendChild(blockEl);
-        });
+        for (let index = 0; index < this.blocks.length; ) {
+            const block = this.blocks[index];
+            if (block.table && block.table.table_id) {
+                const { element, count } = this._renderTableGroup(block.table.table_id, index);
+                editorContent.appendChild(element);
+                index += count;
+            } else {
+                const blockEl = this._renderBlock(block, index);
+                editorContent.appendChild(blockEl);
+                index += 1;
+            }
+        }
         
         this.container.appendChild(editorContent);
         this.editorContent = editorContent;
@@ -117,11 +125,13 @@ class BlockEditor {
         wrapper.className = 'editor-block-wrapper';
         wrapper.dataset.blockId = block.id;
         wrapper.dataset.blockIndex = String(index);
+        wrapper.dataset.blockIndexStart = String(index);
+        wrapper.dataset.blockIndexEnd = String(index);
 
-        // Text indentation based on level (no checkbox indent)
+        // Text indentation based on hierarchy depth (no checkbox indent)
         const listMeta = block.list || {};
-        const level = listMeta.level || 0;
-        const textIndent = level > 0 ? (level * 45) : 0;
+        const depth = typeof block.hierarchy_depth === 'number' ? block.hierarchy_depth : 0;
+        const textIndent = depth > 0 ? (depth * 45) : 0;
 
         // Add checkbox if enabled
         if (this.options.showCheckboxes) {
@@ -171,6 +181,204 @@ class BlockEditor {
         wrapper.appendChild(contentEl);
 
         return wrapper;
+    }
+
+    /**
+     * Render a contiguous group of table cell blocks as a single table wrapper
+     * @param {string} tableId
+     * @param {number} startIndex
+     * @returns {{ element: HTMLElement, count: number }}
+     */
+    _renderTableGroup(tableId, startIndex) {
+        const tableBlocks = [];
+        let index = startIndex;
+        while (index < this.blocks.length) {
+            const candidate = this.blocks[index];
+            if (!candidate.table || candidate.table.table_id !== tableId) {
+                break;
+            }
+            tableBlocks.push({ block: candidate, index });
+            index += 1;
+        }
+
+        const firstBlock = tableBlocks[0].block;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'editor-block-wrapper editor-table-wrapper';
+        wrapper.dataset.tableId = tableId;
+        wrapper.dataset.blockId = firstBlock.id;
+        wrapper.dataset.blockIndex = String(startIndex);
+        wrapper.dataset.blockIndexStart = String(startIndex);
+        wrapper.dataset.blockIndexEnd = String(startIndex + tableBlocks.length - 1);
+
+        if (this.options.showCheckboxes) {
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.className = 'clause-checkbox editor-checkbox';
+            checkbox.dataset.id = firstBlock.id;
+            checkbox.dataset.tableIds = tableBlocks.map(tb => tb.block.id).join(',');
+            checkbox.checked = this.options.selectedClauses.has(firstBlock.id);
+            checkbox.addEventListener('change', (e) => {
+                this.options.onCheckboxChange(firstBlock.id, e.target.checked);
+            });
+            wrapper.appendChild(checkbox);
+        }
+
+        const depth = typeof firstBlock.hierarchy_depth === 'number' ? firstBlock.hierarchy_depth : 0;
+        const indent = depth > 0 ? (depth * 45) : 0;
+
+        const contentEl = document.createElement('div');
+        contentEl.className = 'editor-table-container';
+        contentEl.style.paddingLeft = `${indent}px`;
+
+        const tableEl = document.createElement('table');
+        tableEl.className = 'block-table';
+
+        const toNumber = (value) => {
+            if (typeof value === 'number') {
+                return value;
+            }
+            if (typeof value === 'string' && value.trim() !== '') {
+                const parsed = parseInt(value, 10);
+                if (Number.isFinite(parsed)) {
+                    return parsed;
+                }
+            }
+            return Number.NaN;
+        };
+
+        const spanValue = (raw) => {
+            const parsed = toNumber(raw);
+            if (!Number.isNaN(parsed) && parsed > 0) {
+                return parsed;
+            }
+            return 1;
+        };
+
+        const rowNextCol = new Map();
+        const normalizedCells = tableBlocks.map(tb => {
+            const { block } = tb;
+            const tableInfo = block.table || {};
+            const rawRow = toNumber(tableInfo.row);
+            const row = !Number.isNaN(rawRow) ? rawRow : (rowNextCol.size > 0 ? Math.max(...rowNextCol.keys()) : 0);
+            const rawCol = toNumber(tableInfo.col);
+            const hasExplicitCol = !Number.isNaN(rawCol);
+            const rowSpan = spanValue(tableInfo.row_span);
+            const colSpan = spanValue(tableInfo.col_span);
+
+            const nextCol = rowNextCol.get(row) ?? 0;
+            let col = nextCol;
+            if (hasExplicitCol) {
+                col = rawCol;
+                if (col + colSpan > nextCol) {
+                    rowNextCol.set(row, col + colSpan);
+                }
+            } else {
+                rowNextCol.set(row, nextCol + colSpan);
+            }
+
+            return {
+                block,
+                index: tb.index,
+                row,
+                col,
+                rowSpan,
+                colSpan
+            };
+        });
+
+        const sortedCells = normalizedCells.slice().sort((a, b) => {
+            if (a.row !== b.row) {
+                return a.row - b.row;
+            }
+            return a.col - b.col;
+        });
+
+        const maxRow = Math.max(...sortedCells.map(cell => cell.row + cell.rowSpan), 1);
+        const maxCol = Math.max(...sortedCells.map(cell => cell.col + cell.colSpan), 1);
+        const rowCount = Math.max(Math.ceil(maxRow), 1);
+        const colCount = Math.max(Math.ceil(maxCol), 1);
+
+        const cellMap = new Map();
+        sortedCells.forEach(cell => {
+            cellMap.set(`${cell.row}:${cell.col}`, cell);
+        });
+
+        const spanTracker = Array.from({ length: rowCount }, () => Array(colCount).fill(false));
+
+        for (let row = 0; row < rowCount; row++) {
+            const rowEl = document.createElement('tr');
+            for (let col = 0; col < colCount; col++) {
+                if (spanTracker[row][col]) {
+                    continue;
+                }
+
+                const key = `${row}:${col}`;
+                const cellData = cellMap.get(key);
+                const td = document.createElement('td');
+
+                if (cellData) {
+                    const { block, rowSpan, colSpan } = cellData;
+                    if (rowSpan > 1) {
+                        td.rowSpan = rowSpan;
+                    }
+                    if (colSpan > 1) {
+                        td.colSpan = colSpan;
+                    }
+
+                    const cellEl = this._renderTableCell(block, cellData.index);
+                    cellEl.dataset.row = String(cellData.row);
+                    cellEl.dataset.col = String(cellData.col);
+                    cellEl.dataset.rowSpan = String(rowSpan);
+                    cellEl.dataset.colSpan = String(colSpan);
+                    td.appendChild(cellEl);
+
+                    for (let r = row; r < row + rowSpan; r++) {
+                        for (let c = col; c < col + colSpan; c++) {
+                            if (r < rowCount && c < colCount) {
+                                spanTracker[r][c] = true;
+                            }
+                        }
+                    }
+                } else {
+                    td.className = 'empty-table-cell';
+                    td.innerHTML = '&nbsp;';
+                    spanTracker[row][col] = true;
+                }
+
+                rowEl.appendChild(td);
+            }
+            tableEl.appendChild(rowEl);
+        }
+
+        contentEl.appendChild(tableEl);
+        wrapper.appendChild(contentEl);
+
+        return { element: wrapper, count: tableBlocks.length };
+    }
+
+    /**
+     * Render a single table cell within a table group
+     * @param {Block} block
+     * @param {number} index
+     * @returns {HTMLElement}
+     */
+    _renderTableCell(block, index) {
+        const cellWrapper = document.createElement('div');
+        cellWrapper.className = 'editor-table-cell';
+        cellWrapper.dataset.blockId = block.id;
+        cellWrapper.dataset.blockIndex = String(index);
+        cellWrapper.dataset.blockIndexStart = String(index);
+        cellWrapper.dataset.blockIndexEnd = String(index);
+
+        const textEl = document.createElement('div');
+        textEl.className = 'editor-block-text';
+        textEl.dataset.blockId = block.id;
+        textEl.contentEditable = this.options.readOnly ? 'false' : 'true';
+        textEl.spellcheck = !this.options.readOnly;
+        textEl.innerHTML = this._renderFormattedText(block);
+
+        cellWrapper.appendChild(textEl);
+        return cellWrapper;
     }
     
     /**
@@ -302,6 +510,10 @@ class BlockEditor {
         
         const blockId = target.dataset.blockId;
         const blockIndex = this.blocks.findIndex(b => b.id === blockId);
+        const block = this.blocks[blockIndex];
+        if (block && block.table) {
+            return;
+        }
         
         if (event.key === 'Enter' && !event.shiftKey) {
             event.preventDefault();
@@ -516,7 +728,8 @@ class BlockEditor {
             text: text.substring(offset),
             runs: [{ start: 0, end: text.length - offset, formats: [] }],
             list: block.list ? { ...block.list } : undefined,
-            para_idx: -1 // New block, will be assigned on save
+            para_idx: -1, // New block, will be assigned on save
+            hierarchy_depth: typeof block.hierarchy_depth === 'number' ? block.hierarchy_depth : 0,
         };
         
         // Truncate current block
@@ -630,9 +843,20 @@ class BlockEditor {
      */
     _reRenderBlock(blockIndex) {
         const block = this.blocks[blockIndex];
-        const oldWrapper = this.container.querySelector(`[data-block-id="${block.id}"]`)?.parentElement;
+        if (block.table && block.table.table_id) {
+            const tableWrapper = this.container.querySelector(`.editor-table-wrapper[data-table-id="${block.table.table_id}"]`);
+            if (!tableWrapper) {
+                return;
+            }
+            const { element } = this._renderTableGroup(block.table.table_id, Number(tableWrapper.dataset.blockIndexStart || 0));
+            tableWrapper.replaceWith(element);
+            return;
+        }
+
+        const textEl = this.container.querySelector(`.editor-block-text[data-block-id="${block.id}"]`);
+        const oldWrapper = textEl ? textEl.closest('.editor-block-wrapper') : null;
         if (!oldWrapper) return;
-        
+
         const newWrapper = this._renderBlock(block, blockIndex);
         oldWrapper.replaceWith(newWrapper);
     }

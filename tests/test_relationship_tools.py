@@ -49,6 +49,7 @@ def analysis_dir_with_relationships(tmp_path: Path) -> Path:
                 "clause_group_id": "block-1",
                 "continuation_of": None,
                 "attachment_id": None,
+                "hierarchy_depth": 0,
             },
             {
                 "block_id": "block-2",
@@ -60,6 +61,7 @@ def analysis_dir_with_relationships(tmp_path: Path) -> Path:
                 "clause_group_id": "block-2",
                 "continuation_of": None,
                 "attachment_id": None,
+                "hierarchy_depth": 1,
             },
         ]
     }

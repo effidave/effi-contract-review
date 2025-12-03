@@ -8,6 +8,7 @@ const vscode = acquireVsCodeApi();
 let currentData = null;
 let allBlocks = []; // Store all blocks from blocks.jsonl
 let relationshipsMap = new Map(); // Map of block_id -> relationship data
+let relationshipDepthCache = new Map();
 
 // Editor components (Sprint 2)
 let blockEditor = null;
@@ -26,14 +27,18 @@ window.addEventListener('message', event => {
     switch (message.command) {
         case 'updateData':
             currentData = message.data;
-            allBlocks = message.data.blocks || [];
+            allBlocks = (message.data.blocks || []).map(block => ({ ...block }));
             // Build relationships map
             relationshipsMap.clear();
+            relationshipDepthCache.clear();
             if (message.data.relationships && message.data.relationships.relationships) {
                 message.data.relationships.relationships.forEach(rel => {
                     relationshipsMap.set(rel.block_id, rel);
                 });
             }
+            allBlocks.forEach(block => {
+                block.hierarchy_depth = getRelationshipDepth(block.id);
+            });
             renderData(message.data);
             break;
         case 'noAnalysis':
@@ -123,6 +128,61 @@ function renderData(data) {
 
 
 const selectedClauses = new Set();
+
+
+function getRelationshipDepth(blockId) {
+    if (!blockId) {
+        return 0;
+    }
+    if (relationshipDepthCache.has(blockId)) {
+        return relationshipDepthCache.get(blockId);
+    }
+
+    const visited = new Set();
+
+    function resolve(id) {
+        if (!id) {
+            return 0;
+        }
+        if (relationshipDepthCache.has(id)) {
+            return relationshipDepthCache.get(id);
+        }
+        if (visited.has(id)) {
+            relationshipDepthCache.set(id, 0);
+            return 0;
+        }
+
+        visited.add(id);
+        const rel = relationshipsMap.get(id);
+        if (!rel || !rel.parent_block_id) {
+            relationshipDepthCache.set(id, 0);
+            visited.delete(id);
+            return 0;
+        }
+
+        const depth = resolve(rel.parent_block_id) + 1;
+        relationshipDepthCache.set(id, depth);
+        visited.delete(id);
+        return depth;
+    }
+
+    return resolve(blockId);
+}
+
+function getBlockDepth(block) {
+    if (!block) {
+        return 0;
+    }
+    if (typeof block.hierarchy_depth === 'number') {
+        return block.hierarchy_depth;
+    }
+    const depth = getRelationshipDepth(block.id);
+    if (typeof depth === 'number') {
+        block.hierarchy_depth = depth;
+        return depth;
+    }
+    return 0;
+}
 
 
 function handleCheckboxChange(id, checked) {
@@ -420,7 +480,11 @@ function paginateEditorContent(pagesHost, breakBeforeSet, breakAfterSet) {
 
     blockElements.forEach((blockEl, index) => {
         const blockHeight = blockHeights[index] || 0;
-        const hasBreakBefore = breakBeforeSet.has(index) && currentContent.childElementCount > 0;
+        const rawStart = blockEl.dataset.blockIndexStart ? parseInt(blockEl.dataset.blockIndexStart, 10) : (blockEl.dataset.blockIndex ? parseInt(blockEl.dataset.blockIndex, 10) : index);
+        const startIndex = Number.isNaN(rawStart) ? index : rawStart;
+        const rawEnd = blockEl.dataset.blockIndexEnd ? parseInt(blockEl.dataset.blockIndexEnd, 10) : startIndex;
+        const endIndex = Number.isNaN(rawEnd) ? startIndex : rawEnd;
+        const hasBreakBefore = breakBeforeSet.has(startIndex) && currentContent.childElementCount > 0;
         const exceedsHeight = (currentHeight + blockHeight) > PAGE_HEIGHT_PX && currentContent.childElementCount > 0;
 
         if (hasBreakBefore || exceedsHeight || pendingBreakAfter) {
@@ -434,7 +498,7 @@ function paginateEditorContent(pagesHost, breakBeforeSet, breakAfterSet) {
         currentContent.appendChild(blockEl);
         currentHeight += blockHeight;
 
-        if (breakAfterSet.has(index)) {
+        if (breakAfterSet.has(endIndex)) {
             pendingBreakAfter = true;
         }
     });
@@ -507,10 +571,10 @@ function buildFallbackPages(blocks, breakBeforeSet, breakAfterSet) {
 function renderBlock(block) {
     const listMeta = block.list || {};
     const isSelected = selectedClauses.has(block.id);
-    const level = listMeta.level || 0;
+    const depth = getBlockDepth(block);
 
-    // Text indentation based on level (for nested lists)
-    let textIndent = level > 0 ? (level * 24) : 0;
+    // Text indentation based on ancestor depth (for nested relationships)
+    let textIndent = depth > 0 ? (depth * 24) : 0;
 
     const ordinal = listMeta.ordinal || '';
 
@@ -558,11 +622,10 @@ function renderTable(blocks) {
     const isSelected = selectedClauses.has(firstBlock.id);
     
     // Indentation (use first block's level)
-    const listMeta = firstBlock.list || {};
-    const level = listMeta.level || 0;
+    const depth = getBlockDepth(firstBlock);
     let indent = 0;
-    if (level > 0) {
-        indent = 54 + ((level - 1) * 15);
+    if (depth > 0) {
+        indent = 54 + ((depth - 1) * 15);
     }
 
     return `

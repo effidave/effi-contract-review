@@ -5,16 +5,59 @@ from __future__ import annotations
 from typing import Any, Iterable, Mapping, MutableMapping
 
 
+def _compute_hierarchy_depths(
+    parent_lookup: Mapping[str, str | None],
+) -> dict[str, int]:
+    """Return mapping of block_id -> ancestor depth derived from parent links."""
+
+    depth_cache: dict[str, int] = {}
+
+    def _resolve(block_id: str, stack: set[str] | None = None) -> int:
+        if block_id in depth_cache:
+            return depth_cache[block_id]
+
+        if stack is None:
+            stack = set()
+        if block_id in stack:
+            # Break potential cycles gracefully by treating as root.
+            depth_cache[block_id] = 0
+            return 0
+
+        stack.add(block_id)
+        parent_id = parent_lookup.get(block_id)
+        if not parent_id:
+            depth = 0
+        else:
+            depth = _resolve(parent_id, stack) + 1
+        stack.remove(block_id)
+        depth_cache[block_id] = depth
+        return depth
+
+    for block_id in parent_lookup:
+        _resolve(block_id)
+
+    return depth_cache
+
+
 def build_relationships(
     blocks: Iterable[MutableMapping[str, Any]],
 ) -> list[dict[str, Any]]:
     """Return relationship records for the supplied blocks."""
 
+    block_list = list(blocks)
     relationships: list[dict[str, Any]] = []
+    parent_lookup: dict[str, str | None] = {}
 
-    for block in blocks:
+    for block in block_list:
         block_id = str(block["id"])
         parent_block_id = block.get("parent_block_id")
+        parent_lookup[block_id] = str(parent_block_id) if parent_block_id else None
+
+    hierarchy_depths = _compute_hierarchy_depths(parent_lookup)
+
+    for block in block_list:
+        block_id = str(block["id"])
+        parent_block_id = parent_lookup.get(block_id)
         child_ids = [str(child) for child in block.get("child_block_ids", [])]
         sibling_ordinal = int(block.get("sibling_ordinal", 0))
 
@@ -27,7 +70,7 @@ def build_relationships(
         relationships.append(
             {
                 "block_id": block_id,
-                "parent_block_id": str(parent_block_id) if parent_block_id else None,
+                "parent_block_id": parent_block_id,
                 "child_block_ids": child_ids,
                 "sibling_ordinal": sibling_ordinal,
                 "source": source,
@@ -36,6 +79,7 @@ def build_relationships(
                 "attachment_id": block.get("attachment_id"),
                 "clause_group_id": str(clause_group_id) if clause_group_id else None,
                 "continuation_of": str(continuation_of) if continuation_of else None,
+                "hierarchy_depth": hierarchy_depths.get(block_id, 0),
             }
         )
 

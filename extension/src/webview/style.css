@@ -517,6 +517,27 @@ body {
     color: #000000;
 }
 
+.editor-table-wrapper {
+    align-items: stretch;
+}
+
+.editor-table-container {
+    flex: 1;
+    display: flex;
+}
+
+.editor-table-container .block-table {
+    width: 100%;
+}
+
+.editor-table-cell {
+    width: 100%;
+}
+
+.editor-table-cell .editor-block-text {
+    min-height: 1.3em;
+}
+
 .block-count {
     margin-top: 12px;
     padding: 8px;
@@ -602,25 +623,33 @@ body {
 }
 
 /* Scrollbar */
+html,
+body {
+    scrollbar-color: #bfbfbf #ffffff;
+    scrollbar-width: thin;
+}
+
 ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--vscode-scrollbarSlider-background);
+    background: #ffffff;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--vscode-scrollbarSlider-background);
+    background: #bfbfbf;
+    border-radius: 6px;
+    border: 2px solid #ffffff;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--vscode-scrollbarSlider-hoverBackground);
+    background: #a6a6a6;
 }
 
 ::-webkit-scrollbar-thumb:active {
-    background: var(--vscode-scrollbarSlider-activeBackground);
+    background: #8c8c8c;
 }
 
 /* ================================
