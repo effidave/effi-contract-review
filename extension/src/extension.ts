@@ -630,12 +630,16 @@ function getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Web
     const editorPath = path.join(context.extensionPath, 'src', 'webview', 'editor.js');
     const toolbarPath = path.join(context.extensionPath, 'src', 'webview', 'toolbar.js');
     const shortcutsPath = path.join(context.extensionPath, 'src', 'webview', 'shortcuts.js');
+    
+    // Sprint 3: Comment panel
+    const commentsPath = path.join(context.extensionPath, 'src', 'webview', 'comments.js');
 
     const scriptUri = webview.asWebviewUri(vscode.Uri.file(scriptPath));
     const styleUri = webview.asWebviewUri(vscode.Uri.file(stylePath));
     const editorUri = webview.asWebviewUri(vscode.Uri.file(editorPath));
     const toolbarUri = webview.asWebviewUri(vscode.Uri.file(toolbarPath));
     const shortcutsUri = webview.asWebviewUri(vscode.Uri.file(shortcutsPath));
+    const commentsUri = webview.asWebviewUri(vscode.Uri.file(commentsPath));
 
     // Use CSP nonce for security
     const nonce = getNonce();
@@ -654,6 +658,7 @@ function getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Web
         <div class="header">
             <h1 id="document-title">Document</h1>
             <div class="toolbar">
+                <button id="toggle-comments-btn" class="icon-button" title="Toggle Comments">💬</button>
                 <button id="refresh-btn" class="icon-button" title="Refresh">↻</button>
             </div>
         </div>
@@ -668,8 +673,11 @@ function getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Web
             </div>
 
             <div id="data-view" style="display: none;">
-                <div class="pages-container">
-                    <div id="fulltext-content" class="tab-content"></div>
+                <div class="document-with-comments">
+                    <div class="pages-container">
+                        <div id="fulltext-content" class="tab-content"></div>
+                    </div>
+                    <div id="comment-panel-container" style="display: none;"></div>
                 </div>
             </div>
         </div>
@@ -688,6 +696,8 @@ function getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Web
     <script nonce="${nonce}" src="${editorUri}"></script>
     <script nonce="${nonce}" src="${toolbarUri}"></script>
     <script nonce="${nonce}" src="${shortcutsUri}"></script>
+    <!-- Sprint 3: Comment panel -->
+    <script nonce="${nonce}" src="${commentsUri}"></script>
     <script nonce="${nonce}" src="${scriptUri}"></script>
 </body>
 </html>`;

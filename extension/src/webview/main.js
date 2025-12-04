@@ -20,6 +20,10 @@ let pageBreakAfterSet = new Set();
 const PAGE_HEIGHT_PX = 1000; // Automatic page break threshold
 let paginationRequestId = null;
 
+// Comment panel (Sprint 3)
+let commentPanel = null;
+let commentsData = []; // Store comments from the document
+
 // Handle messages from extension
 window.addEventListener('message', event => {
     const message = event.data;
@@ -61,6 +65,29 @@ window.addEventListener('message', event => {
                 toolbar.setSaveStatus('error', message.message || 'Save failed');
             }
             break;
+        case 'updateComments':
+            // Handle comments data from extension
+            commentsData = message.comments || [];
+            if (commentPanel) {
+                commentPanel.setComments(commentsData);
+            }
+            break;
+        case 'commentResolved':
+            // Handle comment resolved confirmation
+            if (commentPanel) {
+                commentPanel.updateCommentStatus(message.commentId, 'resolved');
+            }
+            break;
+        case 'commentUnresolved':
+            // Handle comment unresolved confirmation
+            if (commentPanel) {
+                commentPanel.updateCommentStatus(message.commentId, 'active');
+            }
+            break;
+        case 'commentError':
+            // Handle comment operation error
+            console.error('Comment operation failed:', message.error);
+            break;
     }
 });
 
@@ -90,9 +117,40 @@ document.addEventListener('DOMContentLoaded', () => {
         vscode.postMessage({ command: 'ready' });
     });
     
+    // Set up toggle comments button
+    document.getElementById('toggle-comments-btn')?.addEventListener('click', () => {
+        toggleCommentsPanel();
+    });
+    
+    // Initialize comment panel
+    initializeCommentPanel();
+    
     // Notify extension that webview is ready
     vscode.postMessage({ command: 'ready' });
 });
+
+/**
+ * Toggle visibility of the comments panel
+ */
+function toggleCommentsPanel() {
+    const container = document.getElementById('comment-panel-container');
+    const toggleBtn = document.getElementById('toggle-comments-btn');
+    
+    if (!container) return;
+    
+    const isVisible = container.style.display !== 'none';
+    container.style.display = isVisible ? 'none' : 'block';
+    
+    // Update button appearance
+    if (toggleBtn) {
+        toggleBtn.classList.toggle('active', !isVisible);
+    }
+    
+    // Request comments if showing and not yet loaded
+    if (!isVisible && commentsData.length === 0) {
+        requestComments();
+    }
+}
 
 function showMessage(message) {
     const loadingEl = document.getElementById('loading');
@@ -722,4 +780,117 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+// ============================================================================
+// Comment Panel Functions (Sprint 3)
+// ============================================================================
+
+/**
+ * Initialize the comment panel
+ */
+function initializeCommentPanel() {
+    const container = document.getElementById('comment-panel-container');
+    if (!container || !window.CommentPanel) {
+        console.log('CommentPanel not available or container not found');
+        return;
+    }
+    
+    // Create the comment panel with event handlers
+    commentPanel = new window.CommentPanel(container, {
+        onCommentClick: (comment) => {
+            console.log('Comment clicked:', comment.id);
+        },
+        onScrollToBlock: (paraId) => {
+            scrollToBlockByParaId(paraId);
+        },
+        onResolve: (commentId) => {
+            resolveComment(commentId);
+        },
+        onUnresolve: (commentId) => {
+            unresolveComment(commentId);
+        },
+        onHighlightBlock: (paraId) => {
+            highlightBlockByParaId(paraId);
+        }
+    });
+    
+    // Set initial comments if available
+    if (commentsData.length > 0) {
+        commentPanel.setComments(commentsData);
+    }
+}
+
+/**
+ * Scroll the document view to a block by its para_id
+ */
+function scrollToBlockByParaId(paraId) {
+    if (!paraId) return;
+    
+    // Find the block in the document
+    const block = allBlocks.find(b => b.para_id === paraId);
+    if (!block) {
+        console.warn('Block not found for para_id:', paraId);
+        return;
+    }
+    
+    // Find the DOM element for this block
+    const blockElement = document.querySelector(`[data-para-id="${paraId}"], [data-id="${block.id}"]`);
+    if (blockElement) {
+        blockElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
+
+/**
+ * Highlight a block by its para_id
+ */
+function highlightBlockByParaId(paraId) {
+    // Remove existing highlights
+    document.querySelectorAll('.comment-highlight').forEach(el => {
+        el.classList.remove('comment-highlight');
+    });
+    
+    if (!paraId) return;
+    
+    // Find the block in the document
+    const block = allBlocks.find(b => b.para_id === paraId);
+    if (!block) return;
+    
+    // Find and highlight the DOM element
+    const blockElement = document.querySelector(`[data-para-id="${paraId}"], [data-id="${block.id}"]`);
+    if (blockElement) {
+        blockElement.classList.add('comment-highlight');
+    }
+}
+
+/**
+ * Send resolve comment request to extension
+ */
+function resolveComment(commentId) {
+    vscode.postMessage({
+        command: 'resolveComment',
+        commentId: commentId,
+        documentPath: currentData?.documentPath || ''
+    });
+}
+
+/**
+ * Send unresolve comment request to extension
+ */
+function unresolveComment(commentId) {
+    vscode.postMessage({
+        command: 'unresolveComment',
+        commentId: commentId,
+        documentPath: currentData?.documentPath || ''
+    });
+}
+
+/**
+ * Request comments from extension
+ */
+function requestComments() {
+    vscode.postMessage({
+        command: 'getComments',
+        documentPath: currentData?.documentPath || ''
+    });
 }
