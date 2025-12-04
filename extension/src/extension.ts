@@ -198,6 +198,16 @@ function showContractWebview(context: vscode.ExtensionContext) {
                         // Sprint 2: Save edited blocks to document
                         await saveBlocksToDocument(message.blocks, message.documentPath, webviewPanel);
                         break;
+                    // Sprint 3: Comment management
+                    case 'getComments':
+                        await getComments(message.documentPath, webviewPanel);
+                        break;
+                    case 'resolveComment':
+                        await resolveComment(message.documentPath, message.commentId, webviewPanel);
+                        break;
+                    case 'unresolveComment':
+                        await unresolveComment(message.documentPath, message.commentId, webviewPanel);
+                        break;
                 }
             },
             undefined,
@@ -872,6 +882,160 @@ async function saveBlocksToDocument(blocks: any[], documentPath: string, webview
             webviewPanel.webview.postMessage({ command: 'saveError', message: errorMsg });
         }
         vscode.window.showErrorMessage(errorMsg);
+    }
+}
+
+/**
+ * Sprint 3: Get all comments from a document
+ */
+async function getComments(documentPath: string, webviewPanel: vscode.WebviewPanel | undefined) {
+    if (!documentPath || !fs.existsSync(documentPath)) {
+        if (webviewPanel) {
+            webviewPanel.webview.postMessage({ 
+                command: 'commentError', 
+                error: 'Document path not provided or file not found' 
+            });
+        }
+        return;
+    }
+    
+    try {
+        const workspaceRoot = path.join(__dirname, '..', '..');
+        const pythonCmd = getPythonPath(workspaceRoot);
+        const scriptPath = path.join(__dirname, '..', 'scripts', 'manage_comments.py');
+        
+        const { stdout } = await execAsync(`cd "${workspaceRoot}" && "${pythonCmd}" "${scriptPath}" get_comments "${documentPath}"`);
+        const result = JSON.parse(stdout);
+        
+        if (result.success) {
+            if (webviewPanel) {
+                webviewPanel.webview.postMessage({ 
+                    command: 'updateComments', 
+                    comments: result.comments,
+                    totalComments: result.total_comments
+                });
+            }
+        } else {
+            if (webviewPanel) {
+                webviewPanel.webview.postMessage({ 
+                    command: 'commentError', 
+                    error: result.error 
+                });
+            }
+        }
+    } catch (error) {
+        if (webviewPanel) {
+            webviewPanel.webview.postMessage({ 
+                command: 'commentError', 
+                error: `Failed to get comments: ${error}` 
+            });
+        }
+    }
+}
+
+/**
+ * Sprint 3: Resolve a comment in a document
+ */
+async function resolveComment(documentPath: string, commentId: string, webviewPanel: vscode.WebviewPanel | undefined) {
+    if (!documentPath || !fs.existsSync(documentPath)) {
+        if (webviewPanel) {
+            webviewPanel.webview.postMessage({ 
+                command: 'commentError', 
+                error: 'Document path not provided or file not found',
+                commentId 
+            });
+        }
+        return;
+    }
+    
+    try {
+        const workspaceRoot = path.join(__dirname, '..', '..');
+        const pythonCmd = getPythonPath(workspaceRoot);
+        const scriptPath = path.join(__dirname, '..', 'scripts', 'manage_comments.py');
+        
+        const { stdout } = await execAsync(`cd "${workspaceRoot}" && "${pythonCmd}" "${scriptPath}" resolve_comment "${documentPath}" "${commentId}"`);
+        const result = JSON.parse(stdout);
+        
+        if (result.success) {
+            if (webviewPanel) {
+                webviewPanel.webview.postMessage({ 
+                    command: 'commentResolved', 
+                    commentId,
+                    success: true
+                });
+            }
+            // Refresh comments list
+            await getComments(documentPath, webviewPanel);
+        } else {
+            if (webviewPanel) {
+                webviewPanel.webview.postMessage({ 
+                    command: 'commentError', 
+                    error: result.error,
+                    commentId 
+                });
+            }
+        }
+    } catch (error) {
+        if (webviewPanel) {
+            webviewPanel.webview.postMessage({ 
+                command: 'commentError', 
+                error: `Failed to resolve comment: ${error}`,
+                commentId 
+            });
+        }
+    }
+}
+
+/**
+ * Sprint 3: Unresolve a comment in a document
+ */
+async function unresolveComment(documentPath: string, commentId: string, webviewPanel: vscode.WebviewPanel | undefined) {
+    if (!documentPath || !fs.existsSync(documentPath)) {
+        if (webviewPanel) {
+            webviewPanel.webview.postMessage({ 
+                command: 'commentError', 
+                error: 'Document path not provided or file not found',
+                commentId 
+            });
+        }
+        return;
+    }
+    
+    try {
+        const workspaceRoot = path.join(__dirname, '..', '..');
+        const pythonCmd = getPythonPath(workspaceRoot);
+        const scriptPath = path.join(__dirname, '..', 'scripts', 'manage_comments.py');
+        
+        const { stdout } = await execAsync(`cd "${workspaceRoot}" && "${pythonCmd}" "${scriptPath}" unresolve_comment "${documentPath}" "${commentId}"`);
+        const result = JSON.parse(stdout);
+        
+        if (result.success) {
+            if (webviewPanel) {
+                webviewPanel.webview.postMessage({ 
+                    command: 'commentUnresolved', 
+                    commentId,
+                    success: true
+                });
+            }
+            // Refresh comments list
+            await getComments(documentPath, webviewPanel);
+        } else {
+            if (webviewPanel) {
+                webviewPanel.webview.postMessage({ 
+                    command: 'commentError', 
+                    error: result.error,
+                    commentId 
+                });
+            }
+        }
+    } catch (error) {
+        if (webviewPanel) {
+            webviewPanel.webview.postMessage({ 
+                command: 'commentError', 
+                error: `Failed to unresolve comment: ${error}`,
+                commentId 
+            });
+        }
     }
 }
 

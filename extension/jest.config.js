@@ -1,0 +1,14 @@
+module.exports = {
+  testEnvironment: 'node',
+  testMatch: [
+    '**/src/__tests__/**/*.test.js',
+    // Exclude the custom runner test file from webview/__tests__
+    '!**/src/webview/__tests__/comments.test.js'
+  ],
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    // The comments.test.js uses a custom test runner, not Jest
+    '/src/webview/__tests__/comments.test.js'
+  ],
+  verbose: true
+};
