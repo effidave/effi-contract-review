@@ -5,6 +5,59 @@
 
 ---
 
+## Pre-Sprint Analysis
+
+### Current State (What's Already Done)
+
+**Comment Extraction** (`effilocal/mcp_server/core/comments.py`):
+- ✅ Extracts comment_id, para_id, author, initials, date, text
+- ✅ Status extraction from `commentsExtended.xml` (active/resolved)
+- ✅ `is_resolved` and `done_flag` fields populated
+- ✅ Paragraph index mapping via `w:commentReference` scanning
+- ✅ MCP tools: `get_all_comments`, `get_comments_by_author`, `add_word_comment`
+
+**Extension Webview** (`extension/src/webview/`):
+- ✅ Block-based WYSIWYG editor (Sprint 2)
+- ✅ BlockEditor class with contentEditable
+- ✅ Toolbar with B/I/U, undo/redo, save
+- ✅ Keyboard shortcuts (Ctrl+B/I/U/S/Z/Y)
+- ✅ View/Edit mode toggle
+- ✅ Extension ↔ webview messaging infrastructure
+- ✅ Para_id matching for document identity (Sprint 1)
+
+### Gaps to Fill
+
+**Comment Enhancements Needed:**
+- ❌ Anchor extraction (start/end character offsets from `w:commentRangeStart`/`w:commentRangeEnd`)
+- ⏸️ Reply threading (deferred - show flat list for MVP)
+- ❌ `resolve_comment()` function (update commentsExtended.xml done flag)
+- ❌ `delete_comment()` function
+- ❌ `reference_text` field always empty currently
+
+**Track Changes (All New):**
+- ❌ Revision extraction (parse `<w:ins>`, `<w:del>`, `<w:rPrChange>`)
+- ❌ Accept/reject individual revisions
+- ❌ Bulk accept/reject all
+
+**UI Components (All New):**
+- ❌ Comment panel sidebar
+- ❌ Inline comment indicators in editor
+- ❌ Context menu for adding comments
+- ❌ Track changes visualization (ins/del styling)
+- ❌ Accept/reject buttons
+
+### Architectural Decisions
+
+1. **Comments as Sidecar Data**: Keep comments separate from blocks, linked by para_id. This matches Word's architecture where comments are stored in separate XML parts.
+
+2. **Revision Storage**: Store revisions inline within blocks during extraction (each block may contain multiple revisions). This simplifies rendering since changes are already position-mapped.
+
+3. **Comment Panel Position**: Right sidebar (250px) that scrolls independently. Comments linked to visible blocks should scroll into view when block is focused.
+
+4. **Extension Scripts Bridge**: Use Python scripts in `extension/scripts/` for comment/revision operations, matching the existing `save_blocks.py` pattern.
+
+---
+
 ## Objectives
 
 1. **Comment Display** - Show existing Word comments inline
@@ -40,12 +93,14 @@
 - [ ] Comment linked to correct text range
 - [ ] Test: Add comment → save → open in Word → verify comment
 
-### US3.3: Reply to Comments
+### US3.3: Reply to Comments *(Deferred to future sprint)*
 **As a** lawyer responding to counterparty comments,  
 **I want** to reply to existing comments,  
 **So that** we can have a threaded discussion.
 
-**Acceptance Criteria:**
+**Status:** Deferred - showing flat comment list for MVP
+
+**Acceptance Criteria:** (Future Sprint)
 - [ ] "Reply" option on existing comments
 - [ ] Replies threaded under parent
 - [ ] Replies saved to .docx
@@ -90,27 +145,64 @@
 
 ## Technical Design
 
-### Comment Data Model
+### Existing Implementation Details
+
+**Current Comment Data Structure** (from `extract_comment_data()` in `comments.py`):
+```python
+{
+    'id': 'comment_1',           # Internal sequential ID
+    'comment_id': '0',           # Word's w:id attribute
+    'para_id': '3DD8236A',       # w14:paraId - links to commentsExtended.xml
+    'author': 'John Smith',
+    'initials': 'JS',
+    'date': '2025-12-02T10:30:00Z',
+    'text': 'Comment text content',
+    'paragraph_index': 5,        # Index in document body (via w:commentReference scan)
+    'in_table': False,
+    'reference_text': '',        # TODO: Currently always empty - need to extract
+    'status': 'active',          # From commentsExtended.xml ('active' or 'resolved')
+    'is_resolved': False,        # Boolean convenience
+    'done_flag': 0               # Raw value (0=active, 1=resolved)
+}
+```
+
+**Status Extraction Mechanism:**
+- `commentsExtended.xml` contains `w15:commentEx` elements with `w15:paraId` and `w15:done`
+- `extract_comment_status_map()` builds a mapping: `{para_id: {status, done, is_resolved}}`
+- `merge_comment_status()` links status to comments via para_id matching
+
+**Existing MCP Tools** (in `effilocal/mcp_server/main.py`):
+- `get_all_comments` - Calls `extract_all_comments()`
+- `get_comments_by_author` - Filters by author name
+- `add_word_comment` - Creates new comment (from upstream word_document_server)
+- `add_word_comment_near_text` - Adds comment near specific text
+
+### Enhanced Comment Data Model
 
 ```javascript
-// Comment stored in block model
+// Extended from current implementation
 {
-  id: "uuid",
-  text: "This clause needs review",
+  id: "comment_1",
+  comment_id: "0",
+  para_id: "3DD8236A",
   author: "John Smith",
+  initials: "JS",
   date: "2025-12-02T10:30:00Z",
-  status: "active", // or "resolved"
-  anchorBlockId: "block-uuid",
-  anchorStart: 15,  // character offset
-  anchorEnd: 45,
-  replies: [
-    {
-      id: "reply-uuid",
-      text: "I've updated the wording",
-      author: "Jane Doe",
-      date: "2025-12-03T14:00:00Z"
-    }
-  ]
+  text: "This clause needs review",
+  status: "active",
+  is_resolved: false,
+  done_flag: 0,
+  paragraph_index: 5,
+  
+  // NEW: Anchor information (paragraph-level for MVP)
+  anchor: {
+    para_id: "3DD8236A",          // Paragraph the comment is attached to
+    text: "anchored text"          // The text the comment references (nice-to-have)
+  }
+  
+  // DEFERRED: Reply threading (flat list for MVP)
+  // parent_comment_id: null,
+  // replies: [...]
 }
 ```
 
@@ -463,7 +555,7 @@ del.change {
 ### Integration Tests
 - Add comment → save → reopen → verify
 - Accept change → save → verify in Word
-- Reply to comment → verify threading
+- Resolve comment → verify status persists
 
 ### Manual Tests
 1. Open document with existing comments and track changes
@@ -477,11 +569,11 @@ del.change {
 
 ## Definition of Done
 
-- [ ] All existing comments visible
-- [ ] Can add new comments with anchor
-- [ ] Can reply to comments
+- [ ] All existing comments visible (flat list)
+- [ ] Can add new comments with paragraph-level anchor
+- [ ] ~~Can reply to comments~~ (Deferred)
 - [ ] Can resolve comments
-- [ ] Track changes displayed correctly
+- [ ] Track changes displayed correctly (insertions/deletions only)
 - [ ] Can accept/reject individual changes
 - [ ] All changes persist to .docx
 - [ ] Unit tests passing
@@ -501,3 +593,98 @@ del.change {
 - Word's comment IDs are not stable across saves; use internal tracking
 - Track changes may have complex overlapping; handle edge cases
 - Consider "compare versions" feature for future sprint
+
+---
+
+## Implementation Phases
+
+### Phase 1: Comment Display & Basic Interaction (Week 1)
+
+**Day 1-2: Backend Enhancement**
+1. Enhance `extract_all_comments()` to populate `paragraph_index` reliably (paragraph-level anchoring)
+2. Extract `reference_text` (the text the comment is attached to) - nice to have
+3. ~~Add reply threading support~~ → Deferred: show flat list for MVP
+4. Create `resolve_comment()` function to update `commentsExtended.xml`
+
+**Day 3-4: Comment Panel UI**
+1. Create `extension/src/webview/comments.js` - CommentPanel class
+2. Add right sidebar container to webview HTML
+3. Implement comment card rendering with author, date, status
+4. Add inline comment indicators (small icon in margin next to anchored text)
+5. Hover/click interaction to highlight anchored text
+
+**Day 5: Integration & Testing**
+1. Load comments alongside blocks in extension
+2. Wire up CommentPanel to blockEditor
+3. Test with real documents containing comments
+4. Handle resolved vs active visual distinction
+
+### Phase 2: Track Changes (Week 2, Days 1-3)
+
+**Day 1: Revision Extraction**
+1. Create `effilocal/mcp_server/core/revisions.py`
+2. Parse `<w:ins>` elements (insertions) - author, date, text, position
+3. Parse `<w:del>` elements (deletions) - author, date, original text, position
+4. ~~Parse `<w:rPrChange>` formatting changes~~ → Deferred to future sprint
+5. Map revisions to blocks via paragraph index
+6. Test with `HJ9 (TRACKED).docx`
+
+**Day 2: Track Changes Display**
+1. Create `extension/src/webview/track-changes.js`
+2. Render insertions with green underline, deletions with red strikethrough
+3. Show author on hover via title attribute
+4. Add CSS styling for ins/del elements
+
+**Day 3: Accept/Reject**
+1. Implement `accept_revision()` - remove `<w:ins>` wrapper, keep text
+2. Implement `reject_revision()` - remove `<w:ins>` element entirely
+3. For deletions: accept = remove text, reject = restore text
+4. Add toolbar buttons for "Accept All" / "Reject All"
+
+### Phase 3: Comment Creation & Reply (Week 2, Days 4-5)
+
+**Day 4: Add Comment Flow**
+1. Create context menu on text selection
+2. Add comment input dialog/popover
+3. Create `extension/scripts/add_comment.py`
+4. Wire up to existing MCP `add_word_comment` tool
+
+**Day 5: Reply & Resolve**
+1. Add "Reply" button to comment cards
+2. Create `add_reply()` function in Python
+3. Add "Resolve" button that updates status
+4. Final integration testing and polish
+
+---
+
+## Open Questions (Resolved)
+
+1. **Comment Anchor Precision**: Should we track character offsets within runs, or is paragraph-level anchoring sufficient for MVP?
+   - ✅ **Decision**: Start with paragraph-level anchoring (matches current para_id linkage). Enhance later if needed.
+
+2. **Reply Threading Priority**: Should we implement threaded reply display?
+   - ✅ **Decision**: Show flat list for MVP. Threading can be added in future sprint.
+
+3. **Track Changes Scope**: Should we handle formatting changes (`<w:rPrChange>`)?
+   - ✅ **Decision**: Focus on text insertions/deletions only. Ignore formatting changes in this sprint.
+
+4. **Test Documents**: Where are sample documents with comments and tracked changes?
+   - ✅ **Decision**: Use `HJ9 (TRACKED).docx` in `EL_Projects/Test Project/drafts/current_drafts/` - has both comments and tracked changes.
+
+5. **Track Changes Toggle**: Should we have a "Show/Hide Track Changes" toggle, or always show them?
+   - *Recommendation*: Always show with clear visual distinction. Add toggle in future sprint.
+
+6. **Multi-Author Colors**: Should different authors have different highlight colors (like Word)?
+   - *Recommendation*: Defer to future sprint. Use consistent green/red for MVP.
+
+---
+
+## Risk Mitigation
+
+| Risk | Impact | Mitigation |
+|------|--------|------------|
+| Complex nested revisions | Rendering breaks | Flatten to sequential changes during extraction |
+| Comment ranges span paragraphs | Anchor mismatch | Link to first paragraph, note limitation |
+| Word ID instability | Lost references | Use para_id as stable anchor, track by position |
+| Large documents slow | Poor UX | Lazy-load comments panel, virtualize if needed |
+

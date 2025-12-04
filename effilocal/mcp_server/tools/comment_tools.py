@@ -31,6 +31,8 @@ from effilocal.mcp_server.core.comments import (
     get_comments_for_paragraph,
     extract_comment_status_map,
     merge_comment_status,
+    resolve_comment,
+    unresolve_comment,
 )
 
 # Note: We don't import tool wrappers from upstream since we define our own
@@ -381,6 +383,82 @@ async def update_comment(
 
 
 # ============================================================================
+# NEW Functions (resolve/unresolve - Sprint 3 Phase 1)
+# ============================================================================
+
+async def resolve_comment_tool(
+    filename: str,
+    comment_id: str
+) -> str:
+    """Mark a comment as resolved in a Word document.
+    
+    This updates the commentsExtended.xml part to set the comment's status
+    to resolved (done="1"), which is how Word tracks resolved comments.
+    
+    Args:
+        filename: Path to the Word document
+        comment_id: The ID of the comment to resolve (the w:id attribute)
+    
+    Returns:
+        String result indicating success or failure
+    """
+    filename = ensure_docx_extension(filename)
+    if not os.path.exists(filename):
+        return f"Error: Document {filename} does not exist"
+
+    try:
+        doc = Document(filename)
+        success = resolve_comment(doc, comment_id)
+        
+        if success:
+            doc.save(filename)
+            return f"Successfully resolved comment {comment_id} in {os.path.basename(filename)}"
+        else:
+            return f"Error: Could not resolve comment {comment_id}. Comment may not exist or document may not have commentsExtended.xml."
+
+    except PermissionError:
+        return f"Error: Permission denied - The file '{os.path.basename(filename)}' is likely open in Word. Please close it and try again."
+    except Exception as e:
+        return f"Error: Failed to resolve comment: {str(e)}"
+
+
+async def unresolve_comment_tool(
+    filename: str,
+    comment_id: str
+) -> str:
+    """Mark a comment as active (unresolve it) in a Word document.
+    
+    This updates the commentsExtended.xml part to set the comment's status
+    to active (done="0"), reversing a previous resolve operation.
+    
+    Args:
+        filename: Path to the Word document
+        comment_id: The ID of the comment to unresolve (the w:id attribute)
+    
+    Returns:
+        String result indicating success or failure
+    """
+    filename = ensure_docx_extension(filename)
+    if not os.path.exists(filename):
+        return f"Error: Document {filename} does not exist"
+
+    try:
+        doc = Document(filename)
+        success = unresolve_comment(doc, comment_id)
+        
+        if success:
+            doc.save(filename)
+            return f"Successfully unresolved comment {comment_id} in {os.path.basename(filename)}"
+        else:
+            return f"Error: Could not unresolve comment {comment_id}. Comment may not exist or document may not have commentsExtended.xml."
+
+    except PermissionError:
+        return f"Error: Permission denied - The file '{os.path.basename(filename)}' is likely open in Word. Please close it and try again."
+    except Exception as e:
+        return f"Error: Failed to unresolve comment: {str(e)}"
+
+
+# ============================================================================
 # Re-export all functions for compatibility
 # ============================================================================
 
@@ -394,4 +472,8 @@ __all__ = [
     'add_comment_after_text',
     'add_comment_for_paragraph',
     'update_comment',
+    
+    # New functions (resolve/unresolve - Sprint 3 Phase 1)
+    'resolve_comment_tool',
+    'unresolve_comment_tool',
 ]

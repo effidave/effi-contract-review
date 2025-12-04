@@ -1,0 +1,41 @@
+{
+  "styles": [
+    {
+      "name": "Heading 1",
+      "type": "heading",
+      "count": 1,
+      "semantic_hint": "clause_heading",
+      "hint_scores": {
+        "clause_heading": 1.75,
+        "list_item": 0.75
+      }
+    },
+    {
+      "name": "Heading 2",
+      "type": "heading",
+      "count": 1,
+      "semantic_hint": "clause_heading",
+      "hint_scores": {
+        "clause_heading": 1.75,
+        "list_item": 0.75
+      }
+    },
+    {
+      "name": "Heading 3",
+      "type": "heading",
+      "count": 2,
+      "semantic_hint": "clause_heading",
+      "hint_scores": {
+        "clause_heading": 1.75,
+        "list_item": 0.75
+      }
+    },
+    {
+      "name": "Normal",
+      "type": "paragraph",
+      "count": 347,
+      "semantic_hint": null,
+      "hint_scores": null
+    }
+  ]
+}
