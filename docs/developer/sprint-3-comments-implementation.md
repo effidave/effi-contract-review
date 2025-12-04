@@ -2,15 +2,27 @@
 
 ## Phase 1: Comment Display & Basic Interaction (Complete)
 
-**Status**: ✅ Backend and UI implementation complete  
+**Status**: ✅ Complete  
 **Date**: December 4, 2025  
-**Commits**: `e96e684` (backend), `ab8e9aa` (UI)
+**Commits**: 
+- `e96e684` (Backend - Day 1-2)
+- `ab8e9aa` (UI - Day 3-4)
+- `010bdaf` (Integration - Day 5)
 
 ---
 
 ## Overview
 
 Sprint 3 adds comment and track changes support to the effi-contract-review system. Phase 1 focuses on displaying comments in a panel and enabling basic resolve/unresolve functionality.
+
+## Test Summary
+
+| Test Suite | Tests | Status |
+|------------|-------|--------|
+| Python Backend (pytest) | 24 | ✅ All pass |
+| UI Tests (custom runner) | 37 | ✅ All pass |
+| Integration Tests (Jest) | 31 | ✅ All pass |
+| **Total** | **92** | ✅ **All pass** |
 
 ## Completed Work
 
@@ -157,19 +169,27 @@ Each extracted comment has these fields:
 
 | File | Changes |
 |------|---------|
-| `extension/src/webview/comments.js` | New CommentPanel class |
+| `extension/src/webview/comments.js` | New CommentPanel class (352 lines) |
 | `extension/src/webview/__tests__/comments.test.js` | New test suite (37 tests) with mock DOM |
 | `extension/src/webview/main.js` | Comment panel integration, messaging |
 | `extension/src/webview/style.css` | Comprehensive comment panel styles |
 | `extension/src/extension.ts` | Script loading, toggle button, HTML structure |
 
+### Integration (Commit `010bdaf`)
+
+| File | Changes |
+|------|---------|
+| `extension/scripts/manage_comments.py` | New Python script for extension to call backend |
+| `extension/src/extension.ts` | Added getComments, resolveComment, unresolveComment handlers |
+| `extension/src/__tests__/integration.test.js` | New integration test suite (31 tests) |
+| `extension/jest.config.js` | Jest configuration to exclude custom runner tests |
+| `docs/developer/sprint-3-comments-implementation.md` | This documentation |
+
 ---
 
-## Remaining Phase 1 Work
+## Phase 1 Complete
 
-### UI Components (Complete)
-
-All UI components have been implemented:
+All Phase 1 work has been completed:
 
 1. **CommentPanel component** (`extension/src/webview/comments.js`) ✅
    - Flat list rendering of comments
@@ -278,6 +298,7 @@ from effilocal.mcp_server.core.comments import extract_all_comments
 doc = Document('contract.docx')
 comments = extract_all_comments(doc)
 
+
 for c in comments:
     status = '✓' if c['is_resolved'] else '○'
     print(f"{status} {c['author']}: {c['text'][:50]}...")
@@ -304,6 +325,72 @@ result = await resolve_comment_tool(
 )
 # Returns: "Successfully resolved comment 6 in contract.docx"
 ```
+
+### Via Extension Script
+
+```bash
+# Get all comments
+python extension/scripts/manage_comments.py get_comments document.docx
+
+# Resolve a comment
+python extension/scripts/manage_comments.py resolve_comment document.docx 0
+
+# Unresolve a comment
+python extension/scripts/manage_comments.py unresolve_comment document.docx 0
+```
+
+---
+
+## Integration Architecture
+
+### Extension ↔ Python Flow
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                         VS Code Extension                            │
+├─────────────────────────────────────────────────────────────────────┤
+│  Webview (main.js)           extension.ts (host)                    │
+│  ┌──────────────────┐        ┌──────────────────────┐              │
+│  │ CommentPanel     │        │ Message Handler      │              │
+│  │ - setComments()  │───────▶│ - getComments        │              │
+│  │ - onResolve()    │        │ - resolveComment     │              │
+│  │ - onUnresolve()  │        │ - unresolveComment   │              │
+│  └──────────────────┘        └──────────────────────┘              │
+│                                        │                            │
+└────────────────────────────────────────│────────────────────────────┘
+                                         │ execAsync()
+                                         ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                    extension/scripts/manage_comments.py             │
+├─────────────────────────────────────────────────────────────────────┤
+│  Commands:                                                          │
+│  - get_comments <docx>          → JSON {success, comments[]}       │
+│  - resolve_comment <docx> <id>  → JSON {success, message}          │
+│  - unresolve_comment <docx> <id>→ JSON {success, message}          │
+└─────────────────────────────────────────────────────────────────────┘
+                                         │
+                                         ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                    effilocal/mcp_server/core/comments.py            │
+├─────────────────────────────────────────────────────────────────────┤
+│  - extract_all_comments(doc)                                        │
+│  - resolve_comment(doc, comment_id)                                 │
+│  - unresolve_comment(doc, comment_id)                               │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Integration Test Coverage (31 Tests)
+
+| Category | Tests | Description |
+|----------|-------|-------------|
+| Python Script Existence | 2 | Script exists and is valid Python |
+| get_comments Command | 6 | JSON output, required fields, status, para_id |
+| resolve_comment Command | 3 | Resolve active, error handling |
+| unresolve_comment Command | 2 | Unresolve resolved, error handling |
+| Extension Handlers | 7 | Message structure verification |
+| End-to-End Flows | 4 | Full cycle, reference text, para_id, concurrent ops |
+| Comment-Block Association | 3 | para_id format, UI display fields |
+| Error Handling | 4 | Invalid commands, missing args, file not found |
 
 ---
 
