@@ -305,13 +305,18 @@ class NumberingSession:
 
         state = self._shared.setdefault(effective_abs_id, AbstractState([0] * 9))
         reset_due_to_new_num = False
-        # Note: We don't reset counters when numId changes because different numIds
-        # can share the same abstractNumId, and Word continues the counter sequence
-        # across them (e.g., numId 10 and 11 both referencing abstractNumId 101).
+        # When numId changes, check if the NEW numId has a startOverride for the current level.
+        # If so, we need to restart the counter to honor Word's explicit restart signal.
         if num_id is not None:
             if state.last_num_id is None:
                 state.last_num_id = num_id
             elif state.last_num_id != num_id:
+                # numId changed - check for startOverride on the new numId
+                lvl_overrides = self._nums.get(num_id, {}).get("lvlOverrides", {})
+                ov = lvl_overrides.get(ilvl)
+                if ov and "startOverride" in ov:
+                    # Word explicitly says to restart - flag it so we apply effective_start below
+                    reset_due_to_new_num = True
                 state.last_num_id = num_id
         counters = state.counters
         prev_level = state.prev_level
