@@ -268,6 +268,22 @@ Tools for inserting content relative to specific clause numbers in contracts:
 - Handles complex numbering formats (multi-level, legal style, lettered)
 - Inserted paragraphs get native `w14:paraId` attributes automatically from Word
 
+#### **Word Numbering Signals**
+Understanding how Word signals numbering restarts is critical for correct clause rendering:
+
+- **`abstractNumId`**: Defines the numbering *format* (pattern, styles). Multiple `numId`s can share the same abstract.
+- **`numId`**: A specific *instance* that paragraphs bind to. By default, same `abstractNumId` = shared counters.
+- **`startOverride`**: Explicit signal in `<w:lvlOverride>` to restart at a specific value.
+
+**Example**: In contracts with multiple Schedules, each Schedule's clause numbering uses a different `numId` pointing to the same `abstractNumId`, with `startOverride` to restart at 1:
+
+| Schedule | numId | abstractNumId | startOverride | Clauses |
+|----------|-------|---------------|---------------|---------|
+| Schedule 5 | 29 | 53 | ❌ No | 1-11 |
+| Schedule 6 | 33 | 53 | ✅ val="1" | 1, 2, 3... (restarts) |
+
+The `NumberingSession` in `renderer.py` detects `numId` changes and applies `startOverride` when present. See `docs/numbering.md` for full details.
+
 #### **Attachment Insertion**
 - Schedules, annexes, and exhibits are inserted as standard paragraphs
 - Paragraphs are tracked via their native `w14:paraId` attribute
