@@ -335,6 +335,20 @@ function getBlockDepth(block) {
     return 0;
 }
 
+/**
+ * Get the visual indent depth for a block.
+ * For blocks within an attachment (but not the anchor itself), reduce by 1 level
+ * so that level-0 clauses within a Schedule are not indented.
+ */
+function getVisualDepth(block) {
+    let depth = getBlockDepth(block);
+    // For blocks within an attachment (but not the anchor itself), reduce indent by 1 level
+    if (block.attachment_id && !block.attachment && depth > 0) {
+        depth = depth - 1;
+    }
+    return depth;
+}
+
 
 function handleCheckboxChange(id, checked) {
     // Check if this is a table checkbox
@@ -729,7 +743,7 @@ function buildFallbackPages(blocks, breakBeforeSet, breakAfterSet) {
 function renderBlock(block) {
     const listMeta = block.list || {};
     const isSelected = selectedClauses.has(block.id);
-    const depth = getBlockDepth(block);
+    const depth = getVisualDepth(block);
 
     // Text indentation based on ancestor depth (for nested relationships)
     let textIndent = depth > 0 ? (depth * 24) : 0;
@@ -780,7 +794,7 @@ function renderTable(blocks) {
     const isSelected = selectedClauses.has(firstBlock.id);
     
     // Indentation (use first block's level)
-    const depth = getBlockDepth(firstBlock);
+    const depth = getVisualDepth(firstBlock);
     let indent = 0;
     if (depth > 0) {
         indent = 54 + ((depth - 1) * 15);

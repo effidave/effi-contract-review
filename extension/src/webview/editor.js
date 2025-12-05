@@ -135,7 +135,12 @@ class BlockEditor {
 
         // Text indentation based on hierarchy depth (no checkbox indent)
         const listMeta = block.list || {};
-        const depth = typeof block.hierarchy_depth === 'number' ? block.hierarchy_depth : 0;
+        let depth = typeof block.hierarchy_depth === 'number' ? block.hierarchy_depth : 0;
+        // For blocks within an attachment (but not the anchor itself), reduce indent by 1 level
+        // so that level-0 clauses within a Schedule are not indented
+        if (block.attachment_id && !block.attachment && depth > 0) {
+            depth = depth - 1;
+        }
         const textIndent = depth > 0 ? (depth * 45) : 0;
 
         // Add checkbox if enabled
@@ -233,7 +238,11 @@ class BlockEditor {
             wrapper.appendChild(checkbox);
         }
 
-        const depth = typeof firstBlock.hierarchy_depth === 'number' ? firstBlock.hierarchy_depth : 0;
+        let depth = typeof firstBlock.hierarchy_depth === 'number' ? firstBlock.hierarchy_depth : 0;
+        // For blocks within an attachment (but not the anchor itself), reduce indent by 1 level
+        if (firstBlock.attachment_id && !firstBlock.attachment && depth > 0) {
+            depth = depth - 1;
+        }
         const indent = depth > 0 ? (depth * 45) : 0;
 
         const contentEl = document.createElement('div');
