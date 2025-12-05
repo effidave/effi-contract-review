@@ -96,16 +96,17 @@ class TestResolveComment:
         if not comments:
             pytest.skip("No comments in test document")
         
-        # Get first active comment
-        active_comments = [c for c in comments if c.get('status') == 'active']
+        # Get first active comment with a para_id
+        active_comments = [c for c in comments if c.get('status') == 'active' and c.get('para_id')]
         if not active_comments:
-            pytest.skip("No active comments to resolve")
+            pytest.skip("No active comments with para_id to resolve")
         
         comment_to_resolve = active_comments[0]
+        para_id = comment_to_resolve['para_id']
         comment_id = comment_to_resolve['comment_id']
         
-        # Resolve the comment
-        result = resolve_comment(doc, comment_id)
+        # Resolve the comment using para_id
+        result = resolve_comment(doc, para_id)
         
         assert result is True, "resolve_comment should return True on success"
         
@@ -135,21 +136,21 @@ class TestResolveComment:
         if not comments:
             pytest.skip("No comments in test document")
         
-        active_comments = [c for c in comments if c.get('status') == 'active']
+        active_comments = [c for c in comments if c.get('status') == 'active' and c.get('para_id')]
         if not active_comments:
-            pytest.skip("No active comments to resolve")
+            pytest.skip("No active comments with para_id to resolve")
         
         comment = active_comments[0]
+        para_id = comment['para_id']
         
-        # Resolve it
-        resolve_comment(doc, comment['comment_id'])
+        # Resolve it using para_id
+        resolve_comment(doc, para_id)
         doc.save(str(test_doc_with_comments))
         
         # Check the XML directly
         doc2 = Document(str(test_doc_with_comments))
         status_map = extract_comment_status_map(doc2)
         
-        para_id = comment['para_id']
         if para_id and para_id in status_map:
             assert status_map[para_id]['is_resolved'] is True, "commentsExtended should show resolved"
             assert status_map[para_id]['done'] == 1, "done flag should be 1 in XML"
@@ -181,20 +182,22 @@ class TestResolveComment:
         if not comments:
             pytest.skip("No comments in test document")
         
-        # Find or create a resolved comment
-        resolved_comments = [c for c in comments if c.get('status') == 'resolved']
+        # Find or create a resolved comment with para_id
+        resolved_comments = [c for c in comments if c.get('status') == 'resolved' and c.get('para_id')]
         if resolved_comments:
             comment = resolved_comments[0]
         else:
             # Resolve one first
-            active = [c for c in comments if c.get('status') == 'active']
+            active = [c for c in comments if c.get('status') == 'active' and c.get('para_id')]
             if not active:
-                pytest.skip("No comments to test")
+                pytest.skip("No comments with para_id to test")
             comment = active[0]
-            resolve_comment(doc, comment['comment_id'])
+            resolve_comment(doc, comment['para_id'])
+        
+        para_id = comment['para_id']
         
         # Resolve again - should succeed (idempotent)
-        result = resolve_comment(doc, comment['comment_id'])
+        result = resolve_comment(doc, para_id)
         assert result is True, "Resolving already-resolved comment should still return True"
 
 
@@ -214,7 +217,7 @@ class TestUnresolveComment:
             pytest.fail("unresolve_comment not yet implemented - expected failure")
     
     def test_unresolve_comment_by_id(self, test_doc_with_comments):
-        """Test unresolving a comment by its comment_id."""
+        """Test unresolving a comment by its para_id."""
         try:
             from effilocal.mcp_server.core.comments import resolve_comment, unresolve_comment
         except ImportError:
@@ -226,16 +229,17 @@ class TestUnresolveComment:
         if not comments:
             pytest.skip("No comments in test document")
         
-        # First resolve a comment
-        active_comments = [c for c in comments if c.get('status') == 'active']
+        # First resolve a comment with para_id
+        active_comments = [c for c in comments if c.get('status') == 'active' and c.get('para_id')]
         if not active_comments:
-            pytest.skip("No active comments to test")
+            pytest.skip("No active comments with para_id to test")
         
         comment = active_comments[0]
-        resolve_comment(doc, comment['comment_id'])
+        para_id = comment['para_id']
+        resolve_comment(doc, para_id)
         
         # Now unresolve it
-        result = unresolve_comment(doc, comment['comment_id'])
+        result = unresolve_comment(doc, para_id)
         assert result is True, "unresolve_comment should return True on success"
         
         # Verify status

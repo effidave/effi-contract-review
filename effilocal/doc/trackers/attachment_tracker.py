@@ -241,12 +241,9 @@ class AttachmentTracker(TrackerEventConsumer):
         group_id = event.restart_group_id
         if not isinstance(group_id, str):
             return None
-        if group_id in self._processed_groups:
-            return None
-        ordinal_position = payload.get("ordinal_at_parse")
-        if not payload.get("restart_boundary", False) and ordinal_position not in (None, 1):
-            return None
 
+        # First, check if the numbering pattern indicates an attachment type
+        # (e.g., "Schedule %1", "Annex %1", "Exhibit %1")
         attachment_type = None
         pattern = payload.get("pattern") or ""
         for cue in ATTACHMENT_PATTERN_CUES:
@@ -254,6 +251,7 @@ class AttachmentTracker(TrackerEventConsumer):
                 attachment_type = cue.attachment_type
                 break
 
+        # Also check the block text for attachment keywords
         parsed = self._parse_attachment_from_text(block.get("text", ""))
         if parsed is None and self._pending_heading_text:
             parsed = self._parse_attachment_from_text(self._pending_heading_text)
@@ -263,10 +261,24 @@ class AttachmentTracker(TrackerEventConsumer):
         if attachment_type is None:
             return None
 
+        # For attachment-type numbering (Schedule, Annex, etc.), each numbered item
+        # at level 0 is a separate attachment, regardless of restart_boundary.
+        # Only apply the group/restart checks for non-attachment numbering.
+        is_attachment_pattern = attachment_type in self._ROOT_TYPES or attachment_type is not None
+        
+        if not is_attachment_pattern:
+            # For regular numbered lists, use the original restart logic
+            if group_id in self._processed_groups:
+                return None
+            ordinal_position = payload.get("ordinal_at_parse")
+            if not payload.get("restart_boundary", False) and ordinal_position not in (None, 1):
+                return None
+
         if parsed is not None:
             _, ordinal, title = parsed
         else:
             ordinal = _normalise_ordinal_token(str(payload.get("ordinal") or ""))
+            title = None
             title = None
 
         parent_id = (
@@ -342,15 +354,22 @@ def _normalise_ordinal(raw: str) -> str | None:
 
 
 def _normalise_ordinal_token(token: str) -> str | None:
-    cleaned = token.strip()
-    cleaned = cleaned.strip(ATTACHMENT_PUNCTUATION + ". ")
-    if not cleaned:
-        return None
-    return _normalise_ordinal(cleaned)
-
-
-def _normalise_ordinal_token(token: str) -> str | None:
+    """Extract and normalise an ordinal from a token like 'Schedule 1' or '1'."""
     cleaned = token.strip().strip(ATTACHMENT_PUNCTUATION + ". ")
     if not cleaned:
         return None
-    return _normalise_ordinal(cleaned)
+    
+    # Try direct normalisation first (for tokens like "1", "A", "IV")
+    direct = _normalise_ordinal(cleaned)
+    if direct is not None:
+        return direct
+    
+    # For patterns like "Schedule 1", extract the trailing ordinal
+    parts = cleaned.split()
+    if len(parts) >= 2:
+        # Check if last part is an ordinal
+        last_ordinal = _normalise_ordinal(parts[-1])
+        if last_ordinal is not None:
+            return last_ordinal
+    
+    return None

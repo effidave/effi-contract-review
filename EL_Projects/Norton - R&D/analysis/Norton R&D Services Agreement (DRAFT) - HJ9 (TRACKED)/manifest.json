@@ -1,7 +1,7 @@
 {
   "doc_id": "123e4567-e89b-12d3-a456-426614174000",
   "v": 1,
-  "created_at": "2025-12-05T12:54:22+00:00",
+  "created_at": "2025-12-05T13:27:36+00:00",
   "tool_version": "sprint2-dev",
   "doc_format": "docx",
   "sdt_carrier": "content-controls",
@@ -9,11 +9,11 @@
   "range_marker_tag_prefix": "marker:",
   "fallback_heading_label": "Body (no heading)",
   "checksums": {
-    "blocks.jsonl": "sha256:d0bc58679340ac7c1c6e0e976c383e98943a3f8d8c0d8a5a27f1e0708db79140",
-    "sections.json": "sha256:cbc7ba185de16401c16f5e197e3511674dc03cd322cb19b1361bafd5de1bfa12",
+    "blocks.jsonl": "sha256:dfc1f68bd28405e3c3861119651058777d5b69d568bfa539a31384208090b333",
+    "sections.json": "sha256:7f62cfede3e7cb78b9be083b413cbc032b0b913958598703e42d9ea9fed1d7bc",
     "styles.json": "sha256:2147027691afdeec5ac01a85dba55fe654b57885ee95db44a2608412038c91e2",
-    "relationships.json": "sha256:3be1fcb7ba5cf1156da9be76f58f7aad4f34c5c47fdc20e1df0d6cc6d04c55df",
-    "tag_ranges.jsonl": "sha256:87ccf07a5e08eea4196e11f0b4888acf5b8a3767e72692af7cda826643eb2ca4",
+    "relationships.json": "sha256:49ed86236a212e2d47e814e95dce43345731f58e83dc105f384ee2001358e20a",
+    "tag_ranges.jsonl": "sha256:42e2320e368a0ac6739553946ff4a696b5e9c3236ea061c0cf059ab1760f6032",
     "index.json": "sha256:75215e62fe9dc90d9df51b042f746122167cfdf91d6c6293cdff570d24262aca"
   },
   "schema_checksums": {

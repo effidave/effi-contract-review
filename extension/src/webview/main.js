@@ -638,6 +638,8 @@ function paginateEditorContent(pagesHost, breakBeforeSet, breakAfterSet) {
         const startIndex = Number.isNaN(rawStart) ? index : rawStart;
         const rawEnd = blockEl.dataset.blockIndexEnd ? parseInt(blockEl.dataset.blockIndexEnd, 10) : startIndex;
         const endIndex = Number.isNaN(rawEnd) ? startIndex : rawEnd;
+        
+        // Respect explicit Word page breaks AND use height-based automatic breaks
         const hasBreakBefore = breakBeforeSet.has(startIndex) && currentContent.childElementCount > 0;
         const exceedsHeight = (currentHeight + blockHeight) > PAGE_HEIGHT_PX && currentContent.childElementCount > 0;
 
@@ -692,6 +694,7 @@ function buildFallbackPages(blocks, breakBeforeSet, breakAfterSet) {
     const averageBlockHeight = 32; // rough estimate when actual layout isn't available
 
     blocks.forEach((block, index) => {
+        // Respect explicit Word page breaks
         if (breakBeforeSet.has(index) && currentPage.length > 0) {
             pages.push(currentPage);
             currentPage = [];
@@ -708,6 +711,7 @@ function buildFallbackPages(blocks, breakBeforeSet, breakAfterSet) {
             return;
         }
 
+        // Also use height-based automatic breaks
         if (currentHeight >= PAGE_HEIGHT_PX) {
             pages.push(currentPage);
             currentPage = [];
