@@ -65,7 +65,9 @@ class AttachmentTracker(TrackerEventConsumer):
             self._pending_heading_text = None
             return current_section_id, True
 
-        numbering_event = self._pending_numbering_events.pop(block["id"], None)
+        # Look up by para_id since block["id"] is not yet assigned during iteration
+        lookup_key = block.get("para_id") or block.get("id")
+        numbering_event = self._pending_numbering_events.pop(lookup_key, None)
         numbered_info = self._detect_numbered_attachment(block, numbering_event)
         if numbered_info is not None:
             current_section_id = self._apply_attachment(block, current_section_id, numbered_info)

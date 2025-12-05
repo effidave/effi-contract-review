@@ -425,8 +425,11 @@ class AnalysisPipeline:
     ) -> None:
         if not self._tracker_event_consumers:
             return
+        # Use para_id for event matching since block["id"] is not yet assigned
+        # para_id comes from Word's w14:paraId and is available at parse time
+        para_id = block.get("para_id") or str(block.get("id"))
         event = NumberingEvent(
-            block_id=str(block.get("id")),
+            block_id=para_id,
             payload=payload,
             restart_group_id=group_id,
         )
