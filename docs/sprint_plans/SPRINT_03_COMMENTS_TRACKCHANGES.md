@@ -613,6 +613,56 @@ del.change {
 4. Add inline comment indicators (small icon in margin next to anchored text)
 5. Hover/click interaction to highlight anchored text
 
+Plan: Sprint 3 Phase 1 Day 3-4 - Comment Panel UI Integration
+Integrate the existing CommentPanel skeleton into the webview editor with full bidirectional communication between extension, webview, and MCP server.
+
+## Architecture
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          VS Code Extension Host                              │
+│  extension.ts                                                                │
+│  ├── onDidReceiveMessage: resolveComment → call MCP tool                    │
+│  ├── onDidReceiveMessage: unresolveComment → call MCP tool                  │
+│  └── loadComments(): extract via MCP → postMessage to webview               │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    ↕ postMessage
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              Webview (main.js)                               │
+│  ┌─────────────────────────────────────┬───────────────────────────────────┐│
+│  │         Editor Container            │       Comment Panel Sidebar       ││
+│  │  ┌───────────────────────────────┐  │  ┌─────────────────────────────┐  ││
+│  │  │  BlockEditor (editor.js)      │  │  │  CommentPanel (comments.js) │  ││
+│  │  │  - blocks with para_id        │  │  │  - flat list of comments    │  ││
+│  │  │  - comment indicators (📝)    │←─┼──│  - filter buttons           │  ││
+│  │  │  - highlight on selection     │  │  │  - resolve/unresolve        │  ││
+│  │  └───────────────────────────────┘  │  └─────────────────────────────┘  ││
+│  └─────────────────────────────────────┴───────────────────────────────────┘│
+└─────────────────────────────────────────────────────────────────────────────┘
+
+## Files to Modify/Create
+File	Action	Purpose
+main.js	Modify	Add sidebar container, wire CommentPanel, handle messages
+editor.js	Modify	Add scrollToBlock(paraId), highlightBlock(paraId), comment indicators
+comments.js	Exists	Already has CommentPanel class - verify callbacks work
+style.css	Modify	Add sidebar layout, comment panel styles, highlight styles
+extension.ts	Modify	Add loadComments, resolveComment, unresolveComment handlers
+comments.test.js	Create	Jest tests for CommentPanel
+extension/src/webview/__tests__/integration.test.js	Create	Integration tests for panel ↔ editor
+Steps
+Review current files - Read main.js, editor.js, extension.ts to understand existing patterns
+Write Jest tests first - Test CommentPanel rendering, callbacks, filter behavior
+Add sidebar HTML structure in main.js with flexbox layout (editor 70%, sidebar 30%)
+Add editor methods - scrollToBlock(paraId), highlightBlock(paraId), getBlocksWithComments()
+Wire CommentPanel callbacks to editor and vscode.postMessage
+Add extension message handlers for resolveComment, unresolveComment, loadComments
+Add CSS for layout, comment cards, highlight states
+Test with real document - HJ9 (TRACKED).docx
+Further Considerations
+Comment loading trigger: Should comments load automatically when document opens, or on-demand via button? Recommendation: Auto-load with document
+
+Block-to-comment mapping: Blocks have para_id, comments have para_id. Should I build a lookup map in main.js or pass through editor? Recommendation: Build map in main.js, pass to both components
+
+MCP tool invocation: How does extension.ts currently call MCP tools? Via Python script subprocess or direct MCP client? Need to check existing pattern
+
 **Day 5: Integration & Testing**
 1. Load comments alongside blocks in extension
 2. Wire up CommentPanel to blockEditor
@@ -647,10 +697,10 @@ del.change {
 1. Create context menu on text selection
 2. Add comment input dialog/popover
 3. Create `extension/scripts/add_comment.py`
-4. Wire up to existing MCP `add_word_comment` tool
+4. Wire up to existing MCP `add_comment_for_paragraph` tool
 
 **Day 5: Reply & Resolve**
-1. Add "Reply" button to comment cards
+1. Add "Reply" button to comment cards - n.b. threaded comments are deferred - for now this will simply create a comment on the same para_id
 2. Create `add_reply()` function in Python
 3. Add "Resolve" button that updates status
 4. Final integration testing and polish

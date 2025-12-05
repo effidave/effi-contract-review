@@ -23,3 +23,11 @@ Q&A chat to identify an appropriate precedent
 auto-git the artifacts 'with a useful message'
 update the artifacts on each change - but how to preserve the uuids?
 create an md file based on the blocks on each change - and use this as the context alongside all other contexts
+
+generate paraId for new blocks:
+Random rnd = new();
+int idNum = rnd.Next(1, int.MaxValue);
+string newId = idNum.ToString("X8");
+[but also check for collisions with existing paraIds]
+
+make sure track changes is rendering deleted text

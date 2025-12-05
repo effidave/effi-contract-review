@@ -182,7 +182,8 @@ const createMockVSCode = () => {
 // Test data
 const sampleComments = [
     {
-        id: '0',
+        id: 'comment_1',
+        comment_id: '0',  // actual w:id from XML
         author: 'John Smith',
         date: '2024-01-15T10:30:00Z',
         text: 'Please review this clause carefully.',
@@ -192,7 +193,8 @@ const sampleComments = [
         reference_text: 'The Supplier shall provide...'
     },
     {
-        id: '1',
+        id: 'comment_2',
+        comment_id: '1',  // actual w:id from XML
         author: 'Jane Doe',
         date: '2024-01-16T14:45:00Z',
         text: 'This has been addressed.',
@@ -202,7 +204,8 @@ const sampleComments = [
         reference_text: 'Payment terms shall be...'
     },
     {
-        id: '2',
+        id: 'comment_3',
+        comment_id: '2',  // actual w:id from XML
         author: 'Bob Wilson',
         date: '2024-01-17T09:15:00Z',
         text: 'Need legal review on this section.',
@@ -448,7 +451,7 @@ runner.describe('Comment Status Display', () => {
         panel.setComments([sampleComments[0]]);
         
         const item = container.querySelector('.comment-item');
-        assert.equal(item.dataset.commentId, '0', 'Should store comment id in data-comment-id');
+        assert.equal(item.dataset.commentId, 'comment_1', 'Should store comment id in data-comment-id');
     });
     
     runner.it('should store para_id in data attribute when available', () => {
@@ -478,7 +481,7 @@ runner.describe('CommentPanel Interactions', () => {
         const item = container.querySelector('.comment-item');
         item.click();
         
-        assert.equal(clickedId, '0', 'Should call onCommentClick with comment id');
+        assert.equal(clickedId, 'comment_1', 'Should call onCommentClick with comment id');
     });
     
     runner.it('should trigger scrollToBlock when comment with para_id is clicked', () => {
@@ -529,30 +532,30 @@ runner.describe('CommentPanel Interactions', () => {
     
     runner.it('should call onResolve callback when resolve button clicked', () => {
         if (!CommentPanel) throw new Error('CommentPanel not implemented');
-        let resolvedId = null;
+        let resolvedParaId = null;
         const { container, panel } = createPanelWithMockDOM({
-            onResolve: (commentId) => { resolvedId = commentId; }
+            onResolve: (paraId) => { resolvedParaId = paraId; }
         });
         panel.setComments([sampleComments[0]]);
         
         const resolveBtn = container.querySelector('.comment-action-resolve');
         resolveBtn.click();
         
-        assert.equal(resolvedId, '0', 'Should call onResolve with comment id');
+        assert.equal(resolvedParaId, '05C9333F', 'Should call onResolve with para_id');
     });
     
     runner.it('should call onUnresolve callback when unresolve button clicked', () => {
         if (!CommentPanel) throw new Error('CommentPanel not implemented');
-        let unresolvedId = null;
+        let unresolvedParaId = null;
         const { container, panel } = createPanelWithMockDOM({
-            onUnresolve: (commentId) => { unresolvedId = commentId; }
+            onUnresolve: (paraId) => { unresolvedParaId = paraId; }
         });
         panel.setComments([sampleComments[1]]);
         
         const unresolveBtn = container.querySelector('.comment-action-unresolve');
         unresolveBtn.click();
         
-        assert.equal(unresolvedId, '1', 'Should call onUnresolve with comment id');
+        assert.equal(unresolvedParaId, '1A2B3C4D', 'Should call onUnresolve with para_id');
     });
     
     runner.it('should prevent event bubbling when action button clicked', () => {
@@ -584,9 +587,9 @@ runner.describe('Comment-Block Highlighting', () => {
         const { container, panel } = createPanelWithMockDOM();
         panel.setComments(sampleComments);
         
-        panel.selectComment('0');
+        panel.selectComment('comment_1');
         
-        const item = container.querySelector('[data-comment-id="0"]');
+        const item = container.querySelector('[data-comment-id="comment_1"]');
         assert.ok(item.classList.contains('comment-selected'), 'Selected comment should have highlight class');
     });
     
@@ -595,11 +598,11 @@ runner.describe('Comment-Block Highlighting', () => {
         const { container, panel } = createPanelWithMockDOM();
         panel.setComments(sampleComments);
         
-        panel.selectComment('0');
-        panel.selectComment('1');
+        panel.selectComment('comment_1');
+        panel.selectComment('comment_2');
         
-        const item0 = container.querySelector('[data-comment-id="0"]');
-        const item1 = container.querySelector('[data-comment-id="1"]');
+        const item0 = container.querySelector('[data-comment-id="comment_1"]');
+        const item1 = container.querySelector('[data-comment-id="comment_2"]');
         assert.ok(!item0.classList.contains('comment-selected'), 'First comment should not be selected');
         assert.ok(item1.classList.contains('comment-selected'), 'Second comment should be selected');
     });
@@ -612,7 +615,7 @@ runner.describe('Comment-Block Highlighting', () => {
         });
         panel.setComments([sampleComments[0]]);
         
-        panel.selectComment('0');
+        panel.selectComment('comment_1');
         
         assert.equal(highlightedParaId, '05C9333F', 'Should call onHighlightBlock with para_id');
     });
@@ -625,7 +628,7 @@ runner.describe('Comment-Block Highlighting', () => {
         });
         panel.setComments([sampleComments[0]]);
         
-        panel.selectComment('0');
+        panel.selectComment('comment_1');
         panel.clearSelection();
         
         assert.ok(highlightCleared, 'Should call onHighlightBlock with null to clear highlight');
@@ -636,9 +639,9 @@ runner.describe('Comment-Block Highlighting', () => {
         const { container, panel } = createPanelWithMockDOM();
         panel.setComments(sampleComments);
         
-        panel.selectComment('0');
+        panel.selectComment('comment_1');
         
-        const item = container.querySelector('[data-comment-id="0"]');
+        const item = container.querySelector('[data-comment-id="comment_1"]');
         assert.ok(item._scrolledIntoView, 'Selected comment should be scrolled into view');
     });
     
@@ -720,7 +723,7 @@ runner.describe('Comment Updates', () => {
         const { container, panel } = createPanelWithMockDOM();
         panel.setComments([{...sampleComments[0]}]);
         
-        panel.updateCommentStatus('0', 'resolved');
+        panel.updateCommentStatus('comment_1', 'resolved');
         
         const item = container.querySelector('.comment-item');
         assert.ok(item.classList.contains('status-resolved'), 'Comment should show as resolved');
@@ -731,7 +734,7 @@ runner.describe('Comment Updates', () => {
         const { container, panel } = createPanelWithMockDOM();
         panel.setComments([{...sampleComments[1]}]);
         
-        panel.updateCommentStatus('1', 'active');
+        panel.updateCommentStatus('comment_2', 'active');
         
         const item = container.querySelector('.comment-item');
         assert.ok(item.classList.contains('status-active'), 'Comment should show as active');
@@ -755,10 +758,10 @@ runner.describe('Comment Updates', () => {
         const { container, panel } = createPanelWithMockDOM();
         panel.setComments(sampleComments);
         
-        panel.selectComment('0');
+        panel.selectComment('comment_1');
         panel.setComments(sampleComments); // refresh
         
-        const item = container.querySelector('[data-comment-id="0"]');
+        const item = container.querySelector('[data-comment-id="comment_1"]');
         assert.ok(item.classList.contains('comment-selected'), 'Selection should be maintained after refresh');
     });
     
@@ -769,9 +772,9 @@ runner.describe('Comment Updates', () => {
             onHighlightBlock: (paraId) => { if (paraId === null) highlightCleared = true; }
         });
         panel.setComments(sampleComments);
-        panel.selectComment('0');
+        panel.selectComment('comment_1');
         
-        // Refresh with comments not including id '0'
+        // Refresh with comments not including id 'comment_1'
         panel.setComments([sampleComments[1], sampleComments[2]]);
         
         assert.ok(highlightCleared, 'Should clear highlight when selected comment is removed');

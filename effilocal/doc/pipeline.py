@@ -11,6 +11,7 @@ from uuid import uuid4
 from docx.table import Table
 from docx.text.paragraph import Paragraph
 
+from effilocal.doc.amended_paragraph import AmendedParagraph
 from effilocal.doc.numbering import NumberingDefinitions
 from effilocal.doc.numbering_inspector import NumberingInspector
 from effilocal.doc.numbering_context import NumberingEvent
@@ -103,13 +104,21 @@ class AnalysisPipeline:
         return self._current_section_id
 
     def process_paragraph(self, paragraph: Paragraph) -> Block | None:
-        """Build and enrich a paragraph block, returning ``None`` for blanks."""
+        """Build and enrich a paragraph block, returning ``None`` for blanks.
+        
+        Uses AmendedParagraph to correctly handle track changes:
+        - amended_text includes insertions (w:ins > w:t) but excludes deletions (w:delText)
+        - amended_runs provides formatting info with zero-width delete runs containing deleted_text
+        """
+        # Create AmendedParagraph wrapper for track changes support
+        amended = AmendedParagraph(paragraph)
 
         build_result, next_section_id = build_paragraph_block(
             paragraph,
             self._current_section_id,
             hash_provider=self._hash_tracker.next_hash,
             as_dataclass=self._use_value_objects,
+            amended=amended,
         )
         if build_result is None:
             if self._definition_tracker is not None:
@@ -120,6 +129,15 @@ class AnalysisPipeline:
             build_result.to_dict() if hasattr(build_result, "to_dict") else build_result
         )
         block: Block = block_dict  # type: ignore[assignment]
+        
+        # Add runs with formatting and revision info (Option A model)
+        runs = amended.amended_runs
+        if not runs and block.get('text'):
+            # Create default run covering full text if no runs extracted
+            text_len = len(block['text'])
+            runs = [{'start': 0, 'end': text_len, 'formats': []}]
+        block['runs'] = runs
+        
         block["para_idx"] = self._para_counter
         self._para_counter += 1
         original_heading_section = block["section_id"] if block["type"] == "heading" else None

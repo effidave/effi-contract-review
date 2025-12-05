@@ -127,6 +127,11 @@ class BlockEditor {
         wrapper.dataset.blockIndex = String(index);
         wrapper.dataset.blockIndexStart = String(index);
         wrapper.dataset.blockIndexEnd = String(index);
+        
+        // Add para_id for comment linkage (Sprint 3)
+        if (block.para_id) {
+            wrapper.dataset.paraId = block.para_id;
+        }
 
         // Text indentation based on hierarchy depth (no checkbox indent)
         const listMeta = block.list || {};
@@ -209,6 +214,11 @@ class BlockEditor {
         wrapper.dataset.blockIndex = String(startIndex);
         wrapper.dataset.blockIndexStart = String(startIndex);
         wrapper.dataset.blockIndexEnd = String(startIndex + tableBlocks.length - 1);
+        
+        // Add para_id for comment linkage (Sprint 3)
+        if (firstBlock.para_id) {
+            wrapper.dataset.paraId = firstBlock.para_id;
+        }
 
         if (this.options.showCheckboxes) {
             const checkbox = document.createElement('input');
@@ -410,12 +420,55 @@ class BlockEditor {
                 if (run.formats.includes('underline')) {
                     escapedText = `<u>${escapedText}</u>`;
                 }
+                
+                // Track changes formatting
+                if (run.formats.includes('insert')) {
+                    // Build title attribute for hover info
+                    const title = this._buildRevisionTitle(run, 'Inserted');
+                    escapedText = `<ins class="revision-insert" title="${title}">${escapedText}</ins>`;
+                }
+                if (run.formats.includes('delete')) {
+                    const title = this._buildRevisionTitle(run, 'Deleted');
+                    escapedText = `<del class="revision-delete" title="${title}">${escapedText}</del>`;
+                }
             }
             
             html += escapedText;
         });
         
         return html || '<br>';
+    }
+
+    /**
+     * Build title attribute for revision hover tooltip
+     * @param {Object} run - The run object with revision info
+     * @param {string} action - 'Inserted' or 'Deleted'
+     * @returns {string}
+     */
+    _buildRevisionTitle(run, action) {
+        const author = run.author || 'Unknown';
+        const date = run.date ? this._formatRevisionDate(run.date) : '';
+        return this._escapeHtml(`${action} by ${author}${date ? ' on ' + date : ''}`);
+    }
+
+    /**
+     * Format revision date for display
+     * @param {string} dateStr - ISO date string
+     * @returns {string}
+     */
+    _formatRevisionDate(dateStr) {
+        try {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString(undefined, { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        } catch {
+            return dateStr;
+        }
     }
     
     /**
@@ -1066,7 +1119,76 @@ class BlockEditor {
         document.removeEventListener('selectionchange', this._handleSelectionChange);
         this.container.removeEventListener('paste', this._handlePaste);
     }
+    
+    // ========================================================================
+    // Sprint 3: Comment Integration Methods
+    // ========================================================================
+    
+    /**
+     * Scroll to a block by its para_id
+     * @param {string} paraId - The paragraph ID
+     * @returns {boolean} - Whether the block was found and scrolled to
+     */
+    scrollToBlock(paraId) {
+        if (!paraId) return false;
+        
+        const blockEl = this.container.querySelector(`[data-para-id="${paraId}"]`);
+        if (blockEl) {
+            blockEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * Highlight a block by its para_id
+     * @param {string} paraId - The paragraph ID (null to clear highlights)
+     */
+    highlightBlock(paraId) {
+        // Remove existing highlights
+        this.container.querySelectorAll('.comment-highlight').forEach(el => {
+            el.classList.remove('comment-highlight');
+        });
+        
+        if (!paraId) return;
+        
+        const blockEl = this.container.querySelector(`[data-para-id="${paraId}"]`);
+        if (blockEl) {
+            blockEl.classList.add('comment-highlight');
+        }
+    }
+    
+    /**
+     * Get all para_ids that have blocks in the document
+     * @returns {Set<string>} - Set of para_ids
+     */
+    getBlockParaIds() {
+        const paraIds = new Set();
+        this.blocks.forEach(block => {
+            if (block.para_id) {
+                paraIds.add(block.para_id);
+            }
+        });
+        return paraIds;
+    }
+    
+    /**
+     * Check which para_ids from a list exist in the document
+     * @param {Array<string>} paraIds - Array of para_ids to check
+     * @returns {Set<string>} - Set of para_ids that exist in the document
+     */
+    getMatchingParaIds(paraIds) {
+        const docParaIds = this.getBlockParaIds();
+        return new Set(paraIds.filter(id => docParaIds.has(id)));
+    }
 }
 
-// Export for use in main.js
-window.BlockEditor = BlockEditor;
+// Export for use in main.js (browser)
+if (typeof window !== 'undefined') {
+    window.BlockEditor = BlockEditor;
+}
+
+// Export for use in Node.js (testing)
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { BlockEditor };
+}

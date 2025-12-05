@@ -3,10 +3,13 @@
 
 Usage:
     manage_comments.py get_comments <docx_path>
-    manage_comments.py resolve_comment <docx_path> <comment_id>
-    manage_comments.py unresolve_comment <docx_path> <comment_id>
+    manage_comments.py resolve_comment <docx_path> <para_id>
+    manage_comments.py unresolve_comment <docx_path> <para_id>
 
 Outputs JSON to stdout.
+
+Note: para_id is the w14:paraId from the comment's internal paragraph,
+which is the stable identifier used for threading and status tracking.
 """
 
 from __future__ import annotations
@@ -46,75 +49,75 @@ def get_comments(docx_path: Path) -> dict:
         return {"success": False, "error": f"Failed to extract comments: {str(e)}"}
 
 
-def resolve_comment_cmd(docx_path: Path, comment_id: str) -> dict:
-    """Mark a comment as resolved."""
+def resolve_comment_cmd(docx_path: Path, para_id: str) -> dict:
+    """Mark a comment as resolved using its para_id."""
     if not docx_path.exists():
         return {"success": False, "error": f"File not found: {docx_path}"}
     
     try:
         doc = Document(str(docx_path))
-        success = resolve_comment(doc, comment_id)
+        success = resolve_comment(doc, para_id)
         
         if success:
             doc.save(str(docx_path))
             return {
                 "success": True,
-                "message": f"Comment {comment_id} resolved",
-                "comment_id": comment_id,
+                "message": f"Comment resolved",
+                "para_id": para_id,
             }
         else:
             return {
                 "success": False,
-                "error": f"Could not resolve comment {comment_id}. Comment may not exist or document may not have commentsExtended.xml.",
-                "comment_id": comment_id,
+                "error": f"Could not resolve comment. Comment may not exist or document may not have commentsExtended.xml.",
+                "para_id": para_id,
             }
     except PermissionError:
         return {
             "success": False,
             "error": f"Permission denied - file '{docx_path.name}' may be open in Word",
-            "comment_id": comment_id,
+            "para_id": para_id,
         }
     except Exception as e:
         return {
             "success": False,
             "error": f"Failed to resolve comment: {str(e)}",
-            "comment_id": comment_id,
+            "para_id": para_id,
         }
 
 
-def unresolve_comment_cmd(docx_path: Path, comment_id: str) -> dict:
-    """Mark a comment as active (unresolve)."""
+def unresolve_comment_cmd(docx_path: Path, para_id: str) -> dict:
+    """Mark a comment as active (unresolve) using its para_id."""
     if not docx_path.exists():
         return {"success": False, "error": f"File not found: {docx_path}"}
     
     try:
         doc = Document(str(docx_path))
-        success = unresolve_comment(doc, comment_id)
+        success = unresolve_comment(doc, para_id)
         
         if success:
             doc.save(str(docx_path))
             return {
                 "success": True,
-                "message": f"Comment {comment_id} unresolved",
-                "comment_id": comment_id,
+                "message": f"Comment unresolved",
+                "para_id": para_id,
             }
         else:
             return {
                 "success": False,
-                "error": f"Could not unresolve comment {comment_id}. Comment may not exist or document may not have commentsExtended.xml.",
-                "comment_id": comment_id,
+                "error": f"Could not unresolve comment. Comment may not exist or document may not have commentsExtended.xml.",
+                "para_id": para_id,
             }
     except PermissionError:
         return {
             "success": False,
             "error": f"Permission denied - file '{docx_path.name}' may be open in Word",
-            "comment_id": comment_id,
+            "para_id": para_id,
         }
     except Exception as e:
         return {
             "success": False,
             "error": f"Failed to unresolve comment: {str(e)}",
-            "comment_id": comment_id,
+            "para_id": para_id,
         }
 
 
@@ -123,22 +126,22 @@ def main():
     parser.add_argument("command", choices=["get_comments", "resolve_comment", "unresolve_comment"],
                         help="Command to execute")
     parser.add_argument("docx_path", type=Path, help="Path to .docx file")
-    parser.add_argument("comment_id", nargs="?", help="Comment ID (for resolve/unresolve)")
+    parser.add_argument("para_id", nargs="?", help="Comment para_id (for resolve/unresolve)")
 
     args = parser.parse_args()
 
     if args.command == "get_comments":
         result = get_comments(args.docx_path)
     elif args.command == "resolve_comment":
-        if not args.comment_id:
-            result = {"success": False, "error": "comment_id is required for resolve_comment"}
+        if not args.para_id:
+            result = {"success": False, "error": "para_id is required for resolve_comment"}
         else:
-            result = resolve_comment_cmd(args.docx_path, args.comment_id)
+            result = resolve_comment_cmd(args.docx_path, args.para_id)
     elif args.command == "unresolve_comment":
-        if not args.comment_id:
-            result = {"success": False, "error": "comment_id is required for unresolve_comment"}
+        if not args.para_id:
+            result = {"success": False, "error": "para_id is required for unresolve_comment"}
         else:
-            result = unresolve_comment_cmd(args.docx_path, args.comment_id)
+            result = unresolve_comment_cmd(args.docx_path, args.para_id)
     else:
         result = {"success": False, "error": f"Unknown command: {args.command}"}
 

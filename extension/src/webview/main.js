@@ -23,6 +23,11 @@ let paginationRequestId = null;
 // Comment panel (Sprint 3)
 let commentPanel = null;
 let commentsData = []; // Store comments from the document
+let commentParaIds = new Set(); // Set of para_ids that have comments
+
+// Track Changes (Sprint 3 Phase 2)
+let revisionsData = []; // Store revisions from the document
+let revisionCount = 0; // Total revision count
 
 // Handle messages from extension
 window.addEventListener('message', event => {
@@ -44,6 +49,11 @@ window.addEventListener('message', event => {
                 block.hierarchy_depth = getRelationshipDepth(block.id);
             });
             renderData(message.data);
+            
+            // Sprint 3: Auto-load comments when document data is received
+            if (message.data.documentPath) {
+                requestComments();
+            }
             break;
         case 'noAnalysis':
             showMessage(message.message);
@@ -68,9 +78,22 @@ window.addEventListener('message', event => {
         case 'updateComments':
             // Handle comments data from extension
             commentsData = message.comments || [];
+            
+            // Build set of para_ids that have comments
+            commentParaIds = new Set();
+            commentsData.forEach(comment => {
+                if (comment.para_id) {
+                    commentParaIds.add(comment.para_id);
+                }
+            });
+            
+            // Update comment panel
             if (commentPanel) {
                 commentPanel.setComments(commentsData);
             }
+            
+            // Update inline comment indicators in editor
+            updateCommentIndicators();
             break;
         case 'commentResolved':
             // Handle comment resolved confirmation
@@ -87,6 +110,36 @@ window.addEventListener('message', event => {
         case 'commentError':
             // Handle comment operation error
             console.error('Comment operation failed:', message.error);
+            showErrorToast(message.error || 'Comment operation failed');
+            break;
+        
+        // Sprint 3 Phase 2: Track Changes (Revisions)
+        case 'updateRevisions':
+            // Handle revisions data from extension
+            revisionsData = message.revisions || [];
+            revisionCount = message.totalRevisions || 0;
+            
+            // Update revision count in UI
+            updateRevisionCountDisplay();
+            
+            // TODO: When blocks are re-analyzed, inject revision info into runs
+            console.log(`Received ${revisionCount} revisions`);
+            break;
+        case 'revisionAccepted':
+            console.log('Revision accepted:', message.revisionId);
+            break;
+        case 'revisionRejected':
+            console.log('Revision rejected:', message.revisionId);
+            break;
+        case 'allRevisionsAccepted':
+            console.log(`All ${message.acceptedCount} revisions accepted`);
+            break;
+        case 'allRevisionsRejected':
+            console.log(`All ${message.rejectedCount} revisions rejected`);
+            break;
+        case 'revisionError':
+            console.error('Revision operation failed:', message.error);
+            showErrorToast(message.error || 'Revision operation failed');
             break;
     }
 });
@@ -162,6 +215,46 @@ function showMessage(message) {
     if (loadingEl) {
         loadingEl.innerHTML = `<p>${escapeHtml(message)}</p>`;
     }
+}
+
+/**
+ * Show an error toast notification to the user.
+ * The toast auto-dismisses after 5 seconds or can be clicked to dismiss.
+ */
+function showErrorToast(message) {
+    // Remove any existing toast
+    const existingToast = document.querySelector('.error-toast');
+    if (existingToast) {
+        existingToast.remove();
+    }
+    
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = 'error-toast';
+    toast.innerHTML = `
+        <span class="error-toast-icon">⚠️</span>
+        <span class="error-toast-message">${escapeHtml(message)}</span>
+        <button class="error-toast-close" title="Dismiss">×</button>
+    `;
+    
+    // Add click handlers
+    toast.querySelector('.error-toast-close').onclick = () => toast.remove();
+    toast.onclick = (e) => {
+        if (e.target.className !== 'error-toast-close') {
+            toast.remove();
+        }
+    };
+    
+    // Add to document
+    document.body.appendChild(toast);
+    
+    // Auto-dismiss after 5 seconds
+    setTimeout(() => {
+        if (toast.parentNode) {
+            toast.classList.add('error-toast-fade-out');
+            setTimeout(() => toast.remove(), 300);
+        }
+    }, 5000);
 }
 
 function renderData(data) {
@@ -512,6 +605,9 @@ function schedulePagination() {
     paginationRequestId = requestAnimationFrame(() => {
         paginationRequestId = null;
         paginateEditorContent(blockEditor.container, pageBreakBeforeSet, pageBreakAfterSet);
+        
+        // Sprint 3: Re-add comment indicators after pagination
+        updateCommentIndicators();
     });
 }
 
@@ -827,7 +923,14 @@ function initializeCommentPanel() {
 function scrollToBlockByParaId(paraId) {
     if (!paraId) return;
     
-    // Find the block in the document
+    // Use BlockEditor if available (preferred)
+    if (blockEditor && blockEditor.scrollToBlock) {
+        if (blockEditor.scrollToBlock(paraId)) {
+            return;
+        }
+    }
+    
+    // Fallback: Find the block in the document
     const block = allBlocks.find(b => b.para_id === paraId);
     if (!block) {
         console.warn('Block not found for para_id:', paraId);
@@ -845,7 +948,13 @@ function scrollToBlockByParaId(paraId) {
  * Highlight a block by its para_id
  */
 function highlightBlockByParaId(paraId) {
-    // Remove existing highlights
+    // Use BlockEditor if available (preferred)
+    if (blockEditor && blockEditor.highlightBlock) {
+        blockEditor.highlightBlock(paraId);
+        return;
+    }
+    
+    // Fallback: Remove existing highlights
     document.querySelectorAll('.comment-highlight').forEach(el => {
         el.classList.remove('comment-highlight');
     });
@@ -865,22 +974,26 @@ function highlightBlockByParaId(paraId) {
 
 /**
  * Send resolve comment request to extension
+ * @param {string} paraId - The w14:paraId of the comment's internal paragraph
  */
-function resolveComment(commentId) {
+function resolveComment(paraId) {
+    console.log('Resolving comment:', paraId, 'Document:', currentData?.documentPath);
     vscode.postMessage({
         command: 'resolveComment',
-        commentId: commentId,
+        paraId: paraId,
         documentPath: currentData?.documentPath || ''
     });
 }
 
 /**
  * Send unresolve comment request to extension
+ * @param {string} paraId - The w14:paraId of the comment's internal paragraph
  */
-function unresolveComment(commentId) {
+function unresolveComment(paraId) {
+    console.log('Unresolving comment:', paraId, 'Document:', currentData?.documentPath);
     vscode.postMessage({
         command: 'unresolveComment',
-        commentId: commentId,
+        paraId: paraId,
         documentPath: currentData?.documentPath || ''
     });
 }
@@ -893,4 +1006,63 @@ function requestComments() {
         command: 'getComments',
         documentPath: currentData?.documentPath || ''
     });
+}
+
+/**
+ * Update inline comment indicators in the editor
+ * Previously showed a 💬 icon next to blocks - now disabled
+ * The Comments button in the toolbar provides access to comments
+ */
+function updateCommentIndicators() {
+    // Remove any existing indicators
+    document.querySelectorAll('.comment-indicator').forEach(el => el.remove());
+    
+    // Comment indicators disabled - use the Comments toggle button instead
+}
+
+/**
+ * Update the revision count display in the UI
+ */
+function updateRevisionCountDisplay() {
+    const countEl = document.getElementById('revision-count');
+    if (countEl) {
+        countEl.textContent = revisionCount.toString();
+        countEl.classList.toggle('has-revisions', revisionCount > 0);
+    }
+}
+
+/**
+ * Request revisions from the extension
+ */
+function requestRevisions() {
+    if (currentData && currentData.documentPath) {
+        vscode.postMessage({
+            command: 'getRevisions',
+            documentPath: currentData.documentPath
+        });
+    }
+}
+
+/**
+ * Accept all revisions in the document
+ */
+function acceptAllRevisions() {
+    if (currentData && currentData.documentPath) {
+        vscode.postMessage({
+            command: 'acceptAllRevisions',
+            documentPath: currentData.documentPath
+        });
+    }
+}
+
+/**
+ * Reject all revisions in the document
+ */
+function rejectAllRevisions() {
+    if (currentData && currentData.documentPath) {
+        vscode.postMessage({
+            command: 'rejectAllRevisions',
+            documentPath: currentData.documentPath
+        });
+    }
 }

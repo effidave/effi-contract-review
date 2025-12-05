@@ -337,7 +337,7 @@ def _get_comment_para_id(doc: DocumentType, comment_id: str) -> Optional[str]:
     return None
 
 
-def resolve_comment(doc: DocumentType, comment_id: str) -> bool:
+def resolve_comment(doc: DocumentType, para_id: str) -> bool:
     """
     Mark a comment as resolved by updating commentsExtended.xml.
     
@@ -346,15 +346,15 @@ def resolve_comment(doc: DocumentType, comment_id: str) -> bool:
     
     Args:
         doc: The Document object
-        comment_id: The w:id attribute of the comment to resolve
+        para_id: The w14:paraId of the comment's internal paragraph (e.g., "19C2FF2B")
         
     Returns:
         True if successfully resolved, False if comment not found or error
     """
-    return _set_comment_done_flag(doc, comment_id, done=True)
+    return _set_comment_done_flag(doc, para_id, done=True)
 
 
-def unresolve_comment(doc: DocumentType, comment_id: str) -> bool:
+def unresolve_comment(doc: DocumentType, para_id: str) -> bool:
     """
     Mark a comment as active (unresolve it) by updating commentsExtended.xml.
     
@@ -363,21 +363,27 @@ def unresolve_comment(doc: DocumentType, comment_id: str) -> bool:
     
     Args:
         doc: The Document object
-        comment_id: The w:id attribute of the comment to unresolve
+        para_id: The w14:paraId of the comment's internal paragraph (e.g., "19C2FF2B")
         
     Returns:
         True if successfully unresolved, False if comment not found or error
     """
-    return _set_comment_done_flag(doc, comment_id, done=False)
+    return _set_comment_done_flag(doc, para_id, done=False)
 
 
-def _set_comment_done_flag(doc: DocumentType, comment_id: str, done: bool) -> bool:
+def _set_comment_done_flag(doc: DocumentType, para_id: str, done: bool) -> bool:
     """
     Set the done flag for a comment in commentsExtended.xml.
     
+    Uses para_id directly - this is the w14:paraId from the paragraph inside
+    the comment in comments.xml, which links to w15:paraId in commentsExtended.xml.
+    
+    This approach is simpler and better for threaded comments, where parent/child
+    relationships are defined by paraIdParent -> paraId references.
+    
     Args:
         doc: The Document object
-        comment_id: The w:id attribute of the comment
+        para_id: The paragraph ID of the comment (w14:paraId from comments.xml)
         done: True to mark as resolved (done="1"), False for active (done="0")
         
     Returns:
@@ -386,8 +392,6 @@ def _set_comment_done_flag(doc: DocumentType, comment_id: str, done: bool) -> bo
     from lxml import etree
     
     try:
-        # Get the para_id for this comment
-        para_id = _get_comment_para_id(doc, comment_id)
         if not para_id:
             return False
         

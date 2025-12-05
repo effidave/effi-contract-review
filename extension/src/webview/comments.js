@@ -241,7 +241,8 @@ class CommentPanel {
             unresolveBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 if (this.options.onUnresolve) {
-                    this.options.onUnresolve(comment.id);
+                    // Use para_id - the stable identifier for threading and status
+                    this.options.onUnresolve(comment.para_id);
                 }
             });
             actions.appendChild(unresolveBtn);
@@ -251,7 +252,8 @@ class CommentPanel {
             resolveBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 if (this.options.onResolve) {
-                    this.options.onResolve(comment.id);
+                    // Use para_id - the stable identifier for threading and status
+                    this.options.onResolve(comment.para_id);
                 }
             });
             actions.appendChild(resolveBtn);

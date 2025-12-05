@@ -203,10 +203,26 @@ function showContractWebview(context: vscode.ExtensionContext) {
                         await getComments(message.documentPath, webviewPanel);
                         break;
                     case 'resolveComment':
-                        await resolveComment(message.documentPath, message.commentId, webviewPanel);
+                        await resolveComment(message.documentPath, message.paraId, webviewPanel);
                         break;
                     case 'unresolveComment':
-                        await unresolveComment(message.documentPath, message.commentId, webviewPanel);
+                        await unresolveComment(message.documentPath, message.paraId, webviewPanel);
+                        break;
+                    // Sprint 3 Phase 2: Track Changes (Revisions)
+                    case 'getRevisions':
+                        await getRevisions(message.documentPath, webviewPanel);
+                        break;
+                    case 'acceptRevision':
+                        await acceptRevision(message.documentPath, message.revisionId, webviewPanel);
+                        break;
+                    case 'rejectRevision':
+                        await rejectRevision(message.documentPath, message.revisionId, webviewPanel);
+                        break;
+                    case 'acceptAllRevisions':
+                        await acceptAllRevisions(message.documentPath, webviewPanel);
+                        break;
+                    case 'rejectAllRevisions':
+                        await rejectAllRevisions(message.documentPath, webviewPanel);
                         break;
                 }
             },
@@ -668,7 +684,10 @@ function getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Web
         <div class="header">
             <h1 id="document-title">Document</h1>
             <div class="toolbar">
-                <button id="toggle-comments-btn" class="icon-button" title="Toggle Comments">💬</button>
+                <button id="toggle-comments-btn" class="comments-toggle-btn" title="Toggle Comments Panel">
+                    <span class="comments-icon">💬</span>
+                    <span class="comments-label">Comments</span>
+                </button>
                 <button id="refresh-btn" class="icon-button" title="Refresh">↻</button>
             </div>
         </div>
@@ -935,14 +954,15 @@ async function getComments(documentPath: string, webviewPanel: vscode.WebviewPan
 
 /**
  * Sprint 3: Resolve a comment in a document
+ * @param paraId - The w14:paraId of the comment's internal paragraph
  */
-async function resolveComment(documentPath: string, commentId: string, webviewPanel: vscode.WebviewPanel | undefined) {
+async function resolveComment(documentPath: string, paraId: string, webviewPanel: vscode.WebviewPanel | undefined) {
     if (!documentPath || !fs.existsSync(documentPath)) {
         if (webviewPanel) {
             webviewPanel.webview.postMessage({ 
                 command: 'commentError', 
                 error: 'Document path not provided or file not found',
-                commentId 
+                paraId 
             });
         }
         return;
@@ -953,14 +973,14 @@ async function resolveComment(documentPath: string, commentId: string, webviewPa
         const pythonCmd = getPythonPath(workspaceRoot);
         const scriptPath = path.join(__dirname, '..', 'scripts', 'manage_comments.py');
         
-        const { stdout } = await execAsync(`cd "${workspaceRoot}" && "${pythonCmd}" "${scriptPath}" resolve_comment "${documentPath}" "${commentId}"`);
+        const { stdout } = await execAsync(`cd "${workspaceRoot}" && "${pythonCmd}" "${scriptPath}" resolve_comment "${documentPath}" "${paraId}"`);
         const result = JSON.parse(stdout);
         
         if (result.success) {
             if (webviewPanel) {
                 webviewPanel.webview.postMessage({ 
                     command: 'commentResolved', 
-                    commentId,
+                    paraId,
                     success: true
                 });
             }
@@ -971,7 +991,7 @@ async function resolveComment(documentPath: string, commentId: string, webviewPa
                 webviewPanel.webview.postMessage({ 
                     command: 'commentError', 
                     error: result.error,
-                    commentId 
+                    paraId 
                 });
             }
         }
@@ -980,7 +1000,7 @@ async function resolveComment(documentPath: string, commentId: string, webviewPa
             webviewPanel.webview.postMessage({ 
                 command: 'commentError', 
                 error: `Failed to resolve comment: ${error}`,
-                commentId 
+                paraId 
             });
         }
     }
@@ -988,14 +1008,15 @@ async function resolveComment(documentPath: string, commentId: string, webviewPa
 
 /**
  * Sprint 3: Unresolve a comment in a document
+ * @param paraId - The w14:paraId of the comment's internal paragraph
  */
-async function unresolveComment(documentPath: string, commentId: string, webviewPanel: vscode.WebviewPanel | undefined) {
+async function unresolveComment(documentPath: string, paraId: string, webviewPanel: vscode.WebviewPanel | undefined) {
     if (!documentPath || !fs.existsSync(documentPath)) {
         if (webviewPanel) {
             webviewPanel.webview.postMessage({ 
                 command: 'commentError', 
                 error: 'Document path not provided or file not found',
-                commentId 
+                paraId 
             });
         }
         return;
@@ -1006,14 +1027,14 @@ async function unresolveComment(documentPath: string, commentId: string, webview
         const pythonCmd = getPythonPath(workspaceRoot);
         const scriptPath = path.join(__dirname, '..', 'scripts', 'manage_comments.py');
         
-        const { stdout } = await execAsync(`cd "${workspaceRoot}" && "${pythonCmd}" "${scriptPath}" unresolve_comment "${documentPath}" "${commentId}"`);
+        const { stdout } = await execAsync(`cd "${workspaceRoot}" && "${pythonCmd}" "${scriptPath}" unresolve_comment "${documentPath}" "${paraId}"`);
         const result = JSON.parse(stdout);
         
         if (result.success) {
             if (webviewPanel) {
                 webviewPanel.webview.postMessage({ 
                     command: 'commentUnresolved', 
-                    commentId,
+                    paraId,
                     success: true
                 });
             }
@@ -1024,7 +1045,7 @@ async function unresolveComment(documentPath: string, commentId: string, webview
                 webviewPanel.webview.postMessage({ 
                     command: 'commentError', 
                     error: result.error,
-                    commentId 
+                    paraId 
                 });
             }
         }
@@ -1033,7 +1054,263 @@ async function unresolveComment(documentPath: string, commentId: string, webview
             webviewPanel.webview.postMessage({ 
                 command: 'commentError', 
                 error: `Failed to unresolve comment: ${error}`,
-                commentId 
+                paraId 
+            });
+        }
+    }
+}
+
+/**
+ * Sprint 3 Phase 2: Get all revisions (track changes) from a document
+ */
+async function getRevisions(documentPath: string, webviewPanel: vscode.WebviewPanel | undefined) {
+    if (!documentPath || !fs.existsSync(documentPath)) {
+        if (webviewPanel) {
+            webviewPanel.webview.postMessage({ 
+                command: 'revisionError', 
+                error: 'Document path not provided or file not found'
+            });
+        }
+        return;
+    }
+    
+    try {
+        const workspaceRoot = path.join(__dirname, '..', '..');
+        const pythonCmd = getPythonPath(workspaceRoot);
+        const scriptPath = path.join(__dirname, '..', 'scripts', 'manage_revisions.py');
+        
+        const { stdout } = await execAsync(`cd "${workspaceRoot}" && "${pythonCmd}" "${scriptPath}" get_revisions "${documentPath}"`);
+        const result = JSON.parse(stdout);
+        
+        if (result.success) {
+            if (webviewPanel) {
+                webviewPanel.webview.postMessage({ 
+                    command: 'updateRevisions', 
+                    revisions: result.revisions,
+                    totalRevisions: result.total_revisions
+                });
+            }
+        } else {
+            if (webviewPanel) {
+                webviewPanel.webview.postMessage({ 
+                    command: 'revisionError', 
+                    error: result.error 
+                });
+            }
+        }
+    } catch (error) {
+        if (webviewPanel) {
+            webviewPanel.webview.postMessage({ 
+                command: 'revisionError', 
+                error: `Failed to get revisions: ${error}`
+            });
+        }
+    }
+}
+
+/**
+ * Sprint 3 Phase 2: Accept a revision in a document
+ */
+async function acceptRevision(documentPath: string, revisionId: string, webviewPanel: vscode.WebviewPanel | undefined) {
+    if (!documentPath || !fs.existsSync(documentPath)) {
+        if (webviewPanel) {
+            webviewPanel.webview.postMessage({ 
+                command: 'revisionError', 
+                error: 'Document path not provided or file not found',
+                revisionId 
+            });
+        }
+        return;
+    }
+    
+    try {
+        const workspaceRoot = path.join(__dirname, '..', '..');
+        const pythonCmd = getPythonPath(workspaceRoot);
+        const scriptPath = path.join(__dirname, '..', 'scripts', 'manage_revisions.py');
+        
+        const { stdout } = await execAsync(`cd "${workspaceRoot}" && "${pythonCmd}" "${scriptPath}" accept_revision "${documentPath}" "${revisionId}"`);
+        const result = JSON.parse(stdout);
+        
+        if (result.success) {
+            if (webviewPanel) {
+                webviewPanel.webview.postMessage({ 
+                    command: 'revisionAccepted', 
+                    revisionId,
+                    success: true
+                });
+            }
+            // Refresh revisions list
+            await getRevisions(documentPath, webviewPanel);
+        } else {
+            if (webviewPanel) {
+                webviewPanel.webview.postMessage({ 
+                    command: 'revisionError', 
+                    error: result.error,
+                    revisionId 
+                });
+            }
+        }
+    } catch (error) {
+        if (webviewPanel) {
+            webviewPanel.webview.postMessage({ 
+                command: 'revisionError', 
+                error: `Failed to accept revision: ${error}`,
+                revisionId 
+            });
+        }
+    }
+}
+
+/**
+ * Sprint 3 Phase 2: Reject a revision in a document
+ */
+async function rejectRevision(documentPath: string, revisionId: string, webviewPanel: vscode.WebviewPanel | undefined) {
+    if (!documentPath || !fs.existsSync(documentPath)) {
+        if (webviewPanel) {
+            webviewPanel.webview.postMessage({ 
+                command: 'revisionError', 
+                error: 'Document path not provided or file not found',
+                revisionId 
+            });
+        }
+        return;
+    }
+    
+    try {
+        const workspaceRoot = path.join(__dirname, '..', '..');
+        const pythonCmd = getPythonPath(workspaceRoot);
+        const scriptPath = path.join(__dirname, '..', 'scripts', 'manage_revisions.py');
+        
+        const { stdout } = await execAsync(`cd "${workspaceRoot}" && "${pythonCmd}" "${scriptPath}" reject_revision "${documentPath}" "${revisionId}"`);
+        const result = JSON.parse(stdout);
+        
+        if (result.success) {
+            if (webviewPanel) {
+                webviewPanel.webview.postMessage({ 
+                    command: 'revisionRejected', 
+                    revisionId,
+                    success: true
+                });
+            }
+            // Refresh revisions list
+            await getRevisions(documentPath, webviewPanel);
+        } else {
+            if (webviewPanel) {
+                webviewPanel.webview.postMessage({ 
+                    command: 'revisionError', 
+                    error: result.error,
+                    revisionId 
+                });
+            }
+        }
+    } catch (error) {
+        if (webviewPanel) {
+            webviewPanel.webview.postMessage({ 
+                command: 'revisionError', 
+                error: `Failed to reject revision: ${error}`,
+                revisionId 
+            });
+        }
+    }
+}
+
+/**
+ * Sprint 3 Phase 2: Accept all revisions in a document
+ */
+async function acceptAllRevisions(documentPath: string, webviewPanel: vscode.WebviewPanel | undefined) {
+    if (!documentPath || !fs.existsSync(documentPath)) {
+        if (webviewPanel) {
+            webviewPanel.webview.postMessage({ 
+                command: 'revisionError', 
+                error: 'Document path not provided or file not found'
+            });
+        }
+        return;
+    }
+    
+    try {
+        const workspaceRoot = path.join(__dirname, '..', '..');
+        const pythonCmd = getPythonPath(workspaceRoot);
+        const scriptPath = path.join(__dirname, '..', 'scripts', 'manage_revisions.py');
+        
+        const { stdout } = await execAsync(`cd "${workspaceRoot}" && "${pythonCmd}" "${scriptPath}" accept_all "${documentPath}"`);
+        const result = JSON.parse(stdout);
+        
+        if (result.success) {
+            if (webviewPanel) {
+                webviewPanel.webview.postMessage({ 
+                    command: 'allRevisionsAccepted', 
+                    acceptedCount: result.accepted_count,
+                    success: true
+                });
+            }
+            // Refresh revisions list (should now be empty)
+            await getRevisions(documentPath, webviewPanel);
+            vscode.window.showInformationMessage(`Accepted ${result.accepted_count} revisions`);
+        } else {
+            if (webviewPanel) {
+                webviewPanel.webview.postMessage({ 
+                    command: 'revisionError', 
+                    error: result.error 
+                });
+            }
+        }
+    } catch (error) {
+        if (webviewPanel) {
+            webviewPanel.webview.postMessage({ 
+                command: 'revisionError', 
+                error: `Failed to accept all revisions: ${error}`
+            });
+        }
+    }
+}
+
+/**
+ * Sprint 3 Phase 2: Reject all revisions in a document
+ */
+async function rejectAllRevisions(documentPath: string, webviewPanel: vscode.WebviewPanel | undefined) {
+    if (!documentPath || !fs.existsSync(documentPath)) {
+        if (webviewPanel) {
+            webviewPanel.webview.postMessage({ 
+                command: 'revisionError', 
+                error: 'Document path not provided or file not found'
+            });
+        }
+        return;
+    }
+    
+    try {
+        const workspaceRoot = path.join(__dirname, '..', '..');
+        const pythonCmd = getPythonPath(workspaceRoot);
+        const scriptPath = path.join(__dirname, '..', 'scripts', 'manage_revisions.py');
+        
+        const { stdout } = await execAsync(`cd "${workspaceRoot}" && "${pythonCmd}" "${scriptPath}" reject_all "${documentPath}"`);
+        const result = JSON.parse(stdout);
+        
+        if (result.success) {
+            if (webviewPanel) {
+                webviewPanel.webview.postMessage({ 
+                    command: 'allRevisionsRejected', 
+                    rejectedCount: result.rejected_count,
+                    success: true
+                });
+            }
+            // Refresh revisions list (should now be empty)
+            await getRevisions(documentPath, webviewPanel);
+            vscode.window.showInformationMessage(`Rejected ${result.rejected_count} revisions`);
+        } else {
+            if (webviewPanel) {
+                webviewPanel.webview.postMessage({ 
+                    command: 'revisionError', 
+                    error: result.error 
+                });
+            }
+        }
+    } catch (error) {
+        if (webviewPanel) {
+            webviewPanel.webview.postMessage({ 
+                command: 'revisionError', 
+                error: `Failed to reject all revisions: ${error}`
             });
         }
     }

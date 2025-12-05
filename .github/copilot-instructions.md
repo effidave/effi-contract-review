@@ -121,6 +121,7 @@ npm run compile
 
 ### Python Virtual Environment
 Python venv is at: `.venv\Scripts\python.exe`
+Activate it by C:\Users\DavidSant\effi-contract-review\.venv\Scripts\Activate.ps1
 
 ---
 

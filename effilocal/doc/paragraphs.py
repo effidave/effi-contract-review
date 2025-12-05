@@ -4,12 +4,13 @@
 from __future__ import annotations
 
 import re
-from typing import Any, Callable
+from typing import Any, Callable, Optional
 from uuid import uuid4
 
 from docx.text.paragraph import Paragraph
 from docx.oxml.ns import qn
 
+from effilocal.doc.amended_paragraph import AmendedParagraph
 from effilocal.doc.blocks import ParagraphBlock
 
 
@@ -92,10 +93,25 @@ def build_paragraph_block(
     *,
     hash_provider: Callable[[str], str],
     as_dataclass: bool = False,
+    amended: Optional[AmendedParagraph] = None,
 ) -> tuple[dict[str, Any] | ParagraphBlock | None, str]:
-    """Create the baseline block for ``paragraph`` and return the next section id."""
-
-    text = paragraph.text.strip()
+    """Create the baseline block for ``paragraph`` and return the next section id.
+    
+    Args:
+        paragraph: The Word paragraph to process
+        current_section_id: Current section identifier
+        hash_provider: Function to generate content hashes
+        as_dataclass: If True, return ParagraphBlock instead of dict
+        amended: Optional AmendedParagraph wrapper for track changes support.
+                 If provided, uses amended_text (visible text with insertions,
+                 without deletions) instead of paragraph.text.
+    """
+    # Use amended_text if AmendedParagraph provided, otherwise fall back to standard text
+    if amended is not None:
+        text = amended.amended_text.strip()
+    else:
+        text = paragraph.text.strip()
+    
     if not text:
         return None, current_section_id
 
