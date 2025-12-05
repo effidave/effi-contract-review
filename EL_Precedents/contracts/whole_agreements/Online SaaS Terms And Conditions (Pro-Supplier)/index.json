@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "doc_id": "Online-SaaS-Terms-And-Conditions-(Pro-Supplier)",
+  "doc_format": "docx",
+  "source_filename": "Online SaaS Terms And Conditions (Pro-Supplier).docx",
+  "char_count": 55895,
+  "block_count": 300,
+  "section_count": 285,
+  "ltu_count": 300,
+  "max_section_depth": 4,
+  "has_tag_ranges": true,
+  "schema_version": "1.0.0",
+  "filemap": {
+    "blocks": "blocks.jsonl",
+    "sections": "sections.json",
+    "styles": "styles.json",
+    "tag_ranges": "tag_ranges.jsonl"
+  }
+}

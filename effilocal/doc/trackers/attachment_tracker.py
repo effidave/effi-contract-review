@@ -171,8 +171,23 @@ class AttachmentTracker(TrackerEventConsumer):
         if block.get("type") == "list_item":
             return None
 
+        # Allow level 0 numbering (used for Schedule 1, Annex 1, etc.)
+        # but skip blocks with deeper numbering levels
         if block.get("_docx_has_numbering"):
-            return None
+            list_meta = block.get("list")
+            if isinstance(list_meta, Mapping):
+                list_level = list_meta.get("level")
+                if not isinstance(list_level, int) or list_level > 0:
+                    return None
+            else:
+                # Has numbering flag but no list payload yet - check num_pr directly
+                num_pr = block.get("num_pr")
+                if isinstance(num_pr, dict):
+                    ilvl = num_pr.get("ilvl", 0)
+                    if ilvl > 0:
+                        return None
+                else:
+                    return None
 
         list_meta = block.get("list")
         if isinstance(list_meta, Mapping):

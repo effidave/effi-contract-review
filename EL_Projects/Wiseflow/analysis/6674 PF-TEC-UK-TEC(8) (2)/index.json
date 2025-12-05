@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "doc_id": "123e4567-e89b-12d3-a456-426614174000",
+  "doc_format": "docx",
+  "source_filename": "6674 PF-TEC-UK-TEC(8) (2).docx",
+  "char_count": 257330,
+  "block_count": 3604,
+  "section_count": 1,
+  "ltu_count": 3604,
+  "max_section_depth": 1,
+  "has_tag_ranges": true,
+  "schema_version": "1.0.0",
+  "filemap": {
+    "blocks": "blocks.jsonl",
+    "sections": "sections.json",
+    "styles": "styles.json",
+    "tag_ranges": "tag_ranges.jsonl"
+  }
+}

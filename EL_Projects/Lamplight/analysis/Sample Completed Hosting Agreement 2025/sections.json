@@ -2,15 +2,13 @@
   "doc_id": "123e4567-e89b-12d3-a456-426614174000",
   "hierarchy_depth": 3,
   "depth_max": 3,
-  "avg_blocks_per_section": 12.535714285714286,
+  "avg_blocks_per_section": 13.0,
   "root": {
     "children": [
       {
-        "id": "d2e393e0-23f7-4f27-9eba-bc06cc8c9f2c",
-        "ltu_id": "ltu_d2e393e0-23f7-4f27-9eba-bc06cc8c9f2c",
-        "child_ids": [
-          "11f70323-fec9-4894-aafe-987d2d6f2e32"
-        ],
+        "id": "80c75d3c-9e2a-42db-a76b-32b8ad5ce3a8",
+        "ltu_id": "ltu_80c75d3c-9e2a-42db-a76b-32b8ad5ce3a8",
+        "child_ids": [],
         "title": "Front Matter",
         "level": 1,
         "block_ids": [
@@ -23,35 +21,20 @@
           "07C2B36E",
           "2E525CDC",
           "28C13D77",
-          "2A8A5A6B"
+          "2A8A5A6B",
+          "6D4DD26B",
+          "36DC7FD2",
+          "44207773"
         ],
-        "char_count": 669,
-        "children": [
-          {
-            "id": "11f70323-fec9-4894-aafe-987d2d6f2e32",
-            "ltu_id": "ltu_11f70323-fec9-4894-aafe-987d2d6f2e32",
-            "child_ids": [],
-            "title": "2. The Customer wishes to engage Lamplight to provide it with a hosted solution, comprising software created by Lamplight and hosted by a third party, with Lamplight assuming responsibility in full for its own services and in part for those of the third party host.",
-            "level": 3,
-            "block_ids": [
-              "6D4DD26B",
-              "36DC7FD2",
-              "44207773"
-            ],
-            "char_count": 398,
-            "children": [],
-            "role": null,
-            "attachment_id": null,
-            "parent_id": "d2e393e0-23f7-4f27-9eba-bc06cc8c9f2c"
-          }
-        ],
+        "char_count": 1067,
+        "children": [],
         "role": "front_matter",
         "attachment_id": null,
         "parent_id": null
       },
       {
-        "id": "e8e885df-18ce-4a18-8e23-b5cb6a5b51be",
-        "ltu_id": "ltu_e8e885df-18ce-4a18-8e23-b5cb6a5b51be",
+        "id": "94fad095-6a34-401b-b508-1a027a6bc2bf",
+        "ltu_id": "ltu_94fad095-6a34-401b-b508-1a027a6bc2bf",
         "child_ids": [],
         "title": "Body (no heading)",
         "level": 1,
@@ -88,11 +71,11 @@
         "parent_id": null
       },
       {
-        "id": "2c405956-b918-4f69-9b2f-3fae22cb584b",
-        "ltu_id": "ltu_2c405956-b918-4f69-9b2f-3fae22cb584b",
+        "id": "2af947b4-b249-42d8-8db8-bf4f66f806b5",
+        "ltu_id": "ltu_2af947b4-b249-42d8-8db8-bf4f66f806b5",
         "child_ids": [
-          "b55e7b19-9ebf-4efe-a6a2-5f7853bf18f3",
-          "70e880e3-41de-4eff-9ae1-d4bc68256906"
+          "ffe5a9aa-0ffa-40bc-8c2c-170da1663619",
+          "7945790a-bd54-419b-9d10-c0d8227b3e09"
         ],
         "title": "1.8 Where the words include(s), including or in particular are used in this agreement, they are deemed to have the words \"without limitation\" following them.",
         "level": 1,
@@ -102,8 +85,8 @@
         "char_count": 157,
         "children": [
           {
-            "id": "b55e7b19-9ebf-4efe-a6a2-5f7853bf18f3",
-            "ltu_id": "ltu_b55e7b19-9ebf-4efe-a6a2-5f7853bf18f3",
+            "id": "ffe5a9aa-0ffa-40bc-8c2c-170da1663619",
+            "ltu_id": "ltu_ffe5a9aa-0ffa-40bc-8c2c-170da1663619",
             "child_ids": [],
             "title": "2. PRODUCTS AND SERVICES TO BE PROVIDED",
             "level": 3,
@@ -188,11 +171,11 @@
             "children": [],
             "role": null,
             "attachment_id": null,
-            "parent_id": "2c405956-b918-4f69-9b2f-3fae22cb584b"
+            "parent_id": "2af947b4-b249-42d8-8db8-bf4f66f806b5"
           },
           {
-            "id": "70e880e3-41de-4eff-9ae1-d4bc68256906",
-            "ltu_id": "ltu_70e880e3-41de-4eff-9ae1-d4bc68256906",
+            "id": "7945790a-bd54-419b-9d10-c0d8227b3e09",
+            "ltu_id": "ltu_7945790a-bd54-419b-9d10-c0d8227b3e09",
             "child_ids": [],
             "title": "9. WARRANTIES",
             "level": 2,
@@ -273,7 +256,7 @@
             "children": [],
             "role": null,
             "attachment_id": null,
-            "parent_id": "2c405956-b918-4f69-9b2f-3fae22cb584b"
+            "parent_id": "2af947b4-b249-42d8-8db8-bf4f66f806b5"
           }
         ],
         "role": null,
@@ -281,10 +264,10 @@
         "parent_id": null
       },
       {
-        "id": "4a32d7bd-d8dc-44b3-81b4-88c4ccc868ef",
-        "ltu_id": "ltu_4a32d7bd-d8dc-44b3-81b4-88c4ccc868ef",
+        "id": "c7f62e30-f820-4a37-b62a-cd307e4f2fc4",
+        "ltu_id": "ltu_c7f62e30-f820-4a37-b62a-cd307e4f2fc4",
         "child_ids": [
-          "93738590-032d-4288-8269-58dae27baa22"
+          "61f11aa1-1279-474a-abe1-1030567158b1"
         ],
         "title": "APPENDIX 1 GENERAL TERMS",
         "level": 1,
@@ -329,10 +312,10 @@
         "char_count": 2039,
         "children": [
           {
-            "id": "93738590-032d-4288-8269-58dae27baa22",
-            "ltu_id": "ltu_93738590-032d-4288-8269-58dae27baa22",
+            "id": "61f11aa1-1279-474a-abe1-1030567158b1",
+            "ltu_id": "ltu_61f11aa1-1279-474a-abe1-1030567158b1",
             "child_ids": [
-              "cbe72550-70f8-4c9b-87cc-b6b566f1dd3b"
+              "5fac8cd9-b35d-4adb-820c-4171b50cfb99"
             ],
             "title": "APPENDIX 2",
             "level": 2,
@@ -380,8 +363,8 @@
             "char_count": 3701,
             "children": [
               {
-                "id": "cbe72550-70f8-4c9b-87cc-b6b566f1dd3b",
-                "ltu_id": "ltu_cbe72550-70f8-4c9b-87cc-b6b566f1dd3b",
+                "id": "5fac8cd9-b35d-4adb-820c-4171b50cfb99",
+                "ltu_id": "ltu_5fac8cd9-b35d-4adb-820c-4171b50cfb99",
                 "child_ids": [],
                 "title": "APPENDIX 3",
                 "level": 3,
@@ -399,22 +382,22 @@
                 "char_count": 615,
                 "children": [],
                 "role": null,
-                "attachment_id": "00ffacf7-a395-4110-a710-2380af131601",
-                "parent_id": "93738590-032d-4288-8269-58dae27baa22"
+                "attachment_id": "e283c380-0f8f-49e8-a034-e2e0f0c4f6da",
+                "parent_id": "61f11aa1-1279-474a-abe1-1030567158b1"
               }
             ],
             "role": null,
-            "attachment_id": "a7694d33-e553-455d-9fd4-aca18b65dc45",
-            "parent_id": "4a32d7bd-d8dc-44b3-81b4-88c4ccc868ef"
+            "attachment_id": "c930fdb9-a0d7-445b-808f-64a58fdf7c0c",
+            "parent_id": "c7f62e30-f820-4a37-b62a-cd307e4f2fc4"
           }
         ],
         "role": null,
-        "attachment_id": "9d1467d5-1a4a-4024-94e8-80da49ea643e",
+        "attachment_id": "0ffa3b7d-af0f-412f-9807-e602819babbf",
         "parent_id": null
       },
       {
-        "id": "36f191e8-f8f8-4db2-a881-3b9ba33f78ef",
-        "ltu_id": "ltu_36f191e8-f8f8-4db2-a881-3b9ba33f78ef",
+        "id": "9dfb37c6-6f82-4c4a-adc9-93776180568a",
+        "ltu_id": "ltu_9dfb37c6-6f82-4c4a-adc9-93776180568a",
         "child_ids": [],
         "title": "Body (no heading)",
         "level": 1,
@@ -424,12 +407,12 @@
         "char_count": 36,
         "children": [],
         "role": null,
-        "attachment_id": "00ffacf7-a395-4110-a710-2380af131601",
+        "attachment_id": "e283c380-0f8f-49e8-a034-e2e0f0c4f6da",
         "parent_id": null
       },
       {
-        "id": "d3bdfc6b-95f8-400a-8b01-d3234de3210a",
-        "ltu_id": "ltu_d3bdfc6b-95f8-400a-8b01-d3234de3210a",
+        "id": "7cb1cb2c-10e0-4037-baae-f126933a320d",
+        "ltu_id": "ltu_7cb1cb2c-10e0-4037-baae-f126933a320d",
         "child_ids": [],
         "title": "Body (no heading)",
         "level": 1,
@@ -439,12 +422,12 @@
         "char_count": 42,
         "children": [],
         "role": null,
-        "attachment_id": "00ffacf7-a395-4110-a710-2380af131601",
+        "attachment_id": "e283c380-0f8f-49e8-a034-e2e0f0c4f6da",
         "parent_id": null
       },
       {
-        "id": "02cda90d-d3fc-4ec2-8d5a-b7c1ceb2dcae",
-        "ltu_id": "ltu_02cda90d-d3fc-4ec2-8d5a-b7c1ceb2dcae",
+        "id": "25d87ed1-944e-4c08-95a6-1c3f06c539a5",
+        "ltu_id": "ltu_25d87ed1-944e-4c08-95a6-1c3f06c539a5",
         "child_ids": [],
         "title": "Body (no heading)",
         "level": 1,
@@ -454,12 +437,12 @@
         "char_count": 24,
         "children": [],
         "role": null,
-        "attachment_id": "00ffacf7-a395-4110-a710-2380af131601",
+        "attachment_id": "e283c380-0f8f-49e8-a034-e2e0f0c4f6da",
         "parent_id": null
       },
       {
-        "id": "616401ec-d315-4fc0-b7be-108e3a1c72ab",
-        "ltu_id": "ltu_616401ec-d315-4fc0-b7be-108e3a1c72ab",
+        "id": "e6634a40-181e-4b69-9ed4-595e3c338ac7",
+        "ltu_id": "ltu_e6634a40-181e-4b69-9ed4-595e3c338ac7",
         "child_ids": [],
         "title": "Body (no heading)",
         "level": 1,
@@ -473,12 +456,12 @@
         "char_count": 507,
         "children": [],
         "role": null,
-        "attachment_id": "00ffacf7-a395-4110-a710-2380af131601",
+        "attachment_id": "e283c380-0f8f-49e8-a034-e2e0f0c4f6da",
         "parent_id": null
       },
       {
-        "id": "b340653c-5446-4d7c-87e1-2c77bd8ba148",
-        "ltu_id": "ltu_b340653c-5446-4d7c-87e1-2c77bd8ba148",
+        "id": "350d27ac-47b4-42a7-8317-2eb7e30611de",
+        "ltu_id": "ltu_350d27ac-47b4-42a7-8317-2eb7e30611de",
         "child_ids": [],
         "title": "Body (no heading)",
         "level": 1,
@@ -488,12 +471,12 @@
         "char_count": 22,
         "children": [],
         "role": null,
-        "attachment_id": "00ffacf7-a395-4110-a710-2380af131601",
+        "attachment_id": "e283c380-0f8f-49e8-a034-e2e0f0c4f6da",
         "parent_id": null
       },
       {
-        "id": "e545af28-1f9a-4de4-93c7-f70b1d667cbd",
-        "ltu_id": "ltu_e545af28-1f9a-4de4-93c7-f70b1d667cbd",
+        "id": "1d2c4890-dc31-469c-9d92-4752823a5e1a",
+        "ltu_id": "ltu_1d2c4890-dc31-469c-9d92-4752823a5e1a",
         "child_ids": [],
         "title": "Body (no heading)",
         "level": 1,
@@ -503,12 +486,12 @@
         "char_count": 25,
         "children": [],
         "role": null,
-        "attachment_id": "00ffacf7-a395-4110-a710-2380af131601",
+        "attachment_id": "e283c380-0f8f-49e8-a034-e2e0f0c4f6da",
         "parent_id": null
       },
       {
-        "id": "95b9215f-20af-4cb2-ae37-ef3dda35cf20",
-        "ltu_id": "ltu_95b9215f-20af-4cb2-ae37-ef3dda35cf20",
+        "id": "046b2e8a-e574-4502-a4aa-54e7145cfddb",
+        "ltu_id": "ltu_046b2e8a-e574-4502-a4aa-54e7145cfddb",
         "child_ids": [],
         "title": "Body (no heading)",
         "level": 1,
@@ -518,12 +501,12 @@
         "char_count": 38,
         "children": [],
         "role": null,
-        "attachment_id": "00ffacf7-a395-4110-a710-2380af131601",
+        "attachment_id": "e283c380-0f8f-49e8-a034-e2e0f0c4f6da",
         "parent_id": null
       },
       {
-        "id": "3f420a3e-93d4-4494-b1e7-17bd4343d072",
-        "ltu_id": "ltu_3f420a3e-93d4-4494-b1e7-17bd4343d072",
+        "id": "1353f95e-5da4-4585-9c0e-e794e9b68a6b",
+        "ltu_id": "ltu_1353f95e-5da4-4585-9c0e-e794e9b68a6b",
         "child_ids": [],
         "title": "Body (no heading)",
         "level": 1,
@@ -583,12 +566,12 @@
         "char_count": 3232,
         "children": [],
         "role": null,
-        "attachment_id": "00ffacf7-a395-4110-a710-2380af131601",
+        "attachment_id": "e283c380-0f8f-49e8-a034-e2e0f0c4f6da",
         "parent_id": null
       },
       {
-        "id": "904789b9-a986-4ec5-967c-ecd49e3809c2",
-        "ltu_id": "ltu_904789b9-a986-4ec5-967c-ecd49e3809c2",
+        "id": "f773c71a-fdc1-4b93-9a7c-5b4027808d80",
+        "ltu_id": "ltu_f773c71a-fdc1-4b93-9a7c-5b4027808d80",
         "child_ids": [],
         "title": "APPENDIX 4 DATA PROTOCOL",
         "level": 4,
@@ -600,12 +583,12 @@
         "char_count": 104,
         "children": [],
         "role": null,
-        "attachment_id": "7cfb4f55-fa02-43c9-8390-cbd0d1afd497",
+        "attachment_id": "625f7b15-3c12-4d99-b1cd-444be2ea2c3f",
         "parent_id": null
       },
       {
-        "id": "071a3eb8-39fc-4ef1-9227-f7f3efb38b02",
-        "ltu_id": "ltu_071a3eb8-39fc-4ef1-9227-f7f3efb38b02",
+        "id": "581b7305-3cd8-4122-a091-d7b96dbaac0e",
+        "ltu_id": "ltu_581b7305-3cd8-4122-a091-d7b96dbaac0e",
         "child_ids": [],
         "title": "Body (no heading)",
         "level": 1,
@@ -615,12 +598,12 @@
         "char_count": 70,
         "children": [],
         "role": null,
-        "attachment_id": "7cfb4f55-fa02-43c9-8390-cbd0d1afd497",
+        "attachment_id": "625f7b15-3c12-4d99-b1cd-444be2ea2c3f",
         "parent_id": null
       },
       {
-        "id": "7571ef12-e559-4174-b49e-34253d039a0e",
-        "ltu_id": "ltu_7571ef12-e559-4174-b49e-34253d039a0e",
+        "id": "589b73e2-a964-4f7d-93fa-f22b1d62544d",
+        "ltu_id": "ltu_589b73e2-a964-4f7d-93fa-f22b1d62544d",
         "child_ids": [],
         "title": "Body (no heading)",
         "level": 1,
@@ -631,12 +614,12 @@
         "char_count": 103,
         "children": [],
         "role": null,
-        "attachment_id": "7cfb4f55-fa02-43c9-8390-cbd0d1afd497",
+        "attachment_id": "625f7b15-3c12-4d99-b1cd-444be2ea2c3f",
         "parent_id": null
       },
       {
-        "id": "2e16d27f-3ad9-42f7-a4a2-f78212690ee0",
-        "ltu_id": "ltu_2e16d27f-3ad9-42f7-a4a2-f78212690ee0",
+        "id": "22b086b2-45f3-41ff-aed8-5d3087818312",
+        "ltu_id": "ltu_22b086b2-45f3-41ff-aed8-5d3087818312",
         "child_ids": [],
         "title": "Body (no heading)",
         "level": 1,
@@ -646,12 +629,12 @@
         "char_count": 124,
         "children": [],
         "role": null,
-        "attachment_id": "7cfb4f55-fa02-43c9-8390-cbd0d1afd497",
+        "attachment_id": "625f7b15-3c12-4d99-b1cd-444be2ea2c3f",
         "parent_id": null
       },
       {
-        "id": "23f21f79-8111-4c7b-b7f5-e0a0f10d7289",
-        "ltu_id": "ltu_23f21f79-8111-4c7b-b7f5-e0a0f10d7289",
+        "id": "d5ed1caa-6162-4693-bee6-7c71148714e7",
+        "ltu_id": "ltu_d5ed1caa-6162-4693-bee6-7c71148714e7",
         "child_ids": [],
         "title": "Body (no heading)",
         "level": 1,
@@ -665,12 +648,12 @@
         "char_count": 416,
         "children": [],
         "role": null,
-        "attachment_id": "7cfb4f55-fa02-43c9-8390-cbd0d1afd497",
+        "attachment_id": "625f7b15-3c12-4d99-b1cd-444be2ea2c3f",
         "parent_id": null
       },
       {
-        "id": "51d4c8d4-1fae-4950-a9f5-603076cd99b0",
-        "ltu_id": "ltu_51d4c8d4-1fae-4950-a9f5-603076cd99b0",
+        "id": "732fcff3-8311-46f4-a0f4-5802992a07ca",
+        "ltu_id": "ltu_732fcff3-8311-46f4-a0f4-5802992a07ca",
         "child_ids": [],
         "title": "Body (no heading)",
         "level": 1,
@@ -680,12 +663,12 @@
         "char_count": 228,
         "children": [],
         "role": null,
-        "attachment_id": "7cfb4f55-fa02-43c9-8390-cbd0d1afd497",
+        "attachment_id": "625f7b15-3c12-4d99-b1cd-444be2ea2c3f",
         "parent_id": null
       },
       {
-        "id": "01987419-59f8-467f-bd32-75910b36aef0",
-        "ltu_id": "ltu_01987419-59f8-467f-bd32-75910b36aef0",
+        "id": "4ff962b5-8a05-49b9-ba2c-e3d58be88a99",
+        "ltu_id": "ltu_4ff962b5-8a05-49b9-ba2c-e3d58be88a99",
         "child_ids": [],
         "title": "Body (no heading)",
         "level": 1,
@@ -695,12 +678,12 @@
         "char_count": 299,
         "children": [],
         "role": null,
-        "attachment_id": "7cfb4f55-fa02-43c9-8390-cbd0d1afd497",
+        "attachment_id": "625f7b15-3c12-4d99-b1cd-444be2ea2c3f",
         "parent_id": null
       },
       {
-        "id": "2717dcea-999f-4a06-bcf6-4ac09bb9b467",
-        "ltu_id": "ltu_2717dcea-999f-4a06-bcf6-4ac09bb9b467",
+        "id": "d776f4d8-5341-4a2a-be46-85dc4bd1a4ad",
+        "ltu_id": "ltu_d776f4d8-5341-4a2a-be46-85dc4bd1a4ad",
         "child_ids": [],
         "title": "Body (no heading)",
         "level": 1,
@@ -710,12 +693,12 @@
         "char_count": 71,
         "children": [],
         "role": null,
-        "attachment_id": "7cfb4f55-fa02-43c9-8390-cbd0d1afd497",
+        "attachment_id": "625f7b15-3c12-4d99-b1cd-444be2ea2c3f",
         "parent_id": null
       },
       {
-        "id": "ddd27a5c-c01e-4ab3-b7fd-214eafd30d00",
-        "ltu_id": "ltu_ddd27a5c-c01e-4ab3-b7fd-214eafd30d00",
+        "id": "b775ae16-0b37-4352-bd84-102b6765d346",
+        "ltu_id": "ltu_b775ae16-0b37-4352-bd84-102b6765d346",
         "child_ids": [],
         "title": "Body (no heading)",
         "level": 1,
@@ -727,12 +710,12 @@
         "char_count": 240,
         "children": [],
         "role": null,
-        "attachment_id": "7cfb4f55-fa02-43c9-8390-cbd0d1afd497",
+        "attachment_id": "625f7b15-3c12-4d99-b1cd-444be2ea2c3f",
         "parent_id": null
       },
       {
-        "id": "91be80e7-dc26-4dfb-8996-fcaca81bda55",
-        "ltu_id": "ltu_91be80e7-dc26-4dfb-8996-fcaca81bda55",
+        "id": "31358df4-8419-4eff-93f2-217f74621872",
+        "ltu_id": "ltu_31358df4-8419-4eff-93f2-217f74621872",
         "child_ids": [],
         "title": "Body (no heading)",
         "level": 1,
@@ -742,12 +725,12 @@
         "char_count": 82,
         "children": [],
         "role": null,
-        "attachment_id": "7cfb4f55-fa02-43c9-8390-cbd0d1afd497",
+        "attachment_id": "625f7b15-3c12-4d99-b1cd-444be2ea2c3f",
         "parent_id": null
       },
       {
-        "id": "6db90bb1-23f4-4313-989e-a9f96aa460a4",
-        "ltu_id": "ltu_6db90bb1-23f4-4313-989e-a9f96aa460a4",
+        "id": "26dde3c7-7f29-47f5-843c-686caeb239af",
+        "ltu_id": "ltu_26dde3c7-7f29-47f5-843c-686caeb239af",
         "child_ids": [],
         "title": "Body (no heading)",
         "level": 1,
@@ -758,7 +741,7 @@
         "char_count": 438,
         "children": [],
         "role": null,
-        "attachment_id": "7cfb4f55-fa02-43c9-8390-cbd0d1afd497",
+        "attachment_id": "625f7b15-3c12-4d99-b1cd-444be2ea2c3f",
         "parent_id": null
       }
     ]

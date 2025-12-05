@@ -1,0 +1,20 @@
+{
+  "styles": [
+    {
+      "name": "Heading 7",
+      "type": "table_cell",
+      "count": 87,
+      "semantic_hint": "clause_heading",
+      "hint_scores": {
+        "clause_heading": 0.75
+      }
+    },
+    {
+      "name": "Normal",
+      "type": "table_cell",
+      "count": 3517,
+      "semantic_hint": null,
+      "hint_scores": null
+    }
+  ]
+}

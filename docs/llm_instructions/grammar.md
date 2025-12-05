@@ -1,0 +1,1 @@
+in British English although the noun "licence" has two Cs, the verb "to license" uses an s in place of the second c

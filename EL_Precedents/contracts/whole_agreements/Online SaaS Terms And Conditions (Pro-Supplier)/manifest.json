@@ -1,0 +1,40 @@
+{
+  "doc_id": "Online-SaaS-Terms-And-Conditions-(Pro-Supplier)",
+  "v": 1,
+  "created_at": "2025-12-04T17:44:38+00:00",
+  "tool_version": "sprint2-dev",
+  "doc_format": "docx",
+  "sdt_carrier": "content-controls",
+  "range_marker_carrier": "content-controls",
+  "range_marker_tag_prefix": "marker:",
+  "fallback_heading_label": "Body (no heading)",
+  "checksums": {
+    "blocks.jsonl": "sha256:8d51283ab6657666b993d039ace10bed416d12721ea8fbe957c52d2ed53bd32b",
+    "sections.json": "sha256:8636db616c74bb10730f81fc782cd78885f7ac082b553555e37208a690f82dc7",
+    "styles.json": "sha256:e4d0a3f16c8c478f652424d61e67d2f3c7cd3620850c57821848d5c44bb04104",
+    "relationships.json": "sha256:613a058b24ee6e7564e925e5af5b1539fd317dff3629d172ff9ee1881447aca2",
+    "tag_ranges.jsonl": "sha256:ce55f6f48b4eea4314c506c9b1e51dfa648669da116c6b85a35dfc70a54d8d97",
+    "index.json": "sha256:ed5c431964fba4137e0949b48676e650a2ada753ce625acfda38ccd1c4b7ce15"
+  },
+  "schema_checksums": {
+    "block.schema.json": "sha256:a79c29ccec8330bef4e2ed057adee57e544a0749ee71c8aac86b8f8e13d1550e",
+    "edit_plan.schema.json": "sha256:4d9432a9d9b1b61675f527817c7dfdd608ffa20a63f2c1f50d9f0cba9ac367b1",
+    "index.schema.json": "sha256:f305e73bdd196f01be5aba55a1bfe71dc0756218dbafc234fbd9e269c7f84557",
+    "labels.schema.json": "sha256:44e45c3f69aa8c9728872198061b34cbc23aa83a232a93debb3bce13f42e1052",
+    "manifest.schema.json": "sha256:cbab4e0766ffb0d8b0fb12cc0a6b7d75f39bdacc70fed82baaae6de0f102829d",
+    "relationships.schema.json": "sha256:0a6b82f199e7e009eb01866b591d10d35578bb937e794216a56a29c3f922246e",
+    "report.schema.json": "sha256:cc9454c8a3713921e540d0e7e1ce3fca7c8569e9704475ec39eae016541bf3be",
+    "sections.schema.json": "sha256:64d13ab3f694c5e4bcce3072c1d2823c614b2718aa50ba4850aea65c3b9fcdcc",
+    "styles.schema.json": "sha256:69bb206dd584e1ce1e19e6f752f510633761625ed9ba8905fa78c2bfdf731549",
+    "tag_range.schema.json": "sha256:38ae87688b3e7f53b0d7466d5699e6e741330b2da45ea6f784ae6da8bf002c3f"
+  },
+  "attachments": [
+    {
+      "attachment_id": "2bcfc5f7-ef3a-4046-9437-8a13a157dc3f",
+      "type": "annex",
+      "ordinal": "1",
+      "title": "Data Protection Particulars",
+      "parent_attachment_id": null
+    }
+  ]
+}

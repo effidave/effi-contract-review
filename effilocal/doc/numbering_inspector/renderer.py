@@ -321,7 +321,13 @@ class NumberingSession:
         ancestors_touched = []
         for k in range(0, ilvl):
             if counters[k] == 0:
-                base_start = self._abstracts[abs_id]["levels"][k]["start"]
+                # Defensive: some abstract numberings may not define all levels
+                level_def = self._abstracts[abs_id]["levels"].get(k)
+                if level_def is None:
+                    # Level not defined in abstract - use default start of 1
+                    base_start = 1
+                else:
+                    base_start = level_def.get("start", 1)
                 override_start = None
                 if num_id is not None:
                     aov = self._nums[num_id]["lvlOverrides"].get(k)
