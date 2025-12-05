@@ -39,6 +39,9 @@ def infer_block_hierarchy(blocks: Iterable[MutableMapping[str, Any]]) -> None:
     last_numbered_any_by_group: Dict[Optional[str], _ParentContext] = {}
     recent_ordinals_by_group: Dict[Optional[str], OrderedDict[Tuple[str, int], _ParentContext]] = defaultdict(OrderedDict)
     recent_ordinals_global: OrderedDict[Tuple[str, int], _ParentContext] = OrderedDict()
+    # Track the current attachment anchor block (the block that triggered attachment detection)
+    current_attachment_anchor: Optional[str] = None
+    current_attachment_id: Optional[str] = None
 
     def _indent_value(block: MutableMapping[str, Any]) -> int:
         indent_value = block.get("indent")
@@ -290,6 +293,18 @@ def infer_block_hierarchy(blocks: Iterable[MutableMapping[str, Any]]) -> None:
         block_type = block.get("type")
         group_id = block.get("restart_group_id")
 
+        # Track attachment anchors: blocks that have an "attachment" field are attachment headers
+        # (e.g., "Schedule 6" header). These should become parents of level-0 blocks within
+        # the same attachment.
+        attachment_info = block.get("attachment")
+        if isinstance(attachment_info, MutableMapping) and attachment_info.get("attachment_id"):
+            current_attachment_anchor = block_id
+            current_attachment_id = attachment_info.get("attachment_id")
+        elif block.get("attachment_id") != current_attachment_id:
+            # We've moved to a different attachment or no attachment
+            current_attachment_anchor = None
+            current_attachment_id = block.get("attachment_id")
+
         def _finalise(
             block_type: Optional[str],
             parent_id: Optional[str],
@@ -416,6 +431,18 @@ def infer_block_hierarchy(blocks: Iterable[MutableMapping[str, Any]]) -> None:
                 parent_id = list_stack[-1].block_id
             elif heading_stack:
                 parent_id = heading_stack[-1].block_id
+            
+            # For level-0 list items within an attachment, use the attachment anchor as parent
+            # (e.g., "Schedule 6" header becomes parent of clause 1 within Schedule 6)
+            if level == 0 and parent_id is None:
+                block_attachment_id = block.get("attachment_id")
+                if (
+                    block_attachment_id
+                    and block_attachment_id == current_attachment_id
+                    and current_attachment_anchor
+                    and current_attachment_anchor != block_id  # Don't self-parent
+                ):
+                    parent_id = current_attachment_anchor
 
             counters_raw = list_payload.get("counters")
             counters_tuple = _normalize_counters(counters_raw)
