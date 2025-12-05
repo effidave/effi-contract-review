@@ -21,9 +21,12 @@ def has_page_break_before(paragraph: Paragraph) -> bool:
     """Check if paragraph has a page break before it.
     
     Detects:
-    1. Explicit page breaks (<w:br w:type="page"/>) in preceding content
+    1. Page break before paragraph property (w:pageBreakBefore)
     2. Word's lastRenderedPageBreak marker (soft page break from last render)
-    3. Page break before paragraph property (w:pageBreakBefore)
+    
+    Note: Explicit page breaks (<w:br w:type="page"/>) are detected by
+    has_explicit_page_break() and set on the paragraph containing the break,
+    not the following one.
     """
     p_elem = paragraph._p
     
@@ -37,22 +40,43 @@ def has_page_break_before(paragraph: Paragraph) -> bool:
             if val not in ('0', 'false'):
                 return True
     
-    # Check for lastRenderedPageBreak in runs (soft page break marker from Word)
+    # Check for lastRenderedPageBreak anywhere in paragraph (including inside w:ins)
     # This indicates where Word calculated a page break when the doc was last saved
-    for run in p_elem.findall(qn('w:r')):
-        if run.find(qn('w:lastRenderedPageBreak')) is not None:
+    for lrpb in p_elem.iter(qn('w:lastRenderedPageBreak')):
+        # Ignore if inside a deletion (<w:del>)
+        parent = lrpb.getparent()
+        while parent is not None and parent != p_elem:
+            if parent.tag == qn('w:del'):
+                break  # Inside a deletion, skip this marker
+            parent = parent.getparent()
+        else:
+            # Not inside a deletion, this is an active marker
             return True
     
     return False
 
 
 def has_explicit_page_break(paragraph: Paragraph) -> bool:
-    """Check if paragraph contains an explicit hard page break (<w:br w:type="page"/>)."""
+    """Check if paragraph contains an explicit hard page break (<w:br w:type="page"/>).
+    
+    Handles page breaks in:
+    - Direct runs: <w:r><w:br w:type="page"/></w:r>
+    - Track changes insertions: <w:ins><w:r><w:br w:type="page"/></w:r></w:ins>
+    """
     p_elem = paragraph._p
     
-    for run in p_elem.findall(qn('w:r')):
-        for br in run.findall(qn('w:br')):
-            if br.get(qn('w:type')) == 'page':
+    # Use XPath to find all <w:br> elements anywhere in the paragraph,
+    # including those inside <w:ins> (track changes insertions)
+    for br in p_elem.iter(qn('w:br')):
+        if br.get(qn('w:type')) == 'page':
+            # Ignore page breaks inside deletions (<w:del>)
+            parent = br.getparent()
+            while parent is not None and parent != p_elem:
+                if parent.tag == qn('w:del'):
+                    break  # Inside a deletion, skip this break
+                parent = parent.getparent()
+            else:
+                # Not inside a deletion, this is an active page break
                 return True
     
     return False
