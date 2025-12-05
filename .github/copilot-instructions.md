@@ -300,6 +300,45 @@ The `NumberingSession` in `renderer.py` detects `numId` changes and applies `sta
 - Links comments to status via `w14:paraId` / `w15:paraId` matching
 - Returns structured comment data with `status`, `is_resolved`, `done_flag` fields
 
+#### **Page Break Detection**
+Page breaks are detected in `effilocal/doc/paragraphs.py` and stored in block metadata:
+
+- **`page_break_before`**: True if paragraph has page break before it
+- **`page_break_after`**: True if paragraph contains explicit page break
+
+**Detection handles:**
+1. `<w:pageBreakBefore>` in paragraph properties
+2. `<w:lastRenderedPageBreak>` markers (soft breaks from last render)
+3. `<w:br w:type="page"/>` explicit hard breaks
+
+**Track Changes Support**: Page breaks inside `<w:ins>` (insertions) are detected; 
+page breaks inside `<w:del>` (deletions) are ignored. This ensures the analysis 
+reflects the current effective document state, not deleted content.
+
+#### **Attachment Hierarchy**
+When an ATTACHMENT_CUE is detected (e.g., "Schedule 6" header), the block containing 
+that cue becomes the parent of all level-0 numbered blocks within that attachment:
+
+**Before** (orphaned clauses):
+```
+Schedule 6 (parent_block_id: null)
+  └── (no children)
+Clause 1 (parent_block_id: null, hierarchy_depth: 0)
+  └── Sub-clause 1.1
+```
+
+**After** (proper hierarchy):
+```
+Schedule 6 (parent_block_id: null)
+  └── Clause 1 (parent_block_id: Schedule 6, hierarchy_depth: 1)
+        └── Sub-clause 1.1 (hierarchy_depth: 2)
+```
+
+**Implementation** (`effilocal/doc/hierarchy.py`):
+- Tracks `current_attachment_anchor` and `current_attachment_id` during hierarchy inference
+- For level-0 list items with no other parent, uses attachment anchor if block has same `attachment_id`
+- Ensures attachment header is always at top of hierarchy for blocks within that attachment
+
 #### **Block Identity via Native w14:paraId**
 Block identification uses the native `w14:paraId` attribute that Word provides on every paragraph:
 
