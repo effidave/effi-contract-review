@@ -37,6 +37,13 @@ from word_document_server.utils.document_utils import (
 
 from word_document_server.utils.file_utils import check_file_writeable, ensure_docx_extension
 
+# Import paraId utilities for assigning Word-compatible IDs to new paragraphs
+from effilocal.doc.uuid_embedding import (
+    generate_para_id,
+    set_paragraph_para_id,
+    collect_all_para_ids,
+)
+
 
 # ============================================================================
 # SDT-Aware Iteration Functions
@@ -463,6 +470,9 @@ def insert_numbered_list_near_text(
         else:  # after
             insert_index = parent.index(target_element) + 1
         
+        # Collect existing paraIds for collision checking
+        existing_ids = collect_all_para_ids(doc)
+        
         # Insert list items
         from docx.oxml import OxmlElement
         from docx.shared import Pt
@@ -470,6 +480,12 @@ def insert_numbered_list_near_text(
         # Simple implementation: add paragraphs with list style
         for item_text in list_items:
             new_para = doc.add_paragraph(item_text, style='List Bullet' if bullet_type == 'bullet' else 'List Number')
+            
+            # Assign Word-compatible paraId
+            para_id = generate_para_id(existing_ids)
+            set_paragraph_para_id(new_para._element, para_id)
+            existing_ids.add(para_id)
+            
             # Move to correct position
             para_element = new_para._element
             parent.remove(para_element)

@@ -38,6 +38,9 @@ __all__ = [
     "get_paragraph_uuid",  # Backward compatibility alias
     "find_paragraph_by_para_id",
     "assign_block_ids",
+    "generate_para_id",
+    "set_paragraph_para_id",
+    "collect_all_para_ids",
     "BlockKey",
     "ParaKey",
     "TableCellKey",
@@ -119,6 +122,129 @@ def find_paragraph_by_para_id(doc: Document, para_id: str):
                         return para
     
     return None
+
+
+def collect_all_para_ids(doc: Document) -> set[str]:
+    """Collect all existing w14:paraId values from a document.
+    
+    This traverses all paragraphs (body, tables, headers, footers) to build
+    a complete set of existing IDs for collision checking.
+    
+    Args:
+        doc: Document object
+        
+    Returns:
+        Set of uppercase 8-character hex paraId strings
+    """
+    existing_ids: set[str] = set()
+    
+    # Body paragraphs
+    for para in doc.paragraphs:
+        pid = para._element.get(qn("w14:paraId"))
+        if pid:
+            existing_ids.add(pid.upper())
+    
+    # Table cell paragraphs
+    for table in doc.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                for para in cell.paragraphs:
+                    pid = para._element.get(qn("w14:paraId"))
+                    if pid:
+                        existing_ids.add(pid.upper())
+    
+    # Header and footer paragraphs
+    for section in doc.sections:
+        for header in [section.header, section.first_page_header, section.even_page_header]:
+            if header and header.is_linked_to_previous is False:
+                for para in header.paragraphs:
+                    pid = para._element.get(qn("w14:paraId"))
+                    if pid:
+                        existing_ids.add(pid.upper())
+        
+        for footer in [section.footer, section.first_page_footer, section.even_page_footer]:
+            if footer and footer.is_linked_to_previous is False:
+                for para in footer.paragraphs:
+                    pid = para._element.get(qn("w14:paraId"))
+                    if pid:
+                        existing_ids.add(pid.upper())
+    
+    return existing_ids
+
+
+def generate_para_id(existing_ids: set[str] | None = None, max_attempts: int = 100) -> str:
+    """Generate a new w14:paraId that doesn't collide with existing IDs.
+    
+    Word uses 8-character uppercase hex strings for paragraph IDs.
+    This function generates random IDs in the same format and checks
+    for collisions against the provided set of existing IDs.
+    
+    Args:
+        existing_ids: Set of existing paraId strings (uppercase) to avoid.
+                     If None, no collision checking is performed.
+        max_attempts: Maximum number of generation attempts before raising.
+        
+    Returns:
+        An 8-character uppercase hex string (e.g., "3A7F2C1D")
+        
+    Raises:
+        RuntimeError: If unable to generate a unique ID after max_attempts.
+        
+    Example:
+        >>> existing = collect_all_para_ids(doc)
+        >>> new_id = generate_para_id(existing)
+        >>> set_paragraph_para_id(para._element, new_id)
+    """
+    import secrets
+    
+    for _ in range(max_attempts):
+        # Generate 4 random bytes = 8 hex chars
+        new_id = secrets.token_hex(4).upper()
+        
+        if existing_ids is None or new_id not in existing_ids:
+            return new_id
+    
+    raise RuntimeError(
+        f"Failed to generate unique paraId after {max_attempts} attempts. "
+        f"Existing ID count: {len(existing_ids) if existing_ids else 0}"
+    )
+
+
+def set_paragraph_para_id(
+    paragraph_element: etree._Element,
+    para_id: str,
+    text_id: str | None = None,
+) -> None:
+    """Set the w14:paraId (and optionally w14:textId) on a paragraph element.
+    
+    Word requires both w14:paraId and w14:textId on paragraphs. If textId
+    is not provided, a new random one will be generated.
+    
+    Args:
+        paragraph_element: A w:p element to modify
+        para_id: The 8-character hex paraId to set
+        text_id: Optional 8-character hex textId. If None, generates one.
+        
+    Example:
+        >>> new_p = OxmlElement('w:p')
+        >>> existing = collect_all_para_ids(doc)
+        >>> para_id = generate_para_id(existing)
+        >>> set_paragraph_para_id(new_p, para_id)
+    """
+    import secrets
+    
+    # Ensure uppercase
+    para_id = para_id.upper()
+    
+    # Generate textId if not provided
+    if text_id is None:
+        text_id = secrets.token_hex(4).upper()
+    else:
+        text_id = text_id.upper()
+    
+    # Set both attributes
+    paragraph_element.set(qn("w14:paraId"), para_id)
+    paragraph_element.set(qn("w14:textId"), text_id)
 
 
 def _iter_paragraphs_with_index(document: Document) -> Iterator[tuple[int, etree._Element]]:

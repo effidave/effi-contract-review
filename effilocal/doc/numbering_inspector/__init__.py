@@ -38,12 +38,12 @@ class NumberingInspector:
         self,
         *,
         doc_tree: etree._ElementTree,
-        num_tree: etree._ElementTree,
+        num_tree: etree._ElementTree | None,
         styles_tree: etree._ElementTree,
         enable_logging: bool | None = None,
     ) -> None:
         self._doc_tree = doc_tree
-        self._num_tree = num_tree
+        self._num_tree = num_tree  # May be None if document has no numbering.xml
         self._styles_tree = styles_tree
         self._nums = None
         self._abstracts = None

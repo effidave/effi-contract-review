@@ -393,3 +393,180 @@ class TestRealWorldDocument:
         doc2 = Document(str(doc_path))
         para_id = get_paragraph_para_id(doc2.paragraphs[0]._element)
         assert para_id == "TESTID01"
+
+
+# ============================================================================
+# Tests for new paraId generation functions
+# ============================================================================
+
+from effilocal.doc.uuid_embedding import (
+    generate_para_id,
+    set_paragraph_para_id,
+    collect_all_para_ids,
+)
+from docx.oxml import OxmlElement
+
+
+class TestGenerateParaId:
+    """Tests for generate_para_id function."""
+    
+    def test_generates_8_char_hex(self):
+        """Test that generated IDs are 8 uppercase hex characters."""
+        para_id = generate_para_id()
+        assert len(para_id) == 8
+        # Check all chars are valid uppercase hex (0-9 or A-F)
+        assert all(c in "0123456789ABCDEF" for c in para_id)
+        # If there are letters, they should be uppercase
+        assert para_id == para_id.upper()
+    
+    def test_avoids_collisions(self):
+        """Test that generated IDs avoid existing IDs."""
+        existing = {"AAAAAAAA", "BBBBBBBB", "CCCCCCCC"}
+        for _ in range(100):
+            new_id = generate_para_id(existing)
+            assert new_id not in existing
+    
+    def test_raises_on_exhaustion(self):
+        """Test that RuntimeError is raised if can't find unique ID."""
+        # Create a massive set - in practice collision is astronomically unlikely
+        # but we can test the error path by mocking
+        import unittest.mock as mock
+        
+        # Mock secrets.token_hex to always return the same value
+        existing = {"DEADBEEF"}
+        with mock.patch('secrets.token_hex', return_value="deadbeef"):
+            with pytest.raises(RuntimeError, match="Failed to generate unique"):
+                generate_para_id(existing, max_attempts=5)
+    
+    def test_no_collision_check_if_none(self):
+        """Test that collision checking is skipped if existing_ids is None."""
+        para_id = generate_para_id(None)
+        assert len(para_id) == 8
+
+
+class TestSetParagraphParaId:
+    """Tests for set_paragraph_para_id function."""
+    
+    def test_sets_para_id_attribute(self):
+        """Test that paraId attribute is set correctly."""
+        new_p = OxmlElement('w:p')
+        set_paragraph_para_id(new_p, "12345678")
+        
+        para_id = new_p.get(qn("w14:paraId"))
+        assert para_id == "12345678"
+    
+    def test_sets_text_id_attribute(self):
+        """Test that textId attribute is also set."""
+        new_p = OxmlElement('w:p')
+        set_paragraph_para_id(new_p, "12345678")
+        
+        text_id = new_p.get(qn("w14:textId"))
+        assert text_id is not None
+        assert len(text_id) == 8
+    
+    def test_uses_provided_text_id(self):
+        """Test that provided textId is used."""
+        new_p = OxmlElement('w:p')
+        set_paragraph_para_id(new_p, "AAAAAAAA", text_id="BBBBBBBB")
+        
+        assert new_p.get(qn("w14:paraId")) == "AAAAAAAA"
+        assert new_p.get(qn("w14:textId")) == "BBBBBBBB"
+    
+    def test_uppercases_ids(self):
+        """Test that IDs are uppercased."""
+        new_p = OxmlElement('w:p')
+        set_paragraph_para_id(new_p, "abcdef12", text_id="12345abc")
+        
+        assert new_p.get(qn("w14:paraId")) == "ABCDEF12"
+        assert new_p.get(qn("w14:textId")) == "12345ABC"
+
+
+class TestCollectAllParaIds:
+    """Tests for collect_all_para_ids function."""
+    
+    def test_collects_body_paragraphs(self, sample_doc):
+        """Test that body paragraph IDs are collected."""
+        existing = collect_all_para_ids(sample_doc)
+        assert "00000001" in existing
+        assert "00000002" in existing
+        assert "00000003" in existing
+    
+    def test_collects_table_paragraphs(self):
+        """Test that table cell paragraph IDs are collected."""
+        doc = Document()
+        table = doc.add_table(rows=2, cols=2)
+        
+        # Add paraIds to table cells (8 chars each)
+        for i, row in enumerate(table.rows):
+            for j, cell in enumerate(row.cells):
+                para = cell.paragraphs[0]
+                _add_para_id(para._element, f"TBL{i}{j}0000")
+        
+        existing = collect_all_para_ids(doc)
+        assert "TBL000000" in existing
+        assert "TBL010000" in existing
+        assert "TBL100000" in existing
+        assert "TBL110000" in existing
+    
+    def test_returns_uppercase(self, sample_doc):
+        """Test that collected IDs are uppercase."""
+        existing = collect_all_para_ids(sample_doc)
+        for para_id in existing:
+            # IDs like "00000001" are already uppercase (digits have no case)
+            # Check they're valid hex and normalized
+            assert all(c in "0123456789ABCDEF" for c in para_id)
+    
+    def test_empty_document(self):
+        """Test with document that has no paraIds."""
+        doc = Document()
+        doc.add_paragraph("No paraId here")
+        
+        existing = collect_all_para_ids(doc)
+        # May be empty or contain auto-generated IDs depending on Word version
+        assert isinstance(existing, set)
+
+
+class TestParaIdIntegration:
+    """Integration tests for paraId generation and assignment."""
+    
+    def test_create_paragraph_with_new_id(self, sample_doc):
+        """Test creating a new paragraph with a generated paraId."""
+        # Collect existing IDs
+        existing = collect_all_para_ids(sample_doc)
+        
+        # Generate new ID
+        new_id = generate_para_id(existing)
+        assert new_id not in existing
+        
+        # Create new paragraph element
+        new_p = OxmlElement('w:p')
+        set_paragraph_para_id(new_p, new_id)
+        
+        # Verify
+        assert new_p.get(qn("w14:paraId")) == new_id
+        assert new_p.get(qn("w14:textId")) is not None
+    
+    def test_generated_id_survives_save_reload(self, tmp_path: Path):
+        """Test that programmatically generated paraId survives save/reload."""
+        doc_path = tmp_path / "new_para.docx"
+        
+        # Create document and add paragraph with generated ID
+        doc = Document()
+        p = doc.add_paragraph("Existing paragraph")
+        _add_para_id(p._element, "EXISTING")
+        
+        existing = collect_all_para_ids(doc)
+        new_id = generate_para_id(existing)
+        
+        # Add a new paragraph manually
+        new_p = doc.add_paragraph("New paragraph")
+        set_paragraph_para_id(new_p._element, new_id)
+        
+        doc.save(str(doc_path))
+        
+        # Reload and verify
+        doc2 = Document(str(doc_path))
+        para_ids = collect_all_para_ids(doc2)
+        
+        assert "EXISTING" in para_ids
+        assert new_id in para_ids

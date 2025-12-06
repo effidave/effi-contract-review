@@ -801,13 +801,15 @@ class BlockEditor {
         const text = block.text || '';
         
         // Create new block with text after cursor
+        // Generate Word-compatible para_id so save can insert it properly
         const newBlock = {
             id: this._generateId(),
             type: 'paragraph',
             text: text.substring(offset),
             runs: [{ text: text.substring(offset), formats: [] }],
             list: block.list ? { ...block.list } : undefined,
-            para_idx: -1, // New block, will be assigned on save
+            para_id: this._generateParaId(),  // Word-compatible 8-char hex ID
+            para_idx: -1, // Negative indicates new block to insert on save
             hierarchy_depth: typeof block.hierarchy_depth === 'number' ? block.hierarchy_depth : 0,
         };
         
@@ -1123,6 +1125,37 @@ class BlockEditor {
             const v = c === 'x' ? r : (r & 0x3 | 0x8);
             return v.toString(16);
         });
+    }
+    
+    /**
+     * Generate a Word-compatible w14:paraId (8-char uppercase hex)
+     * Checks for collisions against existing blocks' para_id values.
+     * @param {number} maxAttempts - Maximum collision avoidance attempts
+     * @returns {string} - 8-character uppercase hex string
+     */
+    _generateParaId(maxAttempts = 100) {
+        // Collect existing para_ids for collision checking
+        const existingIds = new Set();
+        for (const block of this.blocks) {
+            if (block.para_id) {
+                existingIds.add(block.para_id.toUpperCase());
+            }
+        }
+        
+        for (let i = 0; i < maxAttempts; i++) {
+            // Generate 8 random hex characters (4 bytes)
+            const bytes = new Uint8Array(4);
+            crypto.getRandomValues(bytes);
+            const paraId = Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
+            
+            if (!existingIds.has(paraId)) {
+                return paraId;
+            }
+        }
+        
+        // Fallback: timestamp-based ID (should never happen in practice)
+        const fallback = Date.now().toString(16).slice(-8).toUpperCase().padStart(8, '0');
+        return fallback;
     }
     
     /**

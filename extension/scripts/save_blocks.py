@@ -51,11 +51,15 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 from docx import Document
 from docx.shared import Pt
 from docx.oxml.ns import qn
+from docx.oxml import OxmlElement
 from docx.text.paragraph import Paragraph
 
 from effilocal.doc.uuid_embedding import (
     extract_block_uuids, 
     find_paragraph_by_para_id,
+    generate_para_id,
+    set_paragraph_para_id,
+    collect_all_para_ids,
     ParaKey, 
     TableCellKey,
 )
@@ -111,6 +115,104 @@ def apply_formatting(run, formats):
     run.bold = 'bold' in formats
     run.italic = 'italic' in formats
     run.underline = 'underline' in formats
+
+
+def insert_new_paragraph(doc, block, after_para_id: str, existing_ids: set[str], use_para_id: str = None) -> tuple[str, bool]:
+    """
+    Insert a new paragraph into the document after the specified paragraph.
+    
+    Args:
+        doc: Document object
+        block: Block dict with text and runs
+        after_para_id: The para_id of the paragraph to insert after
+        existing_ids: Set of existing paraIds for collision checking
+        use_para_id: Optional pre-generated para_id to use (from client-side generation)
+        
+    Returns:
+        Tuple of (new_para_id, success)
+    """
+    # Find the paragraph to insert after
+    after_para = find_paragraph_by_para_id(doc, after_para_id)
+    if not after_para:
+        return (None, False)
+    
+    # Create new paragraph element
+    new_p = OxmlElement('w:p')
+    
+    # Use provided para_id or generate new one
+    if use_para_id and use_para_id.upper() not in existing_ids:
+        new_para_id = use_para_id.upper()
+    else:
+        new_para_id = generate_para_id(existing_ids)
+    set_paragraph_para_id(new_p, new_para_id)
+    existing_ids.add(new_para_id)
+    
+    # Copy style from the paragraph we're inserting after
+    after_elem = after_para._element
+    after_pPr = after_elem.find(qn('w:pPr'))
+    if after_pPr is not None:
+        # Clone the paragraph properties (excluding numPr to avoid numbering issues)
+        new_pPr = OxmlElement('w:pPr')
+        for child in after_pPr:
+            if child.tag != qn('w:numPr'):  # Don't copy numbering
+                # Create a copy of the element
+                new_child = OxmlElement(child.tag.split('}')[-1] if '}' in child.tag else child.tag)
+                for key, value in child.attrib.items():
+                    new_child.set(key, value)
+                new_pPr.append(new_child)
+        if len(new_pPr) > 0:
+            new_p.insert(0, new_pPr)
+    
+    # Add runs with text and formatting
+    runs_data = block.get('runs', [])
+    text = block.get('text', '')
+    
+    if not runs_data:
+        runs_data = [{'text': text, 'formats': []}]
+    
+    for run_data in runs_data:
+        formats = run_data.get('formats', [])
+        
+        # Skip delete runs
+        if 'delete' in formats:
+            continue
+        
+        run_text = run_data.get('text', '')
+        if not run_text:
+            continue
+        
+        r = OxmlElement('w:r')
+        
+        # Add run properties for formatting
+        if formats:
+            rPr = OxmlElement('w:rPr')
+            if 'bold' in formats:
+                b = OxmlElement('w:b')
+                rPr.append(b)
+            if 'italic' in formats:
+                i = OxmlElement('w:i')
+                rPr.append(i)
+            if 'underline' in formats:
+                u = OxmlElement('w:u')
+                u.set(qn('w:val'), 'single')
+                rPr.append(u)
+            if len(rPr) > 0:
+                r.append(rPr)
+        
+        t = OxmlElement('w:t')
+        # Preserve spaces
+        if run_text.startswith(' ') or run_text.endswith(' '):
+            t.set('{http://www.w3.org/XML/1998/namespace}space', 'preserve')
+        t.text = run_text
+        r.append(t)
+        new_p.append(r)
+    
+    # Insert after the target paragraph
+    parent = after_elem.getparent()
+    target_position = list(parent).index(after_elem)
+    parent.insert(target_position + 1, new_p)
+    
+    return (new_para_id, True)
 
 
 def update_paragraph_content(paragraph, block):
@@ -246,18 +348,43 @@ def save_blocks_to_document(doc_path: str, blocks_path: str):
         # Extract para_id -> paragraph mapping (uses native Word w14:paraId)
         para_id_map = extract_block_uuids(doc)
         
+        # Collect all existing paraIds for collision checking when inserting new blocks
+        existing_ids = collect_all_para_ids(doc)
+        
         if not para_id_map:
             return {
                 "success": False,
                 "error": "No paragraph IDs found in document."
             }
         
-        # Track updates
+        # Track updates and insertions
         updated_count = 0
+        inserted_count = 0
         not_found = []
-
-        # Update paragraphs - find by para_id (w14:paraId)
+        
+        # Separate blocks into existing (para_id found in document) and new (para_idx=-1 or para_id not in doc)
+        existing_blocks = []
+        new_blocks = []
+        
         for block in blocks:
+            para_id = block.get('para_id', '')
+            para_idx = block.get('para_idx', 0)
+            
+            # New blocks have para_idx=-1 (set by editor on split)
+            # OR have a para_id that doesn't exist in the document yet
+            if para_idx == -1:
+                new_blocks.append(block)
+            elif para_id and para_id.upper() not in existing_ids:
+                # para_id was client-generated but not yet in document
+                new_blocks.append(block)
+            elif para_id:
+                existing_blocks.append(block)
+            else:
+                # No para_id and non-negative para_idx - shouldn't happen but treat as update attempt
+                existing_blocks.append(block)
+
+        # First pass: Update existing paragraphs - find by para_id (w14:paraId)
+        for block in existing_blocks:
             block_id = block.get('id', '')
             para_id = block.get('para_id', '')
 
@@ -279,7 +406,40 @@ def save_blocks_to_document(doc_path: str, blocks_path: str):
                 else:
                     not_found.append(f"{block_id} (para_id={para_id}, key={key})")
             else:
-                not_found.append(f"{block_id} (no para_id)")
+                not_found.append(f"{block_id} (para_id={para_id} not in document)")
+        
+        # Second pass: Insert new paragraphs (blocks without para_id)
+        # These come from editor split operations
+        for i, block in enumerate(new_blocks):
+            block_id = block.get('id', '')
+            
+            # Find where to insert: look at previous block in the original blocks list
+            block_index = next((j for j, b in enumerate(blocks) if b.get('id') == block_id), -1)
+            
+            if block_index <= 0:
+                # Can't determine insertion point - insert at end
+                not_found.append(f"{block_id} (new block, can't determine insertion point)")
+                continue
+            
+            # Get the previous block's para_id
+            prev_block = blocks[block_index - 1]
+            prev_para_id = prev_block.get('para_id', '')
+            
+            if not prev_para_id:
+                # Previous block also doesn't have para_id - skip for now
+                not_found.append(f"{block_id} (new block, previous block also new)")
+                continue
+            
+            # Insert after the previous paragraph, using client-generated para_id if available
+            client_para_id = block.get('para_id', '')
+            new_para_id, success = insert_new_paragraph(doc, block, prev_para_id, existing_ids, use_para_id=client_para_id)
+            
+            if success:
+                inserted_count += 1
+                # Update the block's para_id for future reference
+                block['para_id'] = new_para_id
+            else:
+                not_found.append(f"{block_id} (failed to insert after {prev_para_id})")
         
         # Save document
         doc.save(doc_path)
@@ -289,10 +449,19 @@ def save_blocks_to_document(doc_path: str, blocks_path: str):
         temp_blocks_dir = Path(blocks_path).parent
         update_blocks_jsonl(temp_blocks_dir, blocks)
         
+        total_count = updated_count + inserted_count
+        message_parts = []
+        if updated_count > 0:
+            message_parts.append(f"updated {updated_count}")
+        if inserted_count > 0:
+            message_parts.append(f"inserted {inserted_count}")
+        
         result = {
             "success": True,
-            "block_count": updated_count,
-            "message": f"Saved {updated_count} block(s) to document"
+            "block_count": total_count,
+            "updated_count": updated_count,
+            "inserted_count": inserted_count,
+            "message": f"Saved {total_count} block(s) to document ({', '.join(message_parts)})" if message_parts else "No changes made"
         }
         
         if not_found:

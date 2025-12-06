@@ -2,11 +2,10 @@
 
 Note on paragraph tracking:
 - For EXISTING paragraphs, we use Word's native w14:paraId for block matching (see uuid_embedding.py)
-- For NEWLY CREATED paragraphs, Word hasn't assigned a paraId yet, so we use a temporary
-  effi-para-id tag until the document is opened in Word. This is a different use case.
+- For NEWLY CREATED paragraphs, we generate a Word-compatible w14:paraId using
+  generate_para_id() with collision checking. Word honors these IDs.
 """
 import os
-import uuid
 from pathlib import Path
 from typing import List, Optional
 from docx import Document
@@ -18,71 +17,63 @@ from word_document_server.utils.file_utils import (
     check_file_writeable,
 )
 
+from effilocal.doc.uuid_embedding import (
+    generate_para_id,
+    set_paragraph_para_id,
+    collect_all_para_ids,
+    find_paragraph_by_para_id as _find_paragraph_by_para_id,
+)
 
-def add_custom_para_id(paragraph_element):
+
+def add_para_id_to_element(paragraph_element, existing_ids: set[str]) -> str:
     """
-    Add a temporary tracking ID to a newly created paragraph.
+    Add a Word-compatible w14:paraId to a newly created paragraph element.
     
-    This is needed because Word doesn't assign w14:paraId until the document 
-    is opened and saved in Word. For paragraphs WE create programmatically, 
-    we need a way to find them before Word assigns a native paraId.
-    
-    Note: This is SEPARATE from the block matching system which uses native
-    w14:paraId. This is only for tracking newly inserted content.
+    This generates an 8-character uppercase hex ID that doesn't collide
+    with any existing IDs in the document. Word will honor this ID.
     
     Args:
         paragraph_element: The w:p element to add the ID to
+        existing_ids: Set of existing paraIds in the document (from collect_all_para_ids)
         
     Returns:
-        The UUID string that was added
+        The generated paraId string (8 uppercase hex chars)
     """
-    # Generate a UUID
-    para_uuid = str(uuid.uuid4())
+    para_id = generate_para_id(existing_ids)
+    set_paragraph_para_id(paragraph_element, para_id)
+    # Add to existing set to prevent collisions in same batch
+    existing_ids.add(para_id)
+    return para_id
+
+
+# Backward compatibility alias
+def add_custom_para_id(paragraph_element, doc=None):
+    """
+    DEPRECATED: Use add_para_id_to_element() with existing_ids instead.
     
-    # Get or create paragraph properties
-    pPr = paragraph_element.find(qn('w:pPr'))
-    if pPr is None:
-        pPr = OxmlElement('w:pPr')
-        # Insert pPr as first child
-        paragraph_element.insert(0, pPr)
-    
-    # Add w:tag element with our UUID
-    tag = OxmlElement('w:tag')
-    tag.set(qn('w:val'), f'effi-para-id:{para_uuid}')
-    pPr.append(tag)
-    
-    return para_uuid
+    This function still works but doesn't check for collisions unless doc is provided.
+    """
+    if doc is not None:
+        existing_ids = collect_all_para_ids(doc)
+    else:
+        existing_ids = set()
+    return add_para_id_to_element(paragraph_element, existing_ids)
 
 
 def find_paragraph_by_id(doc, para_id=None, custom_id=None):
     """
-    Find a paragraph by either w14:paraId or our custom effi-para-id.
+    Find a paragraph by w14:paraId.
     
     Args:
         doc: The Document object
-        para_id: The w14:paraId to search for (optional)
-        custom_id: The custom effi-para-id UUID to search for (optional)
+        para_id: The w14:paraId to search for
+        custom_id: DEPRECATED - no longer used (kept for backward compat)
         
     Returns:
         The paragraph object if found, None otherwise
     """
-    for para in doc.paragraphs:
-        # Check w14:paraId first (if Word has assigned one)
-        if para_id:
-            doc_para_id = para._element.get(qn('w14:paraId'))
-            if doc_para_id == para_id:
-                return para
-        
-        # Check our custom tag
-        if custom_id:
-            pPr = para._element.find(qn('w:pPr'))
-            if pPr is not None:
-                tag = pPr.find(qn('w:tag'))
-                if tag is not None:
-                    tag_val = tag.get(qn('w:val'))
-                    if tag_val == f'effi-para-id:{custom_id}':
-                        return para
-    
+    if para_id:
+        return _find_paragraph_by_para_id(doc, para_id)
     return None
 
 
@@ -166,17 +157,21 @@ async def add_paragraph_after_attachment(
         
         # Find the last block belonging to this attachment
         last_block_para_id = None
+        last_block = None
         
         for i, block in enumerate(blocks):
             if block.get("attachment_id") == target_attachment_id:
                 last_block_para_id = block.get("para_id")
+                last_block = block
         
         if last_block_para_id is None:
             return f"Could not find content for attachment '{attachment_identifier}'"
         
         # Load the document
         doc = Document(filename)
-        from docx.oxml.ns import qn
+        
+        # Collect existing paraIds for collision checking
+        existing_ids = collect_all_para_ids(doc)
         
         # Find the paragraph with matching para_id (w14:paraId)
         # This is more reliable than matching by text or para_idx
@@ -215,9 +210,8 @@ async def add_paragraph_after_attachment(
             pPr.append(pStyle)
         
         # Optionally inherit numbering
-        if inherit_numbering:
+        if inherit_numbering and last_block:
             # Check if the last paragraph has numbering
-            last_block = blocks[last_block_idx]
             list_meta = last_block.get("list")
             if isinstance(list_meta, dict):
                 num_id = list_meta.get("num_id")
@@ -245,15 +239,15 @@ async def add_paragraph_after_attachment(
         r.append(t)
         new_p.append(r)
         
-        # Add custom para ID for tracking
-        custom_id = add_custom_para_id(new_p)
+        # Add Word-compatible paraId for tracking (with collision checking)
+        new_para_id = add_para_id_to_element(new_p, existing_ids)
         
         # Insert after last paragraph of attachment
         parent.insert(target_position + 1, new_p)
         
         doc.save(filename)
         
-        return f"Paragraph added after {target_attachment['identifier']} in {filename} (para_id={custom_id})"
+        return f"Paragraph added after {target_attachment['identifier']} in {filename} (para_id={new_para_id})"
         
     except Exception as exc:
         return f"Failed to add paragraph after attachment: {str(exc)}"
@@ -427,7 +421,9 @@ async def add_new_attachment_after(
         
         # Load the document
         doc = Document(filename)
-        from docx.oxml.ns import qn
+        
+        # Collect existing paraIds for collision checking
+        existing_ids = collect_all_para_ids(doc)
         
         # Find the reference attachment header paragraph (the one with the "attachment" metadata)
         reference_header_para = None
@@ -492,14 +488,14 @@ async def add_new_attachment_after(
         r.append(t)
         new_header_p.append(r)
         
-        # Add custom para ID for tracking
-        header_custom_id = add_custom_para_id(new_header_p)
+        # Add Word-compatible paraId for tracking (with collision checking)
+        header_para_id = add_para_id_to_element(new_header_p, existing_ids)
         
         # Insert the new header
         parent.insert(target_position + 1, new_header_p)
         
         # Optionally add content paragraph
-        content_custom_id = None
+        content_para_id = None
         if content:
             new_content_p = OxmlElement('w:p')
             
@@ -520,8 +516,8 @@ async def add_new_attachment_after(
             content_r.append(content_t)
             new_content_p.append(content_r)
             
-            # Add custom para ID for content tracking
-            content_custom_id = add_custom_para_id(new_content_p)
+            # Add Word-compatible paraId for content tracking
+            content_para_id = add_para_id_to_element(new_content_p, existing_ids)
             
             # Insert content after header
             parent.insert(target_position + 2, new_content_p)
@@ -529,9 +525,9 @@ async def add_new_attachment_after(
         doc.save(filename)
         
         content_msg = f" with content" if content else ""
-        ids_msg = f" (header_id={header_custom_id}"
-        if content_custom_id:
-            ids_msg += f", content_id={content_custom_id}"
+        ids_msg = f" (header_id={header_para_id}"
+        if content_para_id:
+            ids_msg += f", content_id={content_para_id}"
         ids_msg += ")"
         
         return f"New attachment '{new_attachment_text}' added after {after_attachment}{content_msg} in {filename}{ids_msg}"

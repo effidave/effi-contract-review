@@ -68,9 +68,16 @@ class NumberingResult:
 
 
 def build_numbering_maps(num_tree, styles_tree):
-    """Return (nums, abstracts, style_numpr) dictionaries for numbering resolution."""
-    nums = _extract_number_definitions(num_tree)
-    abstracts = _extract_abstract_definitions(num_tree)
+    """Return (nums, abstracts, style_numpr) dictionaries for numbering resolution.
+    
+    If num_tree is None (document has no numbering.xml), returns empty dicts for nums/abstracts.
+    """
+    if num_tree is None:
+        nums = {}
+        abstracts = {}
+    else:
+        nums = _extract_number_definitions(num_tree)
+        abstracts = _extract_abstract_definitions(num_tree)
     style_numpr = _resolve_paragraph_style_numbering(styles_tree)
     numbering_style_numpr = _extract_numbering_style_links(styles_tree)
     _apply_num_style_links(abstracts, numbering_style_numpr, nums)

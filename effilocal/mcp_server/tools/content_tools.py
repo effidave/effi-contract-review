@@ -70,23 +70,27 @@ async def add_heading(
         int(font_size) if font_size else None,
         bold, italic, border_bottom
     )
-    
-    # If color is specified and heading was added successfully, apply it
-    if color and "added to" in result:
-        try:
-            doc = Document(filename)
-            # Find the last paragraph (just added)
-            last_para = doc.paragraphs[-1] if doc.paragraphs else None
-            if last_para:
-                # Normalize color
+
+    # Assign Word-compatible paraId to the new heading
+    try:
+        doc = Document(filename)
+        last_para = doc.paragraphs[-1] if doc.paragraphs else None
+        if last_para:
+            from effilocal.doc.uuid_embedding import collect_all_para_ids, generate_para_id, set_paragraph_para_id
+            existing_ids = collect_all_para_ids(doc)
+            para_id = generate_para_id(existing_ids)
+            set_paragraph_para_id(last_para._element, para_id)
+            existing_ids.add(para_id)
+            # If color is specified, apply it
+            if color:
                 color_hex = color.strip().lstrip('#').upper()
                 if len(color_hex) == 6:
                     for run in last_para.runs:
                         run.font.color.rgb = RGBColor.from_string(color_hex)
-                    doc.save(filename)
-        except Exception:
-            pass  # Silently fail color application, heading was still added
-    
+            doc.save(filename)
+    except Exception:
+        pass  # Silently fail paraId or color application
+
     return result
 
 
@@ -101,14 +105,29 @@ async def add_paragraph(
     color: Optional[str] = None,
 ) -> str:
     """Add a paragraph to a Word document with optional formatting.
-    
-    Pass-through to upstream (upstream already supports all parameters).
+    EXTENDED: Assigns Word-compatible paraId to the new paragraph.
     """
-    return await upstream_add_paragraph(
+    result = await upstream_add_paragraph(
         filename, text, style, font_name,
         int(font_size) if font_size else None,
         bold, italic, color
     )
+
+    # Assign Word-compatible paraId to the new paragraph
+    try:
+        doc = Document(filename)
+        last_para = doc.paragraphs[-1] if doc.paragraphs else None
+        if last_para:
+            from effilocal.doc.uuid_embedding import collect_all_para_ids, generate_para_id, set_paragraph_para_id
+            existing_ids = collect_all_para_ids(doc)
+            para_id = generate_para_id(existing_ids)
+            set_paragraph_para_id(last_para._element, para_id)
+            existing_ids.add(para_id)
+            doc.save(filename)
+    except Exception:
+        pass  # Silently fail paraId assignment
+
+    return result
 
 
 async def search_and_replace(
@@ -203,8 +222,12 @@ async def add_paragraph_after_clause(
             "The effilocal package should be in the same workspace."
         )
     
-    # Import add_custom_para_id from attachment_tools (effilocal only - not in upstream)
-    from effilocal.mcp_server.tools.attachment_tools import add_custom_para_id
+    # Import paraId utilities from uuid_embedding
+    from effilocal.doc.uuid_embedding import (
+        generate_para_id,
+        set_paragraph_para_id,
+        collect_all_para_ids,
+    )
     
     filename = ensure_docx_extension(filename)
     
@@ -278,6 +301,9 @@ async def add_paragraph_after_clause(
         if last_child_index >= len(doc.paragraphs):
             return f"Invalid paragraph index {last_child_index} (document has {len(doc.paragraphs)} paragraphs)"
         
+        # Collect existing paraIds for collision checking
+        existing_ids = collect_all_para_ids(doc)
+        
         target_paragraph = doc.paragraphs[last_child_index]
         target_p = target_paragraph._p
         parent = target_p.getparent()
@@ -325,11 +351,13 @@ async def add_paragraph_after_clause(
         r.append(t)
         new_p.append(r)
         
+        # Add Word-compatible paraId for tracking (with collision checking)
+        new_para_id = generate_para_id(existing_ids)
+        set_paragraph_para_id(new_p, new_para_id)
+        existing_ids.add(new_para_id)
+        
         # Insert into document
         parent.insert(target_position + 1, new_p)
-        
-        # Add custom para_id for future reference (function generates and returns UUID)
-        custom_id = add_custom_para_id(new_p)
         
         doc.save(filename)
         
@@ -343,7 +371,7 @@ async def add_paragraph_after_clause(
             elif numbering_source == "style" and target_paragraph.style:
                 numbering_info = f" with inherited numbering (source={numbering_source}, style={target_paragraph.style.style_id})"
         
-        return f"Paragraph added after clause '{clause_number}'{numbering_info} in {filename} (para_id={custom_id})"
+        return f"Paragraph added after clause '{clause_number}'{numbering_info} in {filename} (para_id={new_para_id})"
         
     except Exception as exc:
         return f"Failed to add paragraph after clause: {str(exc)}"

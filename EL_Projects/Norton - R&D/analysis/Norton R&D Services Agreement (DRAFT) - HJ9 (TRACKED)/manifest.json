@@ -1,7 +1,7 @@
 {
   "doc_id": "123e4567-e89b-12d3-a456-426614174000",
   "v": 1,
-  "created_at": "2025-12-05T14:58:06+00:00",
+  "created_at": "2025-12-06T02:01:54+00:00",
   "tool_version": "sprint2-dev",
   "doc_format": "docx",
   "sdt_carrier": "content-controls",
@@ -9,11 +9,11 @@
   "range_marker_tag_prefix": "marker:",
   "fallback_heading_label": "Body (no heading)",
   "checksums": {
-    "blocks.jsonl": "sha256:ae80dbffab2996108b8fdbfa5daa6cd12e453c6eac2e87ebe1af67d2a3039465",
-    "sections.json": "sha256:f0ed1ee8182c27c077e28e38e895a74575fbaf00f425634998dd37765333132a",
+    "blocks.jsonl": "sha256:bfce0c164c8f32acad87589e1d93bd5f317085577c10627163e873bce6c8556c",
+    "sections.json": "sha256:517f11d1e87aeb272e2720f7a73923319ae7a1625245ee5cf4f6f89a3c433d1d",
     "styles.json": "sha256:2147027691afdeec5ac01a85dba55fe654b57885ee95db44a2608412038c91e2",
-    "relationships.json": "sha256:d38ddaaf22e5b5bf415efc2e0cfb519b0c062ebd7b03e4025060a3d159995023",
-    "tag_ranges.jsonl": "sha256:ca91dde7a3c1f033d4d019816b9a136cc0ad5c6b4d87dca6b18fa6eadb5d8cfc",
+    "relationships.json": "sha256:02af7807a1076cf85ab9761df94e2911366f4c3a1019917cc97a0e83eef69f68",
+    "tag_ranges.jsonl": "sha256:49125e69cfcdf8c686e6c414fb4310f8b1abca0fe6b70facc6aec1038650e4d0",
     "index.json": "sha256:75215e62fe9dc90d9df51b042f746122167cfdf91d6c6293cdff570d24262aca"
   },
   "schema_checksums": {
@@ -30,42 +30,42 @@
   },
   "attachments": [
     {
-      "attachment_id": "59b5ef6f-1f92-4d17-9723-60cae4f17694",
+      "attachment_id": "bd26f8a0-8cd8-4bf1-bf3e-d55556b569cf",
       "type": "schedule",
       "ordinal": "1",
       "title": null,
       "parent_attachment_id": null
     },
     {
-      "attachment_id": "5ead4f82-76e1-4e70-8685-7e09be6ae2ec",
+      "attachment_id": "e3d21678-0ae2-43d2-bc0d-45da0e68683d",
       "type": "schedule",
       "ordinal": "2",
       "title": null,
       "parent_attachment_id": null
     },
     {
-      "attachment_id": "ec1e533f-8d97-4c25-8689-ed677264c1fe",
+      "attachment_id": "279ed265-f5de-47c9-87ab-4c33f0f7bcaf",
       "type": "schedule",
       "ordinal": "3",
       "title": null,
       "parent_attachment_id": null
     },
     {
-      "attachment_id": "b5019c86-8bb4-40a4-8009-ff87cc613662",
+      "attachment_id": "6ba581db-5930-4d76-a326-42bba5299f8d",
       "type": "schedule",
       "ordinal": "4",
       "title": null,
       "parent_attachment_id": null
     },
     {
-      "attachment_id": "2e0c25d7-963f-4d9b-8990-7f35617b4c54",
+      "attachment_id": "92279019-aec5-4a0a-9eb3-f663a54edc0c",
       "type": "schedule",
       "ordinal": "5",
       "title": null,
       "parent_attachment_id": null
     },
     {
-      "attachment_id": "51ab0943-c057-44c7-8d38-fbd153ea12ae",
+      "attachment_id": "2c7bd991-8c84-4196-ba8d-a5513732d665",
       "type": "schedule",
       "ordinal": "6",
       "title": null,
