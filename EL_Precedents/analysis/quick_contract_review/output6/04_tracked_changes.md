@@ -1,7 +1,10 @@
 ---
-role: acting_for_client
-client: "[CUSTOMER]"
-counterparty: "[SUPPLIER]"
+document_type: tracked_changes
+acting_for: client
+original_provided_by: counterparty
+our_client: "[CLIENT]"
+counterparty: "[COUNTERPARTY]"
+description: "Edits made during contract review"
 ---
 
 # Tracked Changes
@@ -30,7 +33,7 @@ You may use these as a reference when assisting this user with similar contract 
 **After:** ... Exhibit 1 within forty-five (45) days of Company’s ...
 
 ### Rationale
-> For NBC: We suggest a compromise between 75 and our usual 45
+> For [COUNTERPARTY]: We suggest a compromise between 75 and our usual 45
 
 ---
 
@@ -45,14 +48,14 @@ You may use these as a reference when assisting this user with similar contract 
 **After:** ... shall comply with clauses 6 (Data Retention and Descruction), 8 (Cyber Security Incidents) and 9 (Application and Software Requirements) of Exhibit 3 to this Trial.  Other than those specific clauses, Exhibit 3 shall not apply.  Vendor shall not ...
 
 ### Rationale
-> For [SUPPLIER]: I have chosen these clauses from Exhibit 3 which probably map onto your existing processes.
+> For [CLIENT]: I have chosen these clauses from Exhibit 3 which probably map onto your existing processes.
 
-> For NBC: see clause 10 for a list of clauses which look relevant
+> For [COUNTERPARTY]: see clause 10 for a list of clauses which look relevant
 
 ---
 
 ## Edits to clause: "LIMITATION OF LIABILITY"
-**Author:** David Sant | **Date:** 2025-12-05T10:49:00Z
+**Author:** David Sant | **Date:** 2025-12-05T10:48:00Z
 
 ### New clause inserted
 > LIMITATION OF LIABILITY.
@@ -60,7 +63,7 @@ You may use these as a reference when assisting this user with similar contract 
 ---
 
 ## Edits to clause: "In this clause 11 “liability” means..."
-**Author:** David Sant | **Date:** 2025-12-05T10:49:00Z
+**Author:** David Sant | **Date:** 2025-12-05T10:48:00Z
 
 ### New clause inserted
 > In this clause 11 “liability” means every kind of liability arising under or in connection with this Agreement including but not limited to liability in contract, tort (including negligence), misrepresentation, restitution or otherwise.
@@ -68,7 +71,7 @@ You may use these as a reference when assisting this user with similar contract 
 ---
 
 ## Edits to clause: "The Customer assumes sole responsibil..."
-**Author:** David Sant | **Date:** 2025-12-05T10:50:00Z
+**Author:** David Sant | **Date:** 2025-12-05T10:48:00Z
 
 ### New clause inserted
 > The Customer assumes sole responsibility for results obtained from the use of the Vendor IP by the Customer, and for conclusions drawn from such use. Vendor shall have no liability for any damage caused by errors or omissions in any Customer Data, information or instructions provided to the Vendor by the Customer in connection with the Services, or any actions taken by the Vendor at the Customer's direction.
@@ -92,13 +95,13 @@ You may use these as a reference when assisting this user with similar contract 
 ---
 
 ## Edits to clause: "Subject to clause 11.3, the Vendor's..."
-**Author:** David Sant | **Date:** 2025-12-05T10:50:00Z
+**Author:** David Sant | **Date:** 2025-12-05T10:55:00Z
 
 ### New clause inserted
 > Subject to clause 11.3, the Vendor's total aggregate liability under the indemnity at clause 10 shall be limited to $1,000,000 (one million).
 
 ### Rationale
-> For NBC: $1m supercap for indemnity
+> For [COUNTERPARTY]: $1m supercap for indemnity
 
 ---
 
@@ -109,6 +112,6 @@ You may use these as a reference when assisting this user with similar contract 
 > Subject to clauses 11.3, 11.4 and 11.5, the Vendor's total aggregate liability arising in connection with the performance or contemplated performance of this Agreement shall be limited to the total fees paid under the Agreement.
 
 ### Rationale
-> For NBC: And standard liability cap for general liability
+> For [COUNTERPARTY]: And standard liability cap for general liability
 
 ---

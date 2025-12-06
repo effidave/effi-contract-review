@@ -1,7 +1,15 @@
 ---
-role: acting_for_client
-client: "[CUSTOMER]"
-counterparty: "[SUPPLIER]"
+document_type: advice_note
+acting_for: client
+original_provided_by: counterparty
+parties:
+  client:
+    identifier: "[CUSTOMER]"
+    role: "customer"
+  counterparty:
+    identifier: "[SUPPLIER]"
+    role: "supplier"
+description: "Email from lawyer with review and markup"
 ---
 
 # Advice Note
@@ -9,7 +17,7 @@ counterparty: "[SUPPLIER]"
 **From:** David Sant <David.Sant@harperjames.co.uk>
 **To:** Anna Fraser-Harris <anna@didimo.co>
 **Date:** 2025-12-05 11:32:19+00:00
-**Subject:** RE: FW: NBC Trail Contract Template
+**Subject:** RE: FW: [CUSTOMER] Trail Contract Template
 
 ---
 
@@ -27,10 +35,10 @@ Please see attached for my comments.  Things to flag:
 
  
 
-*	AI/machine learning (3.3., Ex. 1)– please check my proposed wording in Exhibit 1 carefully, especially the statements on training data, use of NBC Data. Please also add details of any third party suppliers you use for this.
-*	Subcontractors/suppliers/service providers (3.4) – please list these in Exhibit 1 if they will have access to any NBC Data – n.b. this would include cloud service providers who merely host NBC data. 
+*	AI/machine learning (3.3., Ex. 1)– please check my proposed wording in Exhibit 1 carefully, especially the statements on training data, use of [CUSTOMER] Data. Please also add details of any third party suppliers you use for this.
+*	Subcontractors/suppliers/service providers (3.4) – please list these in Exhibit 1 if they will have access to any [CUSTOMER] Data – n.b. this would include cloud service providers who merely host [CUSTOMER] data. 
 *	IP in outputs (4) – please let me know if they are only able to use the outputs during the term of the agreement.  At the moment, they own the IP in the outputs.
-*	Affiliates (3.1) – are you happy for the entire NBC group to benefit from the trial?
+*	Affiliates (3.1) – are you happy for the entire [CUSTOMER] group to benefit from the trial?
 *	Warranties/indemnities (3.2 and 9 and 10) – see my comments on whether to push back or accept.
 *	Data security (8 and Ex. 3) – I have proposed to limit Exhibit 3 to clauses 6 (Data Retention and Descruction), 8 (Cyber Security Incidents) and 9 (Application and Software Requirements) which look reasonable (and probably align with your existing practices).  Please check these look ok – or let me know if you would like me to provide more detail on this.
 *	Liability cap (11) – I have added a general liability cap (100% of the fees) and a supercap of $1m for the indemnity in clause 10 (i.e. IPR, confidentiality, security).
@@ -42,7 +50,7 @@ I have availability today if you would like to discuss anything or if you would 
 
  
 
-If you are comfortable with these changes, please delete the internal comments, marked For [SUPPLIER].   The comments marked For NBC are safe for sharing with them.
+If you are comfortable with these changes, please delete the internal comments, marked For [SUPPLIER].   The comments marked For [CUSTOMER] are safe for sharing with them.
 
  
 

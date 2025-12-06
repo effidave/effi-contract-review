@@ -187,22 +187,25 @@ class TestSelectDocxAttachment:
 
 
 # =============================================================================
-# Tests for process_comments function
+# Tests for categorize_comments_by_prefix function
 # =============================================================================
 
-class TestProcessComments:
-    """Tests for extracting and categorizing comments."""
+class TestCategorizeCommentsByPrefix:
+    """Tests for categorizing comments by prefix."""
     
     def test_groups_comments_by_client_prefix(self, sample_msg_paths: tuple[Path, Path]) -> None:
-        """Comments starting with 'For {client}' should be in client group."""
-        from scripts.generate_review_example import parse_msg_file, process_comments, select_docx_attachment
+        """Comments starting with 'For {client}:' should be in client group."""
+        from effilocal.mcp_server.core.comments import extract_all_comments
+        from scripts.generate_review_example import categorize_comments_by_prefix, parse_msg_file, select_docx_attachment
         
         _, advice_path = sample_msg_paths
         email_data = parse_msg_file(advice_path)
         docx_att = select_docx_attachment(email_data.attachments, "Select:")
         doc = Document(BytesIO(docx_att.data))
         
-        categorized = process_comments(doc, client_name="Didimo", counterparty_name="NBC")
+        all_comments = extract_all_comments(doc)
+        # Function expects just the name, not "For name" - it builds "For X:" pattern internally
+        categorized = categorize_comments_by_prefix(all_comments, "Didimo", "NBC")
         
         assert "client" in categorized
         assert "counterparty" in categorized
@@ -213,38 +216,23 @@ class TestProcessComments:
             assert comment["text"].startswith("For Didimo")
     
     def test_groups_comments_by_counterparty_prefix(self, sample_msg_paths: tuple[Path, Path]) -> None:
-        """Comments starting with 'For {counterparty}' should be in counterparty group."""
-        from scripts.generate_review_example import parse_msg_file, process_comments, select_docx_attachment
+        """Comments starting with 'For {counterparty}:' should be in counterparty group."""
+        from effilocal.mcp_server.core.comments import extract_all_comments
+        from scripts.generate_review_example import categorize_comments_by_prefix, parse_msg_file, select_docx_attachment
         
         _, advice_path = sample_msg_paths
         email_data = parse_msg_file(advice_path)
         docx_att = select_docx_attachment(email_data.attachments, "Select:")
         doc = Document(BytesIO(docx_att.data))
         
-        categorized = process_comments(doc, client_name="Didimo", counterparty_name="NBC")
+        all_comments = extract_all_comments(doc)
+        categorized = categorize_comments_by_prefix(all_comments, "Didimo", "NBC")
         
         assert len(categorized["counterparty"]) > 0
         
         # All counterparty comments should start with "For NBC"
         for comment in categorized["counterparty"]:
             assert comment["text"].startswith("For NBC")
-    
-    def test_includes_paragraph_text_in_comments(self, sample_msg_paths: tuple[Path, Path]) -> None:
-        """Each comment should include full paragraph text."""
-        from scripts.generate_review_example import parse_msg_file, process_comments, select_docx_attachment
-        
-        _, advice_path = sample_msg_paths
-        email_data = parse_msg_file(advice_path)
-        docx_att = select_docx_attachment(email_data.attachments, "Select:")
-        doc = Document(BytesIO(docx_att.data))
-        
-        categorized = process_comments(doc, client_name="Didimo", counterparty_name="NBC")
-        
-        # Check at least one comment has paragraph_text
-        all_comments = categorized["client"] + categorized["counterparty"] + categorized.get("other", [])
-        comments_with_para_text = [c for c in all_comments if c.get("paragraph_text")]
-        
-        assert len(comments_with_para_text) > 0
 
 
 # =============================================================================
@@ -268,8 +256,8 @@ class TestProcessTrackChanges:
         assert isinstance(changes, list)
     
     def test_change_has_required_fields(self, sample_msg_paths: tuple[Path, Path]) -> None:
-        """Each change should have type, text, author, paragraph_text."""
-        from scripts.generate_review_example import parse_msg_file, process_track_changes, select_docx_attachment
+        """Each change should be a ParagraphDiff with before_text and after_text."""
+        from scripts.generate_review_example import ParagraphDiff, parse_msg_file, process_track_changes, select_docx_attachment
         
         _, advice_path = sample_msg_paths
         email_data = parse_msg_file(advice_path)
@@ -280,10 +268,11 @@ class TestProcessTrackChanges:
         
         if len(changes) > 0:
             change = changes[0]
-            assert "type" in change
-            assert change["type"] in ("insertion", "deletion")
-            assert "text" in change
-            assert "paragraph_text" in change
+            # Now uses ParagraphDiff dataclass
+            assert isinstance(change, ParagraphDiff)
+            assert hasattr(change, "before_text")
+            assert hasattr(change, "after_text")
+            assert hasattr(change, "para_id")
 
 
 # =============================================================================
@@ -294,7 +283,7 @@ class TestGenerateInstructionsMd:
     """Tests for instructions markdown generation."""
     
     def test_includes_email_metadata(self) -> None:
-        """Generated markdown should include From, To, Date, Subject."""
+        """Generated markdown should include From, To (redacted), Date, Subject."""
         from scripts.generate_review_example import Attachment, EmailData, generate_instructions_md
         
         email_data = EmailData(
@@ -308,8 +297,8 @@ class TestGenerateInstructionsMd:
         
         markdown = generate_instructions_md(email_data)
         
-        assert "client@example.com" in markdown
-        assert "lawyer@example.com" in markdown
+        # Emails are now anonymized to [REDACTED]
+        assert "[REDACTED]" in markdown
         assert "2025-12-01" in markdown
         assert "Review Contract" in markdown
     
@@ -338,59 +327,68 @@ class TestGenerateCommentsMd:
         """Should have separate sections for client and counterparty comments."""
         from scripts.generate_review_example import generate_comments_md
         
+        # Comments are now anonymized, so we use placeholder names
         categorized_comments = {
-            "client": [{"text": "For Client: note", "author": "Lawyer", "date": "2025-12-01", 
-                       "reference_text": "ref", "paragraph_text": "para"}],
-            "counterparty": [{"text": "For Counter: note", "author": "Lawyer", "date": "2025-12-01",
-                             "reference_text": "ref", "paragraph_text": "para"}],
+            "client": [{"text": "For [CLIENT]: note", "author": "Lawyer", "date": "2025-12-01", 
+                       "reference_text": "ref"}],
+            "counterparty": [{"text": "For [COUNTERPARTY]: note", "author": "Lawyer", "date": "2025-12-01",
+                             "reference_text": "ref"}],
             "other": []
         }
         
-        markdown = generate_comments_md(categorized_comments, "Client", "Counter")
+        # generate_comments_md expects list of names, not single name
+        markdown = generate_comments_md(categorized_comments, ["Client"], ["Counter"])
         
-        assert "For Client" in markdown
-        assert "For Counter" in markdown
+        # Check for section headers - they use placeholders now
+        assert "[CLIENT]" in markdown
+        assert "[COUNTERPARTY]" in markdown
     
-    def test_includes_reference_text_and_paragraph(self) -> None:
-        """Each comment should show reference text and full paragraph."""
+    def test_includes_reference_text(self) -> None:
+        """Each comment should show reference text."""
         from scripts.generate_review_example import generate_comments_md
         
         categorized_comments = {
             "client": [{
-                "text": "For Client: important note",
+                "text": "For [CLIENT]: important note",
                 "author": "Lawyer",
                 "date": "2025-12-01",
-                "reference_text": "the specific phrase",
-                "paragraph_text": "This is the full paragraph containing the specific phrase here."
+                "reference_text": "the specific phrase"
             }],
             "counterparty": [],
             "other": []
         }
         
-        markdown = generate_comments_md(categorized_comments, "Client", "Counter")
+        markdown = generate_comments_md(categorized_comments, ["Client"], ["Counter"])
         
+        # Reference text should be shown (paragraph_text was removed)
         assert "the specific phrase" in markdown
-        assert "This is the full paragraph" in markdown
 
 
 class TestGenerateTrackChangesMd:
     """Tests for track changes markdown generation."""
     
-    def test_separates_insertions_and_deletions(self) -> None:
-        """Should have separate sections for insertions and deletions."""
-        from scripts.generate_review_example import generate_track_changes_md
+    def test_formats_paragraph_diffs(self) -> None:
+        """Should format ParagraphDiff objects with before/after text."""
+        from scripts.generate_review_example import ParagraphDiff, generate_track_changes_md
         
-        changes = [
-            {"type": "insertion", "text": "added text", "author": "Lawyer", 
-             "date": "2025-12-01", "paragraph_text": "context"},
-            {"type": "deletion", "text": "removed text", "author": "Lawyer",
-             "date": "2025-12-01", "paragraph_text": "context"}
+        # Now uses ParagraphDiff dataclass instead of dict
+        diffs = [
+            ParagraphDiff(
+                before_text="original text",
+                after_text="modified text",
+                authors={"Lawyer"},
+                dates={"2025-12-01"},
+                insertions=["modified"],
+                deletions=["original"],
+                clause_number="",
+                para_id="12345678"
+            )
         ]
         
-        markdown = generate_track_changes_md(changes)
+        markdown = generate_track_changes_md(diffs)
         
-        assert "Insertion" in markdown or "insertion" in markdown.lower()
-        assert "Deletion" in markdown or "deletion" in markdown.lower()
+        # Should contain the diff content
+        assert "original" in markdown or "modified" in markdown
 
 
 class TestGenerateAdviceNoteMd:
@@ -411,6 +409,7 @@ class TestGenerateAdviceNoteMd:
         
         markdown = generate_advice_note_md(email_data)
         
+        # Advice note includes sender/recipients (unlike instructions which uses [REDACTED])
         assert "lawyer@example.com" in markdown
         assert "client@example.com" in markdown
         assert "RE: Review Contract" in markdown
@@ -426,25 +425,26 @@ class TestMainWorkflow:
     def test_generates_all_output_files(
         self, sample_msg_paths: tuple[Path, Path], temp_output_dir: Path
     ) -> None:
-        """Main function should generate all 5 output files."""
+        """Main function should generate all output files."""
         from scripts.generate_review_example import generate_review_example
         
         instructions_path, advice_path = sample_msg_paths
         
-        generate_review_example(
-            incoming_path=instructions_path,
-            outgoing_path=advice_path,
-            client_name="Didimo",
-            counterparty_name="NBC",
-            output_dir=temp_output_dir
-        )
+        # Mock user input to select Didimo as client (option 2)
+        with patch('builtins.input', return_value="2"):
+            generate_review_example(
+                incoming_path=instructions_path,
+                outgoing_path=advice_path,
+                output_dir=temp_output_dir
+            )
         
+        # Current output files (merged comments + edits into 03_review_edits.md)
         expected_files = [
+            "00_mappings.md",
             "01_instructions.md",
             "02_original_agreement.md",
-            "03_review_comments.md",
-            "04_tracked_changes.md",
-            "05_advice_note.md"
+            "03_review_edits.md",  # Merged comments + track changes
+            "04_advice_note.md"
         ]
         
         for filename in expected_files:
@@ -460,50 +460,149 @@ class TestMainWorkflow:
         
         instructions_path, advice_path = sample_msg_paths
         
-        generate_review_example(
-            incoming_path=instructions_path,
-            outgoing_path=advice_path,
-            client_name="Didimo",
-            counterparty_name="NBC",
-            output_dir=temp_output_dir
-        )
+        # Mock user input to select Didimo as client (option 2)
+        with patch('builtins.input', return_value="2"):
+            generate_review_example(
+                incoming_path=instructions_path,
+                outgoing_path=advice_path,
+                output_dir=temp_output_dir
+            )
         
         original_md = (temp_output_dir / "02_original_agreement.md").read_text(encoding="utf-8")
         
         # Should contain some agreement-related content
         assert len(original_md) > 100
     
-    def test_comments_file_has_correct_grouping(
+    def test_review_edits_has_anonymized_parties(
         self, sample_msg_paths: tuple[Path, Path], temp_output_dir: Path
     ) -> None:
-        """03_review_comments.md should have For Didimo and For NBC sections."""
+        """03_review_edits.md should have anonymized party placeholders."""
         from scripts.generate_review_example import generate_review_example
         
         instructions_path, advice_path = sample_msg_paths
         
-        generate_review_example(
-            incoming_path=instructions_path,
-            outgoing_path=advice_path,
-            client_name="Didimo",
-            counterparty_name="NBC",
-            output_dir=temp_output_dir
+        # Mock user input to select Didimo as client (option 2)
+        with patch('builtins.input', return_value="2"):
+            generate_review_example(
+                incoming_path=instructions_path,
+                outgoing_path=advice_path,
+                output_dir=temp_output_dir
+            )
+        
+        edits_md = (temp_output_dir / "03_review_edits.md").read_text(encoding="utf-8")
+        
+        # Should use anonymized placeholders (role-based like [SUPPLIER]/[CUSTOMER])
+        # The exact placeholders depend on the detected party roles
+        has_placeholders = (
+            "[CLIENT]" in edits_md or 
+            "[COUNTERPARTY]" in edits_md or
+            "[SUPPLIER]" in edits_md or 
+            "[CUSTOMER]" in edits_md
         )
-        
-        comments_md = (temp_output_dir / "03_review_comments.md").read_text(encoding="utf-8")
-        
-        assert "Didimo" in comments_md
-        assert "NBC" in comments_md
+        assert has_placeholders, "Expected anonymized party placeholders in output"
 
 
 # =============================================================================
 # Tests for CLI argument parsing
 # =============================================================================
 
+# =============================================================================
+# Tests for _extract_clause_title_from_text function
+# =============================================================================
+
+class TestExtractClauseTitleFromText:
+    """Tests for extracting clause titles from paragraph text."""
+    
+    def test_all_caps_multi_word_title(self) -> None:
+        """Should extract multi-word ALL CAPS titles like 'LIMITATION OF LIABILITY.'"""
+        from scripts.generate_review_example import _extract_clause_title_from_text
+        
+        assert _extract_clause_title_from_text("LIMITATION OF LIABILITY.") == "LIMITATION OF LIABILITY"
+        assert _extract_clause_title_from_text("DATA SECURITY.") == "DATA SECURITY"
+        assert _extract_clause_title_from_text("REPRESENTATIONS, WARRANTIES AND COVENANTS.") == "REPRESENTATIONS, WARRANTIES AND COVENANTS"
+    
+    def test_all_caps_single_word_title(self) -> None:
+        """Should extract single-word ALL CAPS titles like 'INDEMNIFICATION.'"""
+        from scripts.generate_review_example import _extract_clause_title_from_text
+        
+        assert _extract_clause_title_from_text("INDEMNIFICATION.") == "INDEMNIFICATION"
+        assert _extract_clause_title_from_text("TERMINATION.") == "TERMINATION"
+        assert _extract_clause_title_from_text("NOTICES.") == "NOTICES"
+    
+    def test_title_case_single_word(self) -> None:
+        """Should extract single-word Title Case titles like 'Indemnification.'"""
+        from scripts.generate_review_example import _extract_clause_title_from_text
+        
+        assert _extract_clause_title_from_text("Indemnification.") == "Indemnification"
+        assert _extract_clause_title_from_text("Termination.") == "Termination"
+        assert _extract_clause_title_from_text("Notices.") == "Notices"
+    
+    def test_title_case_multi_word(self) -> None:
+        """Should extract multi-word Title Case titles like 'Limitation of Liability.'"""
+        from scripts.generate_review_example import _extract_clause_title_from_text
+        
+        assert _extract_clause_title_from_text("Limitation of Liability.") == "Limitation of Liability"
+        assert _extract_clause_title_from_text("Fees and Payment.") == "Fees and Payment"
+        assert _extract_clause_title_from_text("Term of Agreement.") == "Term of Agreement"
+    
+    def test_title_with_ampersand(self) -> None:
+        """Should handle titles with & symbol."""
+        from scripts.generate_review_example import _extract_clause_title_from_text
+        
+        assert _extract_clause_title_from_text("FEES & EXPENSES.") == "FEES & EXPENSES"
+        assert _extract_clause_title_from_text("Terms & Conditions.") == "Terms & Conditions"
+    
+    def test_title_followed_by_content(self) -> None:
+        """Should extract title when followed by clause content."""
+        from scripts.generate_review_example import _extract_clause_title_from_text
+        
+        result = _extract_clause_title_from_text("INDEMNIFICATION. The Vendor shall indemnify...")
+        assert result == "INDEMNIFICATION"
+        
+        result = _extract_clause_title_from_text("Termination. Either party may terminate...")
+        assert result == "Termination"
+    
+    def test_non_title_text_returns_empty(self) -> None:
+        """Should return empty string for regular paragraph text."""
+        from scripts.generate_review_example import _extract_clause_title_from_text
+        
+        assert _extract_clause_title_from_text("Some normal text without a title.") == ""
+        assert _extract_clause_title_from_text("The parties agree to the following terms.") == ""
+        assert _extract_clause_title_from_text("This Agreement is entered into as of...") == ""
+    
+    def test_empty_or_none_input(self) -> None:
+        """Should handle empty or None input gracefully."""
+        from scripts.generate_review_example import _extract_clause_title_from_text
+        
+        assert _extract_clause_title_from_text("") == ""
+        assert _extract_clause_title_from_text(None) == ""
+    
+    def test_short_all_caps_rejected(self) -> None:
+        """Should reject very short ALL CAPS text (less than 3 chars)."""
+        from scripts.generate_review_example import _extract_clause_title_from_text
+        
+        # "AB." should not be matched as a title (too short)
+        assert _extract_clause_title_from_text("AB.") == ""
+        # But "ABC." should work
+        assert _extract_clause_title_from_text("ABC.") == "ABC"
+    
+    def test_title_with_following_clause_content(self) -> None:
+        """Should extract title from text like 'INDEMNIFICATION.  Vendor shall...'"""
+        from scripts.generate_review_example import _extract_clause_title_from_text
+        
+        # This is the real-world case: reference_text starts with title followed by clause body
+        text = "INDEMNIFICATION.  Vendor shall indemnify, defend, and hold Company"
+        assert _extract_clause_title_from_text(text) == "INDEMNIFICATION"
+        
+        text = "DATA SECURITY. Supplier shall comply with Exhibit 3 to this Trial."
+        assert _extract_clause_title_from_text(text) == "DATA SECURITY"
+
+
 class TestCLIArgumentParsing:
     """Tests for command-line argument parsing."""
     
     def test_required_arguments(self) -> None:
-        """CLI should require --incoming, --outgoing, --client, --counterparty."""
+        """CLI should require --incoming and --outgoing."""
         from scripts.generate_review_example import create_argument_parser
         
         parser = create_argument_parser()
@@ -518,11 +617,10 @@ class TestCLIArgumentParsing:
         
         parser = create_argument_parser()
         
+        # Parties are now auto-detected, so --client/--counterparty no longer exist
         args = parser.parse_args([
             "--incoming", "in.msg",
             "--outgoing", "out.msg",
-            "--client", "Client",
-            "--counterparty", "Counter",
             "--original-index", "1",
             "--edited-index", "2"
         ])
@@ -539,8 +637,6 @@ class TestCLIArgumentParsing:
         args = parser.parse_args([
             "--incoming", "in.msg",
             "--outgoing", "out.msg",
-            "--client", "Client",
-            "--counterparty", "Counter",
             "--single-file"
         ])
         

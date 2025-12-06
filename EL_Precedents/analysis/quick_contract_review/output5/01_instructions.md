@@ -11,7 +11,7 @@ description: "Email from client with review instructions"
 **From:** [REDACTED]
 **To:** [REDACTED]
 **Date:** 2025-12-02 19:08:31+00:00
-**Subject:** NBC Trail Contract Template
+**Subject:** [SUPPLIER] Trail Contract Template
 
 ---
 
@@ -21,7 +21,7 @@ Dear David,
 
 I hope you are well!
 
-We recently received a Trial contract from NBC. Unfortunately, our US lawyers have a conflict of interest and cannot advise on this matter.
+We recently received a Trial contract from [SUPPLIER]. Unfortunately, our US lawyers have a conflict of interest and cannot advise on this matter.
 
 While this contract is governed by US law, we would greatly appreciate your initial comments on the risks from a general legal perspective. I have included my initial notes below, but please also highlight any other concerns or risks you perceive.
 
@@ -40,7 +40,7 @@ Thanks Anna
 
 
 Anna Fraser-Harris | Chief Financial Officer
-+44 0759 869 3581 | www.[SUPPLIER].co <http://www.[SUPPLIER].co/> 
++44 0759 869 3581 | www.[CUSTOMER].co <http://www.[CUSTOMER].co/> 
 
 
  <https://docs.google.com/uc?export=download&id=1DW0eraHdguOzwkjK-E9xQjiOzl3sEJ80&revid=0BzDbAEss_5MaVEdJZVJpekt3OUlXKzVkMStJa013VGVpT25rPQ> 

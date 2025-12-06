@@ -30,7 +30,7 @@ You may use these as a reference when assisting this user with similar contract 
 **After:** ... Exhibit 1 within forty-five (45) days of Company’s ...
 
 ### Rationale
-> For NBC: We suggest a compromise between 75 and our usual 45
+> For [SUPPLIER]: We suggest a compromise between 75 and our usual 45
 
 ---
 
@@ -45,9 +45,9 @@ You may use these as a reference when assisting this user with similar contract 
 **After:** ... shall comply with clauses 6 (Data Retention and Descruction), 8 (Cyber Security Incidents) and 9 (Application and Software Requirements) of Exhibit 3 to this Trial.  Other than those specific clauses, Exhibit 3 shall not apply.  Vendor shall not ...
 
 ### Rationale
-> For [SUPPLIER]: I have chosen these clauses from Exhibit 3 which probably map onto your existing processes.
+> For [CUSTOMER]: I have chosen these clauses from Exhibit 3 which probably map onto your existing processes.
 
-> For NBC: see clause 10 for a list of clauses which look relevant
+> For [SUPPLIER]: see clause 10 for a list of clauses which look relevant
 
 ---
 
@@ -84,7 +84,7 @@ You may use these as a reference when assisting this user with similar contract 
 ---
 
 ## Edits to clause: "Subject to clause 11.3, the Vendor shall..."
-**Author:** David Sant | **Date:** 2025-12-05T10:53:00Z
+**Author:** David Sant | **Date:** 2025-12-05T10:48:00Z
 
 ### New clause inserted
 > Subject to clause 11.3, the Vendor shall have no liability for any special, indirect or consequential loss, costs, damages, charges or expenses.
@@ -98,17 +98,17 @@ You may use these as a reference when assisting this user with similar contract 
 > Subject to clause 11.3, the Vendor's total aggregate liability under the indemnity at clause 10 shall be limited to $1,000,000 (one million).
 
 ### Rationale
-> For NBC: $1m supercap for indemnity
+> For [SUPPLIER]: $1m supercap for indemnity
 
 ---
 
 ## Edits to clause: "Subject to clauses 11.3, 11.4 and 11.5,..."
-**Author:** David Sant | **Date:** 2025-12-05T10:48:00Z
+**Author:** David Sant | **Date:** 2025-12-05T10:54:00Z
 
 ### New clause inserted
 > Subject to clauses 11.3, 11.4 and 11.5, the Vendor's total aggregate liability arising in connection with the performance or contemplated performance of this Agreement shall be limited to the total fees paid under the Agreement.
 
 ### Rationale
-> For NBC: And standard liability cap for general liability
+> For [SUPPLIER]: And standard liability cap for general liability
 
 ---

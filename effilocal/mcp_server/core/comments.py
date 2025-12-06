@@ -76,7 +76,7 @@ def extract_all_comments(doc: DocumentType) -> List[Dict[str, Any]]:
                     comments_map[cid] = comment_data
         
         # Scan paragraphs to map comments to locations
-        # This populates 'paragraph_index' for comments found in the body
+        # This populates 'paragraph_index' and 'para_id' for comments found in the body
         # Use iter_document_paragraphs to include SDT-wrapped paragraphs
         for i, p in enumerate(iter_document_paragraphs(doc)):
             p_element = p._element
@@ -86,10 +86,25 @@ def extract_all_comments(doc: DocumentType) -> List[Dict[str, Any]]:
                 cid = ref.get(qn('w:id'))
                 if cid in comments_map:
                     comments_map[cid]['paragraph_index'] = i
-                    
-        # Also scan tables? (Optional, but good for completeness)
-        # For now, let's stick to main body paragraphs as that's what manage_notes.py needs
+                    # Also capture the paragraph's native para_id for clause matching
+                    para_id = p_element.get(qn('w14:paraId'))
+                    if para_id:
+                        comments_map[cid]['para_id'] = para_id
         
+        # Also scan table cells for comment references
+        # This captures comments in tables that iter_document_paragraphs misses
+        body = doc.element.body
+        for tbl in body.iter(qn('w:tbl')):
+            for tc in tbl.iter(qn('w:tc')):
+                for p_element in tc.iter(qn('w:p')):
+                    refs = p_element.xpath('.//w:commentReference')
+                    for ref in refs:
+                        cid = ref.get(qn('w:id'))
+                        if cid in comments_map:
+                            para_id = p_element.get(qn('w14:paraId'))
+                            if para_id:
+                                comments_map[cid]['para_id'] = para_id
+                    
         comments = list(comments_map.values())
         
         if not comments:
@@ -110,6 +125,13 @@ def extract_all_comments(doc: DocumentType) -> List[Dict[str, Any]]:
             cid = comment.get('comment_id')
             if cid and cid in reference_texts:
                 comment['reference_text'] = reference_texts[cid]
+        
+        # Extract paragraph text for all paragraphs (including table cells)
+        paragraph_texts = get_all_paragraph_texts(doc)
+        for comment in comments:
+            para_id = comment.get('para_id')
+            if para_id and para_id in paragraph_texts:
+                comment['paragraph_text'] = paragraph_texts[para_id]
     
     except Exception as e:
         # If direct access fails, try alternative approach
@@ -488,8 +510,8 @@ def get_all_reference_texts(doc: DocumentType) -> Dict[str, str]:
     """
     Extract reference text for all comments in a document.
     
-    This is more efficient than calling extract_reference_text for each comment
-    as it only iterates through the document once.
+    This scans the entire document body XML (including tables) to find
+    commentRangeStart/commentRangeEnd pairs and extract the text between them.
     
     Args:
         doc: The Document object
@@ -501,34 +523,71 @@ def get_all_reference_texts(doc: DocumentType) -> Dict[str, str]:
     active_ranges: Dict[str, List[str]] = {}  # comment_id -> list of text fragments
     
     try:
-        for para in iter_document_paragraphs(doc):
-            p_element = para._element
+        # Iterate over ALL elements in the document body (including tables)
+        # This ensures we capture comments in table cells
+        body = doc.element.body
+        
+        for element in body.iter():
+            tag = element.tag.split('}')[-1] if '}' in element.tag else element.tag
             
-            for child in p_element.iter():
-                tag = child.tag.split('}')[-1] if '}' in child.tag else child.tag
-                
-                # Handle commentRangeStart
-                if tag == 'commentRangeStart':
-                    cid = child.get(qn('w:id'))
-                    if cid:
-                        active_ranges[cid] = []
-                
-                # Handle commentRangeEnd
-                elif tag == 'commentRangeEnd':
-                    cid = child.get(qn('w:id'))
-                    if cid and cid in active_ranges:
-                        reference_texts[cid] = ''.join(active_ranges[cid]).strip()
-                        del active_ranges[cid]
-                
-                # Collect text for all active ranges
-                elif tag == 't' and child.text:
-                    for cid in active_ranges:
-                        active_ranges[cid].append(child.text)
+            # Handle commentRangeStart
+            if tag == 'commentRangeStart':
+                cid = element.get(qn('w:id'))
+                if cid:
+                    active_ranges[cid] = []
+            
+            # Handle commentRangeEnd
+            elif tag == 'commentRangeEnd':
+                cid = element.get(qn('w:id'))
+                if cid and cid in active_ranges:
+                    reference_texts[cid] = ''.join(active_ranges[cid]).strip()
+                    del active_ranges[cid]
+            
+            # Collect text for all active ranges
+            elif tag == 't' and element.text:
+                for cid in active_ranges:
+                    active_ranges[cid].append(element.text)
     
     except Exception:
         pass
     
     return reference_texts
+
+
+def get_all_paragraph_texts(doc: DocumentType) -> Dict[str, str]:
+    """
+    Extract paragraph text for all paragraphs in a document, including table cells.
+    
+    This scans the entire document body XML to find all paragraphs (w:p elements)
+    and extracts their text content, keyed by para_id.
+    
+    Args:
+        doc: The Document object
+        
+    Returns:
+        Dictionary mapping para_id to paragraph text
+    """
+    paragraph_texts: Dict[str, str] = {}
+    
+    try:
+        body = doc.element.body
+        
+        # Find all paragraph elements in the document (including tables)
+        for p_elem in body.iter(qn('w:p')):
+            para_id = p_elem.get(qn('w14:paraId'))
+            if para_id:
+                # Extract all text from this paragraph
+                text_parts = []
+                for t_elem in p_elem.iter(qn('w:t')):
+                    if t_elem.text:
+                        text_parts.append(t_elem.text)
+                if text_parts:
+                    paragraph_texts[para_id] = ''.join(text_parts).strip()
+    
+    except Exception:
+        pass
+    
+    return paragraph_texts
 
 
 # ============================================================================
