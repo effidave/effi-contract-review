@@ -555,6 +555,129 @@ class BlockEditor {
     }
     
     /**
+     * Extract runs from contenteditable DOM element
+     * Preserves formatting like bold, italic, insert, delete
+     * @param {HTMLElement} element - The contenteditable element
+     * @param {Array} originalRuns - Original runs for metadata (author, date)
+     * @returns {Array} Array of run objects with text and formats
+     */
+    _extractRunsFromDOM(element, originalRuns = []) {
+        const runs = [];
+        
+        // Build a map of original run text -> metadata for tracking changes
+        const originalMetadata = new Map();
+        for (const run of originalRuns) {
+            const text = run.deleted_text || run.text || '';
+            if (text && (run.author || run.date)) {
+                originalMetadata.set(text, { author: run.author, date: run.date });
+            }
+        }
+        
+        /**
+         * Recursively extract runs from a node
+         * @param {Node} node 
+         * @param {Array} currentFormats - formats inherited from parent
+         * @param {Object} metadata - author/date from parent
+         */
+        const extractNode = (node, currentFormats = [], metadata = {}) => {
+            if (node.nodeType === Node.TEXT_NODE) {
+                const text = node.textContent;
+                if (text) {
+                    // Check if original had metadata for this text
+                    const origMeta = originalMetadata.get(text) || metadata;
+                    const run = { 
+                        text, 
+                        formats: [...currentFormats]
+                    };
+                    // For delete runs, use deleted_text
+                    if (currentFormats.includes('delete')) {
+                        run.deleted_text = text;
+                        delete run.text;
+                    }
+                    // Preserve author/date for track changes
+                    if (origMeta.author) run.author = origMeta.author;
+                    if (origMeta.date) run.date = origMeta.date;
+                    runs.push(run);
+                }
+                return;
+            }
+            
+            if (node.nodeType !== Node.ELEMENT_NODE) return;
+            
+            const el = /** @type {HTMLElement} */ (node);
+            const tagName = el.tagName.toLowerCase();
+            
+            // Build formats based on tag
+            const newFormats = [...currentFormats];
+            const newMetadata = { ...metadata };
+            
+            if (tagName === 'strong' || tagName === 'b') {
+                if (!newFormats.includes('bold')) newFormats.push('bold');
+            }
+            if (tagName === 'em' || tagName === 'i') {
+                if (!newFormats.includes('italic')) newFormats.push('italic');
+            }
+            if (tagName === 'u') {
+                if (!newFormats.includes('underline')) newFormats.push('underline');
+            }
+            if (tagName === 'ins') {
+                if (!newFormats.includes('insert')) newFormats.push('insert');
+            }
+            if (tagName === 'del') {
+                if (!newFormats.includes('delete')) newFormats.push('delete');
+            }
+            
+            // Process children
+            for (const child of el.childNodes) {
+                extractNode(child, newFormats, newMetadata);
+            }
+        };
+        
+        // Process all child nodes
+        for (const child of element.childNodes) {
+            extractNode(child, [], {});
+        }
+        
+        // Merge adjacent runs with same formats
+        return this._mergeAdjacentRuns(runs);
+    }
+    
+    /**
+     * Merge adjacent runs with identical formats
+     * @param {Array} runs 
+     * @returns {Array}
+     */
+    _mergeAdjacentRuns(runs) {
+        if (runs.length === 0) return runs;
+        
+        const merged = [];
+        let current = { ...runs[0] };
+        
+        for (let i = 1; i < runs.length; i++) {
+            const run = runs[i];
+            const sameFormats = JSON.stringify(current.formats?.sort() || []) === 
+                               JSON.stringify(run.formats?.sort() || []);
+            const sameAuthor = current.author === run.author;
+            const sameDate = current.date === run.date;
+            
+            if (sameFormats && sameAuthor && sameDate) {
+                // Merge text
+                if (current.deleted_text !== undefined) {
+                    current.deleted_text += run.deleted_text || run.text || '';
+                } else {
+                    current.text = (current.text || '') + (run.text || run.deleted_text || '');
+                }
+            } else {
+                merged.push(current);
+                current = { ...run };
+            }
+        }
+        merged.push(current);
+        
+        return merged;
+    }
+
+    /**
      * Handle input events
      * @param {InputEvent} event 
      */
@@ -569,12 +692,18 @@ class BlockEditor {
         // Save state for undo before making changes
         this._pushUndoState();
         
-        // Update block text (strip HTML for now, preserve formatting later)
-        const newText = target.innerText.replace(/\n$/, ''); // Remove trailing newline
+        // Extract runs from DOM, preserving formatting
+        const newRuns = this._extractRunsFromDOM(target, block.runs || []);
+        
+        // Update block text (combined text from all runs, excluding deleted)
+        const newText = newRuns
+            .filter(r => !r.formats?.includes('delete'))
+            .map(r => r.text || '')
+            .join('');
         block.text = newText;
         
-        // Normalize runs to match new text (text-based model)
-        block.runs = [{ text: newText, formats: [] }];
+        // Update runs with extracted structure
+        block.runs = newRuns;
         
         // Mark as dirty
         this._markDirty(blockId);
@@ -597,7 +726,8 @@ class BlockEditor {
         
         if (event.key === 'Enter' && !event.shiftKey) {
             event.preventDefault();
-            this._splitBlock(blockIndex, this._getCaretOffset(target));
+            // Use full offset (including deleted text) for proper splitting
+            this._splitBlock(blockIndex, this._getCaretOffsetFull(target));
         } else if (event.key === 'Backspace') {
             const offset = this._getCaretOffset(target);
             if (offset === 0 && blockIndex > 0) {
@@ -719,11 +849,21 @@ class BlockEditor {
             if (node.nodeType === Node.TEXT_NODE) {
                 const nodeText = node.textContent || '';
                 if (nodeText) {
-                    text += nodeText;
-                    runs.push({
-                        text: nodeText,
+                    const isDelete = activeFormats.includes('delete');
+                    // Only add to visible text if not deleted
+                    if (!isDelete) {
+                        text += nodeText;
+                    }
+                    const run = {
                         formats: [...activeFormats]
-                    });
+                    };
+                    // Use deleted_text for delete runs, text for others
+                    if (isDelete) {
+                        run.deleted_text = nodeText;
+                    } else {
+                        run.text = nodeText;
+                    }
+                    runs.push(run);
                 }
             } else if (node.nodeType === Node.ELEMENT_NODE) {
                 const el = node;
@@ -737,6 +877,12 @@ class BlockEditor {
                 }
                 if (el.tagName === 'U') {
                     if (!newFormats.includes('underline')) newFormats.push('underline');
+                }
+                if (el.tagName === 'INS') {
+                    if (!newFormats.includes('insert')) newFormats.push('insert');
+                }
+                if (el.tagName === 'DEL') {
+                    if (!newFormats.includes('delete')) newFormats.push('delete');
                 }
                 
                 for (const child of node.childNodes) {
@@ -761,16 +907,20 @@ class BlockEditor {
     _mergeRuns(runs) {
         if (runs.length <= 1) return runs;
         
-        const merged = [runs[0]];
+        const merged = [{ ...runs[0] }];
         for (let i = 1; i < runs.length; i++) {
             const prev = merged[merged.length - 1];
             const curr = runs[i];
             
             if (this._formatsEqual(prev.formats, curr.formats)) {
-                // Concatenate text for merged runs
-                prev.text = (prev.text || '') + (curr.text || '');
+                // Concatenate text for merged runs (handle deleted_text)
+                if (prev.deleted_text !== undefined || curr.deleted_text !== undefined) {
+                    prev.deleted_text = (prev.deleted_text || '') + (curr.deleted_text || '');
+                } else {
+                    prev.text = (prev.text || '') + (curr.text || '');
+                }
             } else {
-                merged.push(curr);
+                merged.push({ ...curr });
             }
         }
         return merged;
@@ -792,21 +942,27 @@ class BlockEditor {
     /**
      * Split a block at the given offset
      * @param {number} blockIndex 
-     * @param {number} offset 
+     * @param {number} offset - FULL offset including deleted text
      */
     _splitBlock(blockIndex, offset) {
         this._pushUndoState();
         
         const block = this.blocks[blockIndex];
-        const text = block.text || '';
         
-        // Create new block with text after cursor
+        // Split runs at the offset, preserving formatting
+        const { beforeRuns, afterRuns } = this._splitRunsAtOffset(block.runs || [], offset);
+        
+        // Compute text from runs (excluding deleted)
+        const beforeText = this._getTextFromRuns(beforeRuns);
+        const afterText = this._getTextFromRuns(afterRuns);
+        
+        // Create new block with text/runs after cursor
         // Generate Word-compatible para_id so save can insert it properly
         const newBlock = {
             id: this._generateId(),
             type: 'paragraph',
-            text: text.substring(offset),
-            runs: [{ text: text.substring(offset), formats: [] }],
+            text: afterText,
+            runs: afterRuns.length > 0 ? afterRuns : [{ text: afterText, formats: [] }],
             list: block.list ? { ...block.list } : undefined,
             para_id: this._generateParaId(),  // Word-compatible 8-char hex ID
             para_idx: -1, // Negative indicates new block to insert on save
@@ -814,8 +970,8 @@ class BlockEditor {
         };
         
         // Truncate current block
-        block.text = text.substring(0, offset);
-        block.runs = [{ text: text.substring(0, offset), formats: [] }];
+        block.text = beforeText;
+        block.runs = beforeRuns.length > 0 ? beforeRuns : [{ text: beforeText, formats: [] }];
         
         // Insert new block
         this.blocks.splice(blockIndex + 1, 0, newBlock);
@@ -841,6 +997,96 @@ class BlockEditor {
     }
     
     /**
+     * Split runs at a given text offset, preserving formatting
+     * @param {Array} runs - Original runs array
+     * @param {number} offset - Character offset to split at (FULL offset including deleted text)
+     * @returns {{ beforeRuns: Array, afterRuns: Array }}
+     */
+    _splitRunsAtOffset(runs, offset) {
+        const beforeRuns = [];
+        const afterRuns = [];
+        let currentOffset = 0;
+        let splitDone = false;
+        
+        for (const run of runs) {
+            const isDelete = run.formats?.includes('delete');
+            const runText = isDelete ? (run.deleted_text || '') : (run.text || '');
+            const runLength = runText.length; // Count ALL text including deleted
+            
+            if (splitDone) {
+                // Already past split point, add to after
+                afterRuns.push(this._cloneRun(run));
+            } else if (currentOffset + runLength <= offset) {
+                // Entire run is before split point
+                beforeRuns.push(this._cloneRun(run));
+                currentOffset += runLength;
+            } else if (currentOffset >= offset) {
+                // Entire run is after split point
+                afterRuns.push(this._cloneRun(run));
+                splitDone = true;
+            } else {
+                // Split point is within this run
+                const splitIndex = offset - currentOffset;
+                
+                // Before part
+                if (splitIndex > 0) {
+                    const beforeRun = this._cloneRun(run);
+                    if (isDelete) {
+                        beforeRun.deleted_text = runText.substring(0, splitIndex);
+                    } else {
+                        beforeRun.text = runText.substring(0, splitIndex);
+                    }
+                    beforeRuns.push(beforeRun);
+                }
+                
+                // After part
+                if (splitIndex < runText.length) {
+                    const afterRun = this._cloneRun(run);
+                    if (isDelete) {
+                        afterRun.deleted_text = runText.substring(splitIndex);
+                    } else {
+                        afterRun.text = runText.substring(splitIndex);
+                    }
+                    afterRuns.push(afterRun);
+                }
+                
+                currentOffset += runLength;
+                splitDone = true;
+            }
+        }
+        
+        return { beforeRuns, afterRuns };
+    }
+    
+    /**
+     * Get visible text from runs (excluding deleted text)
+     * @param {Array} runs 
+     * @returns {string}
+     */
+    _getTextFromRuns(runs) {
+        return runs
+            .filter(r => !r.formats?.includes('delete'))
+            .map(r => r.text || '')
+            .join('');
+    }
+    
+    /**
+     * Clone a run object, preserving all properties
+     * @param {Object} run 
+     * @returns {Object}
+     */
+    _cloneRun(run) {
+        const cloned = {
+            formats: [...(run.formats || [])]
+        };
+        if (run.text !== undefined) cloned.text = run.text;
+        if (run.deleted_text !== undefined) cloned.deleted_text = run.deleted_text;
+        if (run.author !== undefined) cloned.author = run.author;
+        if (run.date !== undefined) cloned.date = run.date;
+        return cloned;
+    }
+
+    /**
      * Merge block with previous block
      * @param {number} blockIndex 
      */
@@ -852,9 +1098,21 @@ class BlockEditor {
         const prevBlock = this.blocks[blockIndex - 1];
         const currBlock = this.blocks[blockIndex];
         
-        const prevLength = (prevBlock.text || '').length;
-        prevBlock.text = (prevBlock.text || '') + (currBlock.text || '');
-        prevBlock.runs = [{ text: prevBlock.text, formats: [] }];
+        // Get cursor position using full offset (including deleted text) for accurate positioning
+        const prevRuns = prevBlock.runs || [{ text: prevBlock.text || '', formats: [] }];
+        const currRuns = currBlock.runs || [{ text: currBlock.text || '', formats: [] }];
+        
+        // Calculate merge point offset (full offset including deleted text)
+        const prevFullLength = prevRuns.reduce((sum, r) => {
+            const text = r.deleted_text || r.text || '';
+            return sum + text.length;
+        }, 0);
+        
+        // Concatenate runs from both blocks
+        prevBlock.runs = [...prevRuns, ...currRuns];
+        
+        // Update text (visible text only, excluding deleted)
+        prevBlock.text = this._getTextFromRuns(prevBlock.runs);
         
         // Remove current block
         this.blocks.splice(blockIndex, 1);
@@ -869,7 +1127,8 @@ class BlockEditor {
         // Update indices
         this._updateBlockIndices();
         
-        // Set cursor at merge point
+        // Set cursor at merge point (using visible offset for caret positioning)
+        const prevLength = this._getTextFromRuns(prevRuns).length;
         const prevTextEl = this.container.querySelector(`[data-block-id="${prevBlock.id}"].editor-block-text`);
         if (prevTextEl) {
             prevTextEl.focus();
@@ -891,9 +1150,17 @@ class BlockEditor {
         const currBlock = this.blocks[blockIndex];
         const nextBlock = this.blocks[blockIndex + 1];
         
-        const currLength = (currBlock.text || '').length;
-        currBlock.text = (currBlock.text || '') + (nextBlock.text || '');
-        currBlock.runs = [{ text: currBlock.text, formats: [] }];
+        const currRuns = currBlock.runs || [{ text: currBlock.text || '', formats: [] }];
+        const nextRuns = nextBlock.runs || [{ text: nextBlock.text || '', formats: [] }];
+        
+        // Remember cursor position (visible text length)
+        const currLength = this._getTextFromRuns(currRuns).length;
+        
+        // Concatenate runs from both blocks
+        currBlock.runs = [...currRuns, ...nextRuns];
+        
+        // Update text (visible text only, excluding deleted)
+        currBlock.text = this._getTextFromRuns(currBlock.runs);
         
         // Remove next block
         this.blocks.splice(blockIndex + 1, 1);
@@ -1064,11 +1331,83 @@ class BlockEditor {
     }
     
     /**
-     * Get caret offset within element
+     * Get caret offset within element (excluding deleted text)
      * @param {HTMLElement} element 
      * @returns {number}
      */
     _getCaretOffset(element) {
+        const selection = window.getSelection();
+        if (!selection || selection.rangeCount === 0) return 0;
+        
+        const range = selection.getRangeAt(0);
+        
+        // Walk through text nodes, counting only non-deleted text
+        let offset = 0;
+        const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null);
+        
+        let node = walker.nextNode();
+        while (node) {
+            // Check if this text node is inside a <del> element
+            const isDeleted = this._isInsideDeletedElement(node);
+            
+            if (node === range.endContainer) {
+                // Caret is in this node
+                if (!isDeleted) {
+                    offset += range.endOffset;
+                }
+                break;
+            } else if (range.endContainer.contains && range.endContainer.contains(node)) {
+                // range.endContainer is an element containing this text node
+                if (!isDeleted) {
+                    offset += node.textContent.length;
+                }
+            } else if (this._nodeIsBeforeCaret(node, range)) {
+                // This node is before the caret
+                if (!isDeleted) {
+                    offset += node.textContent.length;
+                }
+            }
+            
+            node = walker.nextNode();
+        }
+        
+        return offset;
+    }
+    
+    /**
+     * Check if a node is inside a <del> element
+     * @param {Node} node 
+     * @returns {boolean}
+     */
+    _isInsideDeletedElement(node) {
+        let parent = node.parentElement;
+        while (parent) {
+            if (parent.tagName === 'DEL') return true;
+            if (parent.classList?.contains('editor-block-text')) break;
+            parent = parent.parentElement;
+        }
+        return false;
+    }
+    
+    /**
+     * Check if a node is before the caret position
+     * @param {Node} node 
+     * @param {Range} range 
+     * @returns {boolean}
+     */
+    _nodeIsBeforeCaret(node, range) {
+        const nodeRange = document.createRange();
+        nodeRange.selectNode(node);
+        return nodeRange.compareBoundaryPoints(Range.END_TO_START, range) < 0;
+    }
+    
+    /**
+     * Get caret offset including ALL text (including deleted)
+     * Used for splitting blocks where we need to preserve deleted text position
+     * @param {HTMLElement} element 
+     * @returns {number}
+     */
+    _getCaretOffsetFull(element) {
         const selection = window.getSelection();
         if (!selection || selection.rangeCount === 0) return 0;
         
@@ -1081,7 +1420,7 @@ class BlockEditor {
     }
     
     /**
-     * Set caret position within element
+     * Set caret position within element (offset excludes deleted text)
      * @param {HTMLElement} element 
      * @param {number} offset 
      */
@@ -1089,12 +1428,18 @@ class BlockEditor {
         const range = document.createRange();
         const selection = window.getSelection();
         
-        // Find the text node and offset
+        // Find the text node and offset (skipping deleted text)
         let currentOffset = 0;
         const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null);
         
         let node = walker.nextNode();
         while (node) {
+            // Skip text inside <del> elements
+            if (this._isInsideDeletedElement(node)) {
+                node = walker.nextNode();
+                continue;
+            }
+            
             const nodeLength = node.textContent.length;
             if (currentOffset + nodeLength >= offset) {
                 range.setStart(node, offset - currentOffset);
