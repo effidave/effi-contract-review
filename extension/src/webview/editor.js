@@ -1093,20 +1093,20 @@ class BlockEditor {
     _mergeWithPrevious(blockIndex) {
         if (blockIndex <= 0) return;
         
-        this._pushUndoState();
-        
         const prevBlock = this.blocks[blockIndex - 1];
         const currBlock = this.blocks[blockIndex];
         
-        // Get cursor position using full offset (including deleted text) for accurate positioning
+        // Skip if previous block is a table (can't merge into tables)
+        if (prevBlock.table) return;
+        
+        this._pushUndoState();
+        
+        // Get runs from both blocks
         const prevRuns = prevBlock.runs || [{ text: prevBlock.text || '', formats: [] }];
         const currRuns = currBlock.runs || [{ text: currBlock.text || '', formats: [] }];
         
-        // Calculate merge point offset (full offset including deleted text)
-        const prevFullLength = prevRuns.reduce((sum, r) => {
-            const text = r.deleted_text || r.text || '';
-            return sum + text.length;
-        }, 0);
+        // Remember cursor position (visible text length of previous block)
+        const prevLength = this._getTextFromRuns(prevRuns).length;
         
         // Concatenate runs from both blocks
         prevBlock.runs = [...prevRuns, ...currRuns];
@@ -1114,12 +1114,17 @@ class BlockEditor {
         // Update text (visible text only, excluding deleted)
         prevBlock.text = this._getTextFromRuns(prevBlock.runs);
         
-        // Remove current block
+        // Find DOM elements BEFORE modifying the blocks array
+        const currTextEl = this.container.querySelector(`.editor-block-text[data-block-id="${currBlock.id}"]`);
+        const currWrapper = currTextEl ? currTextEl.closest('.editor-block-wrapper') : null;
+        
+        // Remove current block from array
         this.blocks.splice(blockIndex, 1);
         
-        // Remove from DOM
-        const currEl = this.container.querySelector(`[data-block-id="${currBlock.id}"]`).parentElement;
-        currEl.remove();
+        // Remove from DOM (if found)
+        if (currWrapper) {
+            currWrapper.remove();
+        }
         
         // Re-render previous block
         this._reRenderBlock(blockIndex - 1);
@@ -1127,9 +1132,8 @@ class BlockEditor {
         // Update indices
         this._updateBlockIndices();
         
-        // Set cursor at merge point (using visible offset for caret positioning)
-        const prevLength = this._getTextFromRuns(prevRuns).length;
-        const prevTextEl = this.container.querySelector(`[data-block-id="${prevBlock.id}"].editor-block-text`);
+        // Set cursor at merge point
+        const prevTextEl = this.container.querySelector(`.editor-block-text[data-block-id="${prevBlock.id}"]`);
         if (prevTextEl) {
             prevTextEl.focus();
             this._setCaretPosition(prevTextEl, prevLength);
@@ -1145,10 +1149,13 @@ class BlockEditor {
     _mergeWithNext(blockIndex) {
         if (blockIndex >= this.blocks.length - 1) return;
         
-        this._pushUndoState();
-        
         const currBlock = this.blocks[blockIndex];
         const nextBlock = this.blocks[blockIndex + 1];
+        
+        // Skip if next block is a table (can't merge tables)
+        if (nextBlock.table) return;
+        
+        this._pushUndoState();
         
         const currRuns = currBlock.runs || [{ text: currBlock.text || '', formats: [] }];
         const nextRuns = nextBlock.runs || [{ text: nextBlock.text || '', formats: [] }];
@@ -1162,12 +1169,17 @@ class BlockEditor {
         // Update text (visible text only, excluding deleted)
         currBlock.text = this._getTextFromRuns(currBlock.runs);
         
-        // Remove next block
+        // Find DOM element BEFORE modifying the blocks array
+        const nextTextEl = this.container.querySelector(`.editor-block-text[data-block-id="${nextBlock.id}"]`);
+        const nextWrapper = nextTextEl ? nextTextEl.closest('.editor-block-wrapper') : null;
+        
+        // Remove next block from array
         this.blocks.splice(blockIndex + 1, 1);
         
-        // Remove from DOM
-        const nextEl = this.container.querySelector(`[data-block-id="${nextBlock.id}"]`).parentElement;
-        nextEl.remove();
+        // Remove from DOM (if found)
+        if (nextWrapper) {
+            nextWrapper.remove();
+        }
         
         // Re-render current block
         this._reRenderBlock(blockIndex);
@@ -1176,7 +1188,7 @@ class BlockEditor {
         this._updateBlockIndices();
         
         // Keep cursor at original position
-        const currTextEl = this.container.querySelector(`[data-block-id="${currBlock.id}"].editor-block-text`);
+        const currTextEl = this.container.querySelector(`.editor-block-text[data-block-id="${currBlock.id}"]`);
         if (currTextEl) {
             currTextEl.focus();
             this._setCaretPosition(currTextEl, currLength);

@@ -236,17 +236,48 @@ def insert_new_paragraph(doc, block, after_para_id: str, existing_ids: set[str],
     if not runs_data:
         runs_data = [{'text': text, 'formats': []}]
     
+    # Default author/date for track changes in new paragraphs
+    from datetime import datetime
+    default_author = "User"
+    default_date = datetime.now().isoformat()
+    
     for run_data in runs_data:
         formats = run_data.get('formats', [])
+        author = run_data.get('author', default_author)
+        date = run_data.get('date', default_date)
         
-        # Skip delete runs
+        # Handle delete runs
         if 'delete' in formats:
+            deleted_text = run_data.get('deleted_text', run_data.get('text', ''))
+            if not deleted_text:
+                continue
+            
+            # Create w:del wrapper with w:r containing w:delText
+            del_elem = OxmlElement('w:del')
+            del_elem.set(qn('w:author'), author)
+            del_elem.set(qn('w:date'), date)
+            
+            r = create_del_run_element(deleted_text, [f for f in formats if f != 'delete'], author, date)
+            del_elem.append(r)
+            new_p.append(del_elem)
             continue
         
         run_text = run_data.get('text', '')
         if not run_text:
             continue
         
+        # Handle insert runs
+        if 'insert' in formats:
+            ins_elem = OxmlElement('w:ins')
+            ins_elem.set(qn('w:author'), author)
+            ins_elem.set(qn('w:date'), date)
+            
+            r = create_run_element(run_text, [f for f in formats if f != 'insert'], author, date)
+            ins_elem.append(r)
+            new_p.append(ins_elem)
+            continue
+        
+        # Normal run (no track changes)
         r = OxmlElement('w:r')
         
         # Add run properties for formatting
@@ -388,8 +419,13 @@ def update_blocks_jsonl(analysis_dir: Path, edited_blocks: list):
         analysis_dir: Path to analysis directory containing blocks.jsonl
         edited_blocks: List of all block dicts with id, text, runs (includes new blocks)
     """
+    import sys
     blocks_path = analysis_dir / 'blocks.jsonl'
+    print(f"DEBUG update_blocks_jsonl: blocks_path = {blocks_path}", file=sys.stderr)
+    print(f"DEBUG update_blocks_jsonl: edited_blocks count = {len(edited_blocks)}", file=sys.stderr)
+    
     if not blocks_path.exists():
+        print(f"DEBUG update_blocks_jsonl: blocks.jsonl does not exist, returning", file=sys.stderr)
         return
     
     # Create id -> edited block mapping
@@ -403,11 +439,20 @@ def update_blocks_jsonl(analysis_dir: Path, edited_blocks: list):
             if line:
                 existing_blocks.append(json.loads(line))
     
+    print(f"DEBUG update_blocks_jsonl: existing_blocks count = {len(existing_blocks)}", file=sys.stderr)
+    
     # Track existing block IDs
     existing_ids = {b.get('id') for b in existing_blocks}
     
     # Identify new blocks (not in existing blocks.jsonl)
     new_blocks = [b for b in edited_blocks if b.get('id') not in existing_ids]
+    print(f"DEBUG update_blocks_jsonl: new_blocks count = {len(new_blocks)}", file=sys.stderr)
+    
+    if new_blocks:
+        for nb in new_blocks:
+            runs = nb.get('runs', [])
+            del_runs = [r for r in runs if r.get('deleted_text')]
+            print(f"DEBUG update_blocks_jsonl: new block {nb.get('id', 'no-id')[:8]} has {len(del_runs)} deleted_text runs", file=sys.stderr)
     
     # Update matching blocks
     for block in existing_blocks:
@@ -441,6 +486,11 @@ def update_blocks_jsonl(analysis_dir: Path, edited_blocks: list):
     # Write back
     with open(blocks_path, 'w', encoding='utf-8') as f:
         for block in existing_blocks:
+            # Debug: log if block has runs with deleted_text
+            runs = block.get('runs', [])
+            has_del = any(r.get('deleted_text') for r in runs)
+            if has_del:
+                print(f"DEBUG update_blocks_jsonl: Block {block.get('id', 'no-id')[:8]} has deleted_text runs", file=sys.stderr)
             f.write(json.dumps(block, ensure_ascii=False) + '\n')
 
 
@@ -586,6 +636,15 @@ def save_blocks_to_document(doc_path: str, blocks_path: str):
         # Also update blocks.jsonl so the UI stays in sync
         # The temp blocks file is in the analysis directory
         temp_blocks_dir = Path(blocks_path).parent
+        
+        # Debug: Check if any blocks have deleted_text before updating blocks.jsonl
+        for block in blocks:
+            runs = block.get('runs', [])
+            del_runs = [r for r in runs if r.get('deleted_text')]
+            if del_runs:
+                print(f"DEBUG save: Block {block.get('id', 'no-id')[:8]} has {len(del_runs)} deleted_text runs", file=sys.stderr)
+                print(f"DEBUG save: First del run: {del_runs[0]}", file=sys.stderr)
+        
         update_blocks_jsonl(temp_blocks_dir, blocks)
         
         total_count = updated_count + inserted_count

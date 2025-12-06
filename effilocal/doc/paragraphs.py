@@ -136,7 +136,17 @@ def build_paragraph_block(
     else:
         text = paragraph.text.strip()
     
-    if not text:
+    # Check for delete-only paragraphs (no visible text but has deleted runs)
+    has_deleted_content = False
+    deleted_text_for_hash = ""
+    if not text and amended is not None:
+        runs = amended.amended_runs
+        for run in runs:
+            if run.get('deleted_text'):
+                has_deleted_content = True
+                deleted_text_for_hash += run['deleted_text']
+    
+    if not text and not has_deleted_content:
         return None, current_section_id
 
     style_name = paragraph.style.name if paragraph.style is not None else ""
@@ -157,11 +167,14 @@ def build_paragraph_block(
     page_break_before = has_page_break_before(paragraph)
     page_break_after = has_explicit_page_break(paragraph)
 
+    # For content hash, use visible text if available, otherwise deleted text
+    hash_content = text if text else deleted_text_for_hash
+
     if as_dataclass:
         block_obj = ParagraphBlock(
             id=None,  # ID assigned later by assign_block_ids()
             type=block_type,
-            content_hash=hash_provider(text),
+            content_hash=hash_provider(hash_content),
             text=text,
             style=style_name or "",
             level=level if block_type == "heading" else None,
@@ -179,7 +192,7 @@ def build_paragraph_block(
     block: dict[str, Any] = {
         "id": None,  # ID assigned later by assign_block_ids()
         "type": block_type,
-        "content_hash": hash_provider(text),
+        "content_hash": hash_provider(hash_content),
         "text": text,
         "style": style_name or "",
         "style_id": style_id,
