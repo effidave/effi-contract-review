@@ -108,7 +108,7 @@ class AnalysisPipeline:
         
         Uses AmendedParagraph to correctly handle track changes:
         - amended_text includes insertions (w:ins > w:t) but excludes deletions (w:delText)
-        - amended_runs provides formatting info with zero-width delete runs containing deleted_text
+        - amended_runs provides text content with deleted_text for deletions
         """
         # Create AmendedParagraph wrapper for track changes support
         amended = AmendedParagraph(paragraph)
@@ -130,12 +130,11 @@ class AnalysisPipeline:
         )
         block: Block = block_dict  # type: ignore[assignment]
         
-        # Add runs with formatting and revision info (Option A model)
+        # Add runs with formatting and revision info (text-based model)
         runs = amended.amended_runs
         if not runs and block.get('text'):
             # Create default run covering full text if no runs extracted
-            text_len = len(block['text'])
-            runs = [{'start': 0, 'end': text_len, 'formats': []}]
+            runs = [{'text': block['text'], 'formats': []}]
         block['runs'] = runs
         
         block["para_idx"] = self._para_counter

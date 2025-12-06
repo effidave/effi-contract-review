@@ -10,6 +10,7 @@ clause_effect_of_deletion: "If deleted, Customer could argue that the third part
 clause_balance: "pro-supplier"
 supplier_negotiation_option: "Improve the Supplier's position by adding an indemnity so Customer holds the Supplier harmless, defends and indemnifies the Supplier against any losses in relation to the third party services"
 customer_negotiation_option: "Improve the Customer's position by making the Supplier liable for any third party services which are an integral part of the Supplier's Services or where the Customer is not able to opt out of using the third party services"
+legal_issue_tags: "#liability #specification #third-parties #risk #remedies"
 
 --- 
 [END EXPLANATION]

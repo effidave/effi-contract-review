@@ -24,6 +24,7 @@ dependencies = [
     "docx2pdf>=0.1.8",
     "pytest>=8.4.2",
     "lxml>=4.9.0",
+    "extract-msg>=0.55.0",
 ]
 
 [project.urls]

@@ -194,6 +194,8 @@ For each clause, provide YAML with:
 - clause_balance: pro-supplier / pro-customer / balanced / neutral
 - supplier_negotiation_option: How to improve supplier position
 - customer_negotiation_option: How to improve customer position
+- legal_issue_tags: List of tags for the relevant legal issues
+
 
 TONE: Direct, practical, lawyer-to-lawyer. Focus on "so what" and "what do we do."
 
@@ -204,6 +206,7 @@ clause_effect_of_deletion: "If deleted, Customer could argue third-party service
 clause_balance: "pro-supplier"
 supplier_negotiation_option: "Add customer indemnity for third-party service losses."
 customer_negotiation_option: "Make Supplier liable for integral third-party services Customer cannot opt out of."
+legal_issue_tags: "#liability #specification #third-parties #risk #remedies"
 ---
 
 NOW THE TASK:

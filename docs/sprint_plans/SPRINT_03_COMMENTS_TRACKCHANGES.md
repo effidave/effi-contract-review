@@ -208,27 +208,12 @@
 
 ### Track Change Data Model
 
-```javascript
-// Change stored as revision
-{
-  id: "change-uuid",
-  type: "insert" | "delete" | "modify",
-  blockId: "block-uuid",
-  author: "John Smith",
-  date: "2025-12-02T10:30:00Z",
-  // For insert:
-  insertedText: "new text",
-  insertPosition: 25,
-  // For delete:
-  deletedText: "old text",
-  deleteStart: 10,
-  deleteEnd: 20,
-  // For modify:
-  originalText: "old",
-  newText: "new",
-  position: 30
-}
-```
+Track changes are stored inline within block runs using the text-based model (not as separate revision objects). See "Track Change Data Model (Text-Based Runs)" in Phase 1 for details.
+
+For the editor UI, changes are rendered directly from the runs:
+- Insert runs (`formats: ["insert"]`) → `<ins class="revision-insert">` with green underline
+- Delete runs (`formats: ["delete"]`) → `<del class="revision-delete">` with red strikethrough
+- Author/date shown on hover via title attribute
 
 ### UI Layout
 
@@ -605,6 +590,30 @@ del.change {
 2. Extract `reference_text` (the text the comment is attached to) - nice to have
 3. ~~Add reply threading support~~ → Deferred: show flat list for MVP
 4. Create `resolve_comment()` function to update `commentsExtended.xml`
+
+**Track Change Data Model (Text-Based Runs)**
+
+Track changes are stored inline within block runs using the text-based model:
+```javascript
+// Block with track changes
+{
+  id: "block-uuid",
+  para_id: "3DD8236A",
+  text: "Visible text only",  // Does not include deleted content
+  runs: [
+    { text: "Normal text ", formats: [] },
+    { text: "inserted text", formats: ["insert"], author: "John Smith", date: "2024-01-15T10:30:00Z" },
+    { deleted_text: "removed text", formats: ["delete"], author: "Jane Doe", date: "2024-01-16T14:45:00Z" },
+    { text: " more text", formats: [] }
+  ]
+}
+```
+
+Key points:
+- Normal/insert runs have `text` field with their content
+- Delete runs have `deleted_text` field (not included in block.text)
+- No position-based `start`/`end` fields - each run carries its own text
+- Author and date preserved for revision tracking
 
 **Day 3-4: Comment Panel UI**
 1. Create `extension/src/webview/comments.js` - CommentPanel class

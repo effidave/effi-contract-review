@@ -27,14 +27,14 @@ When processing a paragraph like:
 - `paragraph.text` returns: `"The  fox"` (missing "quick", has double space)
 - **We need**: `"The quick fox"` (visible text only)
 
-## Solution: Option A Data Model
+## Solution: Text-Based Run Model
 
-We implemented **Option A** - a data model where:
+We implemented a **text-based** data model where each run carries its own text content:
 
-1. **`text` field**: Contains only **visible** text (normal runs + insertions, NO deletions)
+1. **`text` field** (block level): Contains only **visible** text (normal runs + insertions, NO deletions)
 2. **`runs` field**: Contains all runs including deletions, with:
-   - Normal/insert runs: `start`/`end` positions map to the visible text
-   - Delete runs: **Zero-width** (`start == end`) with `deleted_text` field
+   - Normal/insert runs: `text` field contains the run's visible content
+   - Delete runs: `deleted_text` field contains the removed content
 
 ### Example Output
 
@@ -42,18 +42,19 @@ We implemented **Option A** - a data model where:
 {
   "text": "The quick fox",
   "runs": [
-    { "start": 0, "end": 4, "formats": [] },
-    { "start": 4, "end": 9, "formats": ["insert"], "author": "John" },
-    { "start": 9, "end": 9, "formats": ["delete"], "deleted_text": "brown ", "author": "Jane" },
-    { "start": 9, "end": 13, "formats": [] }
+    { "text": "The ", "formats": [] },
+    { "text": "quick", "formats": ["insert"], "author": "John" },
+    { "deleted_text": "brown ", "formats": ["delete"], "author": "Jane" },
+    { "text": " fox", "formats": [] }
   ]
 }
 ```
 
 This model ensures:
-- Text is always what the user sees (no deleted content cluttering the text)
-- Deletions are still tracked with their position and original content
-- The editor can render strikethrough for deletions at the correct position
+- Each run is self-contained with its own text (no position calculations needed)
+- Deletions use a distinct `deleted_text` field for semantic clarity
+- The editor can render content directly from each run without slicing
+- Runs remain valid even if the paragraph text is edited
 
 ## Key Modules
 
@@ -84,13 +85,20 @@ for amended in iter_amended_paragraphs(doc):
 #### Run Dictionary Structure
 
 ```python
+# Normal or insert run:
 {
-    'start': int,           # Position in amended_text
-    'end': int,             # Position in amended_text (== start for deletes)
-    'formats': List[str],   # ['bold', 'italic', 'insert', 'delete', etc.]
-    'author': str | None,   # Revision author (for insert/delete)
+    'text': str,            # The run's visible text content
+    'formats': List[str],   # ['bold', 'italic', 'insert', etc.]
+    'author': str | None,   # Revision author (for insert runs)
+    'date': str | None,     # Revision date ISO format (for insert runs)
+}
+
+# Delete run:
+{
+    'deleted_text': str,    # The removed text (not visible)
+    'formats': List[str],   # Always includes 'delete'
+    'author': str | None,   # Revision author
     'date': str | None,     # Revision date ISO format
-    'deleted_text': str,    # Only present for delete runs
 }
 ```
 
@@ -195,12 +203,20 @@ The VS Code extension's BlockEditor (`extension/src/webview/editor.js`) renders 
 
 ```javascript
 _renderFormattedText(text, runs) {
-    // For each run, wrap in appropriate elements
-    if (formats.includes('insert')) {
-        html += `<ins class="revision-insert" ...>${escaped}</ins>`;
-    } else if (formats.includes('delete')) {
-        // Zero-width delete: render deleted_text in strikethrough
-        html += `<del class="revision-delete" ...>${run.deleted_text}</del>`;
+    // For each run, render its content directly
+    for (const run of runs) {
+        if (run.formats?.includes('delete')) {
+            // Delete run: render deleted_text in strikethrough
+            html += `<del class="revision-delete">${run.deleted_text}</del>`;
+        } else {
+            // Normal/insert run: render run.text
+            const content = run.text || '';
+            if (run.formats?.includes('insert')) {
+                html += `<ins class="revision-insert">${content}</ins>`;
+            } else {
+                html += content;
+            }
+        }
     }
 }
 ```
@@ -287,8 +303,6 @@ for amended in iter_amended_paragraphs(doc):
 
 ## Future Considerations
 
-1. **Editor updates for zero-width deletes**: The editor currently handles delete runs, but may need refinement for edge cases with adjacent deletions.
+1. **Move tracking**: Word tracks text moves as paired delete+insert. Currently treated as separate revisions.
 
-2. **Move tracking**: Word tracks text moves as paired delete+insert. Currently treated as separate revisions.
-
-3. **Comment threading**: Comments can have replies and status (resolved/active). See `effilocal/mcp_server/core/comments.py` for status extraction.
+2. **Comment threading**: Comments can have replies and status (resolved/active). See `effilocal/mcp_server/core/comments.py` for status extraction.

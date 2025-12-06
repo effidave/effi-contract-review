@@ -1,7 +1,7 @@
 {
-  "doc_id": "norton-test",
+  "doc_id": "123e4567-e89b-12d3-a456-426614174000",
   "v": 1,
-  "created_at": "2025-12-05T13:46:15+00:00",
+  "created_at": "2025-12-05T14:58:06+00:00",
   "tool_version": "sprint2-dev",
   "doc_format": "docx",
   "sdt_carrier": "content-controls",
@@ -9,12 +9,12 @@
   "range_marker_tag_prefix": "marker:",
   "fallback_heading_label": "Body (no heading)",
   "checksums": {
-    "blocks.jsonl": "sha256:d32128a9645a81ac0672d6079fedb0f12aba37ac6b9826e1ea4493ba6d80acaa",
-    "sections.json": "sha256:9748723665f3a8304af86127e1976b5a84f830a9d5fa0b17d8dae31133203bd0",
+    "blocks.jsonl": "sha256:ae80dbffab2996108b8fdbfa5daa6cd12e453c6eac2e87ebe1af67d2a3039465",
+    "sections.json": "sha256:f0ed1ee8182c27c077e28e38e895a74575fbaf00f425634998dd37765333132a",
     "styles.json": "sha256:2147027691afdeec5ac01a85dba55fe654b57885ee95db44a2608412038c91e2",
-    "relationships.json": "sha256:0b568a3fa936a9aa2ca483b4b64a40debe98fdc0b1d145e88a7748605df58c8d",
-    "tag_ranges.jsonl": "sha256:058590c3bbf45ffcaa20ca21a37b0228420dafac19c5550cb7513469d01a0f29",
-    "index.json": "sha256:5150651bd73dfe235ea97615502af4892aad8bbb83ddaa05d91a95e2818d0786"
+    "relationships.json": "sha256:d38ddaaf22e5b5bf415efc2e0cfb519b0c062ebd7b03e4025060a3d159995023",
+    "tag_ranges.jsonl": "sha256:ca91dde7a3c1f033d4d019816b9a136cc0ad5c6b4d87dca6b18fa6eadb5d8cfc",
+    "index.json": "sha256:75215e62fe9dc90d9df51b042f746122167cfdf91d6c6293cdff570d24262aca"
   },
   "schema_checksums": {
     "block.schema.json": "sha256:a79c29ccec8330bef4e2ed057adee57e544a0749ee71c8aac86b8f8e13d1550e",
@@ -30,42 +30,42 @@
   },
   "attachments": [
     {
-      "attachment_id": "ed80938f-38b5-4d1e-bfdf-ef437233e760",
+      "attachment_id": "59b5ef6f-1f92-4d17-9723-60cae4f17694",
       "type": "schedule",
       "ordinal": "1",
       "title": null,
       "parent_attachment_id": null
     },
     {
-      "attachment_id": "cdc6830b-651c-4316-9130-4a79bd0f13c3",
+      "attachment_id": "5ead4f82-76e1-4e70-8685-7e09be6ae2ec",
       "type": "schedule",
       "ordinal": "2",
       "title": null,
       "parent_attachment_id": null
     },
     {
-      "attachment_id": "4fd32698-028a-4d79-833b-b84aef545fa6",
+      "attachment_id": "ec1e533f-8d97-4c25-8689-ed677264c1fe",
       "type": "schedule",
       "ordinal": "3",
       "title": null,
       "parent_attachment_id": null
     },
     {
-      "attachment_id": "0d683730-1639-466d-ae2d-f72ce4f54c60",
+      "attachment_id": "b5019c86-8bb4-40a4-8009-ff87cc613662",
       "type": "schedule",
       "ordinal": "4",
       "title": null,
       "parent_attachment_id": null
     },
     {
-      "attachment_id": "e7658054-87f4-4cb8-8311-ae75f0dc59d2",
+      "attachment_id": "2e0c25d7-963f-4d9b-8990-7f35617b4c54",
       "type": "schedule",
       "ordinal": "5",
       "title": null,
       "parent_attachment_id": null
     },
     {
-      "attachment_id": "046c9b8b-7971-44d9-bf8d-0d6e98bf8640",
+      "attachment_id": "51ab0943-c057-44c7-8d38-fbd153ea12ae",
       "type": "schedule",
       "ordinal": "6",
       "title": null,

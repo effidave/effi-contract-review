@@ -1,0 +1,75 @@
+{
+  "doc_id": "123e4567-e89b-12d3-a456-426614174000",
+  "v": 1,
+  "created_at": "2025-12-06T01:28:42+00:00",
+  "tool_version": "sprint2-dev",
+  "doc_format": "docx",
+  "sdt_carrier": "content-controls",
+  "range_marker_carrier": "content-controls",
+  "range_marker_tag_prefix": "marker:",
+  "fallback_heading_label": "Body (no heading)",
+  "checksums": {
+    "blocks.jsonl": "sha256:5764b9dd049ec3f536d64dc8352eccc8d1df41f8f9e8eb2a7ad6354e050af582",
+    "sections.json": "sha256:3d477aea07e8867e31ccadc5cb72f239ad5d0270c288dce62915940a5e15c257",
+    "styles.json": "sha256:2147027691afdeec5ac01a85dba55fe654b57885ee95db44a2608412038c91e2",
+    "relationships.json": "sha256:7ce0635ab054df3ee0ef3799d728a553b0930d630f32511ef6df3ec3c42baa89",
+    "tag_ranges.jsonl": "sha256:0626755eba77b69327b7a4c51bd5e68d2383b338e8d4082d73a182eb4f5904d5",
+    "index.json": "sha256:4fdd1c413e0e24bd52152df1403738b49ea29455976cbdd43630fded46437cfd"
+  },
+  "schema_checksums": {
+    "block.schema.json": "sha256:a79c29ccec8330bef4e2ed057adee57e544a0749ee71c8aac86b8f8e13d1550e",
+    "edit_plan.schema.json": "sha256:4d9432a9d9b1b61675f527817c7dfdd608ffa20a63f2c1f50d9f0cba9ac367b1",
+    "index.schema.json": "sha256:f305e73bdd196f01be5aba55a1bfe71dc0756218dbafc234fbd9e269c7f84557",
+    "labels.schema.json": "sha256:44e45c3f69aa8c9728872198061b34cbc23aa83a232a93debb3bce13f42e1052",
+    "manifest.schema.json": "sha256:cbab4e0766ffb0d8b0fb12cc0a6b7d75f39bdacc70fed82baaae6de0f102829d",
+    "relationships.schema.json": "sha256:0a6b82f199e7e009eb01866b591d10d35578bb937e794216a56a29c3f922246e",
+    "report.schema.json": "sha256:cc9454c8a3713921e540d0e7e1ce3fca7c8569e9704475ec39eae016541bf3be",
+    "sections.schema.json": "sha256:64d13ab3f694c5e4bcce3072c1d2823c614b2718aa50ba4850aea65c3b9fcdcc",
+    "styles.schema.json": "sha256:69bb206dd584e1ce1e19e6f752f510633761625ed9ba8905fa78c2bfdf731549",
+    "tag_range.schema.json": "sha256:38ae87688b3e7f53b0d7466d5699e6e741330b2da45ea6f784ae6da8bf002c3f"
+  },
+  "attachments": [
+    {
+      "attachment_id": "542182c4-ca2b-49f1-aa07-63c0e47b4477",
+      "type": "schedule",
+      "ordinal": "1",
+      "title": null,
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "51268601-87da-47b9-b3f4-7327d9429221",
+      "type": "schedule",
+      "ordinal": "2",
+      "title": null,
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "9a6d93ff-2547-4f2b-86d4-8d0b9a46dcd6",
+      "type": "schedule",
+      "ordinal": "3",
+      "title": null,
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "d9e2a764-41bf-45ba-8c53-ef4e17d7031c",
+      "type": "schedule",
+      "ordinal": "4",
+      "title": null,
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "22a4e58c-879d-4c62-9b11-1b8c0f562d07",
+      "type": "schedule",
+      "ordinal": "5",
+      "title": null,
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "3c95ff14-b25e-464d-90c5-7a7abf8e6781",
+      "type": "schedule",
+      "ordinal": "6",
+      "title": null,
+      "parent_attachment_id": null
+    }
+  ]
+}

@@ -11,18 +11,22 @@ to identify which paragraphs to update.
 Usage:
     python save_blocks.py <document_path> <blocks_json_path>
 
-Input JSON format:
+Input JSON format (text-based model):
     [
         {
             "id": "block-uuid",
+            "para_id": "05C9333F",
             "text": "Updated paragraph text",
             "runs": [
-                {"start": 0, "end": 5, "formats": ["bold"]},
-                {"start": 5, "end": 10, "formats": []}
+                {"text": "Updated ", "formats": ["bold"]},
+                {"text": "paragraph text", "formats": []}
             ]
         },
         ...
     ]
+
+Note: Delete runs (with 'delete' in formats) are skipped during save
+since they represent deleted content that shouldn't appear in the document.
 
 Output JSON format:
     {
@@ -115,13 +119,17 @@ def update_paragraph_content(paragraph, block):
     
     Replaces all runs in the paragraph with new runs based on the
     block's text and runs formatting structure.
+    
+    Supports both text-based runs (new model) and position-based runs (legacy):
+    - Text-based: run has 'text' or 'deleted_text' field
+    - Position-based: run has 'start' and 'end' fields
     """
     text = block.get('text', '')
     runs_data = block.get('runs', [])
     
     # If no runs data, treat the whole text as unformatted
     if not runs_data:
-        runs_data = [{'start': 0, 'end': len(text), 'formats': []}]
+        runs_data = [{'text': text, 'formats': []}]
     
     # Clear existing runs (but preserve paragraph properties)
     for run in paragraph.runs:
@@ -140,11 +148,25 @@ def update_paragraph_content(paragraph, block):
     
     # Add new runs with formatting
     for run_data in runs_data:
-        start = run_data.get('start', 0)
-        end = run_data.get('end', len(text))
         formats = run_data.get('formats', [])
         
-        run_text = text[start:end]
+        # Skip delete runs - they represent deleted content, not visible text
+        if 'delete' in formats:
+            continue
+        
+        # Get run text - support both text-based (new) and position-based (legacy) models
+        if 'text' in run_data:
+            # Text-based model (new)
+            run_text = run_data['text']
+        elif 'start' in run_data and 'end' in run_data:
+            # Position-based model (legacy/editor operations)
+            start = run_data.get('start', 0)
+            end = run_data.get('end', len(text))
+            run_text = text[start:end]
+        else:
+            # No text content
+            run_text = ''
+        
         if run_text:  # Only add non-empty runs
             run = paragraph.add_run(run_text)
             apply_formatting(run, formats)

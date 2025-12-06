@@ -2,11 +2,14 @@
 """
 AmendedParagraph - Wrapper for paragraphs with track changes support.
 
-Option A Data Model:
+Text-Based Run Model:
 - amended_text: Contains only VISIBLE text (normal runs + insertions, NO deletions)
 - amended_runs: All runs including deletions
-  - Normal/insert runs: start/end map to positions in amended_text
-  - Delete runs: zero-width (start == end), with deleted_text field
+  - Normal/insert runs: have 'text' field containing their text content
+  - Delete runs: have 'deleted_text' field containing struck content
+
+This model avoids stale position data when paragraphs are edited.
+Concatenating run['text'] values (excluding deletes) equals amended_text.
 
 This solves the python-docx limitation where paragraph.text excludes text inside w:ins elements.
 """
@@ -27,7 +30,12 @@ class AmendedParagraph:
     
     The standard paragraph.text property excludes text inside w:ins elements.
     This wrapper iterates the underlying XML to build the complete visible text,
-    plus a runs list with proper positions and deletion metadata.
+    plus a runs list with text content and deletion metadata.
+    
+    Run Model:
+    - Normal runs: {'text': 'content', 'formats': [...]}
+    - Insert runs: {'text': 'content', 'formats': ['insert', ...], 'author': '...', 'date': '...'}
+    - Delete runs: {'deleted_text': 'content', 'formats': ['delete'], 'author': '...', 'date': '...'}
     """
     
     def __init__(self, paragraph: Paragraph):
@@ -59,15 +67,16 @@ class AmendedParagraph:
     @property
     def amended_runs(self) -> List[Dict[str, Any]]:
         """
-        Get runs with positions relative to amended_text.
+        Get runs with text content.
         
         Returns a list of run dictionaries with:
-        - start: Start position in amended_text
-        - end: End position in amended_text (== start for deletions)
+        - text: (for normal/insert runs) The text content
         - formats: List of format strings ('bold', 'italic', 'insert', 'delete', etc.)
         - author: (optional) Author name for insertions/deletions
         - date: (optional) Date string for insertions/deletions
         - deleted_text: (only for delete runs) The deleted text content
+        
+        Concatenating run['text'] values (excluding delete runs) equals amended_text.
         
         Returns:
             List of run dictionaries
@@ -84,12 +93,13 @@ class AmendedParagraph:
         - w:r (run) with w:t (text) - normal text
         - w:ins > w:r > w:t - inserted text (included in amended_text)
         - w:del > w:r > w:delText - deleted text (NOT in amended_text, stored in deleted_text)
+        
+        Each run stores its text content directly rather than positions.
         """
         p_elem = self._paragraph._p
         
         text_parts: List[str] = []
         runs: List[Dict[str, Any]] = []
-        current_pos = 0
         
         # Iterate through all children of the paragraph
         for child in p_elem:
@@ -101,12 +111,10 @@ class AmendedParagraph:
                 run_text, run_formats = self._extract_run_content(child)
                 if run_text:
                     runs.append({
-                        'start': current_pos,
-                        'end': current_pos + len(run_text),
+                        'text': run_text,
                         'formats': run_formats,
                     })
                     text_parts.append(run_text)
-                    current_pos += len(run_text)
             
             elif local_name == 'ins':
                 # Insertion - extract author/date, then process contained runs
@@ -116,9 +124,8 @@ class AmendedParagraph:
                 for r_elem in child.iter(qn('w:r')):
                     run_text, run_formats = self._extract_run_content(r_elem)
                     if run_text:
-                        run_dict = {
-                            'start': current_pos,
-                            'end': current_pos + len(run_text),
+                        run_dict: Dict[str, Any] = {
+                            'text': run_text,
                             'formats': run_formats + ['insert'],
                         }
                         if author:
@@ -127,7 +134,6 @@ class AmendedParagraph:
                             run_dict['date'] = date
                         runs.append(run_dict)
                         text_parts.append(run_text)
-                        current_pos += len(run_text)
             
             elif local_name == 'del':
                 # Deletion - extract author/date and deleted text, but DON'T add to amended_text
@@ -138,8 +144,6 @@ class AmendedParagraph:
                     del_text = self._extract_deleted_text(r_elem)
                     if del_text:
                         run_dict = {
-                            'start': current_pos,  # Zero-width: position but no width
-                            'end': current_pos,    # Same as start
                             'formats': ['delete'],
                             'deleted_text': del_text,
                         }
@@ -148,7 +152,7 @@ class AmendedParagraph:
                         if date:
                             run_dict['date'] = date
                         runs.append(run_dict)
-                        # Note: current_pos does NOT advance - deletion has zero width in amended_text
+                        # Note: deleted text is NOT added to text_parts
         
         self._amended_text = ''.join(text_parts)
         self._amended_runs = runs

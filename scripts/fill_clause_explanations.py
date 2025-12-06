@@ -63,6 +63,7 @@ clause_effect_of_deletion: "{effect_of_deletion}"
 clause_balance: "{balance}"
 clause_supplier_negotiation_option: "{supplier_option}"
 clause_customer_negotiation_option: "{customer_option}"
+legal_issue_tags: "{tags}"
 
 ---"""
 
@@ -167,6 +168,7 @@ clause_effect_of_deletion: "[What happens if deleted from the agreement, e.g. If
 clause_balance: "[pro-supplier/pro-customer/balanced]"
 clause_supplier_negotiation_option: "[How Supplier could improve their position, e.g. Improve the Supplier's position by adding an indemnity so Customer holds the Supplier harmless, defends and indemnifies the Supplier against any losses in relation to the third party services]"
 clause_customer_negotiation_option: "[How Customer could improve their position, e.g. Improve the Customer's position by making the Supplier liable for any third party services which are an integral part of the Supplier's Services or where the Customer is not able to opt out of using the third party services]"
+legal_issue_tags: "[List of tags for the relevant legal issues]"
 
 ---"""
 
@@ -187,6 +189,7 @@ Please provide analysis in this YAML format:
 - clause_balance: pro-supplier/pro-customer/balanced
 - clause_supplier_negotiation_option: How Supplier could improve their position, e.g. Improve the Supplier's position by adding an indemnity so Customer holds the Supplier harmless, defends and indemnifies the Supplier against any losses in relation to the third party services
 - clause_customer_negotiation_option: How Customer could improve their position, e.g. Improve the Customer's position by making the Supplier liable for any third party services which are an integral part of the Supplier's Services or where the Customer is not able to opt out of using the third party services
+- legal_issue_tags: List of tags for the relevant legal issues
 
 Keep each field to 1-2 sentences. Respond with ONLY the YAML block."""
 
@@ -237,8 +240,8 @@ def extract_yaml_from_response(response: str) -> str:
             if 'clause_number:' in line:
                 in_yaml = True
             if in_yaml:
-                # Stop at blank line after clause_customer_negotiation_option
-                if 'clause_customer_negotiation_option:' in line:
+                # Stop at blank line after legal_issue_tags
+                if 'legal_issue_tags:' in line:
                     lines.append(line)
                     break
                 lines.append(line)

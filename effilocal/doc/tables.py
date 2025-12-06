@@ -15,34 +15,23 @@ def _get_amended_cell_content(cell) -> tuple[str, List[Dict[str, Any]]]:
     """
     Get amended text and runs for all paragraphs in a table cell.
     
-    Combines text from all paragraphs with newlines, and adjusts
-    run positions accordingly.
+    Combines text from all paragraphs with newlines. Runs are
+    collected in order without position adjustment (text-based model).
     
     Returns:
         Tuple of (combined_text, combined_runs)
     """
     text_parts = []
     all_runs = []
-    current_pos = 0
     
     for para in cell.paragraphs:
         amended = AmendedParagraph(para)
         para_text = amended.amended_text
         para_runs = amended.amended_runs
         
-        # Adjust run positions for combined text
-        for run in para_runs:
-            adjusted_run = run.copy()
-            adjusted_run['start'] += current_pos
-            if 'delete' not in run.get('formats', []):
-                adjusted_run['end'] += current_pos
-            else:
-                # Zero-width delete runs still get position adjusted
-                adjusted_run['end'] = adjusted_run['start']
-            all_runs.append(adjusted_run)
-        
+        # Collect runs (no position adjustment needed with text-based model)
+        all_runs.extend(para_runs)
         text_parts.append(para_text)
-        current_pos += len(para_text) + 1  # +1 for newline separator
     
     combined_text = '\n'.join(text_parts)
     return combined_text, all_runs
@@ -61,7 +50,7 @@ def build_table_rows(
     
     Uses AmendedParagraph to correctly handle track changes in table cells:
     - amended_text includes insertions but excludes deletions
-    - runs include formatting info with zero-width delete runs
+    - runs include formatting info with text content and deleted_text for deletions
     """
 
     rows: list[list[dict[str, Any] | TableCellBlock]] = []
@@ -77,7 +66,7 @@ def build_table_rows(
             
             # Ensure runs exist for non-empty text
             if not runs and text:
-                runs = [{'start': 0, 'end': len(text), 'formats': []}]
+                runs = [{'text': text, 'formats': []}]
             
             style_name = cell.paragraphs[0].style.name if cell.paragraphs else ""
             heading_meta = (

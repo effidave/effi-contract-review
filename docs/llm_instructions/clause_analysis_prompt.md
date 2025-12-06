@@ -73,6 +73,7 @@ clause_effect_of_deletion: "If deleted, Customer could argue that the third part
 clause_balance: "pro-supplier"
 supplier_negotiation_option: "Improve the Supplier's position by adding an indemnity so Customer holds the Supplier harmless, defends and indemnifies the Supplier against any losses in relation to the third party services"
 customer_negotiation_option: "Improve the Customer's position by making the Supplier liable for any third party services which are an integral part of the Supplier's Services or where the Customer is not able to opt out of using the third party services"
+legal_issue_tags: "#liability #specification #third-parties #risk #remedies"
 
 ---
 [END EXPLANATION]
@@ -83,6 +84,7 @@ Field requirements:
 - clause_balance: pro-supplier / pro-customer / balanced / neutral
 - supplier_negotiation_option: Practical negotiation suggestion
 - customer_negotiation_option: Practical negotiation suggestion
+- legal_issue_tags: List of tags for the relevant legal issues
 
 Note cross-references between clauses when they materially affect the analysis.
 
@@ -162,6 +164,8 @@ clause_effect_of_deletion: "[What happens if this clause is deleted from the agr
 clause_balance: "[pro-supplier/pro-customer/balanced/neutral]"
 supplier_negotiation_option: "[How Supplier could negotiate to improve their position]"
 customer_negotiation_option: "[How Customer could negotiate to improve their position]"
+legal_issue_tags: "[List of tags for the relevant legal issues]"
+
 
 ---
 
@@ -182,6 +186,8 @@ clause_effect_of_deletion: "If deleted, Customer could argue that the third part
 clause_balance: "pro-supplier"
 supplier_negotiation_option: "Improve the Supplier's position by adding an indemnity so Customer holds the Supplier harmless, defends and indemnifies the Supplier against any losses in relation to the third party services"
 customer_negotiation_option: "Improve the Customer's position by making the Supplier liable for any third party services which are an integral part of the Supplier's Services or where the Customer is not able to opt out of using the third party services"
+legal_issue_tags: "#liability #specification #third-parties #risk #remedies"
+
 
 ---
 [END EXPLANATION]
@@ -202,6 +208,8 @@ Now analyze all clauses in the following contract:
 | `clause_balance` | Which party the clause favours | `pro-supplier`, `pro-customer`, `balanced`, or `neutral` |
 | `supplier_negotiation_option` | How Supplier could strengthen their position | "Add audit rights with cost recovery for underpayment" |
 | `customer_negotiation_option` | How Customer could improve their position | "Negotiate right to use Services for affiliates/group companies" |
+| `legal_issue_tags` | "List of tag for relevant legal issues, e.g. #liability #specification #third-parties #risk #remedies" |
+
 
 ---
 

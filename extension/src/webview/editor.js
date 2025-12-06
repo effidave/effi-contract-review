@@ -12,9 +12,11 @@
 
 /**
  * @typedef {Object} Run
- * @property {number} start - Start offset in text
- * @property {number} end - End offset in text
- * @property {string[]} formats - Array of format names ('bold', 'italic', 'underline')
+ * @property {string} [text] - Text content (for normal/insert runs)
+ * @property {string} [deleted_text] - Deleted text content (for delete runs)
+ * @property {string[]} formats - Array of format names ('bold', 'italic', 'underline', 'insert', 'delete')
+ * @property {string} [author] - Author of revision (for insert/delete runs)
+ * @property {string} [date] - Date of revision (for insert/delete runs)
  */
 
 /**
@@ -73,13 +75,14 @@ class BlockEditor {
     
     /**
      * Normalize blocks to ensure consistent structure
+     * Supports both text-based runs (new model) and position-based runs (legacy)
      * @param {Block[]} blocks 
      * @returns {Block[]}
      */
     _normalizeBlocks(blocks) {
         return blocks.map(block => ({
             ...block,
-            runs: block.runs || [{ start: 0, end: (block.text || '').length, formats: [] }]
+            runs: block.runs || [{ text: block.text || '', formats: [] }]
         }));
     }
     
@@ -402,18 +405,33 @@ class BlockEditor {
     
     /**
      * Render block text with formatting spans
+     * Supports both text-based runs (new model) and position-based runs (legacy)
      * @param {Block} block 
      * @returns {string}
      */
     _renderFormattedText(block) {
-        const text = block.text || '';
-        if (!text) return '<br>'; // Empty block needs BR for cursor
+        const blockText = block.text || '';
+        if (!blockText && !block.runs?.length) return '<br>'; // Empty block needs BR for cursor
         
-        const runs = block.runs || [{ start: 0, end: text.length, formats: [] }];
+        const runs = block.runs || [{ text: blockText, formats: [] }];
         
         let html = '';
         runs.forEach(run => {
-            const runText = text.substring(run.start, run.end);
+            // Support both text-based runs (new) and position-based runs (legacy/editor)
+            // Delete runs use 'deleted_text', normal/insert runs use 'text'
+            // Legacy runs use start/end positions into block.text
+            let runText;
+            if (run.deleted_text !== undefined) {
+                runText = run.deleted_text;
+            } else if (run.text !== undefined) {
+                runText = run.text;
+            } else if (run.start !== undefined && run.end !== undefined) {
+                // Legacy position-based runs (from editor operations)
+                runText = blockText.substring(run.start, run.end);
+            } else {
+                runText = '';
+            }
+            
             if (!runText) return;
             
             let escapedText = this._escapeHtml(runText);
@@ -555,8 +573,8 @@ class BlockEditor {
         const newText = target.innerText.replace(/\n$/, ''); // Remove trailing newline
         block.text = newText;
         
-        // Normalize runs to match new text length
-        block.runs = [{ start: 0, end: newText.length, formats: [] }];
+        // Normalize runs to match new text (text-based model)
+        block.runs = [{ text: newText, formats: [] }];
         
         // Mark as dirty
         this._markDirty(blockId);
@@ -701,11 +719,9 @@ class BlockEditor {
             if (node.nodeType === Node.TEXT_NODE) {
                 const nodeText = node.textContent || '';
                 if (nodeText) {
-                    const start = text.length;
                     text += nodeText;
                     runs.push({
-                        start,
-                        end: text.length,
+                        text: nodeText,
                         formats: [...activeFormats]
                     });
                 }
@@ -738,7 +754,7 @@ class BlockEditor {
     }
     
     /**
-     * Merge adjacent runs with identical formats
+     * Merge adjacent runs with identical formats (text-based model)
      * @param {Run[]} runs 
      * @returns {Run[]}
      */
@@ -751,7 +767,8 @@ class BlockEditor {
             const curr = runs[i];
             
             if (this._formatsEqual(prev.formats, curr.formats)) {
-                prev.end = curr.end;
+                // Concatenate text for merged runs
+                prev.text = (prev.text || '') + (curr.text || '');
             } else {
                 merged.push(curr);
             }
@@ -788,7 +805,7 @@ class BlockEditor {
             id: this._generateId(),
             type: 'paragraph',
             text: text.substring(offset),
-            runs: [{ start: 0, end: text.length - offset, formats: [] }],
+            runs: [{ text: text.substring(offset), formats: [] }],
             list: block.list ? { ...block.list } : undefined,
             para_idx: -1, // New block, will be assigned on save
             hierarchy_depth: typeof block.hierarchy_depth === 'number' ? block.hierarchy_depth : 0,
@@ -796,7 +813,7 @@ class BlockEditor {
         
         // Truncate current block
         block.text = text.substring(0, offset);
-        block.runs = [{ start: 0, end: offset, formats: [] }];
+        block.runs = [{ text: text.substring(0, offset), formats: [] }];
         
         // Insert new block
         this.blocks.splice(blockIndex + 1, 0, newBlock);
@@ -835,7 +852,7 @@ class BlockEditor {
         
         const prevLength = (prevBlock.text || '').length;
         prevBlock.text = (prevBlock.text || '') + (currBlock.text || '');
-        prevBlock.runs = [{ start: 0, end: prevBlock.text.length, formats: [] }];
+        prevBlock.runs = [{ text: prevBlock.text, formats: [] }];
         
         // Remove current block
         this.blocks.splice(blockIndex, 1);
@@ -874,7 +891,7 @@ class BlockEditor {
         
         const currLength = (currBlock.text || '').length;
         currBlock.text = (currBlock.text || '') + (nextBlock.text || '');
-        currBlock.runs = [{ start: 0, end: currBlock.text.length, formats: [] }];
+        currBlock.runs = [{ text: currBlock.text, formats: [] }];
         
         // Remove next block
         this.blocks.splice(blockIndex + 1, 1);

@@ -176,26 +176,26 @@ const createMockVSCode = () => {
     };
 };
 
-// Test data - blocks with revision runs
+// Test data - blocks with revision runs (text-based model)
 const sampleBlocksWithRevisions = [
     {
         id: 'block-001',
         type: 'paragraph',
         text: 'This is normal text with an insertion.',
         runs: [
-            { start: 0, end: 20, formats: [] },
-            { start: 20, end: 35, formats: ['insert'], author: 'John Smith', date: '2024-01-15T10:30:00Z' },
-            { start: 35, end: 39, formats: [] }
+            { text: 'This is normal text ', formats: [] },
+            { text: 'with an insertion', formats: ['insert'], author: 'John Smith', date: '2024-01-15T10:30:00Z' },
+            { text: '.', formats: [] }
         ]
     },
     {
         id: 'block-002',
         type: 'paragraph',
-        text: 'Text with a deletion here.',
+        text: 'Text with  here.',  // visible text (deletion not shown)
         runs: [
-            { start: 0, end: 12, formats: [] },
-            { start: 12, end: 20, formats: ['delete'], author: 'Jane Doe', date: '2024-01-16T14:45:00Z' },
-            { start: 20, end: 26, formats: [] }
+            { text: 'Text with ', formats: [] },
+            { deleted_text: 'a delete', formats: ['delete'], author: 'Jane Doe', date: '2024-01-16T14:45:00Z' },
+            { text: ' here.', formats: [] }
         ]
     },
     {
@@ -203,19 +203,20 @@ const sampleBlocksWithRevisions = [
         type: 'paragraph',
         text: 'Bold inserted text here.',
         runs: [
-            { start: 0, end: 5, formats: ['bold'] },
-            { start: 5, end: 18, formats: ['insert', 'bold'], author: 'Bob Wilson', date: '2024-01-17T09:15:00Z' },
-            { start: 18, end: 24, formats: [] }
+            { text: 'Bold ', formats: ['bold'] },
+            { text: 'inserted text', formats: ['insert', 'bold'], author: 'Bob Wilson', date: '2024-01-17T09:15:00Z' },
+            { text: ' here.', formats: [] }
         ]
     },
     {
         id: 'block-004',
         type: 'paragraph',
-        text: 'Multiple revisions in one block.',
+        text: 'Multiple  in one block.',  // visible text only
         runs: [
-            { start: 0, end: 9, formats: ['insert'], author: 'John Smith', date: '2024-01-18T11:00:00Z' },
-            { start: 9, end: 20, formats: [] },
-            { start: 20, end: 32, formats: ['delete'], author: 'Jane Doe', date: '2024-01-18T12:00:00Z' }
+            { text: 'Multiple ', formats: ['insert'], author: 'John Smith', date: '2024-01-18T11:00:00Z' },
+            { text: ' in one ', formats: [] },
+            { deleted_text: 'revisions', formats: ['delete'], author: 'Jane Doe', date: '2024-01-18T12:00:00Z' },
+            { text: 'block.', formats: [] }
         ]
     }
 ];
@@ -225,7 +226,7 @@ const blockWithNoRevisions = {
     type: 'paragraph',
     text: 'Plain text without any revisions.',
     runs: [
-        { start: 0, end: 33, formats: [] }
+        { text: 'Plain text without any revisions.', formats: [] }
     ]
 };
 
@@ -494,6 +495,113 @@ runner.describe('Combined Formatting', () => {
 });
 
 // ----------------------------------------------------------------------------
+// Text-Based Run Model Tests (New Model)
+// ----------------------------------------------------------------------------
+
+// Sample blocks using the new text-based run model
+const textBasedSampleBlocks = [
+    {
+        id: 'text-block-001',
+        type: 'paragraph',
+        text: 'This is normal text with an insertion.',
+        runs: [
+            { text: 'This is normal text ', formats: [] },
+            { text: 'with an insertion', formats: ['insert'], author: 'John Smith', date: '2024-01-15T10:30:00Z' },
+            { text: '.', formats: [] }
+        ]
+    },
+    {
+        id: 'text-block-002',
+        type: 'paragraph',
+        text: 'Text with here.',  // block.text is visible text only (no deleted content)
+        runs: [
+            { text: 'Text with ', formats: [] },
+            { deleted_text: 'a deletion ', formats: ['delete'], author: 'Jane Doe', date: '2024-01-16T14:45:00Z' },
+            { text: 'here.', formats: [] }
+        ]
+    },
+    {
+        id: 'text-block-003',
+        type: 'paragraph',
+        text: 'Bold inserted text here.',
+        runs: [
+            { text: 'Bold ', formats: ['bold'] },
+            { text: 'inserted text', formats: ['insert', 'bold'], author: 'Bob Wilson', date: '2024-01-17T09:15:00Z' },
+            { text: ' here.', formats: [] }
+        ]
+    }
+];
+
+runner.describe('Text-Based Run Model', () => {
+    
+    runner.it('should render text from run.text property', () => {
+        if (!BlockEditor) throw new Error('BlockEditor not implemented');
+        const { editor } = createEditorWithBlock(textBasedSampleBlocks[0]);
+        
+        const html = editor._renderFormattedText(textBasedSampleBlocks[0]);
+        
+        assert.includes(html, 'This is normal text', 'Should render normal text');
+        assert.includes(html, 'with an insertion', 'Should render inserted text');
+    });
+    
+    runner.it('should render deleted_text for delete runs', () => {
+        if (!BlockEditor) throw new Error('BlockEditor not implemented');
+        const { editor } = createEditorWithBlock(textBasedSampleBlocks[1]);
+        
+        const html = editor._renderFormattedText(textBasedSampleBlocks[1]);
+        
+        assert.includes(html, '<del', 'Should have <del> tag');
+        assert.includes(html, 'a deletion', 'Should render deleted text from deleted_text property');
+        assert.includes(html, '</del>', 'Should close the del tag');
+    });
+    
+    runner.it('should support mixed text-based and position-based runs', () => {
+        if (!BlockEditor) throw new Error('BlockEditor not implemented');
+        // This simulates a block that has been partially edited (position-based)
+        // alongside original runs (text-based)
+        const mixedBlock = {
+            id: 'mixed-block',
+            type: 'paragraph',
+            text: 'Original with edits.',
+            runs: [
+                { text: 'Original ', formats: [] },  // text-based
+                { start: 9, end: 13, formats: ['bold'] },  // position-based (legacy/editor)
+                { text: ' edits.', formats: [] }  // text-based
+            ]
+        };
+        const { editor } = createEditorWithBlock(mixedBlock);
+        
+        const html = editor._renderFormattedText(mixedBlock);
+        
+        assert.includes(html, 'Original', 'Should render text-based run');
+        assert.includes(html, '<strong>with</strong>', 'Should render position-based run with bold');
+        assert.includes(html, 'edits.', 'Should render final text-based run');
+    });
+    
+    runner.it('should apply formatting to text-based insert runs', () => {
+        if (!BlockEditor) throw new Error('BlockEditor not implemented');
+        const { editor } = createEditorWithBlock(textBasedSampleBlocks[2]);
+        
+        const html = editor._renderFormattedText(textBasedSampleBlocks[2]);
+        
+        assert.includes(html, '<strong>', 'Should have bold formatting');
+        assert.includes(html, '<ins', 'Should have insert tag');
+        assert.includes(html, 'inserted text', 'Should have the inserted text content');
+    });
+    
+    runner.it('should include author and date in deleted_text tooltip', () => {
+        if (!BlockEditor) throw new Error('BlockEditor not implemented');
+        const { editor } = createEditorWithBlock(textBasedSampleBlocks[1]);
+        
+        const html = editor._renderFormattedText(textBasedSampleBlocks[1]);
+        
+        assert.includes(html, 'Jane Doe', 'Should include author in tooltip');
+        assert.includes(html, 'Deleted', 'Should indicate deletion in tooltip');
+    });
+    
+});
+
+// ----------------------------------------------------------------------------
 // Edge Cases
 // ----------------------------------------------------------------------------
 runner.describe('Edge Cases', () => {
@@ -527,8 +635,8 @@ runner.describe('Edge Cases', () => {
             type: 'paragraph',
             text: 'Text with <script>alert("xss")</script>',
             runs: [
-                { start: 0, end: 10, formats: [] },
-                { start: 10, end: 38, formats: ['insert'], author: 'Test', date: '2024-01-01T00:00:00Z' }
+                { text: 'Text with ', formats: [] },
+                { text: '<script>alert("xss")</script>', formats: ['insert'], author: 'Test', date: '2024-01-01T00:00:00Z' }
             ]
         };
         const { editor } = createEditorWithBlock(block);
@@ -546,7 +654,7 @@ runner.describe('Edge Cases', () => {
             type: 'paragraph',
             text: 'Inserted without author.',
             runs: [
-                { start: 0, end: 24, formats: ['insert'], date: '2024-01-01T00:00:00Z' }
+                { text: 'Inserted without author.', formats: ['insert'], date: '2024-01-01T00:00:00Z' }
             ]
         };
         const { editor } = createEditorWithBlock(block);
@@ -563,7 +671,7 @@ runner.describe('Edge Cases', () => {
             type: 'paragraph',
             text: 'Inserted without date.',
             runs: [
-                { start: 0, end: 22, formats: ['insert'], author: 'Test Author' }
+                { text: 'Inserted without date.', formats: ['insert'], author: 'Test Author' }
             ]
         };
         const { editor } = createEditorWithBlock(block);
