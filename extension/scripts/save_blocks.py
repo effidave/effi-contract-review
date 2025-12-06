@@ -117,6 +117,72 @@ def apply_formatting(run, formats):
     run.underline = 'underline' in formats
 
 
+def create_run_element(run_text, formats, author=None, date=None):
+    """
+    Create a w:r element with text and formatting.
+    
+    Returns the run element (not wrapped in ins/del).
+    """
+    r = OxmlElement('w:r')
+    
+    # Add run properties for formatting
+    if formats:
+        rPr = OxmlElement('w:rPr')
+        if 'bold' in formats:
+            b = OxmlElement('w:b')
+            rPr.append(b)
+        if 'italic' in formats:
+            i = OxmlElement('w:i')
+            rPr.append(i)
+        if 'underline' in formats:
+            u = OxmlElement('w:u')
+            u.set(qn('w:val'), 'single')
+            rPr.append(u)
+        if len(rPr) > 0:
+            r.append(rPr)
+    
+    t = OxmlElement('w:t')
+    # Preserve spaces
+    if run_text.startswith(' ') or run_text.endswith(' '):
+        t.set('{http://www.w3.org/XML/1998/namespace}space', 'preserve')
+    t.text = run_text
+    r.append(t)
+    
+    return r
+
+
+def create_del_run_element(deleted_text, formats, author=None, date=None):
+    """
+    Create a w:delText element inside w:r for deleted content.
+    """
+    r = OxmlElement('w:r')
+    
+    # Add run properties for formatting
+    if formats:
+        rPr = OxmlElement('w:rPr')
+        if 'bold' in formats:
+            b = OxmlElement('w:b')
+            rPr.append(b)
+        if 'italic' in formats:
+            i = OxmlElement('w:i')
+            rPr.append(i)
+        if 'underline' in formats:
+            u = OxmlElement('w:u')
+            u.set(qn('w:val'), 'single')
+            rPr.append(u)
+        if len(rPr) > 0:
+            r.append(rPr)
+    
+    dt = OxmlElement('w:delText')
+    # Preserve spaces
+    if deleted_text.startswith(' ') or deleted_text.endswith(' '):
+        dt.set('{http://www.w3.org/XML/1998/namespace}space', 'preserve')
+    dt.text = deleted_text
+    r.append(dt)
+    
+    return r
+
+
 def insert_new_paragraph(doc, block, after_para_id: str, existing_ids: set[str], use_para_id: str = None) -> tuple[str, bool]:
     """
     Insert a new paragraph into the document after the specified paragraph.
@@ -222,10 +288,16 @@ def update_paragraph_content(paragraph, block):
     Replaces all runs in the paragraph with new runs based on the
     block's text and runs formatting structure.
     
+    Preserves track changes:
+    - Insert runs are wrapped in <w:ins> elements
+    - Delete runs are wrapped in <w:del> elements with <w:delText>
+    
     Supports both text-based runs (new model) and position-based runs (legacy):
     - Text-based: run has 'text' or 'deleted_text' field
     - Position-based: run has 'start' and 'end' fields
     """
+    from datetime import datetime
+    
     text = block.get('text', '')
     runs_data = block.get('runs', [])
     
@@ -233,31 +305,31 @@ def update_paragraph_content(paragraph, block):
     if not runs_data:
         runs_data = [{'text': text, 'formats': []}]
     
-    # Clear existing runs (but preserve paragraph properties)
-    for run in paragraph.runs:
-        run.text = ''
-    
-    # Remove empty runs
+    # Clear all existing content from paragraph
     p = paragraph._p
-    for r in list(p.findall(qn('w:r'))):
-        t_elements = r.findall(qn('w:t'))
-        if not t_elements or all(not (t.text or '') for t in t_elements):
-            # Keep at least one run for formatting
-            pass
+    # Remove all run elements (w:r), ins elements (w:ins), del elements (w:del)
+    for child in list(p):
+        tag = child.tag.split('}')[-1] if '}' in child.tag else child.tag
+        if tag in ('r', 'ins', 'del', 'bookmarkStart', 'bookmarkEnd'):
+            p.remove(child)
     
-    # Clear all run text first
-    paragraph.clear()
+    # Track revision ID for ins/del elements
+    revision_id = 0
     
-    # Add new runs with formatting
+    # Add new runs with formatting and track changes
     for run_data in runs_data:
         formats = run_data.get('formats', [])
+        author = run_data.get('author', 'Unknown')
+        date = run_data.get('date', datetime.now().isoformat())
         
-        # Skip delete runs - they represent deleted content, not visible text
-        if 'delete' in formats:
-            continue
+        is_insert = 'insert' in formats
+        is_delete = 'delete' in formats
         
-        # Get run text - support both text-based (new) and position-based (legacy) models
-        if 'text' in run_data:
+        # Get run text
+        if is_delete:
+            # Delete runs use deleted_text field
+            run_text = run_data.get('deleted_text', run_data.get('text', ''))
+        elif 'text' in run_data:
             # Text-based model (new)
             run_text = run_data['text']
         elif 'start' in run_data and 'end' in run_data:
@@ -269,21 +341,52 @@ def update_paragraph_content(paragraph, block):
             # No text content
             run_text = ''
         
-        if run_text:  # Only add non-empty runs
-            run = paragraph.add_run(run_text)
-            apply_formatting(run, formats)
+        if not run_text:
+            continue
+        
+        # Filter out insert/delete from formats for run properties
+        run_formats = [f for f in formats if f not in ('insert', 'delete')]
+        
+        if is_delete:
+            # Create <w:del> wrapper with <w:r><w:delText>
+            del_elem = OxmlElement('w:del')
+            del_elem.set(qn('w:id'), str(revision_id))
+            del_elem.set(qn('w:author'), author)
+            del_elem.set(qn('w:date'), date)
+            revision_id += 1
+            
+            r = create_del_run_element(run_text, run_formats, author, date)
+            del_elem.append(r)
+            p.append(del_elem)
+            
+        elif is_insert:
+            # Create <w:ins> wrapper with <w:r><w:t>
+            ins_elem = OxmlElement('w:ins')
+            ins_elem.set(qn('w:id'), str(revision_id))
+            ins_elem.set(qn('w:author'), author)
+            ins_elem.set(qn('w:date'), date)
+            revision_id += 1
+            
+            r = create_run_element(run_text, run_formats, author, date)
+            ins_elem.append(r)
+            p.append(ins_elem)
+            
+        else:
+            # Normal run - no track changes wrapper
+            r = create_run_element(run_text, run_formats)
+            p.append(r)
 
 
 def update_blocks_jsonl(analysis_dir: Path, edited_blocks: list):
     """
-    Update blocks.jsonl with edited block content.
+    Update blocks.jsonl with edited block content and insert new blocks.
     
     Reads the existing blocks.jsonl, updates matching blocks with new text/runs,
-    and writes back.
+    inserts new blocks at their correct positions, and writes back.
     
     Args:
         analysis_dir: Path to analysis directory containing blocks.jsonl
-        edited_blocks: List of edited block dicts with id, text, runs
+        edited_blocks: List of all block dicts with id, text, runs (includes new blocks)
     """
     blocks_path = analysis_dir / 'blocks.jsonl'
     if not blocks_path.exists():
@@ -300,6 +403,12 @@ def update_blocks_jsonl(analysis_dir: Path, edited_blocks: list):
             if line:
                 existing_blocks.append(json.loads(line))
     
+    # Track existing block IDs
+    existing_ids = {b.get('id') for b in existing_blocks}
+    
+    # Identify new blocks (not in existing blocks.jsonl)
+    new_blocks = [b for b in edited_blocks if b.get('id') not in existing_ids]
+    
     # Update matching blocks
     for block in existing_blocks:
         if block.get('id') in edited_by_id:
@@ -307,6 +416,27 @@ def update_blocks_jsonl(analysis_dir: Path, edited_blocks: list):
             block['text'] = edited.get('text', block.get('text', ''))
             if 'runs' in edited:
                 block['runs'] = edited['runs']
+            # Update para_id if it was assigned during save
+            if 'para_id' in edited:
+                block['para_id'] = edited['para_id']
+    
+    # Insert new blocks at their correct positions
+    # edited_blocks is in correct order from the UI, use it as reference
+    if new_blocks:
+        # Build ordered result based on edited_blocks order
+        result_blocks = []
+        existing_by_id = {b.get('id'): b for b in existing_blocks}
+        
+        for edited_block in edited_blocks:
+            block_id = edited_block.get('id')
+            if block_id in existing_by_id:
+                # Use the updated existing block
+                result_blocks.append(existing_by_id[block_id])
+            else:
+                # This is a new block - add it
+                result_blocks.append(edited_block)
+        
+        existing_blocks = result_blocks
     
     # Write back
     with open(blocks_path, 'w', encoding='utf-8') as f:
@@ -333,14 +463,23 @@ def save_blocks_to_document(doc_path: str, blocks_path: str):
             blocks = json.load(f)
         
         # Debug: log what we received
-        print(f"DEBUG: Received {len(blocks)} blocks to save", file=sys.stderr)
+        print(f"DEBUG: Received {len(blocks)} blocks", file=sys.stderr)
+        dirty_count = sum(1 for b in blocks if b.get('_isDirty', False))
+        print(f"DEBUG: {dirty_count} blocks marked as dirty", file=sys.stderr)
         if blocks:
             print(f"DEBUG: First block id: {blocks[0].get('id', 'NO ID')}", file=sys.stderr)
             print(f"DEBUG: First block para_id: {blocks[0].get('para_id', 'NO PARA_ID')}", file=sys.stderr)
-            print(f"DEBUG: First block text (first 50 chars): {blocks[0].get('text', '')[:50]}", file=sys.stderr)
+            print(f"DEBUG: First block _isDirty: {blocks[0].get('_isDirty', False)}", file=sys.stderr)
         
         if not blocks:
             return {"success": True, "block_count": 0, "message": "No blocks to save"}
+        
+        # Filter to only dirty blocks for document modification
+        # But keep full blocks list for ordering/position reference
+        dirty_blocks = [b for b in blocks if b.get('_isDirty', False)]
+        
+        if not dirty_blocks:
+            return {"success": True, "block_count": 0, "message": "No dirty blocks to save"}
         
         # Load document
         doc = Document(doc_path)
@@ -362,11 +501,11 @@ def save_blocks_to_document(doc_path: str, blocks_path: str):
         inserted_count = 0
         not_found = []
         
-        # Separate blocks into existing (para_id found in document) and new (para_idx=-1 or para_id not in doc)
+        # Separate DIRTY blocks into existing (para_id found in document) and new (para_idx=-1 or para_id not in doc)
         existing_blocks = []
         new_blocks = []
         
-        for block in blocks:
+        for block in dirty_blocks:
             para_id = block.get('para_id', '')
             para_idx = block.get('para_idx', 0)
             

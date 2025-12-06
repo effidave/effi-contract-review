@@ -878,10 +878,21 @@ function saveEdits() {
         toolbar.setSaveStatus('saving');
     }
     
+    // Get ALL blocks (needed for insertion order of new blocks)
+    // The Python script needs full block list to find where to insert new blocks
+    const allBlocks = blockEditor.getBlocks();
+    const dirtyIds = new Set(dirtyBlocks.map(b => b.id));
+    
+    // Send all blocks but mark which ones are dirty
+    const blocksWithDirtyFlag = allBlocks.map(b => ({
+        ...b,
+        _isDirty: dirtyIds.has(b.id)
+    }));
+    
     // Send dirty blocks to extension for saving
     vscode.postMessage({
         command: 'saveBlocks',
-        blocks: dirtyBlocks,
+        blocks: blocksWithDirtyFlag,
         documentPath: currentData?.documentPath || ''
     });
 }
