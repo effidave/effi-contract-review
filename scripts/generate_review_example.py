@@ -199,31 +199,26 @@ class ParagraphDiff:
     
     @property
     def has_own_title(self) -> bool:
-        """Check if this paragraph has its own clause title (e.g., 'TITLE.' or 'Fees & Payment.')."""
+        """Check if this paragraph has its own clause title (e.g., 'TITLE.' or 'License Grant.')."""
         import re
-        text = self.after_text.strip() or self.before_text.strip()
+        text = (self.after_text or self.before_text or "").strip()
         if not text:
             return False
         
         # A title should be:
-        # 1. Short (max ~50 chars before the period)
-        # 2. Either ALL CAPS, or Title Case words only (not a sentence)
-        # 3. Followed by period then space (or end of text if just the title)
+        # 1. 5 or fewer words followed by a period
+        # 2. Starts with a capital letter
+        # 3. At least 2 characters (to exclude single-letter list items like "A.")
+        # 4. Followed by whitespace or end of text
         
-        # Pattern for ALL CAPS title: "LIMITATION OF LIABILITY."
-        all_caps_match = re.match(r'^([A-Z][A-Z\s&,\-]+?)\.(?:\s|$)', text)
-        if all_caps_match:
-            title = all_caps_match.group(1).strip()
-            if len(title) <= 50:
-                return True
-        
-        # Pattern for Title Case: "Fees & Payment." - each word capitalized, no lowercase-starting words
-        # Must be short and look like a heading, not a sentence
-        title_case_match = re.match(r'^([A-Z][a-z]*(?:\s+(?:[A-Z][a-z]*|&|of|and|the|in|to|for))*?)\.(?:\s|$)', text)
-        if title_case_match:
-            title = title_case_match.group(1).strip()
-            # Must be short to be a title
-            if len(title) <= 50:
+        # Match: capital letter start, then up to 4 more words, then period, then space/end
+        # Words can contain letters, numbers, &, -, commas
+        match = re.match(r'^([A-Z][^\s.]*(?:\s+[A-Za-z0-9&,\-]+){0,4})\.(?:\s|$)', text)
+        if match:
+            title = match.group(1).strip()
+            # Must be at least 2 chars (exclude "A.", "B.", etc.)
+            # and max 50 chars to be a reasonable title
+            if 2 <= len(title) <= 50:
                 return True
         
         return False
@@ -232,22 +227,16 @@ class ParagraphDiff:
     def own_title(self) -> str:
         """Extract this paragraph's own title if it has one, otherwise empty string."""
         import re
-        text = self.after_text.strip() or self.before_text.strip()
+        text = (self.after_text or self.before_text or "").strip()
         if not text:
             return ""
         
-        # ALL CAPS title
-        all_caps_match = re.match(r'^([A-Z][A-Z\s&,\-]+?)\.(?:\s|$)', text)
-        if all_caps_match:
-            title = all_caps_match.group(1).strip()
-            if len(title) <= 50:
-                return title
-        
-        # Title Case
-        title_case_match = re.match(r'^([A-Z][a-z]*(?:\s+(?:[A-Z][a-z]*|&|of|and|the|in|to|for))*?)\.(?:\s|$)', text)
-        if title_case_match:
-            title = title_case_match.group(1).strip()
-            if len(title) <= 50:
+        # Match: 5 or fewer words followed by period, then space or end
+        # Must start with capital, be 2-50 chars
+        match = re.match(r'^([A-Z][^\s.]*(?:\s+[A-Za-z0-9&,\-]+){0,4})\.(?:\s|$)', text)
+        if match:
+            title = match.group(1).strip()
+            if 2 <= len(title) <= 50:
                 return title
         
         return ""
