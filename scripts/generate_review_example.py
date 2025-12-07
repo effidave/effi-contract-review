@@ -59,6 +59,7 @@ from effilocal.mcp_server.core.comments import extract_all_comments
 from effilocal.mcp_server.utils.document_utils import iter_document_paragraphs
 
 # Import refactored party detection and anonymization modules
+from effilocal.doc.clause_lookup import extract_clause_title_from_text
 from effilocal.doc.party_detection import (
     PartyInfo,
     DEFINED_TERM_TO_ROLE,
@@ -1187,7 +1188,7 @@ def generate_review_edits_md(
         # Extract clause title from reference_text if we don't have one
         if clause_num and clause_num not in clause_titles:
             ref_text = comment.get("reference_text", "")
-            title = _extract_clause_title_from_text(ref_text)
+            title = extract_clause_title_from_text(ref_text)
             if title:
                 clause_titles[clause_num] = title
     
@@ -1437,30 +1438,6 @@ def _format_other_item_comment(
     lines.append("")
     
     return lines
-
-
-def _extract_clause_title_from_text(text: str) -> str:
-    """Extract clause title from paragraph text (e.g., 'LIMITATION OF LIABILITY.' -> 'LIMITATION OF LIABILITY')."""
-    import re
-    if not text:
-        return ""
-    
-    # ALL CAPS title pattern (e.g., "INDEMNIFICATION.", "LIMITATION OF LIABILITY.")
-    match = re.match(r'^([A-Z][A-Z\s&,\-]*)\.(?:\s|$)', text)
-    if match:
-        title = match.group(1).strip()
-        # Must be at least 3 chars and all uppercase (excluding spaces/punctuation)
-        if len(title) >= 3 and title.replace(' ', '').replace('&', '').replace(',', '').replace('-', '').isupper():
-            return title
-    
-    # Title Case pattern (e.g., "Indemnification.", "Limitation of Liability.")
-    match = re.match(r'^([A-Z][a-z]+(?:\s+(?:[A-Z][a-z]+|&|of|and|the|in|to|for))*)\.(?:\s|$)', text)
-    if match:
-        title = match.group(1).strip()
-        if len(title) <= 50:
-            return title
-    
-    return ""
 
 
 def _format_comment_for_merged(

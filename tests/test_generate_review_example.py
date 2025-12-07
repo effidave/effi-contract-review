@@ -507,7 +507,7 @@ class TestMainWorkflow:
 # =============================================================================
 
 # =============================================================================
-# Tests for _extract_clause_title_from_text function
+# Tests for extract_clause_title_from_text function (moved to effilocal.doc.clause_lookup)
 # =============================================================================
 
 class TestExtractClauseTitleFromText:
@@ -515,87 +515,87 @@ class TestExtractClauseTitleFromText:
     
     def test_all_caps_multi_word_title(self) -> None:
         """Should extract multi-word ALL CAPS titles like 'LIMITATION OF LIABILITY.'"""
-        from scripts.generate_review_example import _extract_clause_title_from_text
+        from effilocal.doc.clause_lookup import extract_clause_title_from_text
         
-        assert _extract_clause_title_from_text("LIMITATION OF LIABILITY.") == "LIMITATION OF LIABILITY"
-        assert _extract_clause_title_from_text("DATA SECURITY.") == "DATA SECURITY"
-        assert _extract_clause_title_from_text("REPRESENTATIONS, WARRANTIES AND COVENANTS.") == "REPRESENTATIONS, WARRANTIES AND COVENANTS"
+        assert extract_clause_title_from_text("LIMITATION OF LIABILITY.") == "LIMITATION OF LIABILITY"
+        assert extract_clause_title_from_text("DATA SECURITY.") == "DATA SECURITY"
+        assert extract_clause_title_from_text("REPRESENTATIONS, WARRANTIES AND COVENANTS.") == "REPRESENTATIONS, WARRANTIES AND COVENANTS"
     
     def test_all_caps_single_word_title(self) -> None:
         """Should extract single-word ALL CAPS titles like 'INDEMNIFICATION.'"""
-        from scripts.generate_review_example import _extract_clause_title_from_text
+        from effilocal.doc.clause_lookup import extract_clause_title_from_text
         
-        assert _extract_clause_title_from_text("INDEMNIFICATION.") == "INDEMNIFICATION"
-        assert _extract_clause_title_from_text("TERMINATION.") == "TERMINATION"
-        assert _extract_clause_title_from_text("NOTICES.") == "NOTICES"
+        assert extract_clause_title_from_text("INDEMNIFICATION.") == "INDEMNIFICATION"
+        assert extract_clause_title_from_text("TERMINATION.") == "TERMINATION"
+        assert extract_clause_title_from_text("NOTICES.") == "NOTICES"
     
     def test_title_case_single_word(self) -> None:
         """Should extract single-word Title Case titles like 'Indemnification.'"""
-        from scripts.generate_review_example import _extract_clause_title_from_text
+        from effilocal.doc.clause_lookup import extract_clause_title_from_text
         
-        assert _extract_clause_title_from_text("Indemnification.") == "Indemnification"
-        assert _extract_clause_title_from_text("Termination.") == "Termination"
-        assert _extract_clause_title_from_text("Notices.") == "Notices"
+        assert extract_clause_title_from_text("Indemnification.") == "Indemnification"
+        assert extract_clause_title_from_text("Termination.") == "Termination"
+        assert extract_clause_title_from_text("Notices.") == "Notices"
     
     def test_title_case_multi_word(self) -> None:
         """Should extract multi-word Title Case titles like 'Limitation of Liability.'"""
-        from scripts.generate_review_example import _extract_clause_title_from_text
+        from effilocal.doc.clause_lookup import extract_clause_title_from_text
         
-        assert _extract_clause_title_from_text("Limitation of Liability.") == "Limitation of Liability"
-        assert _extract_clause_title_from_text("Fees and Payment.") == "Fees and Payment"
-        assert _extract_clause_title_from_text("Term of Agreement.") == "Term of Agreement"
+        assert extract_clause_title_from_text("Limitation of Liability.") == "Limitation of Liability"
+        assert extract_clause_title_from_text("Fees and Payment.") == "Fees and Payment"
+        assert extract_clause_title_from_text("Term of Agreement.") == "Term of Agreement"
     
     def test_title_with_ampersand(self) -> None:
         """Should handle titles with & symbol."""
-        from scripts.generate_review_example import _extract_clause_title_from_text
+        from effilocal.doc.clause_lookup import extract_clause_title_from_text
         
-        assert _extract_clause_title_from_text("FEES & EXPENSES.") == "FEES & EXPENSES"
-        assert _extract_clause_title_from_text("Terms & Conditions.") == "Terms & Conditions"
+        assert extract_clause_title_from_text("FEES & EXPENSES.") == "FEES & EXPENSES"
+        assert extract_clause_title_from_text("Terms & Conditions.") == "Terms & Conditions"
     
     def test_title_followed_by_content(self) -> None:
         """Should extract title when followed by clause content."""
-        from scripts.generate_review_example import _extract_clause_title_from_text
+        from effilocal.doc.clause_lookup import extract_clause_title_from_text
         
-        result = _extract_clause_title_from_text("INDEMNIFICATION. The Vendor shall indemnify...")
+        result = extract_clause_title_from_text("INDEMNIFICATION. The Vendor shall indemnify...")
         assert result == "INDEMNIFICATION"
         
-        result = _extract_clause_title_from_text("Termination. Either party may terminate...")
+        result = extract_clause_title_from_text("Termination. Either party may terminate...")
         assert result == "Termination"
     
     def test_non_title_text_returns_empty(self) -> None:
         """Should return empty string for regular paragraph text."""
-        from scripts.generate_review_example import _extract_clause_title_from_text
+        from effilocal.doc.clause_lookup import extract_clause_title_from_text
         
-        assert _extract_clause_title_from_text("Some normal text without a title.") == ""
-        assert _extract_clause_title_from_text("The parties agree to the following terms.") == ""
-        assert _extract_clause_title_from_text("This Agreement is entered into as of...") == ""
+        assert extract_clause_title_from_text("Some normal text without a title.") == ""
+        assert extract_clause_title_from_text("The parties agree to the following terms.") == ""
+        assert extract_clause_title_from_text("This Agreement is entered into as of...") == ""
     
     def test_empty_or_none_input(self) -> None:
         """Should handle empty or None input gracefully."""
-        from scripts.generate_review_example import _extract_clause_title_from_text
+        from effilocal.doc.clause_lookup import extract_clause_title_from_text
         
-        assert _extract_clause_title_from_text("") == ""
-        assert _extract_clause_title_from_text(None) == ""
+        assert extract_clause_title_from_text("") == ""
+        assert extract_clause_title_from_text(None) == ""
     
     def test_short_all_caps_rejected(self) -> None:
         """Should reject very short ALL CAPS text (less than 3 chars)."""
-        from scripts.generate_review_example import _extract_clause_title_from_text
+        from effilocal.doc.clause_lookup import extract_clause_title_from_text
         
         # "AB." should not be matched as a title (too short)
-        assert _extract_clause_title_from_text("AB.") == ""
+        assert extract_clause_title_from_text("AB.") == ""
         # But "ABC." should work
-        assert _extract_clause_title_from_text("ABC.") == "ABC"
+        assert extract_clause_title_from_text("ABC.") == "ABC"
     
     def test_title_with_following_clause_content(self) -> None:
         """Should extract title from text like 'INDEMNIFICATION.  Vendor shall...'"""
-        from scripts.generate_review_example import _extract_clause_title_from_text
+        from effilocal.doc.clause_lookup import extract_clause_title_from_text
         
         # This is the real-world case: reference_text starts with title followed by clause body
         text = "INDEMNIFICATION.  Vendor shall indemnify, defend, and hold Company"
-        assert _extract_clause_title_from_text(text) == "INDEMNIFICATION"
+        assert extract_clause_title_from_text(text) == "INDEMNIFICATION"
         
         text = "DATA SECURITY. Supplier shall comply with Exhibit 3 to this Trial."
-        assert _extract_clause_title_from_text(text) == "DATA SECURITY"
+        assert extract_clause_title_from_text(text) == "DATA SECURITY"
 
 
 class TestCLIArgumentParsing:
