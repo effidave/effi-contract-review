@@ -2219,21 +2219,26 @@ def generate_review_example(
     print("Processing track changes...")
     paragraph_diffs = process_track_changes(edited_doc)
     
-    # Extract clause numbers and text from document analysis (keyed by para_id)
-    print("  Extracting clause numbers...")
-    clause_number_map, paragraph_text_map = extract_clause_numbers_from_doc(edited_attachment.data)
+    # Build ClauseLookup for both documents (provides clause number, title, text by para_id)
+    print("  Building clause lookups...")
+    from effilocal.doc.clause_lookup import ClauseLookup
+    edited_lookup = ClauseLookup.from_docx_bytes(edited_attachment.data)
+    original_lookup = ClauseLookup.from_docx_bytes(original_attachment.data)
     
-    # Also get paragraph text from original document (for comments on unchanged clauses)
-    _, original_text_map = extract_clause_numbers_from_doc(original_attachment.data)
+    # Build paragraph_text_map for backward compatibility (used by _format_clause_comments_only)
+    paragraph_text_map = edited_lookup.to_text_map()
     # Merge: prefer edited text, fall back to original
-    for para_id, text in original_text_map.items():
+    for para_id, text in original_lookup.to_text_map().items():
         if para_id not in paragraph_text_map:
             paragraph_text_map[para_id] = text
     
     # Merge clause numbers into diffs using para_id matching
     for diff in paragraph_diffs:
         if diff.para_id:
-            diff.clause_number = clause_number_map.get(diff.para_id, "")
+            diff.clause_number = edited_lookup.get_clause_number(diff.para_id) or ""
+            # Also get clause title if available
+            if not diff.clause_title:
+                diff.clause_title = edited_lookup.get_clause_title(diff.para_id) or ""
     
     matched_clause_numbers = sum(1 for d in paragraph_diffs if d.clause_number)
     print(f"  Matched clause numbers for {matched_clause_numbers}/{len(paragraph_diffs)} paragraphs")
@@ -2242,7 +2247,7 @@ def generate_review_example(
     for comment in all_comments:
         para_id = comment.get("para_id")
         if para_id:
-            comment["clause_number"] = clause_number_map.get(para_id, "")
+            comment["clause_number"] = edited_lookup.get_clause_number(para_id) or ""
     
     matched_comment_clauses = sum(1 for c in all_comments if c.get("clause_number"))
     print(f"  Matched clause numbers for {matched_comment_clauses}/{len(all_comments)} comments")
