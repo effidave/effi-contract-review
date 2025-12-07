@@ -207,19 +207,22 @@ class ParagraphDiff:
         
         # A title should be:
         # 1. 5 or fewer words followed by a period
-        # 2. Starts with a capital letter
-        # 3. At least 2 characters (to exclude single-letter list items like "A.")
+        # 2. Starts with a capital letter (but not a common sentence starter)
+        # 3. At least 3 characters
         # 4. Followed by whitespace or end of text
         
         # Match: capital letter start, then up to 4 more words, then period, then space/end
-        # Words can contain letters, numbers, &, -, commas
         match = re.match(r'^([A-Z][^\s.]*(?:\s+[A-Za-z0-9&,\-]+){0,4})\.(?:\s|$)', text)
         if match:
             title = match.group(1).strip()
-            # Must be at least 2 chars (exclude "A.", "B.", etc.)
-            # and max 50 chars to be a reasonable title
-            if 2 <= len(title) <= 50:
-                return True
+            if len(title) < 3 or len(title) > 50:
+                return False
+            # Reject common sentence starters
+            first_word = title.split()[0] if title else ""
+            sentence_starters = {"The", "A", "An", "This", "That", "These", "Those", "Each", "Any", "All", "Some", "No"}
+            if first_word in sentence_starters:
+                return False
+            return True
         
         return False
     
@@ -232,12 +235,17 @@ class ParagraphDiff:
             return ""
         
         # Match: 5 or fewer words followed by period, then space or end
-        # Must start with capital, be 2-50 chars
         match = re.match(r'^([A-Z][^\s.]*(?:\s+[A-Za-z0-9&,\-]+){0,4})\.(?:\s|$)', text)
         if match:
             title = match.group(1).strip()
-            if 2 <= len(title) <= 50:
-                return title
+            if len(title) < 3 or len(title) > 50:
+                return ""
+            # Reject common sentence starters
+            first_word = title.split()[0] if title else ""
+            sentence_starters = {"The", "A", "An", "This", "That", "These", "Those", "Each", "Any", "All", "Some", "No"}
+            if first_word in sentence_starters:
+                return ""
+            return title
         
         return ""
     
@@ -988,10 +996,14 @@ def generate_review_edits_md(
     for comment in all_comments:
         clause_num = comment.get("clause_number", "") or ""
         clause_comments[clause_num].append(comment)
-        # Extract clause title from reference_text if we don't have one
+        # Extract clause title from reference_text or paragraph_text if we don't have one
         if clause_num and clause_num not in clause_titles:
+            # Try reference_text first, then paragraph_text
             ref_text = comment.get("reference_text", "")
+            para_text = comment.get("paragraph_text", "")
             title = extract_clause_title_from_text(ref_text)
+            if not title and para_text:
+                title = extract_clause_title_from_text(para_text)
             if title:
                 clause_titles[clause_num] = title
     

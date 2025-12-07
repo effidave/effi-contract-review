@@ -35,9 +35,8 @@ def extract_clause_title_from_text(text: str) -> str:
     """
     Extract clause title from paragraph text.
     
-    Handles two patterns:
-    1. ALL CAPS titles (e.g., "LIMITATION OF LIABILITY." -> "LIMITATION OF LIABILITY")
-    2. Title Case titles (e.g., "Indemnification." -> "Indemnification")
+    A title is defined as 5 or fewer words at the start of the text,
+    followed by a period and then whitespace (or end of text).
     
     Args:
         text: The paragraph text to extract title from
@@ -48,28 +47,35 @@ def extract_clause_title_from_text(text: str) -> str:
     Examples:
         >>> extract_clause_title_from_text("INDEMNIFICATION. Each party shall...")
         'INDEMNIFICATION'
-        >>> extract_clause_title_from_text("Limitation of Liability. Subject to...")
-        'Limitation of Liability'
+        >>> extract_clause_title_from_text("License Grant. Subject to...")
+        'License Grant'
         >>> extract_clause_title_from_text("The parties agree to...")
         ''
     """
     if not text:
         return ""
     
-    # ALL CAPS title pattern (e.g., "INDEMNIFICATION.", "LIMITATION OF LIABILITY.")
-    match = re.match(r'^([A-Z][A-Z\s&,\-]*)\.(?:\s|$)', text)
-    if match:
-        title = match.group(1).strip()
-        # Must be at least 3 chars and all uppercase (excluding spaces/punctuation)
-        if len(title) >= 3 and title.replace(' ', '').replace('&', '').replace(',', '').replace('-', '').isupper():
-            return title
+    # Strip leading whitespace
+    text = text.strip()
     
-    # Title Case pattern (e.g., "Indemnification.", "Limitation of Liability.")
-    match = re.match(r'^([A-Z][a-z]+(?:\s+(?:[A-Z][a-z]+|&|of|and|the|in|to|for))*)\.(?:\s|$)', text)
+    # Match: capital letter start, then up to 4 more words, then period, then space/end
+    # Words can contain letters, numbers, &, -, commas
+    # Must be 3-50 chars to exclude very short items like "A." or "AB."
+    match = re.match(r'^([A-Z][^\s.]*(?:\s+[A-Za-z0-9&,\-]+){0,4})\.(?:\s|$)', text)
     if match:
         title = match.group(1).strip()
-        if len(title) <= 50:
-            return title
+        # Must be at least 3 chars
+        if len(title) < 3 or len(title) > 50:
+            return ""
+        
+        # Reject common sentence starters (articles, demonstratives)
+        # These are almost never clause titles
+        first_word = title.split()[0] if title else ""
+        sentence_starters = {"The", "A", "An", "This", "That", "These", "Those", "Each", "Any", "All", "Some", "No"}
+        if first_word in sentence_starters:
+            return ""
+        
+        return title
     
     return ""
 

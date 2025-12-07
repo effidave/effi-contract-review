@@ -19,7 +19,7 @@ Comments provide rationale for edits, or standalone observations about clause te
 
 ---
 
-## Comments on clause 3.1: (untitled)
+## Comments on clause 3.1: "License Grant"
 
 ### Full clause text
 
@@ -64,7 +64,7 @@ Comments provide rationale for edits, or standalone observations about clause te
 
 ---
 
-## Comments on clause 3.4: (untitled)
+## Comments on clause 3.4: "Subcontractors/Vendor Personnel"
 
 ### Full clause text
 
@@ -126,7 +126,7 @@ Comments provide rationale for edits, or standalone observations about clause te
 
 ---
 
-## Comments on clause 9.0: (untitled)
+## Comments on clause 9.0: "REPRESENTATIONS, WARRANTIES AND COVENANTS"
 
 ### Full clause text
 
@@ -220,7 +220,7 @@ Comments provide rationale for edits, or standalone observations about clause te
 
 ---
 
-## Comments on clause 13.2: "No Publicity"
+## Comments on clause 13.2: (untitled)
 
 ### Full clause text
 
@@ -235,7 +235,7 @@ Comments provide rationale for edits, or standalone observations about clause te
 
 ---
 
-## Comments on clause 13.3: (untitled)
+## Comments on clause 13.3: "Governing Law"
 
 ### Full clause text
 
