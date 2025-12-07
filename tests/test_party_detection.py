@@ -34,7 +34,7 @@ class TestPartyInfo:
     
     def test_party_info_has_client_role(self) -> None:
         """PartyInfo should include client_role (e.g., 'supplier', 'customer')."""
-        from scripts.generate_review_example import PartyInfo
+        from effilocal.doc.party_detection import PartyInfo
         
         info = PartyInfo(
             client_prefix="Didimo",
@@ -51,7 +51,7 @@ class TestPartyInfo:
     
     def test_party_info_has_all_required_fields(self) -> None:
         """PartyInfo should have all fields for complete party mapping."""
-        from scripts.generate_review_example import PartyInfo
+        from effilocal.doc.party_detection import PartyInfo
         
         info = PartyInfo(
             client_prefix="Acme",
@@ -82,7 +82,7 @@ class TestExtractDefinedPartyTerms:
     
     def test_extracts_vendor_and_company(self) -> None:
         """Should extract 'Vendor' and 'Company' from typical contract text."""
-        from scripts.generate_review_example import extract_defined_party_terms
+        from effilocal.doc.party_detection import extract_defined_party_terms
         
         doc = Document()
         doc.add_paragraph("Vendor shall provide the services to Company.")
@@ -96,7 +96,7 @@ class TestExtractDefinedPartyTerms:
     
     def test_returns_terms_sorted_by_frequency(self) -> None:
         """Most frequently occurring terms should be first."""
-        from scripts.generate_review_example import extract_defined_party_terms
+        from effilocal.doc.party_detection import extract_defined_party_terms
         
         doc = Document()
         # Vendor appears 3 times with shall/will/may
@@ -116,7 +116,7 @@ class TestExtractDefinedPartyTerms:
     
     def test_filters_common_false_positives(self) -> None:
         """Should filter out 'The', 'Each', 'Either' etc."""
-        from scripts.generate_review_example import extract_defined_party_terms
+        from effilocal.doc.party_detection import extract_defined_party_terms
         
         doc = Document()
         doc.add_paragraph("The parties shall agree. Each party will comply.")
@@ -141,7 +141,7 @@ class TestExtractCompanyNames:
     
     def test_extracts_names_with_ltd_suffix(self) -> None:
         """Should extract company names ending in Ltd or Limited."""
-        from scripts.generate_review_example import extract_company_names
+        from effilocal.doc.party_detection import extract_company_names
         
         doc = Document()
         doc.add_paragraph("This agreement is between Acme Ltd and BigCorp Limited.")
@@ -153,7 +153,7 @@ class TestExtractCompanyNames:
     
     def test_extracts_names_with_inc_llc_suffix(self) -> None:
         """Should extract company names ending in Inc, LLC, Corp."""
-        from scripts.generate_review_example import extract_company_names
+        from effilocal.doc.party_detection import extract_company_names
         
         doc = Document()
         doc.add_paragraph("Between TechCo Inc. and StartupCo, LLC.")
@@ -166,7 +166,7 @@ class TestExtractCompanyNames:
     
     def test_limits_to_first_n_paragraphs(self) -> None:
         """Should only scan first N paragraphs (preamble area)."""
-        from scripts.generate_review_example import extract_company_names
+        from effilocal.doc.party_detection import extract_company_names
         
         doc = Document()
         # Add company name in first paragraph
@@ -193,7 +193,7 @@ class TestExtractFullCompanyNames:
     
     def test_extracts_llc_with_comma(self) -> None:
         """Should extract 'NBCUniversal Media, LLC' with the comma and suffix."""
-        from scripts.generate_review_example import extract_full_company_names
+        from effilocal.doc.party_detection import extract_full_company_names
         
         doc = Document()
         doc.add_paragraph('NBCUniversal Media, LLC ("Company")')
@@ -204,7 +204,7 @@ class TestExtractFullCompanyNames:
     
     def test_extracts_inc_with_comma(self) -> None:
         """Should extract 'Didimo, Inc.' with the comma and suffix."""
-        from scripts.generate_review_example import extract_full_company_names
+        from effilocal.doc.party_detection import extract_full_company_names
         
         doc = Document()
         doc.add_paragraph('Didimo, Inc. ("Vendor")')
@@ -215,7 +215,7 @@ class TestExtractFullCompanyNames:
     
     def test_extracts_ltd_without_comma(self) -> None:
         """Should extract 'Acme Ltd' without comma."""
-        from scripts.generate_review_example import extract_full_company_names
+        from effilocal.doc.party_detection import extract_full_company_names
         
         doc = Document()
         doc.add_paragraph('Acme Ltd and BigCorp Limited agree.')
@@ -227,7 +227,7 @@ class TestExtractFullCompanyNames:
     
     def test_extracts_multiple_companies(self) -> None:
         """Should extract multiple company names from preamble."""
-        from scripts.generate_review_example import extract_full_company_names
+        from effilocal.doc.party_detection import extract_full_company_names
         
         doc = Document()
         doc.add_paragraph('This Agreement is entered into between:')
@@ -241,7 +241,7 @@ class TestExtractFullCompanyNames:
     
     def test_extracts_llc_followed_by_comma(self) -> None:
         """Should extract 'NBCUniversal Media, LLC' even when followed by comma (preamble style)."""
-        from scripts.generate_review_example import extract_full_company_names
+        from effilocal.doc.party_detection import extract_full_company_names
         
         doc = Document()
         # Real preamble format: "NBCUniversal Media, LLC, a Delaware limited liability company"
@@ -263,7 +263,7 @@ class TestExtractCommentPrefixes:
     
     def test_extracts_prefixes_from_comments(self) -> None:
         """Should extract party names from 'For X:' pattern."""
-        from scripts.generate_review_example import extract_comment_prefixes
+        from effilocal.doc.party_detection import extract_party_from_comment_prefixes as extract_comment_prefixes
         
         comments = [
             {"text": "For Didimo: Please review this clause."},
@@ -278,7 +278,7 @@ class TestExtractCommentPrefixes:
     
     def test_returns_unique_prefixes(self) -> None:
         """Should not include duplicates."""
-        from scripts.generate_review_example import extract_comment_prefixes
+        from effilocal.doc.party_detection import extract_party_from_comment_prefixes as extract_comment_prefixes
         
         comments = [
             {"text": "For Client: Note 1"},
@@ -292,7 +292,7 @@ class TestExtractCommentPrefixes:
     
     def test_ignores_comments_without_prefix(self) -> None:
         """Should ignore comments that don't start with 'For X:'."""
-        from scripts.generate_review_example import extract_comment_prefixes
+        from effilocal.doc.party_detection import extract_party_from_comment_prefixes as extract_comment_prefixes
         
         comments = [
             {"text": "For Client: Valid prefix"},
@@ -315,70 +315,70 @@ class TestInferPartyRole:
     
     def test_vendor_infers_supplier_role(self) -> None:
         """'Vendor' should infer 'supplier' role."""
-        from scripts.generate_review_example import infer_party_role
+        from effilocal.doc.party_detection import infer_party_role
         
         role = infer_party_role("Vendor")
         assert role == "supplier"
     
     def test_company_infers_customer_role(self) -> None:
         """'Company' should infer 'customer' role."""
-        from scripts.generate_review_example import infer_party_role
+        from effilocal.doc.party_detection import infer_party_role
         
         role = infer_party_role("Company")
         assert role == "customer"
     
     def test_licensor_infers_licensor_role(self) -> None:
         """'Licensor' should infer 'licensor' role."""
-        from scripts.generate_review_example import infer_party_role
+        from effilocal.doc.party_detection import infer_party_role
         
         role = infer_party_role("Licensor")
         assert role == "licensor"
     
     def test_licensee_infers_licensee_role(self) -> None:
         """'Licensee' should infer 'licensee' role."""
-        from scripts.generate_review_example import infer_party_role
+        from effilocal.doc.party_detection import infer_party_role
         
         role = infer_party_role("Licensee")
         assert role == "licensee"
     
     def test_supplier_infers_supplier_role(self) -> None:
         """'Supplier' should infer 'supplier' role."""
-        from scripts.generate_review_example import infer_party_role
+        from effilocal.doc.party_detection import infer_party_role
         
         role = infer_party_role("Supplier")
         assert role == "supplier"
     
     def test_customer_infers_customer_role(self) -> None:
         """'Customer' should infer 'customer' role."""
-        from scripts.generate_review_example import infer_party_role
+        from effilocal.doc.party_detection import infer_party_role
         
         role = infer_party_role("Customer")
         assert role == "customer"
     
     def test_landlord_infers_landlord_role(self) -> None:
         """'Landlord' should infer 'landlord' role."""
-        from scripts.generate_review_example import infer_party_role
+        from effilocal.doc.party_detection import infer_party_role
         
         role = infer_party_role("Landlord")
         assert role == "landlord"
     
     def test_tenant_infers_tenant_role(self) -> None:
         """'Tenant' should infer 'tenant' role."""
-        from scripts.generate_review_example import infer_party_role
+        from effilocal.doc.party_detection import infer_party_role
         
         role = infer_party_role("Tenant")
         assert role == "tenant"
     
     def test_unknown_term_returns_party(self) -> None:
         """Unknown terms should return 'party' as default."""
-        from scripts.generate_review_example import infer_party_role
+        from effilocal.doc.party_detection import infer_party_role
         
         role = infer_party_role("UnknownTerm")
         assert role == "party"
     
     def test_case_insensitive_matching(self) -> None:
         """Role inference should be case-insensitive."""
-        from scripts.generate_review_example import infer_party_role
+        from effilocal.doc.party_detection import infer_party_role
         
         assert infer_party_role("VENDOR") == "supplier"
         assert infer_party_role("vendor") == "supplier"
@@ -394,7 +394,8 @@ class TestGenerateYamlHeader:
     
     def test_includes_parties_mapping(self) -> None:
         """YAML header should include parties mapping with roles."""
-        from scripts.generate_review_example import PartyInfo, generate_yaml_header
+        from effilocal.doc.party_detection import PartyInfo
+        from effilocal.doc.anonymization import generate_yaml_header
         
         party_info = PartyInfo(
             client_prefix="Didimo",
@@ -417,7 +418,8 @@ class TestGenerateYamlHeader:
     
     def test_excludes_defined_terms_from_yaml(self) -> None:
         """Parties mapping should NOT include defined_term field (it's redundant)."""
-        from scripts.generate_review_example import PartyInfo, generate_yaml_header
+        from effilocal.doc.party_detection import PartyInfo
+        from effilocal.doc.anonymization import generate_yaml_header
         
         party_info = PartyInfo(
             client_prefix="Didimo",
@@ -439,7 +441,8 @@ class TestGenerateYamlHeader:
     
     def test_includes_role_in_parties(self) -> None:
         """Parties mapping should include role field."""
-        from scripts.generate_review_example import PartyInfo, generate_yaml_header
+        from effilocal.doc.party_detection import PartyInfo
+        from effilocal.doc.anonymization import generate_yaml_header
         
         party_info = PartyInfo(
             client_prefix="Didimo",
@@ -462,7 +465,8 @@ class TestGenerateYamlHeader:
     
     def test_includes_original_provided_by(self) -> None:
         """YAML should include original_provided_by field."""
-        from scripts.generate_review_example import PartyInfo, generate_yaml_header
+        from effilocal.doc.party_detection import PartyInfo
+        from effilocal.doc.anonymization import generate_yaml_header
         
         party_info = PartyInfo(
             client_prefix="Acme",
@@ -492,7 +496,7 @@ class TestAnonymizeTextPreservesDefinedTerms:
     
     def test_replaces_party_identifier_not_defined_term(self) -> None:
         """Should replace 'Didimo' but NOT 'Vendor'."""
-        from scripts.generate_review_example import anonymize_text
+        from effilocal.doc.anonymization import anonymize_text
         
         text = "For Didimo: The Vendor shall provide services."
         
@@ -508,7 +512,7 @@ class TestAnonymizeTextPreservesDefinedTerms:
     
     def test_replaces_counterparty_identifier_not_defined_term(self) -> None:
         """Should replace 'NBC' but NOT 'Company'."""
-        from scripts.generate_review_example import anonymize_text
+        from effilocal.doc.anonymization import anonymize_text
         
         text = "For NBC: The Company will pay within 30 days."
         
@@ -524,7 +528,7 @@ class TestAnonymizeTextPreservesDefinedTerms:
     
     def test_replaces_multiple_identifier_variations(self) -> None:
         """Should replace all variations of party identifiers."""
-        from scripts.generate_review_example import anonymize_text
+        from effilocal.doc.anonymization import anonymize_text
         
         text = "NBCUniversal and NBC agree. The Company (NBC) shall..."
         
@@ -548,10 +552,8 @@ class TestPartyDetectionWorkflow:
     
     def test_detect_parties_returns_party_info_with_roles(self) -> None:
         """detect_and_confirm_parties should return PartyInfo with roles."""
-        from scripts.generate_review_example import (
-            detect_and_confirm_parties, 
-            infer_party_role
-        )
+        from scripts.generate_review_example import detect_and_confirm_parties
+        from effilocal.doc.party_detection import infer_party_role
         
         # Create a test document with clear defined terms
         doc = Document()
@@ -592,10 +594,8 @@ class TestMarkdownYamlOutput:
     
     def test_original_agreement_yaml_has_parties(self) -> None:
         """02_original_agreement.md should have parties mapping in YAML."""
-        from scripts.generate_review_example import (
-            generate_original_agreement_md,
-            PartyInfo
-        )
+        from scripts.generate_review_example import generate_original_agreement_md
+        from effilocal.doc.party_detection import PartyInfo
         
         # Create minimal docx
         doc = Document()
@@ -632,10 +632,8 @@ class TestMarkdownYamlOutput:
     
     def test_comments_yaml_has_parties(self) -> None:
         """03_review_comments.md should have parties mapping in YAML."""
-        from scripts.generate_review_example import (
-            generate_comments_md,
-            PartyInfo
-        )
+        from scripts.generate_review_example import generate_comments_md
+        from effilocal.doc.party_detection import PartyInfo
         
         categorized_comments = {
             "client": [{"text": "For Client: note", "author": "L", "date": "2025"}],
@@ -666,10 +664,8 @@ class TestMarkdownYamlOutput:
     
     def test_track_changes_yaml_has_parties(self) -> None:
         """04_tracked_changes.md should have parties mapping in YAML."""
-        from scripts.generate_review_example import (
-            generate_track_changes_md,
-            PartyInfo
-        )
+        from scripts.generate_review_example import generate_track_changes_md
+        from effilocal.doc.party_detection import PartyInfo
         
         party_info = PartyInfo(
             client_prefix="Didimo",
