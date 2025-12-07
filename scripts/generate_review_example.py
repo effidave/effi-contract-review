@@ -97,53 +97,10 @@ def extract_clause_numbers_from_doc(docx_bytes: bytes) -> tuple[dict[str, str], 
         - Dictionary mapping para_id to clause ordinal (e.g., {"3DD8236A": "11.2"})
         - Dictionary mapping para_id to paragraph text (e.g., {"3DD8236A": "Full clause text..."})
     """
-    import tempfile
-    import json
+    from effilocal.doc.clause_lookup import ClauseLookup
     
-    # Write bytes to temp file for analyze_doc
-    with tempfile.NamedTemporaryFile(suffix=".docx", delete=False) as tmp:
-        tmp.write(docx_bytes)
-        tmp_path = Path(tmp.name)
-    
-    ordinal_map: dict[str, str] = {}
-    text_map: dict[str, str] = {}
-    
-    # Create temp directory for analysis artifacts
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        analysis_dir = Path(tmp_dir) / "analysis"
-        
-        try:
-            # Run analyze_doc to extract blocks with numbering
-            run_analyze_doc(tmp_path, analysis_dir)
-            
-            # Load blocks and extract ordinals keyed by para_id
-            blocks_file = analysis_dir / "blocks.jsonl"
-            if blocks_file.exists():
-                with open(blocks_file, 'r', encoding='utf-8') as f:
-                    for line in f:
-                        line = line.strip()
-                        if line:
-                            block = json.loads(line)
-                            para_id = block.get("para_id")
-                            text = block.get("text", "")
-                            list_info = block.get("list") or {}
-                            ordinal = list_info.get("ordinal", "")
-                            
-                            if para_id:
-                                # Store paragraph text
-                                if text:
-                                    text_map[para_id] = text
-                                
-                                # Store ordinal if present
-                                if ordinal:
-                                    # Clean ordinal (remove trailing spaces/periods for cleaner display)
-                                    clean_ordinal = ordinal.strip().rstrip('.')
-                                    ordinal_map[para_id] = clean_ordinal
-        finally:
-            # Clean up temp docx file
-            tmp_path.unlink(missing_ok=True)
-    
-    return ordinal_map, text_map
+    lookup = ClauseLookup.from_docx_bytes(docx_bytes)
+    return lookup.to_ordinal_map(), lookup.to_text_map()
 
 
 # =============================================================================

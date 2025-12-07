@@ -23,8 +23,12 @@ from __future__ import annotations
 
 import json
 import re
+import tempfile
 from pathlib import Path
-from typing import Any
+from typing import Any, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    pass  # Type hints only
 
 
 def extract_clause_title_from_text(text: str) -> str:
@@ -153,7 +157,7 @@ class ClauseLookup:
         """
         Get the clause title for a paragraph.
         
-        First checks for explicit heading.text field in the block.
+        First checks for explicit heading.text field in the block (if source is not 'none').
         If not present, attempts to extract title from paragraph text.
         
         Args:
@@ -166,10 +170,12 @@ class ClauseLookup:
         if not block:
             return None
         
-        # Check for explicit heading.text first
+        # Check for explicit heading.text first (skip fallback labels)
         heading_info = block.get("heading") or {}
+        heading_source = heading_info.get("source", "")
         heading_text = heading_info.get("text", "")
-        if heading_text:
+        # Only use heading.text if it's from a real source (not 'none' fallback)
+        if heading_text and heading_source not in ("none", ""):
             return heading_text
         
         # Fall back to extracting from paragraph text
@@ -215,3 +221,104 @@ class ClauseLookup:
             "clause_title": self.get_clause_title(para_id),
             "text": self.get_clause_text(para_id),
         }
+    
+    @classmethod
+    def from_docx_bytes(cls, docx_bytes: bytes) -> "ClauseLookup":
+        """
+        Create ClauseLookup from raw docx bytes.
+        
+        Writes bytes to a temp file, runs document analysis, and loads
+        the resulting blocks.jsonl file. If blocks don't have native para_ids,
+        generates synthetic ones based on para_idx.
+        
+        Args:
+            docx_bytes: Raw bytes of a .docx document
+            
+        Returns:
+            ClauseLookup instance with blocks from the analyzed document
+            
+        Raises:
+            TypeError: If docx_bytes is None
+            Exception: If document analysis fails (invalid docx, etc.)
+        """
+        if docx_bytes is None:
+            raise TypeError("docx_bytes cannot be None")
+        
+        # Import here to avoid circular import
+        from scripts.docx_to_llm_markdown import run_analyze_doc
+        from effilocal.doc.uuid_embedding import generate_para_id
+        
+        # Write bytes to temp file for analyze_doc
+        with tempfile.NamedTemporaryFile(suffix=".docx", delete=False) as tmp:
+            tmp.write(docx_bytes)
+            tmp_path = Path(tmp.name)
+        
+        # Create temp directory for analysis artifacts
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            analysis_dir = Path(tmp_dir) / "analysis"
+            
+            try:
+                # Run analyze_doc to extract blocks with numbering
+                run_analyze_doc(tmp_path, analysis_dir)
+                
+                # Load blocks from generated file
+                blocks_file = analysis_dir / "blocks.jsonl"
+                if not blocks_file.exists():
+                    # Return empty lookup if no blocks generated
+                    return cls([])
+                
+                # Load blocks and ensure all have para_ids
+                blocks = cls._load_jsonl(blocks_file)
+                existing_ids: set[str] = set()
+                
+                # Collect existing para_ids
+                for block in blocks:
+                    pid = block.get("para_id")
+                    if pid:
+                        existing_ids.add(pid.upper())
+                
+                # Generate para_ids for blocks that don't have them
+                for block in blocks:
+                    if not block.get("para_id"):
+                        new_id = generate_para_id(existing_ids)
+                        block["para_id"] = new_id
+                        existing_ids.add(new_id.upper())
+                
+                return cls(blocks)
+            finally:
+                # Clean up temp docx file
+                tmp_path.unlink(missing_ok=True)
+    
+    def to_ordinal_map(self) -> dict[str, str]:
+        """
+        Convert lookup to para_id -> clause_number mapping.
+        
+        For backward compatibility with dict-based approach.
+        
+        Returns:
+            Dictionary mapping para_id to ordinal (e.g., {"3DD8236A": "11.2"}).
+            Only includes entries that have a non-empty ordinal.
+        """
+        result: dict[str, str] = {}
+        for para_id in self._blocks_by_para_id:
+            clause_num = self.get_clause_number(para_id)
+            if clause_num:
+                result[para_id] = clause_num
+        return result
+    
+    def to_text_map(self) -> dict[str, str]:
+        """
+        Convert lookup to para_id -> text mapping.
+        
+        For backward compatibility with dict-based approach.
+        
+        Returns:
+            Dictionary mapping para_id to paragraph text.
+            Only includes entries that have non-empty text.
+        """
+        result: dict[str, str] = {}
+        for para_id, block in self._blocks_by_para_id.items():
+            text = block.get("text", "")
+            if text:
+                result[para_id] = text
+        return result
