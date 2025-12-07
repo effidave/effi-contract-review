@@ -217,10 +217,9 @@ class ParagraphDiff:
             title = match.group(1).strip()
             if len(title) < 3 or len(title) > 50:
                 return False
-            # Reject common sentence starters
-            first_word = title.split()[0] if title else ""
-            sentence_starters = {"The", "A", "An", "This", "That", "These", "Those", "Each", "Any", "All", "Some", "No"}
-            if first_word in sentence_starters:
+            # Reject if title contains obligation words (indicates a sentence, not a title)
+            title_lower = title.lower()
+            if any(word in title_lower.split() for word in ("shall", "must", "may")):
                 return False
             return True
         
@@ -240,10 +239,9 @@ class ParagraphDiff:
             title = match.group(1).strip()
             if len(title) < 3 or len(title) > 50:
                 return ""
-            # Reject common sentence starters
-            first_word = title.split()[0] if title else ""
-            sentence_starters = {"The", "A", "An", "This", "That", "These", "Those", "Each", "Any", "All", "Some", "No"}
-            if first_word in sentence_starters:
+            # Reject if title contains obligation words (indicates a sentence, not a title)
+            title_lower = title.lower()
+            if any(word in title_lower.split() for word in ("shall", "must", "may")):
                 return ""
             return title
         

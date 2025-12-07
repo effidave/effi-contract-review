@@ -220,7 +220,7 @@ Comments provide rationale for edits, or standalone observations about clause te
 
 ---
 
-## Comments on clause 13.2: (untitled)
+## Comments on clause 13.2: "No Publicity"
 
 ### Full clause text
 
