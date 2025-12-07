@@ -44,8 +44,6 @@ from io import BytesIO
 from pathlib import Path
 from typing import Any
 
-import extract_msg
-import olefile
 from docx import Document
 
 # Add project root to path for effilocal imports
@@ -79,6 +77,14 @@ from effilocal.doc.anonymization import (
     generate_yaml_header,
 )
 
+# Import email parsing module
+from effilocal.doc.email_parser import (
+    Attachment,
+    EmailData,
+    parse_msg_file,
+    select_docx_attachment,
+)
+
 # Import docx_to_llm_markdown module functions
 from scripts.docx_to_llm_markdown import (
     run_analyze_doc,
@@ -102,198 +108,6 @@ def extract_clause_numbers_from_doc(docx_bytes: bytes) -> tuple[dict[str, str], 
     
     lookup = ClauseLookup.from_docx_bytes(docx_bytes)
     return lookup.to_ordinal_map(), lookup.to_text_map()
-
-
-# =============================================================================
-# Data Classes
-# =============================================================================
-
-@dataclass
-class Attachment:
-    """Represents an email attachment with filename and binary data."""
-    
-    filename: str
-    data: bytes
-    
-    @property
-    def is_docx(self) -> bool:
-        """Return True if this attachment is a .docx file."""
-        return self.filename.lower().endswith(".docx")
-
-
-@dataclass
-class EmailData:
-    """Represents parsed email data with metadata and attachments."""
-    
-    subject: str
-    sender: str
-    recipients: str
-    date: str
-    body: str
-    attachments: list[Attachment]
-
-
-# =============================================================================
-# Email Parsing
-# =============================================================================
-
-def parse_msg_file(msg_path: Path) -> EmailData:
-    """
-    Parse an Outlook MSG file and extract metadata + attachments.
-    
-    Uses extract_msg for metadata and olefile for attachment data,
-    since extract_msg fails on some non-standard MSG formats.
-    
-    Args:
-        msg_path: Path to the .msg file
-        
-    Returns:
-        EmailData with subject, sender, recipients, date, body, attachments
-        
-    Raises:
-        FileNotFoundError: If the MSG file doesn't exist
-    """
-    if not msg_path.exists():
-        raise FileNotFoundError(f"MSG file not found: {msg_path}")
-    
-    # Extract metadata using extract_msg (with delayed attachments to avoid errors)
-    msg = extract_msg.openMsg(str(msg_path), delayAttachments=True)
-    
-    subject = msg.subject or ""
-    sender = msg.sender or ""
-    recipients = msg.to or ""
-    date = str(msg.date) if msg.date else ""
-    body = msg.body or ""
-    
-    # Extract attachments using olefile directly (more reliable)
-    attachments = _extract_attachments_olefile(msg_path)
-    
-    return EmailData(
-        subject=subject,
-        sender=sender,
-        recipients=recipients,
-        date=date,
-        body=body,
-        attachments=attachments
-    )
-
-
-def _extract_attachments_olefile(msg_path: Path) -> list[Attachment]:
-    """
-    Extract attachments from MSG file using olefile directly.
-    
-    This bypasses extract_msg's attachment parsing which fails on some MSG files
-    with non-standard attachment properties.
-    
-    Property IDs:
-        - 3707001F: Long filename (UTF-16LE)
-        - 3704001F: Short filename (UTF-16LE)
-        - 37010102: Binary data
-    """
-    ole = olefile.OleFileIO(str(msg_path))
-    attachments = []
-    
-    # Find all attachment directories
-    attach_dirs = set()
-    for stream in ole.listdir():
-        stream_path = "/".join(stream)
-        if stream_path.startswith("__attach_version1.0_"):
-            attach_dirs.add(stream[0])
-    
-    for attach_dir in sorted(attach_dirs):
-        filename = _get_attachment_filename(ole, attach_dir)
-        data = _get_attachment_data(ole, attach_dir)
-        
-        if filename and data:
-            attachments.append(Attachment(filename=filename, data=data))
-    
-    ole.close()
-    return attachments
-
-
-def _get_attachment_filename(ole: olefile.OleFileIO, attach_dir: str) -> str | None:
-    """Get attachment filename from MSG OLE stream."""
-    # Try long filename first (3707), then short filename (3704)
-    # Property type suffix: 001F = UTF-16, 001E = ANSI
-    for prop_base in ("3707", "3704"):
-        for prop_suffix in ("001F", "001E"):
-            try:
-                stream_path = f"{attach_dir}/__substg1.0_{prop_base}{prop_suffix}"
-                data = ole.openstream(stream_path).read()
-                if prop_suffix == "001F":
-                    return data.decode("utf-16-le").rstrip("\x00")
-                else:
-                    return data.decode("latin-1").rstrip("\x00")
-            except Exception:
-                continue
-    return None
-
-
-def _get_attachment_data(ole: olefile.OleFileIO, attach_dir: str) -> bytes | None:
-    """Get attachment binary data from MSG OLE stream."""
-    try:
-        stream_path = f"{attach_dir}/__substg1.0_37010102"
-        return ole.openstream(stream_path).read()
-    except Exception:
-        return None
-
-
-# =============================================================================
-# Attachment Selection
-# =============================================================================
-
-def select_docx_attachment(
-    attachments: list[Attachment],
-    prompt_text: str,
-    preselected_index: int | None = None
-) -> Attachment:
-    """
-    Select a .docx attachment from the list.
-    
-    - If single .docx: auto-select
-    - If preselected_index provided: use that (1-based)
-    - Otherwise: prompt user with numbered list
-    
-    Args:
-        attachments: List of attachments to choose from
-        prompt_text: Text to display when prompting user
-        preselected_index: Optional 1-based index to skip prompt
-        
-    Returns:
-        Selected Attachment
-        
-    Raises:
-        ValueError: If no .docx attachments found or invalid index
-    """
-    docx_attachments = [a for a in attachments if a.is_docx]
-    
-    if not docx_attachments:
-        raise ValueError("No .docx attachments found")
-    
-    if len(docx_attachments) == 1:
-        return docx_attachments[0]
-    
-    if preselected_index is not None:
-        if 1 <= preselected_index <= len(docx_attachments):
-            return docx_attachments[preselected_index - 1]
-        raise ValueError(
-            f"Invalid index {preselected_index}. "
-            f"Must be 1-{len(docx_attachments)}"
-        )
-    
-    # Interactive selection
-    print(f"\n{prompt_text}")
-    for i, att in enumerate(docx_attachments, 1):
-        print(f"  [{i}] {att.filename}")
-    
-    while True:
-        try:
-            choice = int(input("Enter number: "))
-            if 1 <= choice <= len(docx_attachments):
-                return docx_attachments[choice - 1]
-            print(f"Please enter a number between 1 and {len(docx_attachments)}")
-        except ValueError:
-            print("Please enter a valid number")
 
 
 # =============================================================================
