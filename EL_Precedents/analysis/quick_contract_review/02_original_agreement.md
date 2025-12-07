@@ -20,7 +20,7 @@ description: "The counterparty's draft agreement before our review"
 title: "TRIAL ORDER AGREEMENT"
 source: "Didimo_Trial Agreement v1.5 - HJ1 (OCR - Orig)"
 format: llm-optimized
-generated: "2025-12-06"
+generated: "2025-12-07"
 purpose: Legal document formatted for LLM analysis with clause explanation markers
 total_main_clauses: 12
 total_attachments: 3
@@ -31,7 +31,7 @@ clauses:
   - ordinal: "2"
     title: "DEFINITIONS"
   - ordinal: "3"
-    title: "VENDOR IP"
+    title: "[SUPPLIER] IP"
   - ordinal: "4"
     title: "RESERVATION OF RIGHTS"
   - ordinal: "5"
@@ -66,7 +66,7 @@ attachments:
 |---|-------|------|
 | 1 | TRIAL | main |
 | 2 | DEFINITIONS | main |
-| 3 | VENDOR IP | main |
+| 3 | [SUPPLIER] IP | main |
 | 4 | RESERVATION OF RIGHTS | main |
 | 5 | Fees & Payment | main |
 | 6 | TERM AND TERMINATION | main |
@@ -107,7 +107,7 @@ This Trial is intended only for a limited duration assessment of [SUPPLIER]’s 
    **2.5** “Applicable Law” means all laws, rules, regulations, rulings, decrees, directives, or other requirements of any governmental authority, and all current industry self-regulatory principles that (a) apply to the services or (b) relate to the Parties’ rights and obligations in this Trial.
 
 
-## 3. VENDOR IP
+## 3. [SUPPLIER] IP
 
    **3.1** License Grant.  [SUPPLIER] hereby grants to [CUSTOMER] and its Affiliates a non-exclusive, worldwide, non-transferable right and license to access and use (and have [CUSTOMER] agents and subcontractors exercise such rights on [CUSTOMER]’s behalf) the [SUPPLIER] IP during the Term.
 

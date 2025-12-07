@@ -1410,9 +1410,12 @@ def anonymize_text(
     This helps the LLM generalize patterns without memorizing specific names.
     Handles special patterns like ("Company" or "NBCUniversal") → ("[CUSTOMER]")
     
-    Note: Replacements are CASE-SENSITIVE. "Company" (defined term) is replaced,
-    but "company" (generic word) is not. This prevents replacing "a Delaware 
-    limited liability company" incorrectly.
+    Note: Replacements preserve case distinction:
+    - "Company" (defined term with capital) → replaced
+    - "COMPANY" (all caps defined term) → replaced  
+    - "company" (generic lowercase word) → NOT replaced
+    
+    This prevents replacing "a Delaware limited liability company" incorrectly.
     
     Args:
         text: Text to anonymize
@@ -1431,6 +1434,22 @@ def anonymize_text(
         client_names = [client_names] if client_names else []
     if isinstance(counterparty_names, str):
         counterparty_names = [counterparty_names] if counterparty_names else []
+    
+    def expand_case_variants(names: list[str]) -> list[str]:
+        """Add ALLCAPS variants for each name (defined terms often appear in ALLCAPS headings)."""
+        expanded = []
+        for name in names:
+            if name:
+                expanded.append(name)
+                # Add ALLCAPS variant if not already present
+                upper = name.upper()
+                if upper != name and upper not in expanded:
+                    expanded.append(upper)
+        return expanded
+    
+    # Expand to include ALLCAPS variants
+    client_names = expand_case_variants(client_names)
+    counterparty_names = expand_case_variants(counterparty_names)
     
     # Quote characters: straight quotes and curly quotes
     quotes = r'["\'\u201C\u201D]'
