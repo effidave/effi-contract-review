@@ -96,10 +96,30 @@ The Plan Tab allows solo lawyers to track work tasks and MCP tool calls during c
 - `extension/src/webview/style.css` - Plan panel styles
 - `extension/src/extension.ts` - showPlanWebview, getPlanWebviewContent
 
-### 5. LLM/MCP Integration
+### 5. LLM/MCP Integration ✅ COMPLETE
 
-- Hook MCP tool calls to log Edit objects automatically
-- Tests for edit logging
+Automatic logging of MCP tool calls as Edit objects.
+
+**Features:**
+- McpToolLogger service for tracking active tasks and logging edits
+- Active task management (set/clear/get based on task status)
+- Automatic task association when status changes to `in_progress`
+- Tool call recording with start/complete pattern for async operations
+- Event notifications (`onEditLogged`, `onActiveTaskChanged`)
+- Session statistics (edit count, tool usage by name)
+- Recent edits history
+
+**Implementation:**
+- [x] Create `McpToolLogger` class with active task tracking
+- [x] Implement `logToolCall()` for direct logging
+- [x] Implement `recordToolCallStart()`/`completeToolCall()` for async pattern
+- [x] Add event emitters for edit and task change notifications
+- [x] Add session statistics and history tracking
+- [x] Comprehensive tests (39 tests)
+
+**Files:**
+- `extension/src/models/mcpToolLogger.ts` - McpToolLogger service
+- `extension/src/__tests__/mcpToolLogger.test.ts` - 39 tests
 
 ## Project Path Derivation
 
@@ -138,10 +158,10 @@ This matches the existing `getAnalysisDir()` pattern.
 | 2. Persistence | planStorage.test.ts | 36 |
 | 3. Integration | planIntegration.test.ts | 51 |
 | 4. Webview UI | plan.test.js | 77 |
-| **Total** | | **214** |
+| 5. MCP Integration | mcpToolLogger.test.ts | 39 |
+| **Total** | | **253** |
 
 ## Further Considerations
 
 - **TDD Approach:** Write tests first, then implement
 - **0-based ordinals:** LLM-friendly API (ordinal 0 = first position)
-- **Parallel panels:** Plan and Contract Analysis can be open simultaneously
