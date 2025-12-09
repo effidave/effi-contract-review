@@ -3,6 +3,8 @@ module.exports = {
   testMatch: [
     '**/src/__tests__/**/*.test.js',
     '**/src/__tests__/**/*.test.ts',
+    // Include plan.test.js from webview/__tests__
+    '**/src/webview/__tests__/plan.test.js',
     // Exclude the custom runner test file from webview/__tests__
     '!**/src/webview/__tests__/comments.test.js'
   ],

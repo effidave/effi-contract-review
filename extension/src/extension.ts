@@ -10,7 +10,9 @@ import type { TaskStatus, WorkPlanJSON } from './models/workplan';
 const execAsync = promisify(exec);
 
 let webviewPanel: vscode.WebviewPanel | undefined;
+let planWebviewPanel: vscode.WebviewPanel | undefined;
 let currentDocumentPath: string | undefined;
+let currentProjectPath: string | undefined;
 let planProvider: PlanProvider | undefined;
 
 export function activate(context: vscode.ExtensionContext) {
@@ -123,6 +125,12 @@ export function activate(context: vscode.ExtensionContext) {
         }
     );
 
+    // Register command to show Plan webview
+    const showPlanCommand = vscode.commands.registerCommand(
+        'effi-contract-viewer.showPlan',
+        () => showPlanWebview(context)
+    );
+
     context.subscriptions.push(
         showWebviewCommand, 
         analyzeCommand, 
@@ -131,7 +139,8 @@ export function activate(context: vscode.ExtensionContext) {
         analyzeAndLoadCommand,
         saveDocumentCommand,
         saveCheckpointCommand,
-        showHistoryCommand
+        showHistoryCommand,
+        showPlanCommand
     );
 
     // Auto-analyze on .docx file open if configured
@@ -148,6 +157,9 @@ export function activate(context: vscode.ExtensionContext) {
 export function deactivate() {
     if (webviewPanel) {
         webviewPanel.dispose();
+    }
+    if (planWebviewPanel) {
+        planWebviewPanel.dispose();
     }
 }
 
@@ -231,28 +243,8 @@ function showContractWebview(context: vscode.ExtensionContext) {
                     case 'rejectAllRevisions':
                         await rejectAllRevisions(message.documentPath, webviewPanel);
                         break;
-                    
-                    // Plan Tab handlers
-                    case 'getPlan':
-                        await handleGetPlan(message.projectPath, webviewPanel);
-                        break;
-                    case 'savePlan':
-                        await handleSavePlan(message.projectPath, message.plan, webviewPanel);
-                        break;
-                    case 'addTask':
-                        await handleAddTask(message.projectPath, message.title, message.description, message.options, webviewPanel);
-                        break;
-                    case 'updateTask':
-                        await handleUpdateTask(message.projectPath, message.taskId, message.updates, webviewPanel);
-                        break;
-                    case 'deleteTask':
-                        await handleDeleteTask(message.projectPath, message.taskId, webviewPanel);
-                        break;
-                    case 'moveTask':
-                        await handleMoveTask(message.projectPath, message.taskId, message.newOrdinal, webviewPanel);
-                        break;
-                    case 'logEdit':
-                        await handleLogEdit(message.projectPath, message.taskId, message.toolName, message.request, message.response, webviewPanel);
+                    case 'showPlan':
+                        showPlanWebview(context);
                         break;
                 }
             },
@@ -274,8 +266,92 @@ function showContractWebview(context: vscode.ExtensionContext) {
     }
 }
 
+/**
+ * Show the Plan WebviewPanel (separate from Contract Analysis)
+ */
+function showPlanWebview(context: vscode.ExtensionContext) {
+    // Use the same column as Contract Analysis so they appear as tabs in the same group
+    const columnToShowIn = webviewPanel 
+        ? webviewPanel.viewColumn || vscode.ViewColumn.One
+        : (vscode.window.activeTextEditor?.viewColumn || vscode.ViewColumn.One);
+
+    if (planWebviewPanel) {
+        // If panel exists, reveal it
+        planWebviewPanel.reveal(columnToShowIn);
+    } else {
+        // Create new panel
+        planWebviewPanel = vscode.window.createWebviewPanel(
+            'effiPlanViewer',
+            'Work Plan',
+            columnToShowIn,
+            {
+                enableScripts: true,
+                retainContextWhenHidden: true,
+                localResourceRoots: [
+                    vscode.Uri.file(path.join(context.extensionPath, 'dist')),
+                    vscode.Uri.file(path.join(context.extensionPath, 'src', 'webview'))
+                ]
+            }
+        );
+
+        // Set HTML content
+        planWebviewPanel.webview.html = getPlanWebviewContent(context, planWebviewPanel.webview);
+
+        // Handle messages from webview
+        planWebviewPanel.webview.onDidReceiveMessage(
+            async (message) => {
+                switch (message.command) {
+                    case 'ready':
+                        console.log('Plan webview ready');
+                        // Send project path and plan data if available
+                        if (currentProjectPath) {
+                            await handleGetPlan(currentProjectPath, planWebviewPanel);
+                        }
+                        break;
+                    case 'getPlan':
+                        await handleGetPlan(message.projectPath, planWebviewPanel);
+                        break;
+                    case 'savePlan':
+                        await handleSavePlan(message.projectPath, message.plan, planWebviewPanel);
+                        break;
+                    case 'addTask':
+                        await handleAddTask(message.projectPath, message.title, message.description, message.options, planWebviewPanel);
+                        break;
+                    case 'updateTask':
+                        await handleUpdateTask(message.projectPath, message.taskId, message.updates, planWebviewPanel);
+                        break;
+                    case 'deleteTask':
+                        await handleDeleteTask(message.projectPath, message.taskId, planWebviewPanel);
+                        break;
+                    case 'moveTask':
+                        await handleMoveTask(message.projectPath, message.taskId, message.newOrdinal, planWebviewPanel);
+                        break;
+                    case 'logEdit':
+                        await handleLogEdit(message.projectPath, message.taskId, message.toolName, message.request, message.response, planWebviewPanel);
+                        break;
+                }
+            },
+            undefined,
+            context.subscriptions
+        );
+
+        // Handle panel disposal
+        planWebviewPanel.onDidDispose(
+            () => {
+                planWebviewPanel = undefined;
+                vscode.commands.executeCommand('setContext', 'effiPlanViewerActive', false);
+            },
+            null,
+            context.subscriptions
+        );
+
+        vscode.commands.executeCommand('setContext', 'effiPlanViewerActive', true);
+    }
+}
+
 async function analyzeDocument(documentPath: string) {
     currentDocumentPath = documentPath;
+    currentProjectPath = getProjectDir(documentPath);
     
     if (!fs.existsSync(documentPath)) {
         vscode.window.showErrorMessage(`Document not found: ${documentPath}`);
@@ -758,6 +834,10 @@ function getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Web
         <div class="header">
             <h1 id="document-title">Document</h1>
             <div class="toolbar">
+                <button id="show-plan-btn" class="plan-toggle-btn" title="Open Work Plan">
+                    <span class="plan-icon">📋</span>
+                    <span class="plan-label">Plan</span>
+                </button>
                 <button id="toggle-comments-btn" class="comments-toggle-btn" title="Toggle Comments Panel">
                     <span class="comments-icon">💬</span>
                     <span class="comments-label">Comments</span>
@@ -776,11 +856,11 @@ function getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Web
             </div>
 
             <div id="data-view" style="display: none;">
-                <div class="document-with-comments">
+                <div class="document-with-panels">
                     <div class="pages-container">
                         <div id="fulltext-content" class="tab-content"></div>
                     </div>
-                    <div id="comment-panel-container" style="display: none;"></div>
+                    <div id="comment-panel-container" class="side-panel" style="display: none;"></div>
                 </div>
             </div>
         </div>
@@ -806,6 +886,47 @@ function getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Web
 </html>`;
 }
 
+/**
+ * Get HTML content for the Plan WebviewPanel
+ */
+function getPlanWebviewContent(context: vscode.ExtensionContext, webview: vscode.Webview): string {
+    const stylePath = path.join(context.extensionPath, 'src', 'webview', 'style.css');
+    const planPath = path.join(context.extensionPath, 'src', 'webview', 'plan.js');
+    const planMainPath = path.join(context.extensionPath, 'src', 'webview', 'planMain.js');
+
+    const styleUri = webview.asWebviewUri(vscode.Uri.file(stylePath));
+    const planUri = webview.asWebviewUri(vscode.Uri.file(planPath));
+    const planMainUri = webview.asWebviewUri(vscode.Uri.file(planMainPath));
+
+    // Use CSP nonce for security
+    const nonce = getNonce();
+
+    // Include project path in the page for initialization
+    const projectPathEscaped = currentProjectPath ? currentProjectPath.replace(/\\/g, '\\\\').replace(/'/g, "\\'") : '';
+
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource} 'unsafe-inline'; script-src 'nonce-${nonce}';">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="${styleUri}" rel="stylesheet">
+    <title>Work Plan</title>
+</head>
+<body class="plan-webview">
+    <div id="plan-app">
+        <div id="plan-container"></div>
+    </div>
+    
+    <script nonce="${nonce}">
+        window.initialProjectPath = '${projectPathEscaped}';
+    </script>
+    <script nonce="${nonce}" src="${planUri}"></script>
+    <script nonce="${nonce}" src="${planMainUri}"></script>
+</body>
+</html>`;
+}
+
 function getNonce() {
     let text = '';
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -824,6 +945,18 @@ function getAnalysisDir(documentPath: string): string {
     const projectDir = path.dirname(draftsDir);
     const filenameNoExt = path.basename(documentPath, '.docx');
     return path.join(projectDir, 'analysis', filenameNoExt);
+}
+
+/**
+ * Get the project directory from a document path
+ * Expected: EL_Projects/<project>/drafts/current_drafts/<file>.docx
+ *        -> EL_Projects/<project>/
+ */
+function getProjectDir(documentPath: string): string {
+    const docDir = path.dirname(documentPath);
+    const draftsDir = path.dirname(docDir);
+    const projectDir = path.dirname(draftsDir);
+    return projectDir;
 }
 
 async function saveDocument(documentPath: string) {

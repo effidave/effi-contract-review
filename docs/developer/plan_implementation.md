@@ -1,4 +1,4 @@
-# Plan Tab Implementation (Steps 1-3)
+# Plan Tab Implementation (Steps 1-4)
 
 This document describes the implementation of the Plan Tab feature for tracking LLM agent work tasks and MCP tool call edits.
 
@@ -12,33 +12,57 @@ The Plan Tab allows solo lawyers to:
 
 ## Architecture
 
+The Plan uses a **separate WebviewPanel** from Contract Analysis, allowing side-by-side viewing.
+
 ```
-┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
-│   Webview UI    │────▶│  PlanProvider    │────▶│  PlanStorage    │
-│  (Plan Tab)     │◀────│  (extension.ts)  │◀────│  (File System)  │
-└─────────────────┘     └──────────────────┘     └─────────────────┘
-        │                       │                        │
-        │                       │                        ▼
-        │                       │              ┌─────────────────────┐
-        │                       │              │  plans/current/     │
-        │                       │              │    plan.md          │
-        │                       │              │    plan.meta.json   │
-        │                       │              │  logs/              │
-        │                       │              │    edits.jsonl      │
-        │                       │              └─────────────────────┘
-        │                       │
-        ▼                       ▼
-┌─────────────────┐     ┌──────────────────┐
-│  WorkPlan       │     │  WorkTask        │
-│  (domain model) │────▶│  (domain model)  │
-└─────────────────┘     └──────────────────┘
-                               │
-                               ▼
-                        ┌──────────────────┐
-                        │  Edit            │
-                        │  (domain model)  │
-                        └──────────────────┘
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           VS Code Extension Host                            │
+│                              (extension.ts)                                 │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌───────────────────────┐      ┌───────────────────────┐                   │
+│  │  webviewPanel         │      │  planWebviewPanel     │                   │
+│  │  "Contract Analysis"  │      │  "Work Plan"          │                   │
+│  │  (effiContractViewer) │      │  (effiPlanViewer)     │                   │
+│  └───────────┬───────────┘      └───────────┬───────────┘                   │
+│              │                              │                               │
+│              │    postMessage()             │    postMessage()              │
+│              ▼                              ▼                               │
+│  ┌───────────────────────────────────────────────────────────┐              │
+│  │                    Message Handlers                       │              │
+│  │  Contract: analyze, saveBlocks, getComments, ...          │              │
+│  │  Plan: getPlan, addTask, updateTask, deleteTask, logEdit  │              │
+│  └───────────────────────────────────────────────────────────┘              │
+│                              │                                              │
+│                              ▼                                              │
+│  ┌─────────────────────┐  ┌─────────────────────┐  ┌─────────────────────┐  │
+│  │  PlanProvider       │  │  PlanStorage        │  │  WorkPlan / Task    │  │
+│  │  (business logic)   │──│  (file I/O)         │──│  (domain models)    │  │
+│  └─────────────────────┘  └─────────────────────┘  └─────────────────────┘  │
+│                                      │                                      │
+└──────────────────────────────────────┼──────────────────────────────────────┘
+                                       │
+                                       ▼
+                          ┌─────────────────────────┐
+                          │      File System        │
+                          │                         │
+                          │  <project>/             │
+                          │  ├── plans/current/     │
+                          │  │   ├── plan.md        │
+                          │  │   └── plan.meta.json │
+                          │  └── logs/              │
+                          │      └── edits.jsonl    │
+                          └─────────────────────────┘
 ```
+
+### Webview Scripts
+
+| Panel | Entry Point | Main Component | Purpose |
+|-------|-------------|----------------|---------|
+| Contract Analysis | `main.js` | BlockEditor, Toolbar | Document viewing/editing |
+| Work Plan | `planMain.js` | PlanPanel | Task tracking |
+
+Both share `style.css` for consistent VS Code theming.
 
 ## Step 1: Core Classes (50 tests)
 
@@ -297,6 +321,114 @@ Added to the `onDidReceiveMessage` switch statement:
 { command: 'planError', error: string }
 ```
 
+## Step 4: Webview UI (77 tests)
+
+**Architecture:** The Plan is a **separate WebviewPanel** from Contract Analysis. This allows:
+- Opening Plan side-by-side with Contract Analysis
+- Independent lifecycle (close one without affecting other)
+- Cleaner separation of concerns
+
+**Files:**
+- `extension/src/webview/plan.js` - PlanPanel class implementation
+- `extension/src/webview/planMain.js` - Plan webview entry point
+- `extension/src/webview/__tests__/plan.test.js` - Comprehensive tests
+- `extension/src/webview/style.css` - Plan panel CSS styles
+- `extension/src/extension.ts` - showPlanWebview, getPlanWebviewContent, plan handlers
+
+### PlanPanel Class
+
+JavaScript webview component for task management UI.
+
+```javascript
+class PlanPanel {
+    constructor(container, vscode, options = {});
+    
+    // Data management
+    setTasks(tasks);         // Set all tasks
+    getSelectedTask();       // Get currently selected task
+    
+    // Task operations
+    addTask(task);           // Add new task to list
+    updateTask(taskId, updates);  // Update task properties
+    deleteTask(taskId);      // Remove task
+    moveTask(taskId, newOrdinal); // Reorder task
+    
+    // Filtering
+    setFilter(filter);       // 'all' | 'pending' | 'in_progress' | 'completed' | 'blocked'
+    
+    // Message handling
+    handleMessage(message);  // Handle VS Code webview messages
+}
+```
+
+### UI Features
+
+**Task List:**
+- Displays all tasks with title, status, and ordinal
+- Click to select task
+- Status badge coloring (pending=blue, in_progress=yellow, completed=green, blocked=red)
+- Expandable task items to show description and edit log
+
+**Task Actions:**
+- Add new task (button or keyboard shortcut)
+- Edit task inline
+- Delete task with optional confirmation
+- Move task up/down in list
+- Status change dropdown
+
+**Filtering:**
+- Filter by status: All, Pending, In Progress, Completed, Blocked
+- Filter persists during session
+- Count indicators for each status
+
+**Edit Log Display:**
+- Shows MCP tool calls associated with each task
+- Tool name, timestamp, and request/response preview
+- Expandable for full details
+
+**Progress Bar:**
+- Visual indicator of completion progress
+- Shows "X of Y completed" text
+
+**Keyboard Navigation:**
+- Arrow keys to navigate between tasks
+- Enter to select/expand task
+- Delete/Backspace to delete with confirmation
+- Escape to deselect
+
+### CSS Styling
+
+Added to `style.css`:
+- `.plan-webview` - Body class for plan webview
+- `.plan-panel` - Main panel container
+- `.plan-header` - Panel header with title and add button
+- `.plan-task-list` - Scrollable task list container
+- `.plan-task-item` - Individual task styling
+- `.plan-status-badge` - Status indicator badges
+- `.plan-progress-bar` - Completion progress visualization
+- `.plan-filter-controls` - Filter button group
+- `.plan-edit-log` - Edit history display
+
+### planMain.js Entry Point
+
+Initializes the Plan webview:
+- Acquires VS Code API
+- Gets initial project path from page data
+- Creates PlanPanel instance
+- Handles messages from extension
+- Sends 'ready' message on DOM ready
+
+### Extension Integration
+
+**extension.ts changes:**
+- Added `planWebviewPanel` variable for separate panel
+- Added `currentProjectPath` variable (derived from document path)
+- Added `showPlanWebview()` function to create/reveal Plan panel
+- Added `getPlanWebviewContent()` function for Plan HTML
+- Added `getProjectDir()` helper function
+- Registered `effi-contract-viewer.showPlan` command
+- Plan message handlers moved to `showPlanWebview` message switch
+
 ## Test Coverage
 
 | Test Suite | File | Tests |
@@ -304,15 +436,10 @@ Added to the `onDidReceiveMessage` switch statement:
 | Core Classes | `workplan.test.ts` | 50 |
 | Persistence | `planStorage.test.ts` | 36 |
 | Integration | `planIntegration.test.ts` | 51 |
-| **Total** | | **137** |
+| Webview UI | `plan.test.js` | 77 |
+| **Total** | | **214** |
 
 ## Next Steps
-
-### Step 4: Webview UI
-- Add tab bar with "Contract Analysis" and "Plan" tabs
-- Create Plan tab content (task list, task details)
-- Implement View/Edit toggle
-- Wire up auto-save on edit
 
 ### Step 5: LLM/MCP Integration
 - Hook MCP tool calls to automatically log Edit objects

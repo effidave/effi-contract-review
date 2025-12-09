@@ -2,7 +2,75 @@
 
 ## Overview
 
-The Effi Contract Viewer extension uses a VS Code webview to display contract analysis data in a user-friendly interface. This document explains how the webview works, its architecture, and the recent improvements made to support dual-view functionality with shared state.
+The Effi Contract Viewer extension uses VS Code webviews to display contract analysis data and work plan tasks. There are **two independent WebviewPanels**:
+
+1. **Contract Analysis Panel** (`effiContractViewer`) - Document viewing and editing
+2. **Work Plan Panel** (`effiPlanViewer`) - Task tracking and edit logging
+
+These panels can be opened side-by-side for an integrated workflow.
+
+## Architecture Diagram
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           VS Code Extension Host                            │
+│                              (extension.ts)                                 │
+│                                                                             │
+│  ┌─────────────────────┐  ┌─────────────────────┐  ┌─────────────────────┐  │
+│  │  webviewPanel       │  │  planWebviewPanel   │  │  PlanProvider       │  │
+│  │  (Contract Analysis)│  │  (Work Plan)        │  │  (Business Logic)   │  │
+│  └──────────┬──────────┘  └──────────┬──────────┘  └──────────┬──────────┘  │
+│             │                        │                        │             │
+│             │    postMessage()       │    postMessage()       │             │
+│             │                        │                        │             │
+└─────────────┼────────────────────────┼────────────────────────┼─────────────┘
+              │                        │                        │
+              ▼                        ▼                        ▼
+┌─────────────────────────┐  ┌─────────────────────┐  ┌─────────────────────┐
+│  Contract Analysis      │  │  Work Plan          │  │  File System        │
+│  Webview                │  │  Webview            │  │                     │
+│                         │  │                     │  │  plans/current/     │
+│  ┌───────────────────┐  │  │  ┌───────────────┐  │  │    plan.md          │
+│  │ main.js           │  │  │  │ planMain.js   │  │  │    plan.meta.json   │
+│  │ editor.js         │  │  │  │ plan.js       │  │  │  logs/              │
+│  │ toolbar.js        │  │  │  │               │  │  │    edits.jsonl      │
+│  │ comments.js       │  │  │  │ PlanPanel     │  │  │                     │
+│  │ shortcuts.js      │  │  │  │ class         │  │  │  analysis/          │
+│  └───────────────────┘  │  │  └───────────────┘  │  │    blocks.jsonl     │
+│                         │  │                     │  │    manifest.json    │
+│  style.css (shared)     │  │  style.css (shared) │  │    index.json       │
+└─────────────────────────┘  └─────────────────────┘  └─────────────────────┘
+              │                        │                        ▲
+              │                        │                        │
+              └────────────────┬───────┴────────────────────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │  Python Scripts     │
+                    │                     │
+                    │  get_outline.py     │
+                    │  save_blocks.py     │
+                    │  manage_comments.py │
+                    │  manage_revisions.py│
+                    └─────────────────────┘
+```
+
+## Panel Lifecycle
+
+### Contract Analysis Panel
+- **Created by:** `showContractWebview()` or `analyzeAndLoadDocument()`
+- **Command:** `effi-contract-viewer.showWebview`
+- **Content:** `getWebviewContent()` returns HTML with main.js and editor scripts
+
+### Work Plan Panel
+- **Created by:** `showPlanWebview()`
+- **Command:** `effi-contract-viewer.showPlan`
+- **Content:** `getPlanWebviewContent()` returns HTML with planMain.js and plan.js
+
+Both panels:
+- Persist when hidden (`retainContextWhenHidden: true`)
+- Can be revealed in the same or different view columns
+- Communicate via `postMessage()` with the extension host
 
 ## Architecture Components
 
@@ -186,17 +254,31 @@ Copy to clipboard + show notification
 extension/
 ├── src/
 │   ├── extension.ts           # Extension host (Node.js)
+│   │                          # - showContractWebview()
+│   │                          # - showPlanWebview()
+│   │                          # - Message handlers for both panels
+│   ├── models/
+│   │   ├── workplan.ts        # WorkPlan, WorkTask, Edit classes
+│   │   ├── planStorage.ts     # File I/O for plans and edits
+│   │   └── planProvider.ts    # Business logic bridge
 │   └── webview/
-│       ├── main.js            # Webview logic (sandboxed browser)
+│       ├── main.js            # Contract Analysis webview logic
 │       ├── editor.js          # BlockEditor class (Sprint 2)
 │       ├── toolbar.js         # Formatting toolbar (Sprint 2)
 │       ├── shortcuts.js       # Keyboard shortcuts (Sprint 2)
-│       └── style.css          # VS Code theme-aware styles
+│       ├── comments.js        # Comment panel (Sprint 3)
+│       ├── plan.js            # PlanPanel class (Plan feature)
+│       ├── planMain.js        # Plan webview entry point
+│       ├── style.css          # VS Code theme-aware styles (shared)
+│       └── __tests__/
+│           └── plan.test.js   # 77 PlanPanel tests
 ├── scripts/
 │   ├── get_outline.py         # Generate outline from artifacts
 │   ├── get_clause_details.py  # Fetch full text for clause IDs
 │   ├── save_blocks.py         # Save edited blocks to .docx (Sprint 2)
 │   ├── save_document.py       # Save with UUID embedding (Sprint 1)
+│   ├── manage_comments.py     # Comment resolve/unresolve (Sprint 3)
+│   ├── manage_revisions.py    # Track changes (Sprint 3)
 │   └── get_history.py         # Git version history (Sprint 1)
 └── dist/                      # Compiled output
 ```
@@ -391,6 +473,60 @@ webview.onDidReceiveMessage(async (message) => {
 ```
 
 ## Recent Changes (Nov-Dec 2025)
+
+### Plan Tab Feature: Separate WebviewPanel (Dec 2025)
+**Problem:** Users need to track work tasks and MCP tool calls during contract review sessions.
+
+**Architecture Decision:** Implemented as a **separate WebviewPanel** rather than a tab within Contract Analysis.
+
+**Benefits:**
+- Can be opened side-by-side with Contract Analysis
+- Independent lifecycle (close one without affecting other)
+- Cleaner separation of concerns
+- Simpler HTML/JS (no tab switching logic needed)
+
+**Changes Made:**
+1. **extension.ts:**
+   - Added `planWebviewPanel` variable
+   - Added `currentProjectPath` variable (derived from document path)
+   - Added `showPlanWebview()` function
+   - Added `getPlanWebviewContent()` function
+   - Added `getProjectDir()` helper
+   - Registered `effi-contract-viewer.showPlan` command
+   - Added Plan message handlers (getPlan, addTask, updateTask, etc.)
+
+2. **planMain.js** - Entry point for Plan webview:
+   - Acquires VS Code API
+   - Gets initial project path from page data
+   - Creates PlanPanel instance
+   - Handles messages from extension
+
+3. **plan.js** - PlanPanel class:
+   - Task list with CRUD operations
+   - Status filtering and progress bar
+   - Edit log display
+   - Keyboard navigation
+
+4. **TypeScript models:**
+   - `workplan.ts` - WorkPlan, WorkTask, Edit classes
+   - `planStorage.ts` - File I/O for plans and edits
+   - `planProvider.ts` - Business logic bridge
+
+**Test Coverage:** 214 tests (50 + 36 + 51 + 77)
+
+See: [plan_tab.md](./plan_tab.md), [plan_implementation.md](./plan_implementation.md)
+
+### Sprint 3: Comments & Track Changes (Dec 2025)
+**Problem:** Users needed to manage Word comments and track changes from the webview.
+
+**Changes Made:**
+1. **CommentPanel class** (`comments.js`) - Toggle panel showing all comments
+2. **Comment status tracking** - Active/resolved status via commentsExtended.xml
+3. **Resolve/unresolve actions** - Update comment status in document
+4. **Track changes support** - Accept/reject individual or all revisions
+5. **Python scripts** - manage_comments.py, manage_revisions.py
+
+See: [sprint-3-comments-implementation.md](./sprint-3-comments-implementation.md)
 
 ### Sprint 2: WYSIWYG Editor (Dec 2025)
 **Problem:** Users needed to edit documents directly in the webview, not just view them.

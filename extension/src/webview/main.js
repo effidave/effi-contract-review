@@ -174,6 +174,11 @@ document.addEventListener('DOMContentLoaded', () => {
         vscode.postMessage({ command: 'ready' });
     });
     
+    // Set up show plan button
+    document.getElementById('show-plan-btn')?.addEventListener('click', () => {
+        vscode.postMessage({ command: 'showPlan' });
+    });
+    
     // Set up toggle comments button
     document.getElementById('toggle-comments-btn')?.addEventListener('click', () => {
         toggleCommentsPanel();
