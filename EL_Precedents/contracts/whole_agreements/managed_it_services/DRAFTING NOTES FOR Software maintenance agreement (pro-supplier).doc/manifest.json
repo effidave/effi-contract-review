@@ -1,0 +1,89 @@
+{
+  "doc_id": "DRAFTING-NOTES-FOR-Software-maintenance-agreement-",
+  "v": 1,
+  "created_at": "2025-12-09T17:35:47+00:00",
+  "tool_version": "sprint2-dev",
+  "doc_format": "docx",
+  "sdt_carrier": "content-controls",
+  "range_marker_carrier": "content-controls",
+  "range_marker_tag_prefix": "marker:",
+  "fallback_heading_label": "Body (no heading)",
+  "checksums": {
+    "blocks.jsonl": "sha256:ccdd321cec04aa2437c3f8d892a3e56150a0c82ebc7c40530ff0065397b2455e",
+    "sections.json": "sha256:b3eba36e8b21e5fc413cee1a160111cc6e1ba8473470635362a8de4956863b36",
+    "styles.json": "sha256:c8ea4c27b90bbdaf05dd1f26f95272353c4cdb5424c5c39b7165b1d6e167ff70",
+    "relationships.json": "sha256:cc46ce7cbca49e409256243f21e4efbfe1ccd5a18484b5e6f5c01125b394a238",
+    "tag_ranges.jsonl": "sha256:0913c1aef3761daf9203abd7e952269d1799924aee0c1efdb781eaa0ae2b4fe2",
+    "index.json": "sha256:70aedfab5412b7e53b5f18ab6f1e18e88c4b579da1325016761187abf941a706"
+  },
+  "schema_checksums": {
+    "block.schema.json": "sha256:a79c29ccec8330bef4e2ed057adee57e544a0749ee71c8aac86b8f8e13d1550e",
+    "edit_plan.schema.json": "sha256:4d9432a9d9b1b61675f527817c7dfdd608ffa20a63f2c1f50d9f0cba9ac367b1",
+    "index.schema.json": "sha256:f305e73bdd196f01be5aba55a1bfe71dc0756218dbafc234fbd9e269c7f84557",
+    "labels.schema.json": "sha256:44e45c3f69aa8c9728872198061b34cbc23aa83a232a93debb3bce13f42e1052",
+    "manifest.schema.json": "sha256:cbab4e0766ffb0d8b0fb12cc0a6b7d75f39bdacc70fed82baaae6de0f102829d",
+    "relationships.schema.json": "sha256:0a6b82f199e7e009eb01866b591d10d35578bb937e794216a56a29c3f922246e",
+    "report.schema.json": "sha256:cc9454c8a3713921e540d0e7e1ce3fca7c8569e9704475ec39eae016541bf3be",
+    "sections.schema.json": "sha256:64d13ab3f694c5e4bcce3072c1d2823c614b2718aa50ba4850aea65c3b9fcdcc",
+    "styles.schema.json": "sha256:69bb206dd584e1ce1e19e6f752f510633761625ed9ba8905fa78c2bfdf731549",
+    "tag_range.schema.json": "sha256:38ae87688b3e7f53b0d7466d5699e6e741330b2da45ea6f784ae6da8bf002c3f"
+  },
+  "attachments": [
+    {
+      "attachment_id": "cab4bf8b-6bd8-4039-aaa7-740e63442cbc",
+      "type": "schedule",
+      "ordinal": "1",
+      "title": null,
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "9bbe2952-3dca-4a4c-b777-aed835562f54",
+      "type": "schedule",
+      "ordinal": "2",
+      "title": null,
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "16b8c749-6d62-4ad9-838e-993ecadb614f",
+      "type": "schedule",
+      "ordinal": "3",
+      "title": null,
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "1c8ec1ed-4620-4433-97f2-35422fd48c46",
+      "type": "schedule",
+      "ordinal": "4",
+      "title": null,
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "78bf7a85-8799-4da0-b7dd-812fec41cf1b",
+      "type": "schedule",
+      "ordinal": "5",
+      "title": null,
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "6fc7e293-29de-4fa2-afff-9f9a0876b9fa",
+      "type": "schedule",
+      "ordinal": "6",
+      "title": null,
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "b323ee2c-6386-48c7-b3df-15e50545a95a",
+      "type": "schedule",
+      "ordinal": "7",
+      "title": null,
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "101a4136-d44a-4fd2-8adf-a889e0fe6233",
+      "type": "schedule",
+      "ordinal": "8",
+      "title": null,
+      "parent_attachment_id": null
+    }
+  ]
+}

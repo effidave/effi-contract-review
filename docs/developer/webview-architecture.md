@@ -508,11 +508,16 @@ webview.onDidReceiveMessage(async (message) => {
    - Keyboard navigation
 
 4. **TypeScript models:**
-   - `workplan.ts` - WorkPlan, WorkTask, Edit classes
-   - `planStorage.ts` - File I/O for plans and edits
-   - `planProvider.ts` - Business logic bridge
+   - `workplan.ts` - WorkPlan, WorkTask, Edit, LegalDocument classes
+   - `planStorage.ts` - File I/O for plans and edits + edit retrieval
+   - `planProvider.ts` - Business logic bridge + auto-association
 
-**Test Coverage:** 214 tests (50 + 36 + 51 + 77)
+5. **Python Plan MCP Tools** (new):
+   - `effilocal/mcp_server/plan/models.py` - Python equivalents of TypeScript classes
+   - `effilocal/mcp_server/plan/storage.py` - YAML/JSON file I/O
+   - `effilocal/mcp_server/tools/plan_tools.py` - MCP tools for LLM plan management
+
+**Test Coverage:** 279 Plan TypeScript tests + 111 MCP integration tests (39 McpToolLogger + 27 Python logging + 45 Plan tools) = **390 total**
 
 See: [plan_tab.md](./plan_tab.md), [plan_implementation.md](./plan_implementation.md)
 

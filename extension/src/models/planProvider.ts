@@ -5,7 +5,9 @@
  * Provides high-level operations for plan management with caching and persistence.
  */
 
-import { WorkPlan, WorkTask, Edit, TaskStatus, WorkTaskData, EditData } from './workplan';
+import * as fs from 'fs';
+import * as path from 'path';
+import { WorkPlan, WorkTask, Edit, TaskStatus, LegalDocument } from './workplan';
 import { PlanStorage } from './planStorage';
 
 // ============================================================================
@@ -42,6 +44,17 @@ export interface DeleteTaskResult extends OperationResult {
 
 export interface LogEditResult extends OperationResult {
     edit?: Edit;
+    editId?: string;
+    taskId?: string;
+}
+
+export interface ProcessEditsResult extends OperationResult {
+    associatedCount: number;
+    associatedEditIds: string[];
+    skippedReason?: 'no_active_task' | 'no_documents' | 'no_new_edits';
+}
+
+export interface AssociateEditResult extends OperationResult {
     editId?: string;
     taskId?: string;
 }
@@ -348,5 +361,259 @@ export class PlanProvider {
         }));
 
         return { tasks };
+    }
+
+    // ========================================================================
+    // Edit Auto-Association
+    // ========================================================================
+
+    /**
+     * Get the currently active task (status = in_progress)
+     * Returns the first in_progress task by ordinal, or null if none
+     */
+    getActiveTask(): WorkTask | null {
+        if (!this.currentPlan) {
+            return null;
+        }
+        const inProgressTasks = this.currentPlan.getTasksByStatus('in_progress');
+        return inProgressTasks.length > 0 ? inProgressTasks[0] : null;
+    }
+
+    /**
+     * Process unassociated edits and link them to the active task
+     * Only associates edits that affect documents registered with the plan
+     */
+    async processUnassociatedEdits(): Promise<ProcessEditsResult> {
+        if (!this.currentPlan) {
+            await this.getPlan();
+        }
+
+        // Check preconditions
+        const activeTask = this.getActiveTask();
+        if (!activeTask) {
+            return {
+                success: true,
+                associatedCount: 0,
+                associatedEditIds: [],
+                skippedReason: 'no_active_task'
+            };
+        }
+
+        if (this.currentPlan!.documents.length === 0) {
+            return {
+                success: true,
+                associatedCount: 0,
+                associatedEditIds: [],
+                skippedReason: 'no_documents'
+            };
+        }
+
+        try {
+            // Get unassociated edits
+            const unassociated = await this.planStorage.getUnassociatedEdits();
+            const associatedEditIds: string[] = [];
+
+            for (const edit of unassociated) {
+                // Check if edit affects a plan document
+                const editFilename = edit.request.filename as string | undefined;
+                if (editFilename && this.currentPlan!.hasDocument(editFilename)) {
+                    // Associate with active task
+                    activeTask.addEditId(edit.id);
+                    associatedEditIds.push(edit.id);
+                }
+            }
+
+            // Save if we made associations
+            if (associatedEditIds.length > 0) {
+                await this.planStorage.savePlan(this.currentPlan!);
+            }
+
+            return {
+                success: true,
+                associatedCount: associatedEditIds.length,
+                associatedEditIds
+            };
+        } catch (error) {
+            return {
+                success: false,
+                error: error instanceof Error ? error.message : String(error),
+                associatedCount: 0,
+                associatedEditIds: []
+            };
+        }
+    }
+
+    /**
+     * Associate a specific edit with a specific task
+     */
+    async associateEditWithTask(editId: string, taskId: string): Promise<AssociateEditResult> {
+        if (!this.currentPlan) {
+            await this.getPlan();
+        }
+
+        try {
+            // Verify edit exists
+            const edit = await this.planStorage.getEditById(editId);
+            if (!edit) {
+                return {
+                    success: false,
+                    error: `Edit ${editId} not found`,
+                    editId
+                };
+            }
+
+            // Verify task exists
+            const task = this.currentPlan!.getTaskById(taskId);
+            if (!task) {
+                return {
+                    success: false,
+                    error: 'Task not found',
+                    taskId
+                };
+            }
+
+            // Associate
+            task.addEditId(editId);
+            await this.planStorage.savePlan(this.currentPlan!);
+
+            return {
+                success: true,
+                editId,
+                taskId
+            };
+        } catch (error) {
+            return {
+                success: false,
+                error: error instanceof Error ? error.message : String(error),
+                editId,
+                taskId
+            };
+        }
+    }
+
+    /**
+     * Get the last processed timestamp (for incremental processing)
+     */
+    async getLastProcessedTimestamp(): Promise<Date | null> {
+        const metaPath = path.join(this.projectPath, 'logs', 'edit_cursor.json');
+        if (!fs.existsSync(metaPath)) {
+            return null;
+        }
+
+        try {
+            const content = await fs.promises.readFile(metaPath, 'utf-8');
+            const data = JSON.parse(content);
+            return data.lastProcessed ? new Date(data.lastProcessed) : null;
+        } catch {
+            return null;
+        }
+    }
+
+    /**
+     * Set the last processed timestamp
+     */
+    async setLastProcessedTimestamp(timestamp: Date): Promise<void> {
+        const logsDir = path.join(this.projectPath, 'logs');
+        await fs.promises.mkdir(logsDir, { recursive: true });
+        
+        const metaPath = path.join(logsDir, 'edit_cursor.json');
+        const data = { lastProcessed: timestamp.toISOString() };
+        await fs.promises.writeFile(metaPath, JSON.stringify(data), 'utf-8');
+    }
+
+    /**
+     * Process only new edits since last processed timestamp
+     * More efficient for polling/watching scenarios
+     */
+    async processNewEdits(): Promise<ProcessEditsResult> {
+        if (!this.currentPlan) {
+            await this.getPlan();
+        }
+
+        // Check preconditions
+        const activeTask = this.getActiveTask();
+        if (!activeTask) {
+            return {
+                success: true,
+                associatedCount: 0,
+                associatedEditIds: [],
+                skippedReason: 'no_active_task'
+            };
+        }
+
+        if (this.currentPlan!.documents.length === 0) {
+            return {
+                success: true,
+                associatedCount: 0,
+                associatedEditIds: [],
+                skippedReason: 'no_documents'
+            };
+        }
+
+        try {
+            // Get cutoff timestamp
+            const lastProcessed = await this.getLastProcessedTimestamp();
+            
+            // Get new edits
+            let newEdits: Edit[];
+            if (lastProcessed) {
+                newEdits = await this.planStorage.getNewEditsSince(lastProcessed);
+            } else {
+                // First time - process all unassociated
+                newEdits = await this.planStorage.getUnassociatedEdits();
+            }
+
+            if (newEdits.length === 0) {
+                return {
+                    success: true,
+                    associatedCount: 0,
+                    associatedEditIds: [],
+                    skippedReason: 'no_new_edits'
+                };
+            }
+
+            const associatedEditIds: string[] = [];
+            let latestTimestamp = lastProcessed || new Date(0);
+
+            for (const edit of newEdits) {
+                // Only process unassociated edits
+                if (edit.taskId !== null && edit.taskId !== undefined) {
+                    continue;
+                }
+
+                // Check if edit affects a plan document
+                const editFilename = edit.request.filename as string | undefined;
+                if (editFilename && this.currentPlan!.hasDocument(editFilename)) {
+                    activeTask.addEditId(edit.id);
+                    associatedEditIds.push(edit.id);
+                }
+
+                // Track latest timestamp
+                if (edit.timestamp > latestTimestamp) {
+                    latestTimestamp = edit.timestamp;
+                }
+            }
+
+            // Save plan if we made associations
+            if (associatedEditIds.length > 0) {
+                await this.planStorage.savePlan(this.currentPlan!);
+            }
+
+            // Update cursor
+            await this.setLastProcessedTimestamp(latestTimestamp);
+
+            return {
+                success: true,
+                associatedCount: associatedEditIds.length,
+                associatedEditIds
+            };
+        } catch (error) {
+            return {
+                success: false,
+                error: error instanceof Error ? error.message : String(error),
+                associatedCount: 0,
+                associatedEditIds: []
+            };
+        }
     }
 }

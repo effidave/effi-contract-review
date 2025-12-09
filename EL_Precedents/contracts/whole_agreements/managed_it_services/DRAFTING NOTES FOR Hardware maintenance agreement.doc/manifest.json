@@ -1,0 +1,68 @@
+{
+  "doc_id": "DRAFTING-NOTES-FOR-Hardware-maintenance-agreement.",
+  "v": 1,
+  "created_at": "2025-12-09T17:35:28+00:00",
+  "tool_version": "sprint2-dev",
+  "doc_format": "docx",
+  "sdt_carrier": "content-controls",
+  "range_marker_carrier": "content-controls",
+  "range_marker_tag_prefix": "marker:",
+  "fallback_heading_label": "Body (no heading)",
+  "checksums": {
+    "blocks.jsonl": "sha256:c649fc102b053d3cab9ae6a47c4d6cc75f4a81ab5ddbd460fc504db43cb27f7a",
+    "sections.json": "sha256:47b8584988caa8028f601f6155567a65b567a145a1ff31fb7574fb5b74943274",
+    "styles.json": "sha256:7a57ae977142f5dae3e082e786680fbca580e5f22c1713975e747e9a0a8cf00a",
+    "relationships.json": "sha256:f605d9a4eb4dc6d2e6b7556533b29684134178c92990bfcc598992e5c0310ac0",
+    "tag_ranges.jsonl": "sha256:bee67619b33155767f6cbb289abfba72b982121c8e2b3d3e5221ce274c80843c",
+    "index.json": "sha256:a9a44e34ed0b0dd9be0bb8103f1a6d80c4e426cb38efcae8492b97e8edf3413b"
+  },
+  "schema_checksums": {
+    "block.schema.json": "sha256:a79c29ccec8330bef4e2ed057adee57e544a0749ee71c8aac86b8f8e13d1550e",
+    "edit_plan.schema.json": "sha256:4d9432a9d9b1b61675f527817c7dfdd608ffa20a63f2c1f50d9f0cba9ac367b1",
+    "index.schema.json": "sha256:f305e73bdd196f01be5aba55a1bfe71dc0756218dbafc234fbd9e269c7f84557",
+    "labels.schema.json": "sha256:44e45c3f69aa8c9728872198061b34cbc23aa83a232a93debb3bce13f42e1052",
+    "manifest.schema.json": "sha256:cbab4e0766ffb0d8b0fb12cc0a6b7d75f39bdacc70fed82baaae6de0f102829d",
+    "relationships.schema.json": "sha256:0a6b82f199e7e009eb01866b591d10d35578bb937e794216a56a29c3f922246e",
+    "report.schema.json": "sha256:cc9454c8a3713921e540d0e7e1ce3fca7c8569e9704475ec39eae016541bf3be",
+    "sections.schema.json": "sha256:64d13ab3f694c5e4bcce3072c1d2823c614b2718aa50ba4850aea65c3b9fcdcc",
+    "styles.schema.json": "sha256:69bb206dd584e1ce1e19e6f752f510633761625ed9ba8905fa78c2bfdf731549",
+    "tag_range.schema.json": "sha256:38ae87688b3e7f53b0d7466d5699e6e741330b2da45ea6f784ae6da8bf002c3f"
+  },
+  "attachments": [
+    {
+      "attachment_id": "9fcefcc2-b957-482c-b548-557ff91ec428",
+      "type": "schedule",
+      "ordinal": "1",
+      "title": null,
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "a9e6574e-155b-4385-a0cb-3842f0ac85da",
+      "type": "schedule",
+      "ordinal": "2",
+      "title": null,
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "9ae5f845-7218-444c-843e-4f1b2eb4e7a9",
+      "type": "schedule",
+      "ordinal": "1",
+      "title": null,
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "8bf728e0-2752-4ba9-a3d0-583d5a161b51",
+      "type": "schedule",
+      "ordinal": "2",
+      "title": null,
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "61106eb2-5522-4636-a01b-fab72be79fe5",
+      "type": "schedule",
+      "ordinal": "3",
+      "title": null,
+      "parent_attachment_id": null
+    }
+  ]
+}

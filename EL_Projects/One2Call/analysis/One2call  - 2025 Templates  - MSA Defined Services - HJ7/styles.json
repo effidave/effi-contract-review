@@ -1,0 +1,132 @@
+{
+  "styles": [
+    {
+      "name": "Defined Term Para",
+      "type": "unknown",
+      "count": 24,
+      "semantic_hint": "definition",
+      "hint_scores": {
+        "definition": 0.75
+      }
+    },
+    {
+      "name": "Heading 1",
+      "type": "heading",
+      "count": 2,
+      "semantic_hint": "clause_heading",
+      "hint_scores": {
+        "clause_heading": 1.75
+      }
+    },
+    {
+      "name": "Heading 2",
+      "type": "heading",
+      "count": 3,
+      "semantic_hint": "clause_heading",
+      "hint_scores": {
+        "clause_heading": 1.75
+      }
+    },
+    {
+      "name": "Heading 3",
+      "type": "table_cell",
+      "count": 9,
+      "semantic_hint": "clause_heading",
+      "hint_scores": {
+        "clause_heading": 0.75
+      }
+    },
+    {
+      "name": "List Paragraph",
+      "type": "unknown",
+      "count": 3,
+      "semantic_hint": "list_item",
+      "hint_scores": {
+        "list_item": 1.0
+      }
+    },
+    {
+      "name": "No Num Untitled Clause",
+      "type": "paragraph",
+      "count": 1,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "Normal",
+      "type": "table_cell",
+      "count": 41,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "Para Clause",
+      "type": "paragraph",
+      "count": 1,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "Para subclause 1",
+      "type": "paragraph",
+      "count": 2,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "Paragraph",
+      "type": "paragraph",
+      "count": 1,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "Schedule",
+      "type": "heading",
+      "count": 1,
+      "semantic_hint": "clause_heading",
+      "hint_scores": {
+        "clause_heading": 1.0
+      }
+    },
+    {
+      "name": "Title Clause",
+      "type": "heading",
+      "count": 41,
+      "semantic_hint": "clause_heading",
+      "hint_scores": {
+        "clause_heading": 1.5
+      }
+    },
+    {
+      "name": "Title subclause1",
+      "type": "heading",
+      "count": 1,
+      "semantic_hint": "clause_heading",
+      "hint_scores": {
+        "clause_heading": 1.5
+      }
+    },
+    {
+      "name": "Untitled subclause 1",
+      "type": "unknown",
+      "count": 140,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "Untitled subclause 2",
+      "type": "unknown",
+      "count": 132,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "Untitled subclause 3",
+      "type": "unknown",
+      "count": 23,
+      "semantic_hint": null,
+      "hint_scores": null
+    }
+  ]
+}

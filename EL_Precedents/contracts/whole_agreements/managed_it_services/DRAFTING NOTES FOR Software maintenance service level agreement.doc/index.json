@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "doc_id": "DRAFTING-NOTES-FOR-Software-maintenance-service-le",
+  "doc_format": "docx",
+  "source_filename": "DRAFTING NOTES FOR Software maintenance service level agreement.doc.docx",
+  "char_count": 31332,
+  "block_count": 136,
+  "section_count": 15,
+  "ltu_count": 136,
+  "max_section_depth": 1,
+  "has_tag_ranges": true,
+  "schema_version": "1.0.0",
+  "filemap": {
+    "blocks": "blocks.jsonl",
+    "sections": "sections.json",
+    "styles": "styles.json",
+    "tag_ranges": "tag_ranges.jsonl"
+  }
+}

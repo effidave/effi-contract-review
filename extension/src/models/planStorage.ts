@@ -198,6 +198,72 @@ export class PlanStorage {
         return allEdits.filter(edit => edit.taskId === taskId);
     }
 
+    /**
+     * Get specific edits by their IDs, in the order requested
+     */
+    async getEditsByIds(ids: string[]): Promise<Edit[]> {
+        const allEdits = await this.loadEdits();
+        const editMap = new Map(allEdits.map(e => [e.id, e]));
+        
+        // Return in requested order, filtering out missing IDs
+        return ids.map(id => editMap.get(id)).filter((e): e is Edit => e !== undefined);
+    }
+
+    /**
+     * Get all edits from the log (alias for loadEdits for clarity)
+     */
+    async getAllEdits(): Promise<Edit[]> {
+        return this.loadEdits();
+    }
+
+    /**
+     * Get a single edit by ID
+     * Returns null if not found
+     */
+    async getEditById(id: string): Promise<Edit | null> {
+        const allEdits = await this.loadEdits();
+        return allEdits.find(e => e.id === id) || null;
+    }
+
+    /**
+     * Get edits that occurred after a given timestamp
+     */
+    async getNewEditsSince(cutoff: Date): Promise<Edit[]> {
+        const allEdits = await this.loadEdits();
+        return allEdits.filter(e => e.timestamp > cutoff);
+    }
+
+    /**
+     * Get edits that have no task association (taskId is null)
+     * These are edits logged by the MCP server that haven't been linked to a task yet
+     */
+    async getUnassociatedEdits(): Promise<Edit[]> {
+        const allEdits = await this.loadEdits();
+        return allEdits.filter(e => e.taskId === null || e.taskId === undefined);
+    }
+
+    /**
+     * Get edits that affected a specific document
+     * Matches by filename (case-insensitive, path-normalized)
+     */
+    async getEditsForDocument(filename: string): Promise<Edit[]> {
+        const allEdits = await this.loadEdits();
+        const normalizedTarget = this.normalizeFilename(filename);
+        
+        return allEdits.filter(e => {
+            const editFilename = e.request.filename as string | undefined;
+            if (!editFilename) return false;
+            return this.normalizeFilename(editFilename) === normalizedTarget;
+        });
+    }
+
+    /**
+     * Normalize a filename for comparison (lowercase, forward slashes)
+     */
+    private normalizeFilename(filename: string): string {
+        return filename.replace(/\\/g, '/').toLowerCase();
+    }
+
     // ========================================================================
     // Combined Operations
     // ========================================================================

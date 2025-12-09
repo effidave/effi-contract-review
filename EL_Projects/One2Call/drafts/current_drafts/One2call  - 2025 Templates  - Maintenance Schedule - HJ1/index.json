@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "doc_id": "One2call----2025-Templates----Maintenance-Schedule",
+  "doc_format": "docx",
+  "source_filename": "One2call  - 2025 Templates  - Maintenance Schedule - HJ1.docx",
+  "char_count": 17444,
+  "block_count": 134,
+  "section_count": 93,
+  "ltu_count": 134,
+  "max_section_depth": 4,
+  "has_tag_ranges": true,
+  "schema_version": "1.0.0",
+  "filemap": {
+    "blocks": "blocks.jsonl",
+    "sections": "sections.json",
+    "styles": "styles.json",
+    "tag_ranges": "tag_ranges.jsonl"
+  }
+}

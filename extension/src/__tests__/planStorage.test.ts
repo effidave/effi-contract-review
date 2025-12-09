@@ -770,3 +770,357 @@ describe('PlanStorage - Error Handling', () => {
         expect(edits[0].id).toBe('valid');
     });
 });
+
+// ============================================================================
+// SECTION 8: Edit Retrieval by ID Tests
+// ============================================================================
+
+describe('PlanStorage - Edit Retrieval by ID', () => {
+    let tempDir: string;
+
+    beforeEach(() => {
+        tempDir = createTempProjectDir();
+    });
+
+    afterEach(() => {
+        cleanupTempDir(tempDir);
+    });
+
+    describe('getEditsByIds', () => {
+        test('should retrieve specific edits by their IDs', async () => {
+            const storage = new PlanStorage(tempDir);
+            
+            // Create multiple edits
+            await storage.appendEdit(new Edit({
+                id: 'edit001',
+                taskId: 'task1',
+                toolName: 'search_and_replace',
+                request: { find: 'foo' },
+                response: { success: true }
+            }));
+            await storage.appendEdit(new Edit({
+                id: 'edit002',
+                taskId: 'task1',
+                toolName: 'add_paragraph',
+                request: { text: 'hello' },
+                response: { success: true }
+            }));
+            await storage.appendEdit(new Edit({
+                id: 'edit003',
+                taskId: 'task2',
+                toolName: 'delete_clause',
+                request: { clause: '5.1' },
+                response: { success: true }
+            }));
+
+            // Retrieve only specific IDs
+            const edits = await storage.getEditsByIds(['edit001', 'edit003']);
+
+            expect(edits.length).toBe(2);
+            expect(edits.map(e => e.id)).toContain('edit001');
+            expect(edits.map(e => e.id)).toContain('edit003');
+            expect(edits.map(e => e.id)).not.toContain('edit002');
+        });
+
+        test('should return empty array for non-existent IDs', async () => {
+            const storage = new PlanStorage(tempDir);
+            
+            await storage.appendEdit(new Edit({
+                id: 'edit001',
+                taskId: 'task1',
+                toolName: 'tool',
+                request: {},
+                response: {}
+            }));
+
+            const edits = await storage.getEditsByIds(['nonexistent', 'alsonotreal']);
+
+            expect(edits).toEqual([]);
+        });
+
+        test('should return empty array when log file does not exist', async () => {
+            const storage = new PlanStorage(tempDir);
+
+            const edits = await storage.getEditsByIds(['edit001']);
+
+            expect(edits).toEqual([]);
+        });
+
+        test('should preserve edit order matching requested IDs order', async () => {
+            const storage = new PlanStorage(tempDir);
+            
+            await storage.appendEdit(new Edit({ id: 'aaa', taskId: 't', toolName: 'tool', request: {}, response: {} }));
+            await storage.appendEdit(new Edit({ id: 'bbb', taskId: 't', toolName: 'tool', request: {}, response: {} }));
+            await storage.appendEdit(new Edit({ id: 'ccc', taskId: 't', toolName: 'tool', request: {}, response: {} }));
+
+            // Request in different order than log
+            const edits = await storage.getEditsByIds(['ccc', 'aaa']);
+
+            expect(edits[0].id).toBe('ccc');
+            expect(edits[1].id).toBe('aaa');
+        });
+
+        test('should preserve all edit properties when retrieving', async () => {
+            const storage = new PlanStorage(tempDir);
+            const timestamp = new Date('2025-12-09T14:30:00Z');
+            
+            await storage.appendEdit(new Edit({
+                id: 'edit001',
+                taskId: 'task123',
+                toolName: 'search_and_replace',
+                request: { filename: 'doc.docx', find: 'foo', replace: 'bar' },
+                response: { success: true, replacements: 5 },
+                timestamp: timestamp
+            }));
+
+            const edits = await storage.getEditsByIds(['edit001']);
+
+            expect(edits[0].id).toBe('edit001');
+            expect(edits[0].taskId).toBe('task123');
+            expect(edits[0].toolName).toBe('search_and_replace');
+            expect(edits[0].request).toEqual({ filename: 'doc.docx', find: 'foo', replace: 'bar' });
+            expect(edits[0].response).toEqual({ success: true, replacements: 5 });
+            expect(edits[0].timestamp.toISOString()).toBe(timestamp.toISOString());
+        });
+
+        test('should handle partial matches (some IDs exist, some do not)', async () => {
+            const storage = new PlanStorage(tempDir);
+            
+            await storage.appendEdit(new Edit({ id: 'exists1', taskId: 't', toolName: 'tool', request: {}, response: {} }));
+            await storage.appendEdit(new Edit({ id: 'exists2', taskId: 't', toolName: 'tool', request: {}, response: {} }));
+
+            const edits = await storage.getEditsByIds(['exists1', 'notreal', 'exists2', 'alsonotreal']);
+
+            expect(edits.length).toBe(2);
+            expect(edits.map(e => e.id)).toEqual(['exists1', 'exists2']);
+        });
+    });
+
+    describe('getAllEdits', () => {
+        test('should return all edits from the log', async () => {
+            const storage = new PlanStorage(tempDir);
+            
+            await storage.appendEdit(new Edit({ id: 'e1', taskId: 't1', toolName: 'tool1', request: {}, response: {} }));
+            await storage.appendEdit(new Edit({ id: 'e2', taskId: 't1', toolName: 'tool2', request: {}, response: {} }));
+            await storage.appendEdit(new Edit({ id: 'e3', taskId: 't2', toolName: 'tool3', request: {}, response: {} }));
+
+            const edits = await storage.getAllEdits();
+
+            expect(edits.length).toBe(3);
+            expect(edits.map(e => e.id)).toEqual(['e1', 'e2', 'e3']);
+        });
+
+        test('should return empty array when log file does not exist', async () => {
+            const storage = new PlanStorage(tempDir);
+
+            const edits = await storage.getAllEdits();
+
+            expect(edits).toEqual([]);
+        });
+
+        test('should return edits in chronological order (as logged)', async () => {
+            const storage = new PlanStorage(tempDir);
+            
+            await storage.appendEdit(new Edit({ id: 'first', taskId: 't', toolName: 'tool', request: {}, response: {}, timestamp: new Date('2025-12-09T10:00:00Z') }));
+            await storage.appendEdit(new Edit({ id: 'second', taskId: 't', toolName: 'tool', request: {}, response: {}, timestamp: new Date('2025-12-09T11:00:00Z') }));
+            await storage.appendEdit(new Edit({ id: 'third', taskId: 't', toolName: 'tool', request: {}, response: {}, timestamp: new Date('2025-12-09T12:00:00Z') }));
+
+            const edits = await storage.getAllEdits();
+
+            expect(edits[0].id).toBe('first');
+            expect(edits[1].id).toBe('second');
+            expect(edits[2].id).toBe('third');
+        });
+    });
+
+    describe('getEditById', () => {
+        test('should return single edit by ID', async () => {
+            const storage = new PlanStorage(tempDir);
+            
+            await storage.appendEdit(new Edit({ id: 'target', taskId: 't1', toolName: 'tool', request: { data: 123 }, response: { ok: true } }));
+            await storage.appendEdit(new Edit({ id: 'other', taskId: 't2', toolName: 'tool', request: {}, response: {} }));
+
+            const edit = await storage.getEditById('target');
+
+            expect(edit).toBeDefined();
+            expect(edit!.id).toBe('target');
+            expect(edit!.request).toEqual({ data: 123 });
+        });
+
+        test('should return null for non-existent ID', async () => {
+            const storage = new PlanStorage(tempDir);
+            
+            await storage.appendEdit(new Edit({ id: 'exists', taskId: 't', toolName: 'tool', request: {}, response: {} }));
+
+            const edit = await storage.getEditById('nonexistent');
+
+            expect(edit).toBeNull();
+        });
+
+        test('should return null when log file does not exist', async () => {
+            const storage = new PlanStorage(tempDir);
+
+            const edit = await storage.getEditById('anyid');
+
+            expect(edit).toBeNull();
+        });
+    });
+
+    describe('getNewEditsSince', () => {
+        test('should return edits after a given timestamp', async () => {
+            const storage = new PlanStorage(tempDir);
+            const cutoff = new Date('2025-12-09T11:00:00Z');
+            
+            await storage.appendEdit(new Edit({ id: 'old1', taskId: 't', toolName: 'tool', request: {}, response: {}, timestamp: new Date('2025-12-09T10:00:00Z') }));
+            await storage.appendEdit(new Edit({ id: 'old2', taskId: 't', toolName: 'tool', request: {}, response: {}, timestamp: new Date('2025-12-09T10:30:00Z') }));
+            await storage.appendEdit(new Edit({ id: 'new1', taskId: 't', toolName: 'tool', request: {}, response: {}, timestamp: new Date('2025-12-09T11:30:00Z') }));
+            await storage.appendEdit(new Edit({ id: 'new2', taskId: 't', toolName: 'tool', request: {}, response: {}, timestamp: new Date('2025-12-09T12:00:00Z') }));
+
+            const newEdits = await storage.getNewEditsSince(cutoff);
+
+            expect(newEdits.length).toBe(2);
+            expect(newEdits.map(e => e.id)).toEqual(['new1', 'new2']);
+        });
+
+        test('should return all edits if cutoff is before all entries', async () => {
+            const storage = new PlanStorage(tempDir);
+            const cutoff = new Date('2020-01-01T00:00:00Z');
+            
+            await storage.appendEdit(new Edit({ id: 'e1', taskId: 't', toolName: 'tool', request: {}, response: {}, timestamp: new Date('2025-12-09T10:00:00Z') }));
+            await storage.appendEdit(new Edit({ id: 'e2', taskId: 't', toolName: 'tool', request: {}, response: {}, timestamp: new Date('2025-12-09T11:00:00Z') }));
+
+            const newEdits = await storage.getNewEditsSince(cutoff);
+
+            expect(newEdits.length).toBe(2);
+        });
+
+        test('should return empty array if cutoff is after all entries', async () => {
+            const storage = new PlanStorage(tempDir);
+            const cutoff = new Date('2030-01-01T00:00:00Z');
+            
+            await storage.appendEdit(new Edit({ id: 'e1', taskId: 't', toolName: 'tool', request: {}, response: {}, timestamp: new Date('2025-12-09T10:00:00Z') }));
+
+            const newEdits = await storage.getNewEditsSince(cutoff);
+
+            expect(newEdits).toEqual([]);
+        });
+
+        test('should return empty array when log file does not exist', async () => {
+            const storage = new PlanStorage(tempDir);
+
+            const newEdits = await storage.getNewEditsSince(new Date());
+
+            expect(newEdits).toEqual([]);
+        });
+    });
+
+    describe('getUnassociatedEdits', () => {
+        test('should return edits with null taskId', async () => {
+            const storage = new PlanStorage(tempDir);
+            
+            // Manually write edits with null taskId (simulating MCP server logs)
+            const logsDir = path.join(tempDir, 'logs');
+            fs.mkdirSync(logsDir, { recursive: true });
+            const editsContent = [
+                JSON.stringify({ id: 'assigned1', taskId: 'task1', toolName: 'tool', request: {}, response: {}, timestamp: new Date().toISOString() }),
+                JSON.stringify({ id: 'unassigned1', taskId: null, toolName: 'tool', request: { filename: 'doc.docx' }, response: {}, timestamp: new Date().toISOString() }),
+                JSON.stringify({ id: 'assigned2', taskId: 'task2', toolName: 'tool', request: {}, response: {}, timestamp: new Date().toISOString() }),
+                JSON.stringify({ id: 'unassigned2', taskId: null, toolName: 'tool', request: { filename: 'other.docx' }, response: {}, timestamp: new Date().toISOString() })
+            ].join('\n');
+            fs.writeFileSync(path.join(logsDir, 'edits.jsonl'), editsContent);
+
+            const unassigned = await storage.getUnassociatedEdits();
+
+            expect(unassigned.length).toBe(2);
+            expect(unassigned.map((e: Edit) => e.id)).toEqual(['unassigned1', 'unassigned2']);
+        });
+
+        test('should return empty array if all edits are assigned', async () => {
+            const storage = new PlanStorage(tempDir);
+            
+            await storage.appendEdit(new Edit({ id: 'e1', taskId: 'task1', toolName: 'tool', request: {}, response: {} }));
+            await storage.appendEdit(new Edit({ id: 'e2', taskId: 'task2', toolName: 'tool', request: {}, response: {} }));
+
+            const unassigned = await storage.getUnassociatedEdits();
+
+            expect(unassigned).toEqual([]);
+        });
+
+        test('should return empty array when log file does not exist', async () => {
+            const storage = new PlanStorage(tempDir);
+
+            const unassigned = await storage.getUnassociatedEdits();
+
+            expect(unassigned).toEqual([]);
+        });
+    });
+
+    describe('getEditsForDocument', () => {
+        test('should return edits that affected a specific document', async () => {
+            const storage = new PlanStorage(tempDir);
+            
+            await storage.appendEdit(new Edit({
+                id: 'e1', taskId: 't1', toolName: 'search_and_replace',
+                request: { filename: 'C:/Projects/nda.docx', find: 'foo' },
+                response: {}
+            }));
+            await storage.appendEdit(new Edit({
+                id: 'e2', taskId: 't1', toolName: 'add_paragraph',
+                request: { filename: 'C:/Projects/agreement.docx', text: 'hello' },
+                response: {}
+            }));
+            await storage.appendEdit(new Edit({
+                id: 'e3', taskId: 't1', toolName: 'delete_clause',
+                request: { filename: 'C:/Projects/nda.docx', clause: '5.1' },
+                response: {}
+            }));
+
+            const ndaEdits = await storage.getEditsForDocument('C:/Projects/nda.docx');
+
+            expect(ndaEdits.length).toBe(2);
+            expect(ndaEdits.map((e: Edit) => e.id)).toEqual(['e1', 'e3']);
+        });
+
+        test('should match filenames case-insensitively', async () => {
+            const storage = new PlanStorage(tempDir);
+            
+            await storage.appendEdit(new Edit({
+                id: 'e1', taskId: 't1', toolName: 'tool',
+                request: { filename: 'C:/Projects/NDA.docx' },
+                response: {}
+            }));
+
+            const edits = await storage.getEditsForDocument('C:/Projects/nda.docx');
+
+            expect(edits.length).toBe(1);
+        });
+
+        test('should normalize path separators when matching', async () => {
+            const storage = new PlanStorage(tempDir);
+            
+            await storage.appendEdit(new Edit({
+                id: 'e1', taskId: 't1', toolName: 'tool',
+                request: { filename: 'C:\\Projects\\nda.docx' },
+                response: {}
+            }));
+
+            const edits = await storage.getEditsForDocument('C:/Projects/nda.docx');
+
+            expect(edits.length).toBe(1);
+        });
+
+        test('should return empty array if no edits for document', async () => {
+            const storage = new PlanStorage(tempDir);
+            
+            await storage.appendEdit(new Edit({
+                id: 'e1', taskId: 't1', toolName: 'tool',
+                request: { filename: 'C:/Projects/other.docx' },
+                response: {}
+            }));
+
+            const edits = await storage.getEditsForDocument('C:/Projects/nda.docx');
+
+            expect(edits).toEqual([]);
+        });
+    });
+});

@@ -1,0 +1,138 @@
+{
+  "doc_id": "DRAFTING-NOTES-FOR-Systems-integration-agreement-(",
+  "v": 1,
+  "created_at": "2025-12-09T17:36:10+00:00",
+  "tool_version": "sprint2-dev",
+  "doc_format": "docx",
+  "sdt_carrier": "content-controls",
+  "range_marker_carrier": "content-controls",
+  "range_marker_tag_prefix": "marker:",
+  "fallback_heading_label": "Body (no heading)",
+  "checksums": {
+    "blocks.jsonl": "sha256:1f35e8d51f1cc84f3e705e9f0c8658a9acaeb381f212d2bea19701da81809e63",
+    "sections.json": "sha256:83f0e9c59007c24bb257b26ab740cd20c8291d4657450238bfc2926867f41b6e",
+    "styles.json": "sha256:1b6fc18b5f9e53ab206bfb3da3f66af0163c5fbfc40e8b21433933fc5a561fd0",
+    "relationships.json": "sha256:510b7890437d116d2f67671ac77dfd51abc2176ec84e0084b94cbd1e77732a56",
+    "tag_ranges.jsonl": "sha256:60dd688fc6779973b4183cf823504b8f9aff13d84bcb17a02184f9851688e6b4",
+    "index.json": "sha256:59226e146f255d0fcbb9934c48013ff7f1d1944207820904745b5b10a4d0e776"
+  },
+  "schema_checksums": {
+    "block.schema.json": "sha256:a79c29ccec8330bef4e2ed057adee57e544a0749ee71c8aac86b8f8e13d1550e",
+    "edit_plan.schema.json": "sha256:4d9432a9d9b1b61675f527817c7dfdd608ffa20a63f2c1f50d9f0cba9ac367b1",
+    "index.schema.json": "sha256:f305e73bdd196f01be5aba55a1bfe71dc0756218dbafc234fbd9e269c7f84557",
+    "labels.schema.json": "sha256:44e45c3f69aa8c9728872198061b34cbc23aa83a232a93debb3bce13f42e1052",
+    "manifest.schema.json": "sha256:cbab4e0766ffb0d8b0fb12cc0a6b7d75f39bdacc70fed82baaae6de0f102829d",
+    "relationships.schema.json": "sha256:0a6b82f199e7e009eb01866b591d10d35578bb937e794216a56a29c3f922246e",
+    "report.schema.json": "sha256:cc9454c8a3713921e540d0e7e1ce3fca7c8569e9704475ec39eae016541bf3be",
+    "sections.schema.json": "sha256:64d13ab3f694c5e4bcce3072c1d2823c614b2718aa50ba4850aea65c3b9fcdcc",
+    "styles.schema.json": "sha256:69bb206dd584e1ce1e19e6f752f510633761625ed9ba8905fa78c2bfdf731549",
+    "tag_range.schema.json": "sha256:38ae87688b3e7f53b0d7466d5699e6e741330b2da45ea6f784ae6da8bf002c3f"
+  },
+  "attachments": [
+    {
+      "attachment_id": "b2656bfe-805e-4ad0-91df-476cddea04b1",
+      "type": "schedule",
+      "ordinal": "1",
+      "title": null,
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "43578505-d108-4df6-b515-cf1de13d6c12",
+      "type": "schedule",
+      "ordinal": "2",
+      "title": null,
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "b8f5b32e-5275-46f2-91fb-12860ed19146",
+      "type": "schedule",
+      "ordinal": "3",
+      "title": null,
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "965fbd95-b98b-4e15-b14b-5fa9a28f0092",
+      "type": "schedule",
+      "ordinal": "4",
+      "title": null,
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "ba9cf40e-639a-4b46-acc1-62b681e18c3e",
+      "type": "schedule",
+      "ordinal": "5",
+      "title": null,
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "86e8004d-b996-4c64-9f82-e16c7fd95ea8",
+      "type": "schedule",
+      "ordinal": "6",
+      "title": null,
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "40a4ad48-7ffb-4d5f-8b30-ba2bf623d7a3",
+      "type": "annex",
+      "ordinal": "A",
+      "title": null,
+      "parent_attachment_id": "86e8004d-b996-4c64-9f82-e16c7fd95ea8"
+    },
+    {
+      "attachment_id": "744e2c75-3377-4c4e-85df-db0cd4e5ef42",
+      "type": "annex",
+      "ordinal": "B",
+      "title": null,
+      "parent_attachment_id": "40a4ad48-7ffb-4d5f-8b30-ba2bf623d7a3"
+    },
+    {
+      "attachment_id": "9c4890af-9928-49c2-8c85-6d60e1278c12",
+      "type": "annex",
+      "ordinal": "C",
+      "title": null,
+      "parent_attachment_id": "744e2c75-3377-4c4e-85df-db0cd4e5ef42"
+    },
+    {
+      "attachment_id": "3147e066-f317-4af7-9f8e-fde2dbf05bef",
+      "type": "annex",
+      "ordinal": "D",
+      "title": null,
+      "parent_attachment_id": "9c4890af-9928-49c2-8c85-6d60e1278c12"
+    },
+    {
+      "attachment_id": "b6c37db2-97e8-4e2a-8aa9-bcbd0fea66e0",
+      "type": "annex",
+      "ordinal": "E",
+      "title": null,
+      "parent_attachment_id": "3147e066-f317-4af7-9f8e-fde2dbf05bef"
+    },
+    {
+      "attachment_id": "03590433-cd54-4057-a77c-032b961432e6",
+      "type": "annex",
+      "ordinal": "F",
+      "title": null,
+      "parent_attachment_id": "b6c37db2-97e8-4e2a-8aa9-bcbd0fea66e0"
+    },
+    {
+      "attachment_id": "03751c43-abc2-4ea0-9679-e43648ee5a70",
+      "type": "annex",
+      "ordinal": "G",
+      "title": null,
+      "parent_attachment_id": "03590433-cd54-4057-a77c-032b961432e6"
+    },
+    {
+      "attachment_id": "c986a003-772c-4554-b1c8-577c47a7dda8",
+      "type": "annex",
+      "ordinal": "H",
+      "title": null,
+      "parent_attachment_id": "03751c43-abc2-4ea0-9679-e43648ee5a70"
+    },
+    {
+      "attachment_id": "54bbfb6e-a0ce-447b-9fda-efa144c60712",
+      "type": "annex",
+      "ordinal": "I",
+      "title": null,
+      "parent_attachment_id": "c986a003-772c-4554-b1c8-577c47a7dda8"
+    }
+  ]
+}

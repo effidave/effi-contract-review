@@ -1,0 +1,61 @@
+{
+  "doc_id": "123e4567-e89b-12d3-a456-426614174000",
+  "v": 1,
+  "created_at": "2025-12-09T13:01:00+00:00",
+  "tool_version": "sprint2-dev",
+  "doc_format": "docx",
+  "sdt_carrier": "content-controls",
+  "range_marker_carrier": "content-controls",
+  "range_marker_tag_prefix": "marker:",
+  "fallback_heading_label": "Body (no heading)",
+  "checksums": {
+    "blocks.jsonl": "sha256:0bb5424f6f9c50b61a485a7894d4cac87ca2753f8f2b9234e22e68a9f9e5798d",
+    "sections.json": "sha256:3b01f1a29cdbb79b4509119018f780263dde772595d5f2d9c1339ac2a58bad09",
+    "styles.json": "sha256:964c993557ba9fc7b019c9f628be0b566056b27f7219b55dfdbf4e0c69af66ce",
+    "relationships.json": "sha256:c1cd5721785590dc2563214faed75c41a1f56dc87ed270251f505804bc458d6f",
+    "tag_ranges.jsonl": "sha256:c565f0333093efe55dc3e6ec4f14cdbafcbd23ce0e75a2f69810e7a34ecaebc8",
+    "index.json": "sha256:534642ca138e1ab7ef33d72fb4ef89b313ddbee8c29208b05d9761f3d0a32a5d"
+  },
+  "schema_checksums": {
+    "block.schema.json": "sha256:a79c29ccec8330bef4e2ed057adee57e544a0749ee71c8aac86b8f8e13d1550e",
+    "edit_plan.schema.json": "sha256:4d9432a9d9b1b61675f527817c7dfdd608ffa20a63f2c1f50d9f0cba9ac367b1",
+    "index.schema.json": "sha256:f305e73bdd196f01be5aba55a1bfe71dc0756218dbafc234fbd9e269c7f84557",
+    "labels.schema.json": "sha256:44e45c3f69aa8c9728872198061b34cbc23aa83a232a93debb3bce13f42e1052",
+    "manifest.schema.json": "sha256:cbab4e0766ffb0d8b0fb12cc0a6b7d75f39bdacc70fed82baaae6de0f102829d",
+    "relationships.schema.json": "sha256:0a6b82f199e7e009eb01866b591d10d35578bb937e794216a56a29c3f922246e",
+    "report.schema.json": "sha256:cc9454c8a3713921e540d0e7e1ce3fca7c8569e9704475ec39eae016541bf3be",
+    "sections.schema.json": "sha256:64d13ab3f694c5e4bcce3072c1d2823c614b2718aa50ba4850aea65c3b9fcdcc",
+    "styles.schema.json": "sha256:69bb206dd584e1ce1e19e6f752f510633761625ed9ba8905fa78c2bfdf731549",
+    "tag_range.schema.json": "sha256:38ae87688b3e7f53b0d7466d5699e6e741330b2da45ea6f784ae6da8bf002c3f"
+  },
+  "attachments": [
+    {
+      "attachment_id": "d3163e92-e1cf-4591-a35b-1f63c94c955a",
+      "type": "appendix",
+      "ordinal": "1",
+      "title": "GENERAL TERMS",
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "0581fc93-c553-48dd-840c-c59a400d1b93",
+      "type": "appendix",
+      "ordinal": "2",
+      "title": "SERVICES",
+      "parent_attachment_id": "d3163e92-e1cf-4591-a35b-1f63c94c955a"
+    },
+    {
+      "attachment_id": "b0ed4c6c-f41e-41dc-b48c-67735e7a2b0c",
+      "type": "appendix",
+      "ordinal": "3",
+      "title": "TECHNICAL INFRASTRUCTURE, BACKUP AND DISASTER RECOVERY",
+      "parent_attachment_id": "0581fc93-c553-48dd-840c-c59a400d1b93"
+    },
+    {
+      "attachment_id": "5118927a-c2f8-43ec-9e3b-22faf6113662",
+      "type": "appendix",
+      "ordinal": "4",
+      "title": "DATA PROTOCOL",
+      "parent_attachment_id": "b0ed4c6c-f41e-41dc-b48c-67735e7a2b0c"
+    }
+  ]
+}

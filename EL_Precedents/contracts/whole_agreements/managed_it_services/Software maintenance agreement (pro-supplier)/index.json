@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "doc_id": "Software-maintenance-agreement-(pro-supplier)",
+  "doc_format": "docx",
+  "source_filename": "Software maintenance agreement (pro-supplier).docx",
+  "char_count": 66371,
+  "block_count": 394,
+  "section_count": 365,
+  "ltu_count": 394,
+  "max_section_depth": 4,
+  "has_tag_ranges": true,
+  "schema_version": "1.0.0",
+  "filemap": {
+    "blocks": "blocks.jsonl",
+    "sections": "sections.json",
+    "styles": "styles.json",
+    "tag_ranges": "tag_ranges.jsonl"
+  }
+}

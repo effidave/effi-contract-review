@@ -10,7 +10,7 @@
  * - WorkPlan: Manages collection of WorkTasks with ordering and persistence
  */
 
-import { Edit, WorkTask, WorkPlan, TaskStatus } from '../models/workplan';
+import { Edit, WorkTask, WorkPlan, LegalDocument, TaskStatus } from '../models/workplan';
 
 // ============================================================================
 // SECTION 1: Edit Class Tests
@@ -794,5 +794,415 @@ describe('ID generation', () => {
             ids.add(task.id);
         }
         expect(ids.size).toBe(100);
+    });
+});
+
+// ============================================================================
+// SECTION 6: LegalDocument Class Tests
+// ============================================================================
+
+describe('LegalDocument class', () => {
+    describe('constructor and properties', () => {
+        test('should create a LegalDocument with required filename', () => {
+            const doc = new LegalDocument({
+                filename: 'C:/Projects/Acme/drafts/nda.docx'
+            });
+
+            expect(doc.id).toBeDefined();
+            expect(doc.id).toMatch(/^[a-f0-9]{8}$/);
+            expect(doc.filename).toBe('C:/Projects/Acme/drafts/nda.docx');
+            expect(doc.displayName).toBe('nda.docx'); // Auto-derived from filename
+            expect(doc.addedDate).toBeInstanceOf(Date);
+        });
+
+        test('should allow custom ID and displayName', () => {
+            const doc = new LegalDocument({
+                id: 'doc12345',
+                filename: 'C:/Projects/Acme/drafts/nda.docx',
+                displayName: 'NDA v2 (Final)'
+            });
+
+            expect(doc.id).toBe('doc12345');
+            expect(doc.displayName).toBe('NDA v2 (Final)');
+        });
+
+        test('should use provided addedDate', () => {
+            const customDate = new Date('2025-12-01T10:00:00Z');
+            const doc = new LegalDocument({
+                filename: 'doc.docx',
+                addedDate: customDate
+            });
+
+            expect(doc.addedDate).toEqual(customDate);
+        });
+
+        test('should auto-derive displayName from Windows path', () => {
+            const doc = new LegalDocument({
+                filename: 'C:\\Users\\Test\\EL_Projects\\Acme\\drafts\\current_drafts\\agreement.docx'
+            });
+
+            expect(doc.displayName).toBe('agreement.docx');
+        });
+
+        test('should auto-derive displayName from Unix path', () => {
+            const doc = new LegalDocument({
+                filename: '/home/user/projects/contract.docx'
+            });
+
+            expect(doc.displayName).toBe('contract.docx');
+        });
+    });
+
+    describe('serialization', () => {
+        test('should serialize to JSON object', () => {
+            const doc = new LegalDocument({
+                id: 'doc12345',
+                filename: 'C:/Projects/Acme/drafts/nda.docx',
+                displayName: 'NDA v2',
+                addedDate: new Date('2025-12-09T12:00:00Z')
+            });
+
+            const json = doc.toJSON();
+
+            expect(json).toEqual({
+                id: 'doc12345',
+                filename: 'C:/Projects/Acme/drafts/nda.docx',
+                displayName: 'NDA v2',
+                addedDate: '2025-12-09T12:00:00.000Z'
+            });
+        });
+
+        test('should deserialize from JSON object', () => {
+            const json = {
+                id: 'doc12345',
+                filename: 'C:/Projects/Acme/drafts/nda.docx',
+                displayName: 'NDA v2',
+                addedDate: '2025-12-09T12:00:00.000Z'
+            };
+
+            const doc = LegalDocument.fromJSON(json);
+
+            expect(doc.id).toBe('doc12345');
+            expect(doc.filename).toBe('C:/Projects/Acme/drafts/nda.docx');
+            expect(doc.displayName).toBe('NDA v2');
+            expect(doc.addedDate).toEqual(new Date('2025-12-09T12:00:00.000Z'));
+        });
+
+        test('should serialize to YAML-friendly object', () => {
+            const doc = new LegalDocument({
+                id: 'doc12345',
+                filename: 'C:/Projects/nda.docx',
+                displayName: 'NDA Draft'
+            });
+
+            const yaml = doc.toYAML();
+
+            expect(yaml).toHaveProperty('id', 'doc12345');
+            expect(yaml).toHaveProperty('filename', 'C:/Projects/nda.docx');
+            expect(yaml).toHaveProperty('displayName', 'NDA Draft');
+        });
+    });
+
+    describe('equality and matching', () => {
+        test('should check if filename matches', () => {
+            const doc = new LegalDocument({
+                filename: 'C:/Projects/Acme/drafts/nda.docx'
+            });
+
+            expect(doc.matchesFilename('C:/Projects/Acme/drafts/nda.docx')).toBe(true);
+            expect(doc.matchesFilename('C:/Projects/Other/drafts/nda.docx')).toBe(false);
+        });
+
+        test('should match filename case-insensitively on Windows', () => {
+            const doc = new LegalDocument({
+                filename: 'C:/Projects/Acme/drafts/NDA.docx'
+            });
+
+            // Assuming we want case-insensitive matching for Windows paths
+            expect(doc.matchesFilename('C:/Projects/Acme/drafts/nda.docx')).toBe(true);
+        });
+
+        test('should normalize path separators when matching', () => {
+            const doc = new LegalDocument({
+                filename: 'C:\\Projects\\Acme\\drafts\\nda.docx'
+            });
+
+            expect(doc.matchesFilename('C:/Projects/Acme/drafts/nda.docx')).toBe(true);
+        });
+    });
+});
+
+// ============================================================================
+// SECTION 7: WorkPlan Documents Tests
+// ============================================================================
+
+describe('WorkPlan documents', () => {
+    describe('document management', () => {
+        test('should initialize with empty documents array', () => {
+            const plan = new WorkPlan();
+
+            expect(plan.documents).toEqual([]);
+            expect(plan.getDocumentCount()).toBe(0);
+        });
+
+        test('should add a document', () => {
+            const plan = new WorkPlan();
+            const doc = new LegalDocument({ filename: 'C:/Projects/nda.docx' });
+
+            plan.addDocument(doc);
+
+            expect(plan.getDocumentCount()).toBe(1);
+            expect(plan.documents[0].filename).toBe('C:/Projects/nda.docx');
+        });
+
+        test('should not add duplicate document (same filename)', () => {
+            const plan = new WorkPlan();
+            const doc1 = new LegalDocument({ filename: 'C:/Projects/nda.docx' });
+            const doc2 = new LegalDocument({ filename: 'C:/Projects/nda.docx' });
+
+            plan.addDocument(doc1);
+            plan.addDocument(doc2);
+
+            expect(plan.getDocumentCount()).toBe(1);
+        });
+
+        test('should remove document by ID', () => {
+            const plan = new WorkPlan();
+            const doc = new LegalDocument({ id: 'doc1', filename: 'C:/Projects/nda.docx' });
+            plan.addDocument(doc);
+
+            const removed = plan.removeDocument('doc1');
+
+            expect(removed).toBe(true);
+            expect(plan.getDocumentCount()).toBe(0);
+        });
+
+        test('should return false when removing non-existent document', () => {
+            const plan = new WorkPlan();
+
+            const removed = plan.removeDocument('nonexistent');
+
+            expect(removed).toBe(false);
+        });
+
+        test('should get document by ID', () => {
+            const plan = new WorkPlan();
+            const doc = new LegalDocument({ id: 'findme', filename: 'C:/Projects/nda.docx' });
+            plan.addDocument(doc);
+
+            const found = plan.getDocumentById('findme');
+
+            expect(found).toBeDefined();
+            expect(found?.filename).toBe('C:/Projects/nda.docx');
+        });
+
+        test('should get document by filename', () => {
+            const plan = new WorkPlan();
+            const doc = new LegalDocument({ filename: 'C:/Projects/nda.docx', displayName: 'NDA' });
+            plan.addDocument(doc);
+
+            const found = plan.getDocumentByFilename('C:/Projects/nda.docx');
+
+            expect(found).toBeDefined();
+            expect(found?.displayName).toBe('NDA');
+        });
+
+        test('should check if document exists by filename', () => {
+            const plan = new WorkPlan();
+            plan.addDocument(new LegalDocument({ filename: 'C:/Projects/nda.docx' }));
+
+            expect(plan.hasDocument('C:/Projects/nda.docx')).toBe(true);
+            expect(plan.hasDocument('C:/Projects/other.docx')).toBe(false);
+        });
+    });
+
+    describe('filtering edits by document', () => {
+        test('should get edits for a specific document', () => {
+            const plan = new WorkPlan();
+            plan.addDocument(new LegalDocument({ filename: 'C:/Projects/nda.docx' }));
+            plan.addTaskAtEnd(new WorkTask({ id: 'task1', title: 'Task', description: 'D' }));
+
+            // Edit affecting our document
+            const edit1 = new Edit({
+                taskId: 'task1',
+                toolName: 'search_and_replace',
+                request: { filename: 'C:/Projects/nda.docx', find_text: 'foo' },
+                response: { success: true }
+            });
+
+            // Edit affecting a different document
+            const edit2 = new Edit({
+                taskId: 'task1',
+                toolName: 'search_and_replace',
+                request: { filename: 'C:/Projects/other.docx', find_text: 'bar' },
+                response: { success: true }
+            });
+
+            plan.logEdit(edit1);
+            plan.logEdit(edit2);
+
+            const docEdits = plan.getEditsForDocument('C:/Projects/nda.docx');
+
+            expect(docEdits.length).toBe(1);
+            expect(docEdits[0].id).toBe(edit1.id);
+        });
+
+        test('should get all edits affecting plan documents', () => {
+            const plan = new WorkPlan();
+            plan.addDocument(new LegalDocument({ filename: 'C:/Projects/nda.docx' }));
+            plan.addDocument(new LegalDocument({ filename: 'C:/Projects/agreement.docx' }));
+            plan.addTaskAtEnd(new WorkTask({ id: 'task1', title: 'Task', description: 'D' }));
+
+            const edit1 = new Edit({
+                taskId: 'task1',
+                toolName: 'tool1',
+                request: { filename: 'C:/Projects/nda.docx' },
+                response: {}
+            });
+            const edit2 = new Edit({
+                taskId: 'task1',
+                toolName: 'tool2',
+                request: { filename: 'C:/Projects/agreement.docx' },
+                response: {}
+            });
+            const edit3 = new Edit({
+                taskId: 'task1',
+                toolName: 'tool3',
+                request: { filename: 'C:/Projects/unrelated.docx' },
+                response: {}
+            });
+
+            plan.logEdit(edit1);
+            plan.logEdit(edit2);
+            plan.logEdit(edit3);
+
+            const docEdits = plan.getDocumentEdits();
+
+            expect(docEdits.length).toBe(2);
+            expect(docEdits.map(e => e.id)).toContain(edit1.id);
+            expect(docEdits.map(e => e.id)).toContain(edit2.id);
+            expect(docEdits.map(e => e.id)).not.toContain(edit3.id);
+        });
+
+        test('should return empty array when no documents registered', () => {
+            const plan = new WorkPlan();
+            plan.addTaskAtEnd(new WorkTask({ id: 'task1', title: 'Task', description: 'D' }));
+
+            plan.logEdit(new Edit({
+                taskId: 'task1',
+                toolName: 'tool1',
+                request: { filename: 'C:/Projects/nda.docx' },
+                response: {}
+            }));
+
+            const docEdits = plan.getDocumentEdits();
+
+            expect(docEdits).toEqual([]);
+        });
+    });
+
+    describe('YAML serialization with documents', () => {
+        test('should include documents in YAML frontmatter', () => {
+            const plan = new WorkPlan();
+            plan.addDocument(new LegalDocument({
+                id: 'doc1',
+                filename: 'C:/Projects/nda.docx',
+                displayName: 'NDA Draft'
+            }));
+
+            const yaml = plan.toYAMLFrontmatter();
+
+            expect(yaml).toContain('documents:');
+            expect(yaml).toContain('id: doc1');
+            // Filename is quoted because it contains ':'
+            expect(yaml).toContain("filename: 'C:/Projects/nda.docx'");
+            expect(yaml).toContain('displayName: NDA Draft');
+        });
+
+        test('should parse documents from YAML frontmatter', () => {
+            const yaml = `---
+documents:
+  - id: doc1
+    filename: C:/Projects/nda.docx
+    displayName: NDA Draft
+    addedDate: '2025-12-09T10:00:00.000Z'
+tasks:
+  - id: task1
+    title: Review
+    description: Check terms
+    status: pending
+    ordinal: 0
+    creationDate: '2025-12-09T10:00:00.000Z'
+    completionDate: null
+    editIds: []
+---
+
+# Work Plan
+`;
+
+            const plan = WorkPlan.fromYAMLFrontmatter(yaml);
+
+            expect(plan.getDocumentCount()).toBe(1);
+            expect(plan.documents[0].id).toBe('doc1');
+            expect(plan.documents[0].filename).toBe('C:/Projects/nda.docx');
+            expect(plan.documents[0].displayName).toBe('NDA Draft');
+        });
+
+        test('should handle plan.md with no documents', () => {
+            const yaml = `---
+tasks:
+  - id: task1
+    title: Review
+    description: Check terms
+    status: pending
+    ordinal: 0
+    creationDate: '2025-12-09T10:00:00.000Z'
+    completionDate: null
+    editIds: []
+---
+
+# Work Plan
+`;
+
+            const plan = WorkPlan.fromYAMLFrontmatter(yaml);
+
+            expect(plan.getDocumentCount()).toBe(0);
+            expect(plan.documents).toEqual([]);
+        });
+    });
+
+    describe('JSON serialization with documents', () => {
+        test('should include documents in JSON', () => {
+            const plan = new WorkPlan();
+            plan.addDocument(new LegalDocument({
+                id: 'doc1',
+                filename: 'C:/Projects/nda.docx'
+            }));
+
+            const json = plan.toJSON();
+
+            expect(json).toHaveProperty('documents');
+            expect(json.documents!.length).toBe(1);
+            expect(json.documents![0].id).toBe('doc1');
+        });
+
+        test('should deserialize documents from JSON', () => {
+            const json = {
+                tasks: [],
+                documents: [
+                    {
+                        id: 'doc1',
+                        filename: 'C:/Projects/nda.docx',
+                        displayName: 'NDA',
+                        addedDate: '2025-12-09T10:00:00.000Z'
+                    }
+                ]
+            };
+
+            const plan = WorkPlan.fromJSON(json);
+
+            expect(plan.getDocumentCount()).toBe(1);
+            expect(plan.documents[0].filename).toBe('C:/Projects/nda.docx');
+        });
     });
 });

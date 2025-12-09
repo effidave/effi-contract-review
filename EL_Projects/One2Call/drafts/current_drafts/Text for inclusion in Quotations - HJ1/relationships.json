@@ -1,0 +1,122 @@
+{
+  "doc_id": "Text-for-inclusion-in-Quotations---HJ1",
+  "relationships": [
+    {
+      "block_id": "31A43FDD",
+      "parent_block_id": null,
+      "child_block_ids": [],
+      "sibling_ordinal": 0,
+      "source": "paragraph",
+      "restart_group_id": null,
+      "list_meta": null,
+      "attachment_id": null,
+      "clause_group_id": "31A43FDD",
+      "continuation_of": null,
+      "hierarchy_depth": 0
+    },
+    {
+      "block_id": "3820410D",
+      "parent_block_id": null,
+      "child_block_ids": [],
+      "sibling_ordinal": 1,
+      "source": "paragraph",
+      "restart_group_id": null,
+      "list_meta": null,
+      "attachment_id": null,
+      "clause_group_id": "31A43FDD",
+      "continuation_of": null,
+      "hierarchy_depth": 0
+    },
+    {
+      "block_id": "29E24B24",
+      "parent_block_id": null,
+      "child_block_ids": [],
+      "sibling_ordinal": 2,
+      "source": "paragraph",
+      "restart_group_id": null,
+      "list_meta": null,
+      "attachment_id": null,
+      "clause_group_id": "31A43FDD",
+      "continuation_of": null,
+      "hierarchy_depth": 0
+    },
+    {
+      "block_id": "7531048E",
+      "parent_block_id": null,
+      "child_block_ids": [],
+      "sibling_ordinal": 3,
+      "source": "paragraph",
+      "restart_group_id": null,
+      "list_meta": null,
+      "attachment_id": null,
+      "clause_group_id": "31A43FDD",
+      "continuation_of": null,
+      "hierarchy_depth": 0
+    },
+    {
+      "block_id": "737397DA",
+      "parent_block_id": null,
+      "child_block_ids": [],
+      "sibling_ordinal": 4,
+      "source": "paragraph",
+      "restart_group_id": null,
+      "list_meta": null,
+      "attachment_id": null,
+      "clause_group_id": "31A43FDD",
+      "continuation_of": null,
+      "hierarchy_depth": 0
+    },
+    {
+      "block_id": "0C0CEFCF",
+      "parent_block_id": null,
+      "child_block_ids": [],
+      "sibling_ordinal": 5,
+      "source": "paragraph",
+      "restart_group_id": null,
+      "list_meta": null,
+      "attachment_id": null,
+      "clause_group_id": "31A43FDD",
+      "continuation_of": null,
+      "hierarchy_depth": 0
+    },
+    {
+      "block_id": "61E08C20",
+      "parent_block_id": null,
+      "child_block_ids": [],
+      "sibling_ordinal": 6,
+      "source": "paragraph",
+      "restart_group_id": null,
+      "list_meta": null,
+      "attachment_id": null,
+      "clause_group_id": "31A43FDD",
+      "continuation_of": null,
+      "hierarchy_depth": 0
+    },
+    {
+      "block_id": "3CD6790F",
+      "parent_block_id": null,
+      "child_block_ids": [],
+      "sibling_ordinal": 7,
+      "source": "paragraph",
+      "restart_group_id": null,
+      "list_meta": null,
+      "attachment_id": null,
+      "clause_group_id": "31A43FDD",
+      "continuation_of": null,
+      "hierarchy_depth": 0
+    },
+    {
+      "block_id": "1859C428",
+      "parent_block_id": null,
+      "child_block_ids": [],
+      "sibling_ordinal": 8,
+      "source": "paragraph",
+      "restart_group_id": null,
+      "list_meta": null,
+      "attachment_id": null,
+      "clause_group_id": "31A43FDD",
+      "continuation_of": null,
+      "hierarchy_depth": 0
+    }
+  ]
+}

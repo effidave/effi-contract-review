@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "doc_id": "123e4567-e89b-12d3-a456-426614174000",
+  "doc_format": "docx",
+  "source_filename": "One2call  - 2025 Templates  - MSA Defined Services - HJ7.docx",
+  "char_count": 62668,
+  "block_count": 425,
+  "section_count": 356,
+  "ltu_count": 425,
+  "max_section_depth": 4,
+  "has_tag_ranges": true,
+  "schema_version": "1.0.0",
+  "filemap": {
+    "blocks": "blocks.jsonl",
+    "sections": "sections.json",
+    "styles": "styles.json",
+    "tag_ranges": "tag_ranges.jsonl"
+  }
+}

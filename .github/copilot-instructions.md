@@ -84,13 +84,16 @@ Note: effilocal selectively implements layers - only overrides/extends what's ne
 **effilocal/mcp_server/ (Override Layer):**
 | File | Purpose |
 |------|---------||
-| `main.py` | FastMCP server entry point, ~60 tool registrations |
+| `main.py` | FastMCP server entry point, ~70 tool registrations |
 | `tools/content_tools.py` | EXTENDED: add_heading with color, clause-based insertion |
 | `tools/comment_tools.py` | OVERRIDDEN: Comment extraction with status tracking |
 | `tools/attachment_tools.py` | NEW: Schedule/annex/exhibit insertion with para IDs |
 | `tools/numbering_tools.py` | NEW: NumberingInspector for clause analysis |
 | `tools/document_tools.py` | EXTENDED: save_document_as_markdown |
 | `tools/format_tools.py` | EXTENDED: Background highlighting |
+| `tools/plan_tools.py` | NEW: WorkPlan management for LLM workflows |
+| `plan/models.py` | NEW: Python WorkPlan, WorkTask, LegalDocument classes |
+| `plan/storage.py` | NEW: YAML/JSON file I/O for plans |
 | `utils/document_utils.py` | EXTENDED: find_and_replace_text with whole_word_only, dual signature |
 | `utils/hash.py` | NEW: SHA-256 utilities |
 | `core/comments.py` | OVERRIDDEN: Status extraction from commentsExtended.xml |
@@ -381,6 +384,34 @@ Block identification uses the native `w14:paraId` attribute that Word provides o
 - **`save_blocks(docx_path, blocks_path)`**: Save edited blocks back to document
 - **`create_checkpoint(docx_path, note)`**: Create named checkpoint commit
 
+#### **Plan MCP Tools (LLM WorkPlan Management)**
+
+The LLM can create and manage WorkPlans via MCP tools:
+
+**Available Tools:**
+| Tool | Description |
+|------|-------------|
+| `get_work_plan(filename)` | Get plan with tasks, documents, and summary stats |
+| `add_task(filename, title, description, position?, ordinal?)` | Add task (start/end/at) |
+| `update_task(filename, task_id, title?, description?, status?)` | Modify task |
+| `delete_task(filename, task_id)` | Remove task |
+| `move_task(filename, task_id, new_ordinal)` | Reorder task |
+| `start_task(filename, task_id)` | Set status to in_progress |
+| `complete_task(filename, task_id)` | Set status to completed |
+| `block_task(filename, task_id)` | Set status to blocked |
+| `add_plan_document(filename, display_name?)` | Track document |
+| `remove_plan_document(filename, document_id)` | Untrack document |
+| `list_plan_documents(filename)` | List tracked documents |
+
+**Project Path Derivation:**
+All tools use `filename` (any document in the project) to derive project path.
+Supports `EL_Projects/<project>/...` and `EL_Precedents/<project>/...` structures.
+
+**Files:**
+- `effilocal/mcp_server/plan/models.py` - Python WorkPlan, WorkTask, LegalDocument
+- `effilocal/mcp_server/plan/storage.py` - YAML/JSON file I/O for plans
+- `effilocal/mcp_server/tools/plan_tools.py` - MCP tool implementations
+
 ### Building/Packaging
 ```bash
 hatch build        # Wheel + sdist
@@ -435,7 +466,7 @@ Note: After migration, `word_document_server` is pristine upstream. All customiz
 
 ## Testing Notes
 
-**Test Suite**: 162 tests (100% passing)
+**Test Suite**: 700+ tests
 - Framework: pytest 9.0.1
 - Run: `cd tests; pytest -v`
 - Coverage:
@@ -446,6 +477,8 @@ Note: After migration, `word_document_server` is pristine upstream. All customiz
   - `test_comment_status*.py` - Comment extraction with status tracking
   - `test_local_mcp.py` - MCP protocol integration via HTTP transport
   - `test_mcp_tools_availability.py` - Tool registration verification
+  - `test_mcp_tool_logging.py` - Python @with_logging decorator (27 tests)
+  - `test_plan_mcp_tools.py` - Plan MCP tools for LLM plan management (45 tests)
 
 **Testing Approach**:
 - Unit tests for utilities (dual signature support, count calculations)

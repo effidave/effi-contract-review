@@ -58,6 +58,21 @@ export interface WorkTaskJSON {
 
 export interface WorkPlanJSON {
     tasks: WorkTaskJSON[];
+    documents?: LegalDocumentJSON[];
+}
+
+export interface LegalDocumentData {
+    id?: string;
+    filename: string;
+    displayName?: string;
+    addedDate?: Date;
+}
+
+export interface LegalDocumentJSON {
+    id: string;
+    filename: string;
+    displayName: string;
+    addedDate: string;
 }
 
 // ============================================================================
@@ -243,6 +258,88 @@ function toYAMLValue(value: unknown): string {
     }
     if (Array.isArray(value) && value.length === 0) return '[]';
     return String(value);
+}
+
+/**
+ * Extract the filename from a path (handles both Windows and Unix paths)
+ */
+function extractFilenameFromPath(filepath: string): string {
+    // Normalize to forward slashes
+    const normalized = filepath.replace(/\\/g, '/');
+    const parts = normalized.split('/');
+    return parts[parts.length - 1] || filepath;
+}
+
+/**
+ * Normalize a file path for comparison (lowercase, forward slashes)
+ */
+function normalizePathForComparison(filepath: string): string {
+    return filepath.replace(/\\/g, '/').toLowerCase();
+}
+
+// ============================================================================
+// LegalDocument Class
+// ============================================================================
+
+/**
+ * Represents a legal document that a WorkPlan relates to.
+ * Lightweight reference with tracking information.
+ */
+export class LegalDocument {
+    public readonly id: string;
+    public readonly filename: string;
+    public displayName: string;
+    public readonly addedDate: Date;
+
+    constructor(data: LegalDocumentData) {
+        this.id = data.id || generateId();
+        this.filename = data.filename;
+        this.displayName = data.displayName || extractFilenameFromPath(data.filename);
+        this.addedDate = data.addedDate || new Date();
+    }
+
+    /**
+     * Check if this document matches a given filename (case-insensitive, path-normalized)
+     */
+    matchesFilename(filename: string): boolean {
+        return normalizePathForComparison(this.filename) === normalizePathForComparison(filename);
+    }
+
+    /**
+     * Serialize to JSON object
+     */
+    toJSON(): LegalDocumentJSON {
+        return {
+            id: this.id,
+            filename: this.filename,
+            displayName: this.displayName,
+            addedDate: this.addedDate.toISOString()
+        };
+    }
+
+    /**
+     * Deserialize from JSON object
+     */
+    static fromJSON(json: LegalDocumentJSON): LegalDocument {
+        return new LegalDocument({
+            id: json.id,
+            filename: json.filename,
+            displayName: json.displayName,
+            addedDate: new Date(json.addedDate)
+        });
+    }
+
+    /**
+     * Serialize to YAML-friendly object
+     */
+    toYAML(): Record<string, unknown> {
+        return {
+            id: this.id,
+            filename: this.filename,
+            displayName: this.displayName,
+            addedDate: this.addedDate.toISOString()
+        };
+    }
 }
 
 // ============================================================================
@@ -437,10 +534,12 @@ export class WorkTask {
  */
 export class WorkPlan {
     public tasks: WorkTask[];
+    public documents: LegalDocument[];
     private _edits: Edit[];
 
-    constructor(tasks: WorkTask[] = []) {
+    constructor(tasks: WorkTask[] = [], documents: LegalDocument[] = []) {
         this.tasks = [...tasks];
+        this.documents = [...documents];
         this._edits = [];
         this.renumberTasks();
     }
@@ -457,6 +556,13 @@ export class WorkPlan {
      */
     getTaskCount(): number {
         return this.tasks.length;
+    }
+
+    /**
+     * Get the number of documents
+     */
+    getDocumentCount(): number {
+        return this.documents.length;
     }
 
     /**
@@ -554,6 +660,83 @@ export class WorkPlan {
         return this.tasks.filter(t => t.status === status);
     }
 
+    // ========================================================================
+    // Document Management
+    // ========================================================================
+
+    /**
+     * Add a document to the plan (no duplicates by filename)
+     */
+    addDocument(doc: LegalDocument): void {
+        if (!this.hasDocument(doc.filename)) {
+            this.documents.push(doc);
+        }
+    }
+
+    /**
+     * Remove a document by ID
+     */
+    removeDocument(id: string): boolean {
+        const index = this.documents.findIndex(d => d.id === id);
+        if (index === -1) {
+            return false;
+        }
+        this.documents.splice(index, 1);
+        return true;
+    }
+
+    /**
+     * Get a document by ID
+     */
+    getDocumentById(id: string): LegalDocument | undefined {
+        return this.documents.find(d => d.id === id);
+    }
+
+    /**
+     * Get a document by filename
+     */
+    getDocumentByFilename(filename: string): LegalDocument | undefined {
+        return this.documents.find(d => d.matchesFilename(filename));
+    }
+
+    /**
+     * Check if a document with the given filename exists
+     */
+    hasDocument(filename: string): boolean {
+        return this.documents.some(d => d.matchesFilename(filename));
+    }
+
+    /**
+     * Get all edits that affect a specific document
+     */
+    getEditsForDocument(filename: string): Edit[] {
+        return this._edits.filter(e => {
+            const editFilename = e.request.filename as string | undefined;
+            if (!editFilename) return false;
+            // Normalize for comparison
+            return editFilename.replace(/\\/g, '/').toLowerCase() === 
+                   filename.replace(/\\/g, '/').toLowerCase();
+        });
+    }
+
+    /**
+     * Get all edits that affect any of the plan's documents
+     */
+    getDocumentEdits(): Edit[] {
+        if (this.documents.length === 0) {
+            return [];
+        }
+        return this._edits.filter(e => {
+            const editFilename = e.request.filename as string | undefined;
+            if (!editFilename) return false;
+            return this.hasDocument(editFilename);
+        });
+    }
+
+    // ========================================================================
+    // Edit Management
+    // ========================================================================
+
     /**
      * Log an edit and associate it with its task
      */
@@ -584,7 +767,8 @@ export class WorkPlan {
      */
     toJSON(): WorkPlanJSON {
         return {
-            tasks: this.tasks.map(t => t.toJSON())
+            tasks: this.tasks.map(t => t.toJSON()),
+            documents: this.documents.map(d => d.toJSON())
         };
     }
 
@@ -593,15 +777,29 @@ export class WorkPlan {
      */
     static fromJSON(json: WorkPlanJSON): WorkPlan {
         const tasks = json.tasks.map(t => WorkTask.fromJSON(t));
-        return new WorkPlan(tasks);
+        const documents = (json.documents || []).map(d => LegalDocument.fromJSON(d));
+        return new WorkPlan(tasks, documents);
     }
 
     /**
      * Generate YAML frontmatter string
      */
     toYAMLFrontmatter(): string {
-        const lines: string[] = ['---', 'tasks:'];
+        const lines: string[] = ['---'];
         
+        // Documents section
+        if (this.documents.length > 0) {
+            lines.push('documents:');
+            for (const doc of this.documents) {
+                lines.push(`  - id: ${toYAMLValue(doc.id)}`);
+                lines.push(`    filename: ${toYAMLValue(doc.filename)}`);
+                lines.push(`    displayName: ${toYAMLValue(doc.displayName)}`);
+                lines.push(`    addedDate: '${doc.addedDate.toISOString()}'`);
+            }
+        }
+        
+        // Tasks section
+        lines.push('tasks:');
         for (const task of this.tasks) {
             lines.push(`  - id: ${toYAMLValue(task.id)}`);
             lines.push(`    title: ${toYAMLValue(task.title)}`);
@@ -630,8 +828,22 @@ export class WorkPlan {
     static fromYAMLFrontmatter(content: string): WorkPlan {
         const { frontmatter } = parseYAMLFrontmatter(content);
         
+        // Parse documents
+        const documents: LegalDocument[] = [];
+        if (frontmatter.documents && Array.isArray(frontmatter.documents)) {
+            for (const d of frontmatter.documents as Record<string, unknown>[]) {
+                documents.push(new LegalDocument({
+                    id: d.id as string,
+                    filename: d.filename as string,
+                    displayName: d.displayName as string,
+                    addedDate: new Date(d.addedDate as string)
+                }));
+            }
+        }
+        
+        // Parse tasks
         if (!frontmatter.tasks || !Array.isArray(frontmatter.tasks)) {
-            return new WorkPlan();
+            return new WorkPlan([], documents);
         }
         
         const tasks = (frontmatter.tasks as Record<string, unknown>[]).map(t => {
@@ -647,7 +859,7 @@ export class WorkPlan {
             });
         });
         
-        return new WorkPlan(tasks);
+        return new WorkPlan(tasks, documents);
     }
 
     /**

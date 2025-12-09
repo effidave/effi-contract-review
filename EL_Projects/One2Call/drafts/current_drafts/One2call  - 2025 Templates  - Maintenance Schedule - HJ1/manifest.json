@@ -1,0 +1,47 @@
+{
+  "doc_id": "One2call----2025-Templates----Maintenance-Schedule",
+  "v": 1,
+  "created_at": "2025-12-09T17:01:45+00:00",
+  "tool_version": "sprint2-dev",
+  "doc_format": "docx",
+  "sdt_carrier": "content-controls",
+  "range_marker_carrier": "content-controls",
+  "range_marker_tag_prefix": "marker:",
+  "fallback_heading_label": "Body (no heading)",
+  "checksums": {
+    "blocks.jsonl": "sha256:c5482a108bc6c768ac64353b6e5fd5e71176d5b8ef864bade80d2e81dbdde8d1",
+    "sections.json": "sha256:701a59c8f37a249e5347ac540aafe74f985e6a35c738032434aecc45f9e5ec75",
+    "styles.json": "sha256:8c8ad7db512971ad4be13cc00b81dff5f50c41942fab5b1219c703e8b8f8a27e",
+    "relationships.json": "sha256:f63aed525612554f25b305eeb8adea5dcabd3ea19f293a91ba604e1189f11c44",
+    "tag_ranges.jsonl": "sha256:daf9514c0cee3db97dcdc70054b82249d739110c0c179dc3fadbd55260a8b5fa",
+    "index.json": "sha256:b55484a9598a95e0b435680f97ff45595dedbcc21f63defaf9cfda8b1b1736a9"
+  },
+  "schema_checksums": {
+    "block.schema.json": "sha256:a79c29ccec8330bef4e2ed057adee57e544a0749ee71c8aac86b8f8e13d1550e",
+    "edit_plan.schema.json": "sha256:4d9432a9d9b1b61675f527817c7dfdd608ffa20a63f2c1f50d9f0cba9ac367b1",
+    "index.schema.json": "sha256:f305e73bdd196f01be5aba55a1bfe71dc0756218dbafc234fbd9e269c7f84557",
+    "labels.schema.json": "sha256:44e45c3f69aa8c9728872198061b34cbc23aa83a232a93debb3bce13f42e1052",
+    "manifest.schema.json": "sha256:cbab4e0766ffb0d8b0fb12cc0a6b7d75f39bdacc70fed82baaae6de0f102829d",
+    "relationships.schema.json": "sha256:0a6b82f199e7e009eb01866b591d10d35578bb937e794216a56a29c3f922246e",
+    "report.schema.json": "sha256:cc9454c8a3713921e540d0e7e1ce3fca7c8569e9704475ec39eae016541bf3be",
+    "sections.schema.json": "sha256:64d13ab3f694c5e4bcce3072c1d2823c614b2718aa50ba4850aea65c3b9fcdcc",
+    "styles.schema.json": "sha256:69bb206dd584e1ce1e19e6f752f510633761625ed9ba8905fa78c2bfdf731549",
+    "tag_range.schema.json": "sha256:38ae87688b3e7f53b0d7466d5699e6e741330b2da45ea6f784ae6da8bf002c3f"
+  },
+  "attachments": [
+    {
+      "attachment_id": "5bba87da-4033-4eda-8d7e-8e274f9e5de8",
+      "type": "schedule",
+      "ordinal": "1",
+      "title": null,
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "2a718970-4ab6-4d3f-876a-7f425af1c264",
+      "type": "schedule",
+      "ordinal": "2",
+      "title": null,
+      "parent_attachment_id": null
+    }
+  ]
+}

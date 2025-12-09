@@ -1,0 +1,180 @@
+{
+  "styles": [
+    {
+      "name": "Background",
+      "type": "unknown",
+      "count": 3,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "Bullet List 1",
+      "type": "unknown",
+      "count": 12,
+      "semantic_hint": "list_item",
+      "hint_scores": {
+        "list_item": 1.0
+      }
+    },
+    {
+      "name": "Defined Term Number",
+      "type": "unknown",
+      "count": 20,
+      "semantic_hint": "list_item",
+      "hint_scores": {
+        "list_item": 1.0,
+        "definition": 0.75
+      }
+    },
+    {
+      "name": "Defined Term Para",
+      "type": "unknown",
+      "count": 79,
+      "semantic_hint": "definition",
+      "hint_scores": {
+        "definition": 0.75
+      }
+    },
+    {
+      "name": "DescriptiveHeading",
+      "type": "paragraph",
+      "count": 3,
+      "semantic_hint": "clause_heading",
+      "hint_scores": {
+        "clause_heading": 0.75
+      }
+    },
+    {
+      "name": "Intro Default",
+      "type": "paragraph",
+      "count": 1,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "No Num Untitled subclause 1",
+      "type": "paragraph",
+      "count": 18,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "Para Clause",
+      "type": "paragraph",
+      "count": 2,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "Para subclause 1",
+      "type": "paragraph",
+      "count": 10,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "Para subclause 2",
+      "type": "paragraph",
+      "count": 1,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "Paragraph",
+      "type": "table_cell",
+      "count": 51,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "Part",
+      "type": "unknown",
+      "count": 2,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "Parties",
+      "type": "unknown",
+      "count": 2,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "Schedule",
+      "type": "unknown",
+      "count": 12,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "Schedule Title Clause",
+      "type": "heading",
+      "count": 35,
+      "semantic_hint": "clause_heading",
+      "hint_scores": {
+        "clause_heading": 1.0
+      }
+    },
+    {
+      "name": "Schedule Untitled subclause 1",
+      "type": "unknown",
+      "count": 42,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "Schedule Untitled subclause 2",
+      "type": "unknown",
+      "count": 26,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "Testimonium",
+      "type": "paragraph",
+      "count": 1,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "Title Clause",
+      "type": "heading",
+      "count": 34,
+      "semantic_hint": "clause_heading",
+      "hint_scores": {
+        "clause_heading": 1.5
+      }
+    },
+    {
+      "name": "Title subclause1",
+      "type": "heading",
+      "count": 2,
+      "semantic_hint": "clause_heading",
+      "hint_scores": {
+        "clause_heading": 1.5
+      }
+    },
+    {
+      "name": "Untitled subclause 1",
+      "type": "unknown",
+      "count": 162,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "Untitled subclause 2",
+      "type": "unknown",
+      "count": 131,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "Untitled subclause 3",
+      "type": "unknown",
+      "count": 13,
+      "semantic_hint": null,
+      "hint_scores": null
+    }
+  ]
+}

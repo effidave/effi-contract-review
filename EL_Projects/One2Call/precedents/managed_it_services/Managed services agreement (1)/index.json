@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "doc_id": "Managed-services-agreement-(1)",
+  "doc_format": "docx",
+  "source_filename": "Managed services agreement (1).docx",
+  "char_count": 118368,
+  "block_count": 662,
+  "section_count": 576,
+  "ltu_count": 662,
+  "max_section_depth": 4,
+  "has_tag_ranges": true,
+  "schema_version": "1.0.0",
+  "filemap": {
+    "blocks": "blocks.jsonl",
+    "sections": "sections.json",
+    "styles": "styles.json",
+    "tag_ranges": "tag_ranges.jsonl"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "doc_id": "DRAFTING-NOTES-FOR-Systems-integration-agreement-(",
+  "doc_format": "docx",
+  "source_filename": "DRAFTING NOTES FOR Systems integration agreement (pro-supplier).doc.docx",
+  "char_count": 226514,
+  "block_count": 722,
+  "section_count": 26,
+  "ltu_count": 722,
+  "max_section_depth": 9,
+  "has_tag_ranges": true,
+  "schema_version": "1.0.0",
+  "filemap": {
+    "blocks": "blocks.jsonl",
+    "sections": "sections.json",
+    "styles": "styles.json",
+    "tag_ranges": "tag_ranges.jsonl"
+  }
+}

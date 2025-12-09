@@ -21,7 +21,7 @@ Jurisdiction: Primarily English law.
 
 The task: Compare a client's existing SaaS terms against our trusted precedent to identify strengths and weaknesses.
 
-Please confirm you understand this context.
+Please confirm you understand this context.  Don't get started until I tell you.
 ```
 
 ---

@@ -1,0 +1,71 @@
+{
+  "styles": [
+    {
+      "name": "Heading 3",
+      "type": "table_cell",
+      "count": 4,
+      "semantic_hint": "clause_heading",
+      "hint_scores": {
+        "clause_heading": 0.75
+      }
+    },
+    {
+      "name": "Normal",
+      "type": "table_cell",
+      "count": 2,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "Paragraph",
+      "type": "paragraph",
+      "count": 6,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "Part",
+      "type": "unknown",
+      "count": 10,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "Schedule",
+      "type": "unknown",
+      "count": 2,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "Title Clause",
+      "type": "heading",
+      "count": 10,
+      "semantic_hint": "clause_heading",
+      "hint_scores": {
+        "clause_heading": 1.5
+      }
+    },
+    {
+      "name": "Untitled subclause 1",
+      "type": "paragraph",
+      "count": 58,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "Untitled subclause 2",
+      "type": "unknown",
+      "count": 39,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "Untitled subclause 3",
+      "type": "unknown",
+      "count": 3,
+      "semantic_hint": null,
+      "hint_scores": null
+    }
+  ]
+}

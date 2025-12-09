@@ -1,0 +1,1293 @@
+<?xml version="1.0" encoding="UTF-8"?><n-document xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" guid="0" synced="true" validated="true">
+  <n-docbody>
+    <standard.doc precedenttype="agreement">
+      <prelim>
+        <product.name>product.name0</product.name>
+        <title>Software maintenance: service level agreement</title>
+        <author>Practical Law IP&amp;IT</author>
+        <resource.type>Standard documents</resource.type>
+        <juris>juris0</juris>
+        <juris>juris1</juris>
+      </prelim>
+      <abstract>
+        <para>
+          <paratext>This standard document service level agreement is to be used where the services in question are maintenance and support of specified software. It provides for service credits if actual supplier performance fails to meet the performance standards set in the service levels. It is presented in the form of a schedule, but can be readily adapted to comprise a free-standing agreement if needed.</paratext>
+        </para>
+      </abstract>
+      <toc.identifier hasToc="true"/>
+      <body>
+        <drafting.note id="a654473" jurisdiction="">
+          <head align="left" preservecase="true">
+            <headtext>About this document</headtext>
+          </head>
+          <division id="a000007" level="1">
+            <para>
+              <paratext>Service levels and service credits are tools used to ensure that the supplier performs the services to the required standard. They define how well the supplier needs to perform and the immediate financial consequences of failure. Service credits are a mechanism by which amounts are deducted from the amounts to be paid under the contract to the supplier if actual supplier performance fails to meet the performance standards set in the service levels. The main agreement may contain various other mechanisms to rectify poor service delivery. For more information, see <link href="1-211-9964" style="ACTLinkPLCtoPLC"><ital>Practice note, Service levels and service credit schemes in outsourcing</ital></link>. This note analyses how service levels may be set and used and the service credit schemes that may be employed to encourage good performance. The context is outsourcing transactions, but many of the principles referred to in the note are generally applicable.</paratext>
+            </para>
+            <para>
+              <paratext>In this standard document, the services in question are maintenance and support of specified on-premises software. It is assumed that, where cloud services are involved, support and maintenance may be conducted centrally by the cloud provider, so some of the provisions of this schedule may not be relevant (for example, it may not be possible to roll back to a previous version or release of the software, see <internal.reference refid="a885920">Drafting note, Exclusive or non-exclusive remedy</internal.reference>). For more on cloud support, see <link anchor="a280590" href="7-565-0045" style="ACTLinkPLCtoPLC"><ital>Practice note, Cloud services: hybrid cloud and outsourcing: Support</ital></link>.</paratext>
+            </para>
+            <para>
+              <paratext>Typically, software support SLAs are only drafted to deal with response and resolve times for operational defects which affect the functions of the software, and do not deal with wider security aspects (such as addressing security vulnerabilities that may be present in software).</paratext>
+            </para>
+            <para>
+              <paratext>In light of the increased prevalence, severity, and media scrutiny given to, cybersecurity attacks and the changing regulatory landscape in this area (see <link href="5-616-1485" style="ACTLinkPLCtoPLC"><ital>Practice note, UK cybersecurity law</ital></link> and <internal.reference refid="a111692">Drafting note, Network and Information Systems Regulations 2018</internal.reference>) we have included some optional clauses in this standard document to widen the definition of Fault to also cover security vulnerabilities. However, this is approach is largely untested in the legal market and so may be pushed back against by software support vendors who may argue that it would be extremely difficult to set specific service levels relating to security, or may have their own standardised procedures already set up for this. The optional wording is therefore included to ensure that the security aspects of software support are not overlooked, and it may be that the parties will need to build upon these provisions (should it wish to address software security as well as remedying functional defects) to fit with what is technically achievable in practice.</paratext>
+            </para>
+            <para>
+              <paratext>Alternatively, the parties may wish to draft and negotiate an entirely separate security level agreement to fit alongside a typical service level agreement for support services, to cover a broader spectrum of cybersecurity risks in addition to software vulnerabilities.</paratext>
+            </para>
+            <division id="a175339" level="2">
+              <head align="left" preservecase="true">
+                <headtext>Supply chain issues: slavery and human trafficking</headtext>
+              </head>
+              <para>
+                <paratext>The <link href="2-607-4606" style="ACTLinkPLCtoPLC"><ital>Modern Slavery Act 2015</ital></link> (MSA) is aimed at combating crimes of slavery and human trafficking. <link href="7-608-3825" style="ACTLinkPLCtoPLC"><ital>Section 54</ital></link> of the MSA requires commercial organisations having a global turnover of £36 million or more to publish an annual slavery and human trafficking statement for each financial year that ends on or after 31 March 2016. The statement must disclose what steps the organisation has taken to ensure that human trafficking is not taking place in any of its supply chains or its business; or state that it has taken no such steps. A customer may want to include wording in its supply agreements that have a connection with a supply chain to prohibit the use of forced or trafficked labour.</paratext>
+              </para>
+              <para>
+                <paratext>For further information on the MSA including links to example clauses, see <link href="8-618-8657" style="ACTLinkPLCtoPLC"><ital>Modern Slavery Act 2015 toolkit</ital></link>.</paratext>
+              </para>
+            </division>
+            <division id="a111692" level="2">
+              <head align="left" preservecase="true">
+                <headtext>Network and Information Systems Regulations 2018</headtext>
+              </head>
+              <para>
+                <paratext>The <link href="http://www.legislation.gov.uk/uksi/2018/506/made" style="ACTLinkURL"><ital>Network and Information Systems Regulations 2018</ital></link> came into effect on 10 May 2018 pursuant to the <link href="_blank" style="ACTLinkPLCtoPLC"><ital>Cybersecurity Directive</ital></link> (<ital>(EU)2016/1148</ital>) (also known as the Network and Information Security or NIS Directive). They have potential impact on any operator of essential services (OES) that relies on IT systems in the following sectors: energy, transport, health, drinking water supply and distribution, digital infrastructure; and on relevant providers of online marketplaces, online search engines and cloud computing services (Relevant Digital Service Providers (RDSPs)). Like the <link href="6-631-1875" style="ACTLinkPLCtoPLC"><ital>General Data Protection Regulation ((EU) 2016/679)</ital></link>, the NIS Regulations impose security and incident reporting requirements and provide for high penalties (up to £17 million in the case of the NIS Regulations), but their focus is on security of IT systems, rather than security of the personal data processed by those systems; in practice the two regimes are inextricably linked.</paratext>
+              </para>
+              <para>
+                <paratext>For a definition of an OES see <link anchor="a873370" href="w-013-8329" style="ACTLinkPLCtoPLC"><ital>Practice note, Cybersecurity Directive: UK implementation: Identification or Designation as an OES</ital></link>, and for a definition of an RDSP see <link anchor="a375008" href="w-013-8329" style="ACTLinkPLCtoPLC"><ital>Practice note, Cybersecurity Directive: UK implementation: Identification as an RDSP</ital></link>.</paratext>
+              </para>
+              <para>
+                <paratext>OESs and RDSPs have obligations to maintain the security of the systems on which their services rely and to report security incidents to their respective regulators (the ICO is the regulator for RDSPs and Schedule 1 of the NIS Regulations lists the regulators for OES). If the customer is an OES or a RDSP, it may require its software support vendors to help it maintain the security of its software, as well as its functional output.</paratext>
+              </para>
+              <para>
+                <paratext>For more information on regulation in this area, see <link href="https://uk.practicallaw.thomsonreuters.com/Document/Ifce125f52ce011e89bf099c0ee06c731/View/FullText.html?navigationPath=Search%2Fv1%2Fresults%2Fnavigation%2Fi0ad74037000001631c7dd8251e3b5ded%3FNav%3DKNOWHOW_UK%26fragmentIdentifier%3DIfce125f52ce011e89bf099c0ee06c731%26startIndex%3D1%26contextData%3D%2528sc.Search%2529%26transitionType%3DSearchItem&amp;amp;listSource=Search&amp;amp;listPageSource=fb59ed755de5647e15d46f38da30aa37&amp;amp;list=KNOWHOW_UK&amp;amp;rank=2&amp;amp;sessionScopeId=f355d52a736bf86e33540c3b6f87f0bc0755eb7b7024ae7ad01703ae7419a594&amp;amp;originationContext=Search%20Result&amp;amp;transitionType=SearchItem&amp;amp;contextData=%28sc.Search%29&amp;amp;comp=pluk&amp;amp;navId=08FB97D512A17B273842B8ED398F392F" style="ACTLinkURL"><ital>Practice note, Cybersecurity Directive: UK implementation.</ital></link></paratext>
+              </para>
+            </division>
+            <division id="a181190" level="2">
+              <head align="left" preservecase="true">
+                <headtext>Drafting tips</headtext>
+              </head>
+              <para>
+                <paratext>This standard document is presented in the form of a schedule, but can be readily adapted to comprise a free-standing agreement if needed. To do this, follow these steps:</paratext>
+              </para>
+              <list type="bulleted">
+                <list.item>
+                  <para>
+                    <paratext>delete the schedule heading.</paratext>
+                  </para>
+                </list.item>
+                <list.item>
+                  <para>
+                    <paratext>insert provisions for the parties' details at the beginning and their signatures at the end.</paratext>
+                  </para>
+                </list.item>
+                <list.item>
+                  <para>
+                    <paratext>insert appropriate boilerplate provisions from the <link href="9-107-3656" style="ACTLinkPLCtoPLC"><ital>Standard document, Boilerplate agreement</ital></link> (generally, these appear near the beginning and end of the document).</paratext>
+                  </para>
+                </list.item>
+                <list.item>
+                  <para>
+                    <paratext>change the references to paragraphs to read clauses.</paratext>
+                  </para>
+                </list.item>
+                <list.item>
+                  <para>
+                    <paratext>insert any other appropriate clauses.</paratext>
+                  </para>
+                </list.item>
+              </list>
+            </division>
+          </division>
+          <division id="a866280" level="1">
+            <head align="left" preservecase="true">
+              <headtext>Drafting for Brexit</headtext>
+            </head>
+            <para>
+              <paratext>On 31 January 2020 (<link href="w-015-8342" style="ACTLinkPLCtoPLC"><ital>exit day</ital></link>), the UK left the EU and the <link href="w-029-8775" style="ACTLinkPLCtoPLC"><ital>UK-EU withdrawal agreement</ital></link> entered into force. For general information on the withdrawal agreement, <link href="w-029-0843" style="ACTLinkPLCtoPLC"><ital>future relationship agreements</ital></link>, and the operation of UK law following the end of the transition period, see <link href="w-013-0603" style="ACTLinkPLCtoPLC"><ital>UK legal change post-transition and UK-EU agreements toolkit</ital></link>, <link href="w-040-7177" style="ACTLinkPLCtoPLC"><ital>Retained EU law toolkit</ital></link> and Practical Law's <link href="https://uk.practicallaw.thomsonreuters.com/Browse/Home/Resources/Brexit?transitionType=Default&amp;amp;contextData=(sc.Default)&amp;amp;comp=pluk" style="ACTLinkURL"><ital>Brexit page</ital></link>.</paratext>
+            </para>
+            <para>
+              <paratext>The CJEU continues to have some relevance in UK law on an ongoing basis, although CJEU principles and decisions made since the end of the transition period are not binding on UK courts or tribunals; see <link anchor="a351672" href="w-035-8338" style="ACTLinkPLCtoPLC"><ital>Practice note, EU law in the UK after Brexit: Approach to EU law by UK courts</ital></link>.</paratext>
+            </para>
+            <para>
+              <paratext><link href="w-015-6727" style="ACTLinkPLCtoPLC"><ital>Section 2</ital></link> to <link href="w-015-5563" style="ACTLinkPLCtoPLC"><ital>section 4</ital></link> of the European Union (Withdrawal) Act 2018 (EUWA) created a category of law called "retained EU law" at the end of the transition period. <link href="w-019-6282" style="ACTLinkPLCtoPLC"><ital>Retained EU law</ital></link> includes EU-derived domestic legislation, some (formerly) directly applicable EU legislation and some other EU rights that were recognised and available in UK law. For more information see <link anchor="a841696" href="w-039-9385" style="ACTLinkPLCtoPLC"><ital>Practice note, Retained EU law and assimilated law FAQs: What is retained EU law?</ital></link></paratext>
+            </para>
+            <division id="a781254" level="2">
+              <head align="left" preservecase="true">
+                <headtext>Retained EU law</headtext>
+              </head>
+              <para>
+                <paratext>The <link href="w-040-0021" style="ACTLinkPLCtoPLC"><ital>Retained EU Law (Revocation and Reform) Act 2023</ital></link> (REUL Act) makes provision for significant changes to the status, operation and content of retained EU law and most of its provisions come into force at the end of 2023. Retained EU law is known as <link href="w-039-9417" style="ACTLinkPLCtoPLC"><ital>assimilated law</ital></link> for matters arising after the end of 2023, but is referred to in this resource as retained EU law for consistency.</paratext>
+              </para>
+              <para>
+                <paratext>The UK government has published a <link href="https://www.gov.uk/government/publications/intellectual-property-and-retained-european-union-law-the-facts/retained-eu-law-for-intellectual-property" style="ACTLinkURL"><ital>list</ital></link> of retained EU law relating to intellectual property which contains a number of pieces of EU-derived primary and secondary legislation (see <link href="w-038-6026" style="ACTLinkPLCtoPLC"><ital>Legal update, Government guidance on IP and retained EU law updated</ital></link>).</paratext>
+              </para>
+              <para>
+                <paratext>For more information about retained EU-derived domestic legislation, see <link anchor="a129874" href="w-039-9385" style="ACTLinkPLCtoPLC"><ital>Practice note, Retained EU law and assimilated law FAQs: EU-derived domestic legislation</ital></link>.</paratext>
+              </para>
+            </division>
+            <division id="a477241" level="2">
+              <head align="left" preservecase="true">
+                <headtext>Retained EU case law</headtext>
+              </head>
+              <para>
+                <paratext><link href="w-035-7011" style="ACTLinkPLCtoPLC"><ital>Retained EU case law</ital></link> is a defined body of case law that is used to interpret retained EU law. Broadly speaking, it consists of the principles laid down by, and any decisions of, the CJEU as they had effect in EU law immediately before the end of the transition period.</paratext>
+              </para>
+              <para>
+                <paratext><link href="w-040-0027" style="ACTLinkPLCtoPLC"><ital>Section 6</ital></link> of the REUL Act is to come into force on a date specified by commencement regulations, and includes provisions designed to encourage the courts to depart from retained EU case law when interpreting retained EU law. For more information, see <link anchor="a805836" href="w-037-0308" style="ACTLinkPLCtoPLC"><ital>Practice note, Retained EU Law (Revocation and Reform) Act 2023: Interpretation and effect of retained EU law</ital></link>.</paratext>
+              </para>
+            </division>
+          </division>
+        </drafting.note>
+        <disclosure.schedule>
+          <schedule id="a811552">
+            <identifier>Schedule 1</identifier>
+            <head align="left" preservecase="true">
+              <headtext>Service level agreement</headtext>
+            </head>
+            <clause id="a637295">
+              <identifier>1.</identifier>
+              <head align="left" preservecase="true">
+                <headtext>Interpretation</headtext>
+              </head>
+              <drafting.note id="a122069" jurisdiction="">
+                <head align="left" preservecase="true">
+                  <headtext>Interpretation</headtext>
+                </head>
+                <division id="a000008" level="1">
+                  <para>
+                    <paratext>The following terms are not defined in the standard document, as they are likely to be defined in the Main Agreement: Bank Holidays, Business Days, Customer Confidential Information, Customer Site, Customer System, Documents, Services, Software, Specification and Term. Insert appropriate definitions if they are not defined there. <internal.reference refid="a526963">Paragraph 1.2</internal.reference> states that initial capitalised terms are defined in the Main Agreement.</paratext>
+                  </para>
+                </division>
+              </drafting.note>
+              <para>
+                <paratext>The following definitions and rules of interpretation apply in this schedule.</paratext>
+              </para>
+              <subclause1 id="a1013263">
+                <identifier>1.1</identifier>
+                <para>
+                  <paratext>Definitions:</paratext>
+                </para>
+                <defn.item id="a149086">
+                  <defn.term>Commercially Reasonable Efforts</defn.term>
+                  <defn>
+                    <para>
+                      <paratext>the same degree of priority and diligence with which the Supplier meets the support needs of its other similar customers.</paratext>
+                    </para>
+                  </defn>
+                  <drafting.note id="a302093" jurisdiction="">
+                    <head align="left" preservecase="true">
+                      <headtext>Commercially Reasonable Efforts</headtext>
+                    </head>
+                    <division id="a000009" level="1">
+                      <para>
+                        <paratext>If acting for the customer, consider replacing each reference to this term to read best endeavours or all reasonable endeavours. Both alternate terms have been judicially interpreted. See <link href="6-380-0482" style="ACTLinkPLCtoPLC"><ital>Practice note, Best or reasonable endeavours?</ital></link>.</paratext>
+                      </para>
+                    </division>
+                  </drafting.note>
+                </defn.item>
+                <defn.item id="a345065">
+                  <defn.term>Contact List</defn.term>
+                  <defn>
+                    <para>
+                      <paratext>a current list of Supplier contacts and telephone numbers to enable the Customer to escalate its Support Requests, including:</paratext>
+                    </para>
+                    <list type="loweralpha">
+                      <list.item>
+                        <para>
+                          <paratext>the first person to contact; and</paratext>
+                        </para>
+                      </list.item>
+                      <list.item>
+                        <para>
+                          <paratext>the persons in successively more qualified or experienced positions to provide the support sought.</paratext>
+                        </para>
+                      </list.item>
+                    </list>
+                  </defn>
+                </defn.item>
+                <defn.item id="a821968">
+                  <defn.term>Customer Cause</defn.term>
+                  <defn>
+                    <para>
+                      <paratext>any of the following causes:</paratext>
+                    </para>
+                    <list type="loweralpha">
+                      <list.item>
+                        <para>
+                          <paratext>any improper use, misuse or unauthorised alteration of the Software by the Customer;</paratext>
+                        </para>
+                      </list.item>
+                      <list.item>
+                        <para>
+                          <paratext>any use of the Software by the Customer in a manner inconsistent with the then-current Documents;</paratext>
+                        </para>
+                      </list.item>
+                      <list.item>
+                        <para>
+                          <paratext>the use by the Customer of any hardware or software not provided by the Supplier [or approved by the Supplier in the Specification for use by the Customer in connection with the Software]; or</paratext>
+                        </para>
+                      </list.item>
+                      <list.item>
+                        <para>
+                          <paratext>the use of a non-current version or release of the Software.</paratext>
+                        </para>
+                      </list.item>
+                    </list>
+                  </defn>
+                </defn.item>
+                <defn.item id="a917513">
+                  <defn.term>Fault</defn.term>
+                  <defn>
+                    <para>
+                      <paratext>any Operational Fault [or Vulnerability].</paratext>
+                    </para>
+                  </defn>
+                  <drafting.note id="a958521" jurisdiction="">
+                    <head align="left" preservecase="true">
+                      <headtext>Vulnerabilities (optional)</headtext>
+                    </head>
+                    <division id="a000010" level="1">
+                      <para>
+                        <paratext>We recommended expanding the typical definition of fault here to also cover security vulnerabilities which may be present in software or hardware (and which should also be fixed). See <internal.reference refid="a654473">Drafting note, About this document</internal.reference> and <internal.reference refid="a111692">Drafting note, Network and Information Systems Regulations 2018</internal.reference>.</paratext>
+                      </para>
+                    </division>
+                  </drafting.note>
+                </defn.item>
+                <defn.item id="a958373">
+                  <defn.term>Good Industry Practice</defn.term>
+                  <defn>
+                    <para>
+                      <paratext>the exercise of that degree of skill, care, prudence, efficiency, foresight and timeliness as would be expected from a [leading] company within the relevant industry or business sector.</paratext>
+                    </para>
+                  </defn>
+                </defn.item>
+                <defn.item id="a199228">
+                  <defn.term>Help Desk Support</defn.term>
+                  <defn>
+                    <para>
+                      <paratext>support provided by help desk technicians sufficiently qualified and experienced to identify and resolve most support issues relating to the Software.</paratext>
+                    </para>
+                  </defn>
+                </defn.item>
+                <defn.item id="a661874">
+                  <defn.term>Higher-level Support</defn.term>
+                  <defn>
+                    <para>
+                      <paratext>higher-level support provided by an individual on the Contact List.</paratext>
+                    </para>
+                  </defn>
+                </defn.item>
+                <defn.item condition="optional" id="a622235">
+                  <defn.term>Known Vulnerabilities</defn.term>
+                  <defn>
+                    <para>
+                      <paratext>any Vulnerability that has either:</paratext>
+                    </para>
+                    <list type="loweralpha">
+                      <list.item>
+                        <para>
+                          <paratext>been assigned a Common Vulnerabilities and Exposures (CVE) number;</paratext>
+                        </para>
+                      </list.item>
+                      <list.item>
+                        <para>
+                          <paratext>been disclosed on the National Vulnerability Database available at the website operated by the US National Institute of Standards and Technology (NIST) from to time to time; or</paratext>
+                        </para>
+                      </list.item>
+                      <list.item>
+                        <para>
+                          <paratext>been disclosed on the internet, or any [open] public database, such that it would be revealed by reasonable searches conducted in accordance with Good Industry Practice.</paratext>
+                        </para>
+                      </list.item>
+                    </list>
+                    <para>
+                      <paratext><bold>Latent Vulnerabilities: </bold>any instances of typical classes of Vulnerability. For example, buffer overflows, cross-site scripting (XSS) and Structure Query Language (SQL) injection.</paratext>
+                    </para>
+                  </defn>
+                  <drafting.note id="a157966" jurisdiction="">
+                    <head align="left" preservecase="true">
+                      <headtext>Known and Latent Vulnerabilities</headtext>
+                    </head>
+                    <division id="a000011" level="1">
+                      <para>
+                        <paratext>This concept concerns that subset of "known" security vulnerabilities that may be present in software being supported, which the supplier may be expected to mitigate against. A supplier is likely to want to negotiate this definition, reducing its scope to those vulnerabilities disclosed in certain databases only.</paratext>
+                      </para>
+                    </division>
+                  </drafting.note>
+                </defn.item>
+                <defn.item id="a932615">
+                  <defn.term>Main Agreement</defn.term>
+                  <defn>
+                    <para>
+                      <paratext>the agreement to which this schedule relates.</paratext>
+                    </para>
+                    <para>
+                      <paratext><bold>Mitigate: </bold>the taking of such reasonable steps that would be taken by a prudent supplier in accordance with Good Industry Practice to mitigate against the Vulnerability in question, which may include patching or coding changes, and the terms <bold>Mitigated </bold>and <bold>Mitigation </bold>shall be construed accordingly.</paratext>
+                    </para>
+                  </defn>
+                </defn.item>
+                <defn.item id="a151773">
+                  <defn.term>Operational Fault</defn.term>
+                  <defn>
+                    <para>
+                      <paratext>failure of the Software to operate in all material respects in accordance with the Specification and Documents, including any operational failure or error referred to in the Service Level Table.</paratext>
+                    </para>
+                  </defn>
+                </defn.item>
+                <defn.item id="a275781">
+                  <defn.term>Out-of-scope Services</defn.term>
+                  <defn>
+                    <para>
+                      <paratext>either of the following services:</paratext>
+                    </para>
+                    <list type="loweralpha">
+                      <list.item>
+                        <para>
+                          <paratext>any services provided by the Supplier in connection with any apparent problem regarding the Software reasonably determined by the Supplier not to have been caused by a Fault, but rather by a Customer Cause or a cause outside the Supplier's control (including any investigational work resulting in such a determination); or</paratext>
+                        </para>
+                      </list.item>
+                      <list.item>
+                        <para>
+                          <paratext>any Higher-level Support provided in the circumstances specified in <internal.reference refid="a622932">paragraph 2.3</internal.reference>.</paratext>
+                        </para>
+                      </list.item>
+                    </list>
+                  </defn>
+                </defn.item>
+                <defn.item id="a866461">
+                  <defn.term>Service Credits</defn.term>
+                  <defn>
+                    <para>
+                      <paratext>the service credits specified in the table set out in <internal.reference refid="a704338">paragraph 6.1</internal.reference>.</paratext>
+                    </para>
+                  </defn>
+                </defn.item>
+                <defn.item id="a814054">
+                  <defn.term>Service Levels</defn.term>
+                  <defn>
+                    <para>
+                      <paratext>the service level responses and response times referred to in the Service Level Table.</paratext>
+                    </para>
+                  </defn>
+                </defn.item>
+                <defn.item id="a966284">
+                  <defn.term>Service Level Table</defn.term>
+                  <defn>
+                    <para>
+                      <paratext>the table set out in <internal.reference refid="a776516">paragraph 5.1</internal.reference>.</paratext>
+                    </para>
+                  </defn>
+                </defn.item>
+                <defn.item id="a861409">
+                  <defn.term>Solution</defn.term>
+                  <defn>
+                    <para>
+                      <paratext>either of the following outcomes:</paratext>
+                    </para>
+                    <list type="loweralpha">
+                      <list.item>
+                        <para>
+                          <paratext>correction of an Operational Fault or;</paratext>
+                        </para>
+                      </list.item>
+                      <list.item>
+                        <para>
+                          <paratext>a workaround in relation to an Operational Fault (including a reversal of any changes to the Software if deemed appropriate by the Supplier) that is reasonably acceptable to the Customer; [or</paratext>
+                        </para>
+                      </list.item>
+                      <list.item>
+                        <para>
+                          <paratext>Mitigation of a Vulnerability that is reasonably acceptable to the Customer].</paratext>
+                        </para>
+                      </list.item>
+                    </list>
+                  </defn>
+                </defn.item>
+                <defn.item id="a831395">
+                  <defn.term>Support Fees</defn.term>
+                  <defn>
+                    <para>
+                      <paratext>[DETAILS OF SUPPORT FEES].</paratext>
+                    </para>
+                  </defn>
+                </defn.item>
+                <defn.item id="a632467">
+                  <defn.term>Support Hours</defn.term>
+                  <defn>
+                    <para>
+                      <paratext>[Seven days a week, 24 hours a day including Bank Holidays except Christmas Day <bold>OR</bold> [DETAILS OF SUPPORT HOURS]].</paratext>
+                    </para>
+                  </defn>
+                </defn.item>
+                <defn.item id="a825681">
+                  <defn.term>Support Period</defn.term>
+                  <defn>
+                    <para>
+                      <paratext>the Term and, if requested by the Customer, any period during which the Customer transfers the Services to an alternate service provider.</paratext>
+                    </para>
+                  </defn>
+                </defn.item>
+                <defn.item id="a176379">
+                  <defn.term>Support Request</defn.term>
+                  <defn>
+                    <para>
+                      <paratext>request made by the Customer in accordance with this schedule for support in relation to the Software, including correction of an Operational Fault.</paratext>
+                    </para>
+                  </defn>
+                </defn.item>
+                <defn.item id="a484347">
+                  <defn.term>Support Services</defn.term>
+                  <defn>
+                    <para>
+                      <paratext>maintenance of the then-current version or release of the Software, including Help Desk Support and Higher-level Support, but excluding any Out-of-scope Services.</paratext>
+                    </para>
+                  </defn>
+                  <drafting.note id="a616296" jurisdiction="">
+                    <head align="left" preservecase="true">
+                      <headtext>Support Services</headtext>
+                    </head>
+                    <division id="a000012" level="1">
+                      <para>
+                        <paratext>Consider whether this term is intended to extend to enhancements of the Software. If so, amend this definition, for example, by inserting after "Software": "and any enhancements provided to the Customer during the previous 12-month period (on a rolling basis)".</paratext>
+                      </para>
+                    </division>
+                  </drafting.note>
+                </defn.item>
+                <defn.item condition="optional" id="a642341">
+                  <defn.term>Vulnerability</defn.term>
+                  <defn>
+                    <para>
+                      <paratext><bold> </bold>a weakness in the computational logic (for example, code) found in software and hardware components that, when exploited, results in a negative impact to confidentiality, integrity, or availability, and the term <bold>Vulnerabilities </bold>shall be construed accordingly.</paratext>
+                    </para>
+                  </defn>
+                  <drafting.note id="a260774" jurisdiction="">
+                    <head align="left" preservecase="true">
+                      <headtext>Vulnerability (optional)</headtext>
+                    </head>
+                    <division id="a000013" level="1">
+                      <para>
+                        <paratext>This concept concerns security vulnerabilities that may be present in software or hardware provided or developed during the project and is based on the definition used by US National Institute of Standards and Technology (NIST).</paratext>
+                      </para>
+                    </division>
+                  </drafting.note>
+                </defn.item>
+              </subclause1>
+              <subclause1 id="a526963">
+                <identifier>1.2</identifier>
+                <para>
+                  <paratext>All initial capitalised terms in this schedule shall have the meaning given to them in the Main Agreement, unless otherwise defined herein.</paratext>
+                </para>
+              </subclause1>
+            </clause>
+            <clause id="a935957">
+              <identifier>2.</identifier>
+              <head align="left" preservecase="true">
+                <headtext>Support Services</headtext>
+              </head>
+              <subclause1 id="a744472">
+                <identifier>2.1</identifier>
+                <para>
+                  <paratext>During the Support Period the Supplier shall perform the Support Services during the Support Hours in accordance with the Service Levels.</paratext>
+                </para>
+              </subclause1>
+              <subclause1 id="a131591">
+                <identifier>2.2</identifier>
+                <para>
+                  <paratext>As part of the Support Services, the Supplier shall:</paratext>
+                </para>
+                <subclause2 id="a501393">
+                  <identifier>(a)</identifier>
+                  <para>
+                    <paratext>provide Help Desk Support by means of the following telephone number [TELEPHONE NUMBER] and e-mail address [E-MAIL ADDRESS];</paratext>
+                  </para>
+                </subclause2>
+                <subclause2 id="a391988">
+                  <identifier>(b)</identifier>
+                  <para>
+                    <paratext>commit appropriate resources to the provision of Higher-Level Support;</paratext>
+                  </para>
+                  <drafting.note id="a189043" jurisdiction="">
+                    <head align="left" preservecase="true">
+                      <headtext>Extent of Higher-Level Support</headtext>
+                    </head>
+                    <division id="a000014" level="1">
+                      <para>
+                        <paratext>If acting for the Customer, also consider whether the Supplier should be more specific about its commitment to provide higher-level technical expertise.</paratext>
+                      </para>
+                    </division>
+                  </drafting.note>
+                </subclause2>
+                <subclause2 id="a971371">
+                  <identifier>(c)</identifier>
+                  <para>
+                    <paratext>where Help Desk Support is not provided within the relevant Service Level response time and the Customer escalates its Support Request to an individual of appropriate qualification or experience on the Contact List, provide Higher-Level Support;</paratext>
+                  </para>
+                  <drafting.note id="a982052" jurisdiction="">
+                    <head align="left" preservecase="true">
+                      <headtext>Contact List</headtext>
+                    </head>
+                    <division id="a000015" level="1">
+                      <para>
+                        <paratext>Consider whether you wish to be more specific about who the Customer should refer to on the Contact List by reference to particular areas of qualification or experience.</paratext>
+                      </para>
+                    </division>
+                  </drafting.note>
+                </subclause2>
+                <subclause2 id="a46141">
+                  <identifier>(d)</identifier>
+                  <para>
+                    <paratext>use Commercially Reasonable Efforts to:</paratext>
+                  </para>
+                  <subclause3 id="a600643">
+                    <identifier>(i)</identifier>
+                    <para>
+                      <paratext>correct all Operational Faults notified under <internal.reference refid="a178362">paragraph 4.3(a)</internal.reference>[; and</paratext>
+                    </para>
+                  </subclause3>
+                  <subclause3 id="a222099">
+                    <identifier>(ii)</identifier>
+                    <para>
+                      <paratext>Mitigate against all Vulnerabilities notified under <internal.reference refid="a178362">paragraph 4.3(a)</internal.reference><ital> </ital>or detected under <internal.reference refid="a265171">paragraph 2.2(f)</internal.reference>]</paratext>
+                    </para>
+                    <drafting.note id="a411526" jurisdiction="">
+                      <head align="left" preservecase="true">
+                        <headtext>What level of obligation is reasonable?</headtext>
+                      </head>
+                      <division id="a000016" level="1">
+                        <para>
+                          <paratext>Consider whether commercially reasonable efforts are sufficient in the circumstances, see <internal.reference refid="a302093">Drafting note, Commercially Reasonable Efforts</internal.reference>.</paratext>
+                        </para>
+                      </division>
+                    </drafting.note>
+                  </subclause3>
+                </subclause2>
+                <subclause2 id="a757744">
+                  <identifier>(e)</identifier>
+                  <para>
+                    <paratext>provide technical support for the Software in accordance with the Service Levels.</paratext>
+                  </para>
+                </subclause2>
+                <subclause2 id="a265171">
+                  <identifier>(f)</identifier>
+                  <para>
+                    <paratext>[monitor the Software [on a continuous basis during the Support Hours] for [Known Vulnerabilities or Latent] Vulnerabilities].</paratext>
+                  </para>
+                </subclause2>
+              </subclause1>
+              <subclause1 id="a622932">
+                <identifier>2.3</identifier>
+                <para>
+                  <paratext>Any Higher-level Support requested by the Customer to be provided by an individual whose qualification or experience is greater than that reasonably necessary to resolve the relevant Support Request shall be deemed an Out-of-scope Service, provided that an appropriately qualified or experienced individual was available at the time when the Higher-level Support was sought.</paratext>
+                </para>
+                <drafting.note id="a761789" jurisdiction="">
+                  <head align="left" preservecase="true">
+                    <headtext>Out-of-scope Higher-level Support</headtext>
+                  </head>
+                  <division id="a000017" level="1">
+                    <para>
+                      <paratext>This provision is aimed at deterring the Customer from escalating its Support Request inappropriately up the Contact List, that is, to optimise use of a scarce resource.</paratext>
+                    </para>
+                  </division>
+                </drafting.note>
+              </subclause1>
+              <subclause1 id="a594933">
+                <identifier>2.4</identifier>
+                <para>
+                  <paratext>The Supplier may reasonably determine that any services are Out-of-scope Services. If the Supplier makes any such determination, it shall promptly notify the Customer of that determination.</paratext>
+                </para>
+              </subclause1>
+              <subclause1 id="a580207">
+                <identifier>2.5</identifier>
+                <para>
+                  <paratext>The Customer acknowledges that the Supplier is not obliged to provide Out-of-scope Services.</paratext>
+                </para>
+              </subclause1>
+            </clause>
+            <clause id="a758420">
+              <identifier>3.</identifier>
+              <head align="left" preservecase="true">
+                <headtext>Fees</headtext>
+              </head>
+              <subclause1 id="a960689">
+                <identifier>3.1</identifier>
+                <para>
+                  <paratext>The provision of Support Services on a remote, off-site basis (such as over the telephone or by e-mail) within the Support Period shall be included in the Support Fees.</paratext>
+                </para>
+              </subclause1>
+              <subclause1 id="a1014096">
+                <identifier>3.2</identifier>
+                <para>
+                  <paratext>The provision of Support Services outside the Support Period or at the Customer Site or the provision of Out-of-scope Services shall be charged for at the applicable time and materials rates set out in [DESCRIPTION OF RELEVANT DOCUMENT SETTING OUT RATES].</paratext>
+                </para>
+              </subclause1>
+            </clause>
+            <clause id="a1025453">
+              <identifier>4.</identifier>
+              <head align="left" preservecase="true">
+                <headtext>Submitting Support Requests and access</headtext>
+              </head>
+              <subclause1 id="a334537">
+                <identifier>4.1</identifier>
+                <para>
+                  <paratext>The Customer may request Support Services by way of a Support Request.</paratext>
+                </para>
+              </subclause1>
+              <subclause1 id="a626977">
+                <identifier>4.2</identifier>
+                <para>
+                  <paratext>Each Support Request shall include a description of the Operational Fault [or Vulnerability] and, where relevant, the start time of the incident.</paratext>
+                </para>
+              </subclause1>
+              <subclause1 id="a484075">
+                <identifier>4.3</identifier>
+                <para>
+                  <paratext>The Customer shall provide the Supplier with:</paratext>
+                </para>
+                <subclause2 id="a178362">
+                  <identifier>(a)</identifier>
+                  <para>
+                    <paratext>prompt notice of any Faults which it becomes aware of; and</paratext>
+                  </para>
+                </subclause2>
+                <subclause2 id="a829922">
+                  <identifier>(b)</identifier>
+                  <para>
+                    <paratext>such output and other data, documents, information, assistance and (subject to compliance with all Customer's security and encryption requirements notified to the Supplier in writing) remote access to the Customer System, as are reasonably necessary to assist the Supplier to reproduce operating conditions similar to those present when the Customer detected the relevant Operational Fault and to respond to the relevant Support Request.</paratext>
+                  </para>
+                  <drafting.note id="a875239" jurisdiction="">
+                    <head align="left" preservecase="true">
+                      <headtext>Provision of information by Customer</headtext>
+                    </head>
+                    <division id="a000018" level="1">
+                      <para>
+                        <paratext>If acting for the Customer, consider adding the following provisions:</paratext>
+                      </para>
+                      <display.quote>
+                        <para>
+                          <paratext>"The Supplier's obligation to respond to any Support Request in respect of an Operational Fault shall not be dependent upon the Customer reproducing the problem. However, the parties acknowledge that the time to resolve the Operational Fault may be impacted by the Supplier's inability to reproduce the Operational Fault.</paratext>
+                        </para>
+                      </display.quote>
+                      <display.quote>
+                        <para>
+                          <paratext>All such data, documents and information shall constitute Customer Confidential Information under the Main Agreement".</paratext>
+                        </para>
+                      </display.quote>
+                    </division>
+                  </drafting.note>
+                </subclause2>
+              </subclause1>
+              <subclause1 id="a819241">
+                <identifier>4.4</identifier>
+                <para>
+                  <paratext>Save for where the Supplier reasonably determines that it requires access to the Customer Site to provide the relevant Support Service, all Support Services shall be provided on an off-site basis (such as over the telephone or by e-mail) from the Supplier's office.</paratext>
+                </para>
+              </subclause1>
+              <subclause1 id="a907283">
+                <identifier>4.5</identifier>
+                <para>
+                  <paratext>The Customer acknowledges that, to properly assess and resolve Support Requests, it may be necessary to permit the Supplier direct access at the Customer Site to the Customer System and the Customer's files, equipment and personnel.</paratext>
+                </para>
+              </subclause1>
+              <subclause1 id="a174317">
+                <identifier>4.6</identifier>
+                <para>
+                  <paratext>The Customer shall provide such access promptly, provided that the Supplier complies with all the Customer's reasonable security requirements and other policies and procedures relating to contractors entering and working on the Customer Site notified to the Supplier in writing reasonably in advance.</paratext>
+                </para>
+              </subclause1>
+            </clause>
+            <clause id="a224354">
+              <identifier>5.</identifier>
+              <head align="left" preservecase="true">
+                <headtext>Service Levels</headtext>
+              </head>
+              <subclause1 id="a776516">
+                <identifier>5.1</identifier>
+                <para>
+                  <paratext>The Supplier shall:</paratext>
+                </para>
+                <subclause2 id="a1035459">
+                  <identifier>(a)</identifier>
+                  <para>
+                    <paratext>prioritise:</paratext>
+                  </para>
+                  <subclause3 id="a385864">
+                    <identifier>(i)</identifier>
+                    <para>
+                      <paratext>all Support Requests based on its reasonable assessment of the severity level of the Fault reported [;</paratext>
+                    </para>
+                  </subclause3>
+                  <subclause3 id="a694180">
+                    <identifier>(ii)</identifier>
+                    <para>
+                      <paratext>Mitigation of each Vulnerability based on its reasonable assessment of the risk posed by such Vulnerability; and]</paratext>
+                    </para>
+                  </subclause3>
+                </subclause2>
+                <subclause2 id="a789788">
+                  <identifier>(b)</identifier>
+                  <para>
+                    <paratext>respond to all Support Requests, [and address all Vulnerabilities] in accordance with the responses and response times specified in the table set out below:</paratext>
+                  </para>
+                  <para>
+                    <paratext>
+                      <table frame="all" pgwide="1">
+                        <tgroup cols="4">
+                          <colspec colname="1" colnum="1" colwidth="14"/>
+                          <colspec colname="2" colnum="2" colwidth="28"/>
+                          <colspec colname="3" colnum="3" colwidth="28"/>
+                          <colspec colname="4" colnum="4" colwidth="28"/>
+                          <tbody>
+                            <row>
+                              <entry valign="top">
+                                <para align="left">
+                                  <paratext><bold>Severity level of Fault</bold></paratext>
+                                </para>
+                              </entry>
+                              <entry valign="top">
+                                <para align="left">
+                                  <paratext><bold>Definition</bold></paratext>
+                                </para>
+                              </entry>
+                              <entry valign="top">
+                                <para align="left">
+                                  <paratext><bold>Service Level response and response time for Operational Faults</bold></paratext>
+                                </para>
+                              </entry>
+                              <entry valign="top">
+                                <para align="left">
+                                  <paratext><bold>[Service Level response and response time for Vulnerabilities</bold></paratext>
+                                </para>
+                              </entry>
+                            </row>
+                            <row>
+                              <entry valign="top">
+                                <para align="left">
+                                  <paratext>1</paratext>
+                                </para>
+                              </entry>
+                              <entry valign="top">
+                                <para align="left">
+                                  <paratext><bold>Business Critical Failures:</bold> An error in, or failure of, the Software that:</paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>a) materially impacts the operations [or security] of the Customer's business or marketability [or security] of its service or product;</paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>b)prevents necessary work from being done; or</paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>c)disables major functions of the Software from being performed.</paratext>
+                                </para>
+                              </entry>
+                              <entry valign="top">
+                                <para align="left">
+                                  <paratext><bold>Level 1 Response:</bold></paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>Acknowledgment of receipt of a Support Request within [NUMBER] minutes.</paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext><bold>Level 2 Response:</bold></paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>The Supplier shall:</paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>a)restore the Software to a state that allows the Customer to continue to use all functions of the Software in all material respects within [NUMBER] hours after the Level 1 Response time has elapsed; and</paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>b)exercise Commercially Reasonable Efforts until full restoration of function is provided.</paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext><bold>Level 3 Response:</bold></paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>The Supplier shall work on the problem continuously and implement a Solution within [NUMBER] hours of receipt of the Support Request.</paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>If the Supplier delivers a Solution by way of a workaround reasonably acceptable to the Customer, the severity level assessment shall reduce to a severity level 2 or lower.</paratext>
+                                </para>
+                              </entry>
+                              <entry valign="top">
+                                <para align="left">
+                                  <paratext><bold>Level 1 Response</bold></paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>Where reported by the Customer:</paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>Acknowledgment of receipt of a Support Request within [NUMBER] minutes.</paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>Where detected by Supplier:</paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>Report details of Vulnerability to Customer within [NUMBER] minutes.</paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext><bold>Level 2 Response:</bold></paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>The Supplier shall work on the problem continuously and implement a Solution within [NUMBER] hours of either receipt of the Support Request or the Supplier's report to the Customer.</paratext>
+                                </para>
+                              </entry>
+                            </row>
+                            <row>
+                              <entry valign="top">
+                                <para align="left">
+                                  <paratext>2</paratext>
+                                </para>
+                              </entry>
+                              <entry valign="top">
+                                <para align="left">
+                                  <paratext><bold>System Defect with Workaround: </bold></paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>a)a Business Critical Failure in the Software for which a work- around above has been deployed; or</paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>b)an error or failure in the Software (other than a Business Critical Failure) that affects the operations [or security] of the Customer's business or marketability [or security] of its service or product.</paratext>
+                                </para>
+                              </entry>
+                              <entry valign="top">
+                                <para align="left">
+                                  <paratext><bold>Level 1 Response:</bold></paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>Acknowledgment of receipt of a Support Request within [NUMBER] hours.</paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext><bold>Level 2 Response:</bold></paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>The Supplier shall, within [NUMBER] Business Days after the Level 1 Response time has elapsed, provide:</paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>a)an emergency software fix or workaround; or</paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>b) temporary release or update release,</paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>which allows the Customer to continue to use all functions of the Software in all material respects.</paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext><bold>Level 3 Response:</bold></paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>The Supplier shall provide a permanent Fault correction as soon as practicable and no later than [NUMBER] Business Days after the Supplier’s receipt of the Support Request.</paratext>
+                                </para>
+                              </entry>
+                              <entry valign="top">
+                                <para align="left">
+                                  <paratext><bold>Level 1 Response</bold></paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>Where reported by the Customer: Acknowledgment of receipt of a Support Request within [NUMBER] hours.</paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>Where detected by Supplier:</paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>Report details of Vulnerability to Customer within [NUMBER] hours.</paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext><bold>Level 2 Response:</bold></paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>The Supplier shall provide a Solution as soon as practicable and no later than [NUMBER] Business Days after either receipt of the Support Request or the Supplier's report to the Customer.</paratext>
+                                </para>
+                              </entry>
+                            </row>
+                            <row>
+                              <entry valign="top">
+                                <para align="left">
+                                  <paratext>3</paratext>
+                                </para>
+                              </entry>
+                              <entry valign="top">
+                                <para align="left">
+                                  <paratext><bold>Minor Error: </bold></paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>An isolated or minor error in the Software that:</paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>a)does not significantly affect Software functionality [or security];</paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>b)may disable only certain non-essential functions; or</paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>c)does not materially impact the Customer's business performance.</paratext>
+                                </para>
+                              </entry>
+                              <entry valign="top">
+                                <para align="left">
+                                  <paratext><bold>Level 1 Response:</bold></paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>Acknowledgment of receipt of the Support Request within [NUMBER] hours.</paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext><bold>Level 2 Response:</bold></paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>The Supplier shall provide a permanent Fault correction within [NUMBER] Business Days after the Level 1 Response time has elapsed.</paratext>
+                                </para>
+                              </entry>
+                              <entry valign="top">
+                                <para align="left">
+                                  <paratext><bold>Level 1 Response</bold></paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>Where reported by the Customer: Acknowledgment of receipt of a Support Request within [NUMBER] hours.</paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>Where detected by Supplier:</paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>Report details of Vulnerability to Customer within [NUMBER] of hours.</paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext><bold>Level 2 Response:</bold></paratext>
+                                </para>
+                                <para align="left">
+                                  <paratext>The Supplier shall implement a Solution within [NUMBER] of Business Days after either receipt of the Support Request or the Supplier's report to the Customer].</paratext>
+                                </para>
+                              </entry>
+                            </row>
+                          </tbody>
+                        </tgroup>
+                      </table>
+                    </paratext>
+                  </para>
+                  <drafting.note id="a526800" jurisdiction="">
+                    <head align="left" preservecase="true">
+                      <headtext>Service Level response</headtext>
+                    </head>
+                    <division id="a000019" level="1">
+                      <para>
+                        <paratext>Both parties should review the text contained in this table and adapt it to their particular circumstances, as these details tend to be highly variable.</paratext>
+                      </para>
+                      <division id="a822411" level="2">
+                        <head align="left" preservecase="true">
+                          <headtext>Response times for mitigation of security vulnerabilities (optional)</headtext>
+                        </head>
+                        <para>
+                          <paratext>We have expanded the typical service level responses to cover the mitigation of security vulnerabilities, should the parties wish to include this. However, this will likely require adaptation in light of what is technically achievable in practice, see <internal.reference refid="a654473">Drafting note, About this document</internal.reference>.</paratext>
+                        </para>
+                      </division>
+                    </division>
+                  </drafting.note>
+                </subclause2>
+              </subclause1>
+              <subclause1 id="a480030">
+                <identifier>5.2</identifier>
+                <para>
+                  <paratext>The parties may, on a case-by-case basis, agree in writing to a reasonable extension of the Service Level response times.</paratext>
+                </para>
+              </subclause1>
+              <subclause1 id="a456076">
+                <identifier>5.3</identifier>
+                <para>
+                  <paratext>The Supplier shall give the Customer regular updates of the nature and status of its efforts to correct [(or, where, relevant, Mitigate)] any Fault [and monthly reports as to achievement of Service Levels and Service Credits to which the Customer has become entitled].</paratext>
+                </para>
+                <drafting.note id="a996778" jurisdiction="">
+                  <head align="left" preservecase="true">
+                    <headtext>Updates</headtext>
+                  </head>
+                  <division id="a000020" level="1">
+                    <para>
+                      <paratext>If acting for the Customer, select the optional text and consider requiring the updates to specify a description of the problem and the estimated time of resolution.</paratext>
+                    </para>
+                  </division>
+                </drafting.note>
+              </subclause1>
+            </clause>
+            <clause id="a893232">
+              <identifier>6.</identifier>
+              <head align="left" preservecase="true">
+                <headtext>Service Credits</headtext>
+              </head>
+              <subclause1 id="a704338">
+                <identifier>6.1</identifier>
+                <para>
+                  <paratext>If the Supplier fails to provide a Solution within the relevant Service Level response time, the Customer shall become entitled to the Service Credit specified in the table set out below corresponding to the relevant severity level of Fault on submitting a written claim for such Service Credit, provided that the relevant Fault or other problem relating to the Software:</paratext>
+                </para>
+                <subclause2 id="a783152">
+                  <identifier>(a)</identifier>
+                  <para>
+                    <paratext>did not result from a Customer Cause or a cause outside the Supplier's control; and</paratext>
+                  </para>
+                </subclause2>
+                <subclause2 id="a281130">
+                  <identifier>(b)</identifier>
+                  <para>
+                    <paratext>[save in the case of Vulnerabilities which should have been detected under <internal.reference refid="a265171">paragraph 2.2(f)</internal.reference>,] was promptly notified to the Supplier under <internal.reference refid="a178362">paragraph 4.3(a)</internal.reference>.</paratext>
+                  </para>
+                  <para>
+                    <paratext>
+                      <table frame="all" pgwide="1">
+                        <tgroup cols="2">
+                          <colspec colname="1" colnum="1" colwidth="19"/>
+                          <colspec colname="2" colnum="2" colwidth="80"/>
+                          <tbody>
+                            <row>
+                              <entry valign="top">
+                                <para align="left">
+                                  <paratext><bold>Severity Level of Fault</bold></paratext>
+                                </para>
+                              </entry>
+                              <entry valign="top">
+                                <para align="left">
+                                  <paratext><bold>Service Credit</bold></paratext>
+                                </para>
+                              </entry>
+                            </row>
+                            <row>
+                              <entry valign="top">
+                                <para align="left">
+                                  <paratext>1</paratext>
+                                </para>
+                              </entry>
+                              <entry valign="top">
+                                <para align="left">
+                                  <paratext>An amount equal to [PERCENTAGE]% of the-then current annual Support Fee for each additional day or part of a day (not to exceed [NUMBER] days) that the Supplier fails to provide a Solution.</paratext>
+                                </para>
+                              </entry>
+                            </row>
+                            <row>
+                              <entry valign="top">
+                                <para align="left">
+                                  <paratext>2</paratext>
+                                </para>
+                              </entry>
+                              <entry valign="top">
+                                <para align="left">
+                                  <paratext>An amount equal to [PERCENTAGE]% of the-then current annual Support Fee for each additional day or part of a day (not to exceed [NUMBER] days) that the Supplier fails to provide a Solution.</paratext>
+                                </para>
+                              </entry>
+                            </row>
+                            <row>
+                              <entry valign="top">
+                                <para align="left">
+                                  <paratext>3</paratext>
+                                </para>
+                              </entry>
+                              <entry valign="top">
+                                <para align="left">
+                                  <paratext>An amount equal to [PERCENTAGE]% of the-then current annual Support Fee for each additional day or part of a day (not to exceed [NUMBER] days) that the Supplier fails to provide a Solution.</paratext>
+                                </para>
+                              </entry>
+                            </row>
+                          </tbody>
+                        </tgroup>
+                      </table>
+                    </paratext>
+                  </para>
+                  <drafting.note id="a965224" jurisdiction="">
+                    <head align="left" preservecase="true">
+                      <headtext>Service Credit amounts</headtext>
+                    </head>
+                    <division id="a000021" level="1">
+                      <para>
+                        <paratext>In this document the Service Credit amounts are determined by applying a specified percentage figure to the annual support fee and multiplying the result by the number of relevant days. Alternative approaches include specifying a fixed amount and multiplying the result by the number of relevant days.</paratext>
+                      </para>
+                    </division>
+                  </drafting.note>
+                </subclause2>
+              </subclause1>
+              <subclause1 id="a787197">
+                <identifier>6.2</identifier>
+                <para>
+                  <paratext>The parties acknowledge that each Service Credit is proportionate when considering the Customer's legitimate interest to address and resolve all Faults as quickly as possible.</paratext>
+                </para>
+                <drafting.note id="a456566" jurisdiction="">
+                  <head align="left" preservecase="true">
+                    <headtext>Service credits</headtext>
+                  </head>
+                  <division id="a000022" level="1">
+                    <para>
+                      <paratext>When agreeing a service credit regime, the parties should consider the legal implications that arise through use of service credits, including their enforceability. For further discussion on this topic, see <link anchor="a574254" href="9-582-2885" style="ACTLinkPLCtoPLC"><ital>Practice note, Contracts: agreed remedies: The rule against penalties</ital></link>.</paratext>
+                    </para>
+                  </division>
+                </drafting.note>
+              </subclause1>
+              <subclause1 id="a1003415">
+                <identifier>6.3</identifier>
+                <para>
+                  <paratext>The provision of a Service Credit shall be an exclusive remedy for a particular Service Level failure.</paratext>
+                </para>
+                <drafting.note id="a885920" jurisdiction="">
+                  <head align="left" preservecase="true">
+                    <headtext>Exclusive or non-exclusive remedy</headtext>
+                  </head>
+                  <division id="a000023" level="1">
+                    <para>
+                      <paratext>If acting for the Customer, consider deleting <internal.reference refid="a1003415">paragraph 6.3</internal.reference> and adding the following additional remedy:</paratext>
+                    </para>
+                    <display.quote>
+                      <para>
+                        <paratext>"Without limiting the Supplier's obligation under paragraph 6.1, if the then-current Software exhibits a severity level 1 or severity level 2 Fault that is unresolved, the Customer may, at its option, use any previous version or release of the Software in which a severity level 1 or severity level 2 Fault does not occur or can be worked around, and the Supplier shall perform all Support Services for such version or release until the Supplier provides a Solution."</paratext>
+                      </para>
+                    </display.quote>
+                    <para>
+                      <paratext>Also consider whether the Service Credits are intended to be the sole remedy for Service Level failures and, if not, consider adding the following provisions:</paratext>
+                    </para>
+                    <display.quote>
+                      <para>
+                        <paratext>"Even if the Customer becomes entitled to a Service Credit under this schedule, the Customer may obtain such other remedies as may be available to it, either under the Main Agreement or otherwise at law or in equity, including the right to terminate the Main Agreement in accordance with clause [NUMBER]. If the Customer exercises such right then, without prejudice to any other rights and remedies that may be available to it, any further Support Fees that fall due during the relevant termination notice period shall remain payable, but the Customer shall cease to be liable for any Support Fees falling due after the notice period has expired. The Supplier shall provide a pro-rata refund of any Support Fees paid in advance."</paratext>
+                      </para>
+                    </display.quote>
+                    <display.quote>
+                      <para>
+                        <paratext>Failure to meet the [SERVICE LEVEL TYPE] Service Level [FREQUENCY OF FAILURE IN RELEVANT TIMEFRAME] shall be deemed a [material breach <bold>OR</bold> breach of a material clause] under clause [NUMBER]."</paratext>
+                      </para>
+                    </display.quote>
+                    <para>
+                      <paratext>The aim of the second provision is to facilitate termination by the Customer if the specified Service Levels are not met. Insert the number of the termination clause. The appropriate Service Level should be specified (if there is more than one) and reference to the appropriate clause should be included. If you wish to restrict the operation of this paragraph to multiple failures to meet the relevant service level, you can do so by inserting appropriate text in the second set of square brackets, for example, "twice in any 12-month period".</paratext>
+                    </para>
+                    <para>
+                      <paratext>The parties might seek to achieve a compromise by identifying the particular Service Level failures for which provision of a Service Credit shall or shall not be an exclusive remedy. This may depend, for example, on the severity level of the relevant Fault or other problem relating to the Software.</paratext>
+                    </para>
+                    <para>
+                      <paratext>The supplier should be aware that any attempt by it to make service credits an exclusive remedy may be subject to the reasonableness test under the Unfair Contract Terms Act 1977 (see, <link anchor="a990188" href="6-370-6007" style="ACTLinkPLCtoPLC"><ital>Practice note, Issues in IT contracts litigation: Service credits as the customer's exclusive remedy</ital></link><ital>)</ital>.</paratext>
+                    </para>
+                  </division>
+                </drafting.note>
+              </subclause1>
+              <subclause1 id="a180953">
+                <identifier>6.4</identifier>
+                <para>
+                  <paratext>Service Credits shall be shown as a deduction from the amount due from the Customer to the Supplier in the next invoice then due to be issued under the Main Agreement. The Supplier shall not in any circumstances be obliged to pay any money or make any refund to the Customer.</paratext>
+                </para>
+                <drafting.note id="a618887" jurisdiction="">
+                  <head align="left" preservecase="true">
+                    <headtext>Credit notes and Service Credits cap</headtext>
+                  </head>
+                  <division id="a000024" level="1">
+                    <para>
+                      <paratext>If acting for the Customer, consider replacing this clause with the following:</paratext>
+                    </para>
+                    <display.quote>
+                      <para>
+                        <paratext>"The Supplier shall issue a credit note in respect of any Service Credit to which the Customer becomes entitled. The Service Credit shall be repayable by the Supplier as a debt within [NUMBER] Business Days of issue of the credit note."</paratext>
+                      </para>
+                    </display.quote>
+                    <para>
+                      <paratext>If acting for the Supplier, consider capping the total Service Credits to which the Customer may become entitled over, for example, a particular 12-month period.</paratext>
+                    </para>
+                  </division>
+                </drafting.note>
+              </subclause1>
+            </clause>
+            <clause id="a409795">
+              <identifier>7.</identifier>
+              <head align="left" preservecase="true">
+                <headtext>Other remedies</headtext>
+              </head>
+              <subclause1 id="a359944">
+                <identifier>7.1</identifier>
+                <para>
+                  <paratext>If a Solution is not provided within the relevant Service Level response time, the Customer may escalate the Support Request to the parties' respective relationship managers identified below and then to their respective senior management identified below:</paratext>
+                </para>
+                <para>
+                  <paratext>[DETAILS OF PARTIES' RELATIONSHIP MANAGERS AND SENIOR MANAGEMENT]</paratext>
+                </para>
+              </subclause1>
+            </clause>
+            <clause id="a651421">
+              <identifier>8.</identifier>
+              <head align="left" preservecase="true">
+                <headtext>Communications</headtext>
+              </head>
+              <subclause1 id="a509483">
+                <identifier>8.1</identifier>
+                <para>
+                  <paratext>In addition to the mechanisms for giving notice specified in clause [NUMBER] of the Main Agreement, the parties may communicate in respect of any matter referred to in this [schedule <bold>OR </bold>agreement] by e-mail (unless specified otherwise).</paratext>
+                </para>
+              </subclause1>
+            </clause>
+          </schedule>
+        </disclosure.schedule>
+      </body>
+      <rev.history>
+        <rev.item>
+          <rev.title>Review (April 2024)</rev.title>
+          <rev.date>20240416</rev.date>
+          <rev.author>Practical Law IP&amp;IT</rev.author>
+          <rev.body>
+            <division id="a000001" level="1">
+              <para>
+                <paratext>We have made some general changes to this resource, including updating <internal.reference refid="a866280">Drafting note, Drafting for Brexit</internal.reference>.</paratext>
+              </para>
+            </division>
+          </rev.body>
+        </rev.item>
+        <rev.item>
+          <rev.title>Review in light of end of UK-EU transition period (December 2020)</rev.title>
+          <rev.date>20201201</rev.date>
+          <rev.author>Practical Law IP&amp;IT</rev.author>
+          <rev.body>
+            <division id="a000002" level="1">
+              <para>
+                <paratext>We have made changes to this resource so that it will continue to work correctly after the end of the UK-EU transition period.</paratext>
+              </para>
+            </division>
+          </rev.body>
+        </rev.item>
+        <rev.item>
+          <rev.title>Security SLA (May 2019)</rev.title>
+          <rev.date>20190509</rev.date>
+          <rev.author>Practical Law IP&amp;IT</rev.author>
+          <rev.body>
+            <division id="a000003" level="1">
+              <para>
+                <paratext>We have expanded the SLA to cover security vulnerabilities in light of the NIS Regulations</paratext>
+              </para>
+            </division>
+          </rev.body>
+        </rev.item>
+        <rev.item>
+          <rev.title>New materials on Brexit and IP (March 2019)</rev.title>
+          <rev.date>20190314</rev.date>
+          <rev.author>Practical Law IP&amp;IT</rev.author>
+          <rev.body>
+            <division id="a000004" level="1">
+              <para>
+                <paratext>We have added links to various materials on Brexit relevant to this resource.</paratext>
+              </para>
+            </division>
+          </rev.body>
+        </rev.item>
+        <rev.item>
+          <rev.title>Network and Information Systems Regulations 2018 (July 2018)</rev.title>
+          <rev.date>20180720</rev.date>
+          <rev.author>Practical Law IP&amp;IT</rev.author>
+          <rev.body>
+            <division id="a000005" level="1">
+              <para>
+                <paratext>Updated to take into account these regulations.</paratext>
+              </para>
+            </division>
+          </rev.body>
+        </rev.item>
+        <rev.item>
+          <rev.title>Changes made to this resource</rev.title>
+          <rev.date>20150101</rev.date>
+          <rev.author>Click here to enter the Resource History Author</rev.author>
+          <rev.body>
+            <division id="a000006" level="1">
+              <para>
+                <paratext>We will record here any changes to this resource as a result of developments in the law or practice.</paratext>
+              </para>
+            </division>
+          </rev.body>
+        </rev.item>
+      </rev.history>
+    </standard.doc>
+  </n-docbody>
+</n-document>

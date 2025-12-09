@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "doc_id": "Systems-integration-agreement-(pro-supplier)-(1)",
+  "doc_format": "docx",
+  "source_filename": "Systems integration agreement (pro-supplier) (1).docx",
+  "char_count": 102793,
+  "block_count": 569,
+  "section_count": 519,
+  "ltu_count": 569,
+  "max_section_depth": 4,
+  "has_tag_ranges": true,
+  "schema_version": "1.0.0",
+  "filemap": {
+    "blocks": "blocks.jsonl",
+    "sections": "sections.json",
+    "styles": "styles.json",
+    "tag_ranges": "tag_ranges.jsonl"
+  }
+}

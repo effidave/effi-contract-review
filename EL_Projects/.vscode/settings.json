@@ -28,5 +28,7 @@
     },
     "github.copilot.instructions": [
         "${workspaceFolder}/docs/llm_instructions/eli.md"
-    ]
+    ],
+    "python-envs.defaultEnvManager": "ms-python.python:system",
+    "python-envs.pythonProjects": []
 }

@@ -698,3 +698,447 @@ describe('Concurrent plan operations', () => {
         expect(edits.length).toBe(5);
     });
 });
+
+// ============================================================================
+// SECTION 7: Edit Auto-Association Tests
+// ============================================================================
+
+describe('Edit auto-association', () => {
+    const TEST_DIR = path.join(__dirname, 'test-auto-association');
+    const PROJECT_PATH = path.join(TEST_DIR, 'TestProject');
+    
+    beforeEach(() => {
+        if (fs.existsSync(TEST_DIR)) {
+            fs.rmSync(TEST_DIR, { recursive: true, force: true });
+        }
+        fs.mkdirSync(PROJECT_PATH, { recursive: true });
+    });
+    
+    afterEach(() => {
+        if (fs.existsSync(TEST_DIR)) {
+            fs.rmSync(TEST_DIR, { recursive: true, force: true });
+        }
+    });
+
+    describe('getActiveTask', () => {
+        test('should return task with status in_progress', async () => {
+            const provider = new PlanProvider(PROJECT_PATH);
+            await provider.initialize();
+            await provider.getPlan();
+            
+            // Add tasks with different statuses
+            await provider.addTask('Pending Task', 'desc');
+            const { task } = await provider.addTask('Active Task', 'desc');
+            await provider.addTask('Another Pending', 'desc');
+            
+            // Set one to in_progress
+            await provider.updateTask(task!.id, { status: 'in_progress' });
+            
+            const activeTask = provider.getActiveTask();
+            
+            expect(activeTask).toBeDefined();
+            expect(activeTask!.id).toBe(task!.id);
+            expect(activeTask!.status).toBe('in_progress');
+        });
+
+        test('should return null if no task is in_progress', async () => {
+            const provider = new PlanProvider(PROJECT_PATH);
+            await provider.initialize();
+            await provider.getPlan();
+            
+            await provider.addTask('Pending Task', 'desc');
+            await provider.addTask('Another Pending', 'desc');
+            
+            const activeTask = provider.getActiveTask();
+            
+            expect(activeTask).toBeNull();
+        });
+
+        test('should return first in_progress task if multiple are active', async () => {
+            const provider = new PlanProvider(PROJECT_PATH);
+            await provider.initialize();
+            await provider.getPlan();
+            
+            const { task: task1 } = await provider.addTask('Task 1', 'desc');
+            const { task: task2 } = await provider.addTask('Task 2', 'desc');
+            
+            await provider.updateTask(task1!.id, { status: 'in_progress' });
+            await provider.updateTask(task2!.id, { status: 'in_progress' });
+            
+            const activeTask = provider.getActiveTask();
+            
+            // Should return first one (by ordinal)
+            expect(activeTask!.id).toBe(task1!.id);
+        });
+    });
+
+    describe('processUnassociatedEdits', () => {
+        test('should associate unassigned edits with active task', async () => {
+            const provider = new PlanProvider(PROJECT_PATH);
+            await provider.initialize();
+            await provider.getPlan();
+            
+            // Add a document to the plan
+            const { LegalDocument } = require('../models/workplan');
+            provider.currentPlan!.addDocument(new LegalDocument({
+                filename: 'C:/Projects/nda.docx'
+            }));
+            
+            // Add a task and set it to in_progress
+            const { task } = await provider.addTask('Review NDA', 'Check liability');
+            await provider.updateTask(task!.id, { status: 'in_progress' });
+            
+            // Simulate MCP server writing unassociated edits to log
+            const logsDir = path.join(PROJECT_PATH, 'logs');
+            fs.mkdirSync(logsDir, { recursive: true });
+            const editsContent = [
+                JSON.stringify({
+                    id: 'mcp_edit_1',
+                    taskId: null,
+                    toolName: 'search_and_replace',
+                    request: { filename: 'C:/Projects/nda.docx', find: 'foo', replace: 'bar' },
+                    response: { success: true },
+                    timestamp: new Date().toISOString()
+                }),
+                JSON.stringify({
+                    id: 'mcp_edit_2',
+                    taskId: null,
+                    toolName: 'add_paragraph',
+                    request: { filename: 'C:/Projects/nda.docx', text: 'hello' },
+                    response: { success: true },
+                    timestamp: new Date().toISOString()
+                })
+            ].join('\n');
+            fs.writeFileSync(path.join(logsDir, 'edits.jsonl'), editsContent);
+            
+            // Process unassociated edits
+            const result = await provider.processUnassociatedEdits();
+            
+            expect(result.success).toBe(true);
+            expect(result.associatedCount).toBe(2);
+            expect(result.associatedEditIds).toContain('mcp_edit_1');
+            expect(result.associatedEditIds).toContain('mcp_edit_2');
+            
+            // Verify task now has these edits
+            const updatedTask = provider.currentPlan!.getTaskById(task!.id);
+            expect(updatedTask!.editIds).toContain('mcp_edit_1');
+            expect(updatedTask!.editIds).toContain('mcp_edit_2');
+        });
+
+        test('should only associate edits for plan documents', async () => {
+            const provider = new PlanProvider(PROJECT_PATH);
+            await provider.initialize();
+            await provider.getPlan();
+            
+            // Add a document to the plan
+            const { LegalDocument } = require('../models/workplan');
+            provider.currentPlan!.addDocument(new LegalDocument({
+                filename: 'C:/Projects/nda.docx'
+            }));
+            
+            // Add active task
+            const { task } = await provider.addTask('Review', 'desc');
+            await provider.updateTask(task!.id, { status: 'in_progress' });
+            
+            // Write edits - some for plan doc, some for other doc
+            const logsDir = path.join(PROJECT_PATH, 'logs');
+            fs.mkdirSync(logsDir, { recursive: true });
+            const editsContent = [
+                JSON.stringify({
+                    id: 'relevant_edit',
+                    taskId: null,
+                    toolName: 'tool',
+                    request: { filename: 'C:/Projects/nda.docx' },
+                    response: {},
+                    timestamp: new Date().toISOString()
+                }),
+                JSON.stringify({
+                    id: 'unrelated_edit',
+                    taskId: null,
+                    toolName: 'tool',
+                    request: { filename: 'C:/Projects/other.docx' },
+                    response: {},
+                    timestamp: new Date().toISOString()
+                })
+            ].join('\n');
+            fs.writeFileSync(path.join(logsDir, 'edits.jsonl'), editsContent);
+            
+            const result = await provider.processUnassociatedEdits();
+            
+            expect(result.associatedCount).toBe(1);
+            expect(result.associatedEditIds).toContain('relevant_edit');
+            expect(result.associatedEditIds).not.toContain('unrelated_edit');
+        });
+
+        test('should skip edits that are already associated', async () => {
+            const provider = new PlanProvider(PROJECT_PATH);
+            await provider.initialize();
+            await provider.getPlan();
+            
+            // Add document and active task
+            const { LegalDocument } = require('../models/workplan');
+            provider.currentPlan!.addDocument(new LegalDocument({
+                filename: 'C:/Projects/nda.docx'
+            }));
+            const { task } = await provider.addTask('Review', 'desc');
+            await provider.updateTask(task!.id, { status: 'in_progress' });
+            
+            // Write mix of associated and unassociated edits
+            const logsDir = path.join(PROJECT_PATH, 'logs');
+            fs.mkdirSync(logsDir, { recursive: true });
+            const editsContent = [
+                JSON.stringify({
+                    id: 'already_assigned',
+                    taskId: 'some_other_task',
+                    toolName: 'tool',
+                    request: { filename: 'C:/Projects/nda.docx' },
+                    response: {},
+                    timestamp: new Date().toISOString()
+                }),
+                JSON.stringify({
+                    id: 'needs_assignment',
+                    taskId: null,
+                    toolName: 'tool',
+                    request: { filename: 'C:/Projects/nda.docx' },
+                    response: {},
+                    timestamp: new Date().toISOString()
+                })
+            ].join('\n');
+            fs.writeFileSync(path.join(logsDir, 'edits.jsonl'), editsContent);
+            
+            const result = await provider.processUnassociatedEdits();
+            
+            expect(result.associatedCount).toBe(1);
+            expect(result.associatedEditIds).toContain('needs_assignment');
+            expect(result.associatedEditIds).not.toContain('already_assigned');
+        });
+
+        test('should do nothing if no active task', async () => {
+            const provider = new PlanProvider(PROJECT_PATH);
+            await provider.initialize();
+            await provider.getPlan();
+            
+            // Add document but no active task
+            const { LegalDocument } = require('../models/workplan');
+            provider.currentPlan!.addDocument(new LegalDocument({
+                filename: 'C:/Projects/nda.docx'
+            }));
+            await provider.addTask('Pending Task', 'desc'); // status: pending
+            
+            // Write unassociated edits
+            const logsDir = path.join(PROJECT_PATH, 'logs');
+            fs.mkdirSync(logsDir, { recursive: true });
+            fs.writeFileSync(path.join(logsDir, 'edits.jsonl'), JSON.stringify({
+                id: 'orphan_edit',
+                taskId: null,
+                toolName: 'tool',
+                request: { filename: 'C:/Projects/nda.docx' },
+                response: {},
+                timestamp: new Date().toISOString()
+            }));
+            
+            const result = await provider.processUnassociatedEdits();
+            
+            expect(result.success).toBe(true);
+            expect(result.associatedCount).toBe(0);
+            expect(result.skippedReason).toBe('no_active_task');
+        });
+
+        test('should do nothing if no plan documents registered', async () => {
+            const provider = new PlanProvider(PROJECT_PATH);
+            await provider.initialize();
+            await provider.getPlan();
+            
+            // Add active task but no documents
+            const { task } = await provider.addTask('Task', 'desc');
+            await provider.updateTask(task!.id, { status: 'in_progress' });
+            
+            // Write unassociated edits
+            const logsDir = path.join(PROJECT_PATH, 'logs');
+            fs.mkdirSync(logsDir, { recursive: true });
+            fs.writeFileSync(path.join(logsDir, 'edits.jsonl'), JSON.stringify({
+                id: 'orphan_edit',
+                taskId: null,
+                toolName: 'tool',
+                request: { filename: 'C:/Projects/nda.docx' },
+                response: {},
+                timestamp: new Date().toISOString()
+            }));
+            
+            const result = await provider.processUnassociatedEdits();
+            
+            expect(result.success).toBe(true);
+            expect(result.associatedCount).toBe(0);
+            expect(result.skippedReason).toBe('no_documents');
+        });
+    });
+
+    describe('associateEditWithTask', () => {
+        test('should associate a specific edit with a task', async () => {
+            const provider = new PlanProvider(PROJECT_PATH);
+            await provider.initialize();
+            await provider.getPlan();
+            
+            const { task } = await provider.addTask('Task', 'desc');
+            
+            // Write an edit to log
+            const logsDir = path.join(PROJECT_PATH, 'logs');
+            fs.mkdirSync(logsDir, { recursive: true });
+            fs.writeFileSync(path.join(logsDir, 'edits.jsonl'), JSON.stringify({
+                id: 'edit_to_associate',
+                taskId: null,
+                toolName: 'tool',
+                request: { filename: 'doc.docx' },
+                response: {},
+                timestamp: new Date().toISOString()
+            }));
+            
+            const result = await provider.associateEditWithTask('edit_to_associate', task!.id);
+            
+            expect(result.success).toBe(true);
+            
+            const updatedTask = provider.currentPlan!.getTaskById(task!.id);
+            expect(updatedTask!.editIds).toContain('edit_to_associate');
+        });
+
+        test('should fail if edit does not exist', async () => {
+            const provider = new PlanProvider(PROJECT_PATH);
+            await provider.initialize();
+            await provider.getPlan();
+            
+            const { task } = await provider.addTask('Task', 'desc');
+            
+            const result = await provider.associateEditWithTask('nonexistent', task!.id);
+            
+            expect(result.success).toBe(false);
+            expect(result.error).toContain('not found');
+        });
+
+        test('should fail if task does not exist', async () => {
+            const provider = new PlanProvider(PROJECT_PATH);
+            await provider.initialize();
+            await provider.getPlan();
+            
+            // Write an edit to log
+            const logsDir = path.join(PROJECT_PATH, 'logs');
+            fs.mkdirSync(logsDir, { recursive: true });
+            fs.writeFileSync(path.join(logsDir, 'edits.jsonl'), JSON.stringify({
+                id: 'edit_exists',
+                taskId: null,
+                toolName: 'tool',
+                request: {},
+                response: {},
+                timestamp: new Date().toISOString()
+            }));
+            
+            const result = await provider.associateEditWithTask('edit_exists', 'nonexistent_task');
+            
+            expect(result.success).toBe(false);
+            expect(result.error).toContain('Task not found');
+        });
+    });
+
+    describe('getLastProcessedTimestamp / setLastProcessedTimestamp', () => {
+        test('should persist and retrieve last processed timestamp', async () => {
+            const provider = new PlanProvider(PROJECT_PATH);
+            await provider.initialize();
+            
+            const timestamp = new Date('2025-12-09T12:00:00Z');
+            await provider.setLastProcessedTimestamp(timestamp);
+            
+            const retrieved = await provider.getLastProcessedTimestamp();
+            
+            expect(retrieved).toEqual(timestamp);
+        });
+
+        test('should return null if no timestamp stored', async () => {
+            const provider = new PlanProvider(PROJECT_PATH);
+            await provider.initialize();
+            
+            const retrieved = await provider.getLastProcessedTimestamp();
+            
+            expect(retrieved).toBeNull();
+        });
+    });
+
+    describe('processNewEdits (incremental)', () => {
+        test('should only process edits newer than last processed timestamp', async () => {
+            const provider = new PlanProvider(PROJECT_PATH);
+            await provider.initialize();
+            await provider.getPlan();
+            
+            // Add document and active task
+            const { LegalDocument } = require('../models/workplan');
+            provider.currentPlan!.addDocument(new LegalDocument({
+                filename: 'C:/Projects/nda.docx'
+            }));
+            const { task } = await provider.addTask('Task', 'desc');
+            await provider.updateTask(task!.id, { status: 'in_progress' });
+            
+            // Set last processed timestamp
+            const cutoff = new Date('2025-12-09T11:00:00Z');
+            await provider.setLastProcessedTimestamp(cutoff);
+            
+            // Write edits - some before cutoff, some after
+            const logsDir = path.join(PROJECT_PATH, 'logs');
+            fs.mkdirSync(logsDir, { recursive: true });
+            const editsContent = [
+                JSON.stringify({
+                    id: 'old_edit',
+                    taskId: null,
+                    toolName: 'tool',
+                    request: { filename: 'C:/Projects/nda.docx' },
+                    response: {},
+                    timestamp: '2025-12-09T10:00:00.000Z'
+                }),
+                JSON.stringify({
+                    id: 'new_edit',
+                    taskId: null,
+                    toolName: 'tool',
+                    request: { filename: 'C:/Projects/nda.docx' },
+                    response: {},
+                    timestamp: '2025-12-09T12:00:00.000Z'
+                })
+            ].join('\n');
+            fs.writeFileSync(path.join(logsDir, 'edits.jsonl'), editsContent);
+            
+            const result = await provider.processNewEdits();
+            
+            expect(result.associatedCount).toBe(1);
+            expect(result.associatedEditIds).toContain('new_edit');
+            expect(result.associatedEditIds).not.toContain('old_edit');
+        });
+
+        test('should update last processed timestamp after processing', async () => {
+            const provider = new PlanProvider(PROJECT_PATH);
+            await provider.initialize();
+            await provider.getPlan();
+            
+            // Add document and active task
+            const { LegalDocument } = require('../models/workplan');
+            provider.currentPlan!.addDocument(new LegalDocument({
+                filename: 'C:/Projects/nda.docx'
+            }));
+            const { task } = await provider.addTask('Task', 'desc');
+            await provider.updateTask(task!.id, { status: 'in_progress' });
+            
+            // Write an edit
+            const logsDir = path.join(PROJECT_PATH, 'logs');
+            fs.mkdirSync(logsDir, { recursive: true });
+            const editTimestamp = new Date('2025-12-09T14:00:00Z');
+            fs.writeFileSync(path.join(logsDir, 'edits.jsonl'), JSON.stringify({
+                id: 'new_edit',
+                taskId: null,
+                toolName: 'tool',
+                request: { filename: 'C:/Projects/nda.docx' },
+                response: {},
+                timestamp: editTimestamp.toISOString()
+            }));
+            
+            await provider.processNewEdits();
+            
+            const lastProcessed = await provider.getLastProcessedTimestamp();
+            expect(lastProcessed!.getTime()).toBeGreaterThanOrEqual(editTimestamp.getTime());
+        });
+    });
+});

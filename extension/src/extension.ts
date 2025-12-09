@@ -6,6 +6,7 @@ import { promisify } from 'util';
 import { ProjectProvider } from './projectProvider';
 import { PlanProvider, TaskUpdateOptions } from './models/planProvider';
 import type { TaskStatus, WorkPlanJSON } from './models/workplan';
+import { EffiChatParticipant } from './chatParticipant';
 
 const execAsync = promisify(exec);
 
@@ -14,9 +15,23 @@ let planWebviewPanel: vscode.WebviewPanel | undefined;
 let currentDocumentPath: string | undefined;
 let currentProjectPath: string | undefined;
 let planProvider: PlanProvider | undefined;
+let currentBlocks: any[] | undefined;  // Blocks currently displayed in Contract Analysis
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('Effi Contract Viewer is now active');
+
+    // Register chat participant for @effi
+    const effiChat = new EffiChatParticipant(
+        () => currentDocumentPath,
+        undefined,  // No test loader
+        () => currentBlocks  // Provide access to loaded blocks
+    );
+    const chatParticipant = vscode.chat.createChatParticipant(
+        'effi-contract-viewer.effi',
+        effiChat.getHandler()
+    );
+    chatParticipant.iconPath = vscode.Uri.joinPath(context.extensionUri, 'icon.png');
+    context.subscriptions.push(chatParticipant);
 
     // Register command to show webview
     const showWebviewCommand = vscode.commands.registerCommand(
@@ -564,7 +579,7 @@ async function loadAnalysisFromDirectory(analysisDir: string, projectPathOrDocPa
         }
 
         // Load blocks.jsonl for full text view
-        let blocks = [];
+        let blocks: any[] = [];
         const blocksPath = path.join(analysisDir, 'blocks.jsonl');
         if (fs.existsSync(blocksPath)) {
             try {
@@ -573,6 +588,8 @@ async function loadAnalysisFromDirectory(analysisDir: string, projectPathOrDocPa
                     .filter(line => line.trim())
                     .map(line => JSON.parse(line));
                 console.log(`Loaded ${blocks.length} blocks from blocks.jsonl`);
+                // Store blocks for chat participant access
+                currentBlocks = blocks;
             } catch (error) {
                 console.error('Error loading blocks.jsonl:', error);
             }
@@ -678,7 +695,7 @@ async function loadAnalysisData(documentPath: string) {
         }
 
         // Load blocks.jsonl for full text view
-        let blocks = [];
+        let blocks: any[] = [];
         const blocksPath = path.join(analysisDir, 'blocks.jsonl');
         if (fs.existsSync(blocksPath)) {
             try {
@@ -687,6 +704,8 @@ async function loadAnalysisData(documentPath: string) {
                     .filter(line => line.trim())
                     .map(line => JSON.parse(line));
                 console.log(`Loaded ${blocks.length} blocks from blocks.jsonl`);
+                // Store blocks for chat participant access
+                currentBlocks = blocks;
             } catch (error) {
                 console.error('Error loading blocks.jsonl:', error);
             }

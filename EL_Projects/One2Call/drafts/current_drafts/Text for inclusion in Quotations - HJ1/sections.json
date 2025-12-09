@@ -1,0 +1,33 @@
+{
+  "doc_id": "Text-for-inclusion-in-Quotations---HJ1",
+  "hierarchy_depth": 1,
+  "depth_max": 1,
+  "avg_blocks_per_section": 9.0,
+  "root": {
+    "children": [
+      {
+        "id": "339fadee-8026-4e9c-9a8e-62989c3ed9cb",
+        "ltu_id": "ltu_339fadee-8026-4e9c-9a8e-62989c3ed9cb",
+        "child_ids": [],
+        "title": "Front Matter",
+        "level": 1,
+        "block_ids": [
+          "31A43FDD",
+          "3820410D",
+          "29E24B24",
+          "7531048E",
+          "737397DA",
+          "0C0CEFCF",
+          "61E08C20",
+          "3CD6790F",
+          "1859C428"
+        ],
+        "char_count": 789,
+        "children": [],
+        "role": "front_matter",
+        "attachment_id": null,
+        "parent_id": null
+      }
+    ]
+  }
+}

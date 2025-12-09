@@ -1,0 +1,68 @@
+{
+  "doc_id": "123e4567-e89b-12d3-a456-426614174000",
+  "v": 1,
+  "created_at": "2025-12-09T18:47:49+00:00",
+  "tool_version": "sprint2-dev",
+  "doc_format": "docx",
+  "sdt_carrier": "content-controls",
+  "range_marker_carrier": "content-controls",
+  "range_marker_tag_prefix": "marker:",
+  "fallback_heading_label": "Body (no heading)",
+  "checksums": {
+    "blocks.jsonl": "sha256:1aad8582e0a65b8adeacf288ce54d3aeaa57925166a21c0bf56f687c813b4632",
+    "sections.json": "sha256:a388d4fd7c30c2fb31c8d1a29bed98247858a02ab59040d53c561da4208976f3",
+    "styles.json": "sha256:eff6ca7cad8ee9dca76c6486460ae8027724ddb7030e78a88beed2b67c8df119",
+    "relationships.json": "sha256:89441c8f9e91020aaa008d9bbddd751bd69c7bf13978ac816c8246d61f2b5e29",
+    "tag_ranges.jsonl": "sha256:b646d43e1d5b0c39d9803056eff5891c0e021f76cd847cf643b7bbf1c3b5fc51",
+    "index.json": "sha256:030e15929692d6f708f2e0e90d4c94cc57bafd95a0ebee1e3f16bba8ab3c327e"
+  },
+  "schema_checksums": {
+    "block.schema.json": "sha256:a79c29ccec8330bef4e2ed057adee57e544a0749ee71c8aac86b8f8e13d1550e",
+    "edit_plan.schema.json": "sha256:4d9432a9d9b1b61675f527817c7dfdd608ffa20a63f2c1f50d9f0cba9ac367b1",
+    "index.schema.json": "sha256:f305e73bdd196f01be5aba55a1bfe71dc0756218dbafc234fbd9e269c7f84557",
+    "labels.schema.json": "sha256:44e45c3f69aa8c9728872198061b34cbc23aa83a232a93debb3bce13f42e1052",
+    "manifest.schema.json": "sha256:cbab4e0766ffb0d8b0fb12cc0a6b7d75f39bdacc70fed82baaae6de0f102829d",
+    "relationships.schema.json": "sha256:0a6b82f199e7e009eb01866b591d10d35578bb937e794216a56a29c3f922246e",
+    "report.schema.json": "sha256:cc9454c8a3713921e540d0e7e1ce3fca7c8569e9704475ec39eae016541bf3be",
+    "sections.schema.json": "sha256:64d13ab3f694c5e4bcce3072c1d2823c614b2718aa50ba4850aea65c3b9fcdcc",
+    "styles.schema.json": "sha256:69bb206dd584e1ce1e19e6f752f510633761625ed9ba8905fa78c2bfdf731549",
+    "tag_range.schema.json": "sha256:38ae87688b3e7f53b0d7466d5699e6e741330b2da45ea6f784ae6da8bf002c3f"
+  },
+  "attachments": [
+    {
+      "attachment_id": "8d4f8318-b54e-4249-a2d0-d2c6f321611e",
+      "type": "schedule",
+      "ordinal": "2",
+      "title": "One2Call Terms and Conditions",
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "93544521-3010-46c9-8086-14f1e44a5d19",
+      "type": "schedule",
+      "ordinal": "2",
+      "title": "Data Protection",
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "28dda3d0-302e-4c2a-afe0-186efb3e5828",
+      "type": "annex",
+      "ordinal": "1",
+      "title": "Particulars of the processing",
+      "parent_attachment_id": "93544521-3010-46c9-8086-14f1e44a5d19"
+    },
+    {
+      "attachment_id": "f1a6677e-bc55-424f-9442-66390b1d4783",
+      "type": "annex",
+      "ordinal": "2",
+      "title": "Processors appointed by the Supplier",
+      "parent_attachment_id": "28dda3d0-302e-4c2a-afe0-186efb3e5828"
+    },
+    {
+      "attachment_id": "c161d446-fcf2-48bf-9a81-419d63fd01d7",
+      "type": "schedule",
+      "ordinal": "3",
+      "title": "Service Schedules",
+      "parent_attachment_id": null
+    }
+  ]
+}

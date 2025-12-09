@@ -37,6 +37,7 @@ from effilocal.mcp_server.tools import (
     review_tools,
     relationship_tools,
     clause_editing_tools,
+    plan_tools,
 )
 
 # Import directly from upstream for tools we don't override
@@ -530,6 +531,67 @@ def register_tools():
     async def replace_text_by_para_id(filename: str, para_id: str, new_text: str):
         """Replace the entire text content of a paragraph identified by its paraId."""
         return await content_tools.replace_text_by_para_id(filename, para_id, new_text)
+
+    # ========================================================================
+    # Work Plan tools (task management for LLM workflows)
+    # ========================================================================
+
+    @mcp.tool()
+    async def get_work_plan(filename: str):
+        """Get the current work plan for a project. Returns tasks, documents, and summary stats."""
+        return await plan_tools.get_work_plan(filename)
+
+    @mcp.tool()
+    async def add_task(filename: str, title: str, description: str, 
+                       position: str = "end", ordinal: int = None):
+        """Add a new task to the work plan. Position: 'start', 'end', or 'at' (with ordinal)."""
+        return await plan_tools.add_task(filename, title, description, position, ordinal)
+
+    @mcp.tool()
+    async def update_task(filename: str, task_id: str, title: str = None, 
+                          description: str = None, status: str = None):
+        """Update a task's title, description, or status (pending/in_progress/completed/blocked)."""
+        return await plan_tools.update_task(filename, task_id, title, description, status)
+
+    @mcp.tool()
+    async def delete_task(filename: str, task_id: str):
+        """Delete a task from the work plan."""
+        return await plan_tools.delete_task(filename, task_id)
+
+    @mcp.tool()
+    async def move_task(filename: str, task_id: str, new_ordinal: int):
+        """Move a task to a new position (0-based ordinal)."""
+        return await plan_tools.move_task(filename, task_id, new_ordinal)
+
+    @mcp.tool()
+    async def start_task(filename: str, task_id: str):
+        """Start working on a task (sets status to in_progress)."""
+        return await plan_tools.start_task(filename, task_id)
+
+    @mcp.tool()
+    async def complete_task(filename: str, task_id: str):
+        """Mark a task as completed."""
+        return await plan_tools.complete_task(filename, task_id)
+
+    @mcp.tool()
+    async def block_task(filename: str, task_id: str):
+        """Mark a task as blocked."""
+        return await plan_tools.block_task(filename, task_id)
+
+    @mcp.tool()
+    async def add_plan_document(filename: str, display_name: str = None):
+        """Add the specified document to the work plan's tracked documents."""
+        return await plan_tools.add_plan_document(filename, display_name)
+
+    @mcp.tool()
+    async def remove_plan_document(filename: str, document_id: str):
+        """Remove a document from the work plan's tracked documents."""
+        return await plan_tools.remove_plan_document(filename, document_id)
+
+    @mcp.tool()
+    async def list_plan_documents(filename: str):
+        """List all documents tracked by the work plan."""
+        return await plan_tools.list_plan_documents(filename)
 
 
 def run_server():

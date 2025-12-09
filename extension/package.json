@@ -16,6 +16,15 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "chatParticipants": [
+      {
+        "id": "effi-contract-viewer.effi",
+        "name": "effi",
+        "fullName": "Effi Contract Assistant",
+        "description": "Ask questions about your contract",
+        "isSticky": false
+      }
+    ],
     "viewsContainers": {
       "activitybar": [
         {

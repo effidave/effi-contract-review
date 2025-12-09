@@ -64,9 +64,26 @@ The Plan uses a **separate WebviewPanel** from Contract Analysis, allowing side-
 
 Both share `style.css` for consistent VS Code theming.
 
-## Step 1: Core Classes (50 tests)
+## Step 1: Core Classes (77 tests)
 
 **File:** `extension/src/models/workplan.ts`
+
+### LegalDocument Class
+
+Represents a document that a WorkPlan relates to:
+
+```typescript
+interface LegalDocumentOptions {
+    id?: string;           // 8-char hex, auto-generated
+    filename: string;      // Full path to .docx file
+    displayName?: string;  // Friendly name (auto-derived if not provided)
+    addedDate?: Date;      // When added to plan
+}
+```
+
+**Key Methods:**
+- `matchesFilename(filename)` - Case-insensitive, path-normalized comparison
+- `toJSON()` / `fromJSON()` / `toYAML()` - Serialization
 
 ### Edit Class
 
@@ -117,6 +134,15 @@ Container for tasks with ordering and edit logging.
 ```typescript
 class WorkPlan {
     tasks: WorkTask[];
+    documents: LegalDocument[];  // Documents this plan relates to
+    
+    // Document management
+    addDocument(doc: LegalDocument): boolean;  // No duplicates by filename
+    removeDocument(id: string): boolean;
+    getDocumentById(id: string): LegalDocument | undefined;
+    getDocumentByFilename(filename: string): LegalDocument | undefined;
+    hasDocument(filename: string): boolean;
+    getDocumentEdits(): Edit[];  // Edits affecting any plan document
     
     // Task management
     addTaskAtEnd(task: WorkTask): void;
@@ -143,7 +169,7 @@ class WorkPlan {
 
 **Ordinal Convention:** All ordinal parameters are **0-based** (index 0 = first position). This was chosen because LLM agents are trained on code that predominantly uses 0-based indexing.
 
-## Step 2: Persistence Layer (36 tests)
+## Step 2: Persistence Layer (77 tests)
 
 **File:** `extension/src/models/planStorage.ts`
 
@@ -181,6 +207,14 @@ class PlanStorage {
     loadEdits(): Promise<Edit[]>;                 // Loads all edits
     loadEditsForTask(taskId: string): Promise<Edit[]>;
     
+    // Edit retrieval (for auto-association)
+    getEditsByIds(ids: string[]): Promise<Edit[]>;     // Retrieve by IDs (ordered)
+    getAllEdits(): Promise<Edit[]>;                     // All edits from log
+    getEditById(id: string): Promise<Edit | null>;      // Single edit lookup
+    getNewEditsSince(cutoff: Date): Promise<Edit[]>;    // After timestamp
+    getUnassociatedEdits(): Promise<Edit[]>;            // taskId is null
+    getEditsForDocument(filename: string): Promise<Edit[]>; // By document
+    
     // Combined operations
     loadWithEdits(): Promise<{ plan: WorkPlan | null; edits: Edit[] }>;
     getOrCreatePlan(): Promise<WorkPlan>;
@@ -216,7 +250,7 @@ Check if indemnity limits are reasonable
 {"id":"e1f2g3h4","taskId":"a1b2c3d4","toolName":"search_and_replace","request":{"filename":"contract.docx","find_text":"unlimited","replace_text":"capped at £1M"},"response":{"success":true,"replaced_count":1},"timestamp":"2025-12-09T10:35:00.000Z"}
 ```
 
-## Step 3: Extension Integration (51 tests)
+## Step 3: Extension Integration (66 tests)
 
 ### PlanProvider Class
 
@@ -244,6 +278,14 @@ class PlanProvider {
     // Edit operations
     logEdit(taskId: string, toolName: string, request: object, response: object): Promise<LogEditResult>;
     getEditsForTask(taskId: string): Promise<Edit[]>;
+    
+    // Auto-association (links MCP tool calls to active task)
+    getActiveTask(): WorkTask | null;                              // First in_progress task
+    processUnassociatedEdits(): Promise<ProcessEditsResult>;       // Batch associate unassigned edits
+    associateEditWithTask(editId: string, taskId: string): Promise<AssociateEditResult>;  // Manual link
+    processNewEdits(): Promise<ProcessEditsResult>;                // Incremental since last timestamp
+    getLastProcessedTimestamp(): Promise<Date | null>;             // Cursor tracking
+    setLastProcessedTimestamp(timestamp: Date): Promise<void>;
     
     // Webview data
     toWebviewData(): object;
@@ -321,7 +363,7 @@ Added to the `onDidReceiveMessage` switch statement:
 { command: 'planError', error: string }
 ```
 
-## Step 4: Webview UI (77 tests)
+## Step 4: Webview UI (59 tests)
 
 **Architecture:** The Plan is a **separate WebviewPanel** from Contract Analysis. This allows:
 - Opening Plan side-by-side with Contract Analysis
@@ -433,18 +475,47 @@ Initializes the Plan webview:
 
 | Test Suite | File | Tests |
 |------------|------|-------|
-| Core Classes | `workplan.test.ts` | 50 |
-| Persistence | `planStorage.test.ts` | 36 |
-| Integration | `planIntegration.test.ts` | 51 |
-| Webview UI | `plan.test.js` | 77 |
-| **Total** | | **214** |
+| Core Classes + LegalDocument | `workplan.test.ts` | 77 |
+| Persistence + Edit Retrieval | `planStorage.test.ts` | 77 |
+| Integration + Auto-Association | `planIntegration.test.ts` | 66 |
+| Webview UI | `plan.test.js` | 59 |
+| **Total** | | **279** |
 
-## Next Steps
+## Step 5: LLM/MCP Integration (Complete)
 
-### Step 5: LLM/MCP Integration
-- Hook MCP tool calls to automatically log Edit objects
-- Associate edits with the current active task
-- Provide task context to LLM for better responses
+See [plan_tab.md](./plan_tab.md) for full details on:
+
+- **5a. TypeScript McpToolLogger** - Extension-side tracking service (39 tests)
+- **5b. Python MCP Server Logging** - `@with_logging` decorator for tool calls (27 tests)
+- **5c. Edit Retrieval** - PlanStorage methods to read from edits.jsonl
+- **5d. Auto-Association** - PlanProvider links new edits to active task
+- **5e. Plan MCP Tools** - Python MCP tools for LLM plan management (45 tests)
+
+### Plan MCP Tools
+
+The LLM can now create and manage WorkPlans directly via MCP tools:
+
+| Tool | Description |
+|------|-------------|
+| `get_work_plan(filename)` | Get plan with tasks, documents, summary stats |
+| `add_task(filename, title, description, position?, ordinal?)` | Add task at start/end/ordinal |
+| `update_task(filename, task_id, title?, description?, status?)` | Modify task |
+| `delete_task(filename, task_id)` | Remove task |
+| `move_task(filename, task_id, new_ordinal)` | Reorder task |
+| `start_task(filename, task_id)` | Set status to in_progress |
+| `complete_task(filename, task_id)` | Set status to completed |
+| `block_task(filename, task_id)` | Set status to blocked |
+| `add_plan_document(filename, display_name?)` | Track document |
+| `remove_plan_document(filename, document_id)` | Untrack document |
+| `list_plan_documents(filename)` | List tracked documents |
+
+**Files:**
+- `effilocal/mcp_server/plan/models.py` - Python WorkPlan, WorkTask, LegalDocument
+- `effilocal/mcp_server/plan/storage.py` - YAML/JSON file I/O
+- `effilocal/mcp_server/tools/plan_tools.py` - MCP tool implementations
+- `tests/test_plan_mcp_tools.py` - 45 tests
+
+**Total Tests:** 390 (279 TypeScript + 39 McpToolLogger + 27 Python logging + 45 Plan tools)
 
 ## Design Decisions
 

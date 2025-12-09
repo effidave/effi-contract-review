@@ -45,9 +45,52 @@ The Plan Tab allows solo lawyers to track work tasks and MCP tool calls during c
 - Edit class (simplest, no dependencies)
 - WorkTask class (depends on Edit)
 - WorkPlan class (depends on WorkTask)
-- Unit tests for all class methods (50 tests)
+- LegalDocument class (document references for WorkPlan)
+- Unit tests for all class methods (77 tests)
 
 **Files:** `extension/src/models/workplan.ts`, `extension/src/__tests__/workplan.test.ts`
+
+#### LegalDocument Class
+
+Represents a legal document that a WorkPlan relates to. Used to track which documents are being worked on and filter edits accordingly.
+
+**Properties:**
+- `id: string` - Unique 8-char hex ID
+- `filename: string` - Full path to the .docx file
+- `displayName: string` - Friendly name (auto-derived from filename if not provided)
+- `addedDate: Date` - When the document was added to the plan
+
+**Methods:**
+- `matchesFilename(filename)` - Case-insensitive, path-normalized comparison
+- `toJSON()` / `fromJSON()` - JSON serialization
+- `toYAML()` - YAML-friendly object
+
+#### WorkPlan Document Features
+
+**Properties:**
+- `documents: LegalDocument[]` - Documents this plan relates to
+
+**Methods:**
+- `addDocument(doc)` - Add a document (no duplicates by filename)
+- `removeDocument(id)` - Remove by ID
+- `getDocumentById(id)` / `getDocumentByFilename(filename)` - Lookups
+- `hasDocument(filename)` - Check if document exists
+- `getEditsForDocument(filename)` - Get edits affecting a specific document
+- `getDocumentEdits()` - Get all edits affecting any plan document
+
+**YAML Serialization:**
+```yaml
+---
+documents:
+  - id: doc12345
+    filename: 'C:/Projects/Acme/drafts/nda.docx'
+    displayName: NDA Draft
+    addedDate: '2025-12-09T10:00:00.000Z'
+tasks:
+  - id: task1234
+    ...
+---
+```
 
 ### 2. Persistence Layer ✅ COMPLETE
 
@@ -100,6 +143,8 @@ The Plan Tab allows solo lawyers to track work tasks and MCP tool calls during c
 
 Automatic logging of MCP tool calls as Edit objects.
 
+#### 5a. TypeScript McpToolLogger (Extension-side)
+
 **Features:**
 - McpToolLogger service for tracking active tasks and logging edits
 - Active task management (set/clear/get based on task status)
@@ -109,17 +154,148 @@ Automatic logging of MCP tool calls as Edit objects.
 - Session statistics (edit count, tool usage by name)
 - Recent edits history
 
-**Implementation:**
-- [x] Create `McpToolLogger` class with active task tracking
-- [x] Implement `logToolCall()` for direct logging
-- [x] Implement `recordToolCallStart()`/`completeToolCall()` for async pattern
-- [x] Add event emitters for edit and task change notifications
-- [x] Add session statistics and history tracking
-- [x] Comprehensive tests (39 tests)
-
 **Files:**
 - `extension/src/models/mcpToolLogger.ts` - McpToolLogger service
 - `extension/src/__tests__/mcpToolLogger.test.ts` - 39 tests
+
+#### 5b. Python MCP Server Logging (Server-side)
+
+Logs tool calls at the MCP server level so all Copilot interactions are captured.
+
+**Features:**
+- `ToolCallLogger` class for append-only logging to `edits.jsonl`
+- `get_project_path()` derives project from document filename
+- `@with_logging` decorator for easy tool wrapping
+- Thread-safe concurrent writes
+- Works with both sync and async functions
+- Error logging (captures exceptions)
+
+**How It Works:**
+```
+Copilot → MCP Server → @with_logging decorator → Tool executes
+                              ↓
+                       Logs to <project>/logs/edits.jsonl
+                              ↓
+                       Extension reads edits.jsonl
+                              ↓
+                       User associates with tasks in Plan UI
+```
+
+**Files:**
+- `effilocal/mcp_server/tool_logging.py` - ToolCallLogger and decorator
+- `tests/test_mcp_tool_logging.py` - 27 tests
+
+**Usage:**
+```python
+from effilocal.mcp_server.tool_logging import with_logging
+
+@with_logging
+async def search_and_replace(filename: str, find_text: str, replace_text: str):
+    # ... implementation
+    return result  # Automatically logged!
+```
+
+#### 5c. Edit Retrieval (Extension reads from log)
+
+The extension reads edits from `edits.jsonl` and can look up full edit details by ID.
+
+**PlanStorage Edit Retrieval Methods:**
+- `getEditsByIds(ids)` - Retrieve specific edits by their IDs (in requested order)
+- `getAllEdits()` - Load all edits from the log
+- `getEditById(id)` - Get a single edit by ID
+- `getNewEditsSince(cutoff)` - Get edits after a timestamp
+- `getUnassociatedEdits()` - Get edits with null taskId (not yet linked to a task)
+- `getEditsForDocument(filename)` - Get edits affecting a specific document
+
+**Linking Strategy (Option C):**
+1. Python MCP server logs tool calls to `edits.jsonl` with `taskId: null`
+2. Extension watches/polls for new entries
+3. Extension checks if edit's filename matches a plan document
+4. If there's an active task (status = `in_progress`), links the edit via `WorkTask.editIds`
+5. Plan stores only edit IDs; full details retrieved from log when needed
+
+**Benefits:**
+- Plan file stays small (just IDs, not duplicated data)
+- Edit log is source of truth for request/response details
+- Lazy loading - only fetch edit details when needed
+- Audit trail preserved - log is append-only
+
+**Files:**
+- `extension/src/models/planStorage.ts` - Edit retrieval methods
+- `extension/src/__tests__/planStorage.test.ts` - 77 tests (including edit retrieval)
+
+#### 5d. Auto-Association (Extension links edits to tasks)
+
+Automatic association of new edits with the currently active task.
+
+**PlanProvider Auto-Association Methods:**
+- `getActiveTask()` - Returns the first task with `status: 'in_progress'`
+- `processUnassociatedEdits()` - Batch process all unassociated edits
+- `associateEditWithTask(editId, taskId)` - Manually link an edit to a task
+- `processNewEdits()` - Incremental processing since last timestamp
+- `getLastProcessedTimestamp()` / `setLastProcessedTimestamp()` - Cursor tracking
+
+**Auto-Association Flow:**
+```
+edits.jsonl → getUnassociatedEdits()
+                    ↓
+            Filter by plan.documents
+                    ↓
+            Check for active task (in_progress)
+                    ↓
+            Add editId to task.editIds
+                    ↓
+            Save plan
+```
+
+**ProcessEditsResult:**
+```typescript
+interface ProcessEditsResult {
+    processed: number;      // Edits successfully associated
+    skipped: number;        // Edits filtered out (wrong document, already linked)
+    errors: string[];       // Any errors encountered
+    noActiveTask: boolean;  // True if no task was in_progress
+}
+```
+
+**Incremental Processing:**
+- `lastProcessedTimestamp` stored in `plan.meta.json`
+- `processNewEdits()` only processes edits newer than this timestamp
+- Prevents reprocessing on each poll cycle
+
+**Files:**
+- `extension/src/models/planProvider.ts` - Auto-association methods
+- `extension/src/__tests__/planIntegration.test.ts` - 66 tests (including 12 auto-association tests)
+
+#### 5e. Plan MCP Tools (LLM can create/manage plans)
+
+Python MCP tools that allow the LLM to create and manage WorkPlans directly.
+
+**Available Tools:**
+
+| Tool | Description |
+|------|-------------|
+| `get_work_plan(filename)` | Get current plan with tasks, documents, and summary stats |
+| `add_task(filename, title, description, position?, ordinal?)` | Add a new task (position: start/end/at) |
+| `update_task(filename, task_id, title?, description?, status?)` | Update task properties |
+| `delete_task(filename, task_id)` | Remove a task |
+| `move_task(filename, task_id, new_ordinal)` | Reorder a task |
+| `start_task(filename, task_id)` | Set status to in_progress |
+| `complete_task(filename, task_id)` | Set status to completed |
+| `block_task(filename, task_id)` | Set status to blocked |
+| `add_plan_document(filename, display_name?)` | Track a document in the plan |
+| `remove_plan_document(filename, document_id)` | Stop tracking a document |
+| `list_plan_documents(filename)` | List all tracked documents |
+
+**Project Path Derivation:**
+All tools use `filename` (a document in the project) to derive the project path.
+Supports `EL_Projects/<project>/...` and `EL_Precedents/<project>/...` structures.
+
+**Files:**
+- `effilocal/mcp_server/plan/models.py` - Python WorkPlan, WorkTask, LegalDocument classes
+- `effilocal/mcp_server/plan/storage.py` - YAML/JSON file I/O
+- `effilocal/mcp_server/tools/plan_tools.py` - MCP tool implementations
+- `tests/test_plan_mcp_tools.py` - 45 tests
 
 ## Project Path Derivation
 
@@ -154,12 +330,14 @@ This matches the existing `getAnalysisDir()` pattern.
 
 | Step | Test File | Tests |
 |------|-----------|-------|
-| 1. Core Classes | workplan.test.ts | 50 |
-| 2. Persistence | planStorage.test.ts | 36 |
-| 3. Integration | planIntegration.test.ts | 51 |
-| 4. Webview UI | plan.test.js | 77 |
-| 5. MCP Integration | mcpToolLogger.test.ts | 39 |
-| **Total** | | **253** |
+| 1. Core Classes + LegalDocument | workplan.test.ts | 77 |
+| 2. Persistence + Edit Retrieval | planStorage.test.ts | 77 |
+| 3. Integration + Auto-Association | planIntegration.test.ts | 66 |
+| 4. Webview UI | plan.test.js | 59 |
+| 5a. TS MCP Integration | mcpToolLogger.test.ts | 39 |
+| 5b. Python MCP Logging | test_mcp_tool_logging.py | 27 |
+| 5e. Plan MCP Tools | test_plan_mcp_tools.py | 45 |
+| **Total** | | **390** |
 
 ## Further Considerations
 
