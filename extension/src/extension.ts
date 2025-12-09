@@ -4,11 +4,14 @@ import * as fs from 'fs';
 import { exec, spawn } from 'child_process';
 import { promisify } from 'util';
 import { ProjectProvider } from './projectProvider';
+import { PlanProvider, TaskUpdateOptions } from './models/planProvider';
+import type { TaskStatus, WorkPlanJSON } from './models/workplan';
 
 const execAsync = promisify(exec);
 
 let webviewPanel: vscode.WebviewPanel | undefined;
 let currentDocumentPath: string | undefined;
+let planProvider: PlanProvider | undefined;
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('Effi Contract Viewer is now active');
@@ -227,6 +230,29 @@ function showContractWebview(context: vscode.ExtensionContext) {
                         break;
                     case 'rejectAllRevisions':
                         await rejectAllRevisions(message.documentPath, webviewPanel);
+                        break;
+                    
+                    // Plan Tab handlers
+                    case 'getPlan':
+                        await handleGetPlan(message.projectPath, webviewPanel);
+                        break;
+                    case 'savePlan':
+                        await handleSavePlan(message.projectPath, message.plan, webviewPanel);
+                        break;
+                    case 'addTask':
+                        await handleAddTask(message.projectPath, message.title, message.description, message.options, webviewPanel);
+                        break;
+                    case 'updateTask':
+                        await handleUpdateTask(message.projectPath, message.taskId, message.updates, webviewPanel);
+                        break;
+                    case 'deleteTask':
+                        await handleDeleteTask(message.projectPath, message.taskId, webviewPanel);
+                        break;
+                    case 'moveTask':
+                        await handleMoveTask(message.projectPath, message.taskId, message.newOrdinal, webviewPanel);
+                        break;
+                    case 'logEdit':
+                        await handleLogEdit(message.projectPath, message.taskId, message.toolName, message.request, message.response, webviewPanel);
                         break;
                 }
             },
@@ -1365,6 +1391,316 @@ async function rejectAllRevisions(documentPath: string, webviewPanel: vscode.Web
                 error: `Failed to reject all revisions: ${error}`
             });
         }
+    }
+}
+
+// ============================================================================
+// Plan Tab Handlers
+// ============================================================================
+
+/**
+ * Get or create PlanProvider for a project path
+ */
+function getOrCreatePlanProvider(projectPath: string): PlanProvider {
+    if (!planProvider || planProvider['projectPath'] !== projectPath) {
+        planProvider = new PlanProvider(projectPath);
+    }
+    return planProvider;
+}
+
+/**
+ * Handle getPlan message - load plan and send to webview
+ */
+async function handleGetPlan(projectPath: string, webviewPanel: vscode.WebviewPanel | undefined) {
+    if (!projectPath) {
+        webviewPanel?.webview.postMessage({
+            command: 'planError',
+            error: 'Project path is required'
+        });
+        return;
+    }
+
+    try {
+        const provider = getOrCreatePlanProvider(projectPath);
+        await provider.initialize();
+        const plan = await provider.getPlan();
+        const data = provider.toWebviewData();
+
+        webviewPanel?.webview.postMessage({
+            command: 'planData',
+            plan: data
+        });
+    } catch (error) {
+        webviewPanel?.webview.postMessage({
+            command: 'planError',
+            error: `Failed to load plan: ${error}`
+        });
+    }
+}
+
+/**
+ * Handle savePlan message - save plan to disk
+ */
+async function handleSavePlan(projectPath: string, planData: unknown, webviewPanel: vscode.WebviewPanel | undefined) {
+    if (!projectPath) {
+        webviewPanel?.webview.postMessage({
+            command: 'planError',
+            error: 'Project path is required'
+        });
+        return;
+    }
+
+    try {
+        const provider = getOrCreatePlanProvider(projectPath);
+        await provider.initialize();
+        
+        // Import WorkPlan to reconstruct from data
+        const { WorkPlan } = await import('./models/workplan.js');
+        const plan = WorkPlan.fromJSON(planData as WorkPlanJSON);
+        
+        const result = await provider.savePlan(plan);
+        
+        if (result.success) {
+            webviewPanel?.webview.postMessage({
+                command: 'planSaved',
+                success: true
+            });
+        } else {
+            webviewPanel?.webview.postMessage({
+                command: 'planError',
+                error: result.error
+            });
+        }
+    } catch (error) {
+        webviewPanel?.webview.postMessage({
+            command: 'planError',
+            error: `Failed to save plan: ${error}`
+        });
+    }
+}
+
+/**
+ * Handle addTask message - add a new task to the plan
+ */
+async function handleAddTask(
+    projectPath: string,
+    title: string,
+    description: string,
+    options: { position?: 'start' | 'end'; ordinal?: number } | undefined,
+    webviewPanel: vscode.WebviewPanel | undefined
+) {
+    if (!projectPath) {
+        webviewPanel?.webview.postMessage({
+            command: 'planError',
+            error: 'Project path is required'
+        });
+        return;
+    }
+
+    try {
+        const provider = getOrCreatePlanProvider(projectPath);
+        await provider.initialize();
+        
+        const result = await provider.addTask(title, description, options);
+        
+        if (result.success && result.task) {
+            webviewPanel?.webview.postMessage({
+                command: 'taskAdded',
+                task: result.task.toJSON(),
+                success: true
+            });
+        } else {
+            webviewPanel?.webview.postMessage({
+                command: 'planError',
+                error: result.error || 'Failed to add task'
+            });
+        }
+    } catch (error) {
+        webviewPanel?.webview.postMessage({
+            command: 'planError',
+            error: `Failed to add task: ${error}`
+        });
+    }
+}
+
+/**
+ * Handle updateTask message - update an existing task
+ */
+async function handleUpdateTask(
+    projectPath: string,
+    taskId: string,
+    updates: { title?: string; description?: string; status?: string },
+    webviewPanel: vscode.WebviewPanel | undefined
+) {
+    if (!projectPath) {
+        webviewPanel?.webview.postMessage({
+            command: 'planError',
+            error: 'Project path is required'
+        });
+        return;
+    }
+
+    try {
+        const provider = getOrCreatePlanProvider(projectPath);
+        await provider.initialize();
+        
+        // Cast status to TaskStatus if provided
+        const typedUpdates: TaskUpdateOptions = {
+            ...updates,
+            status: updates.status as TaskStatus | undefined
+        };
+        
+        const result = await provider.updateTask(taskId, typedUpdates);
+        
+        if (result.success) {
+            webviewPanel?.webview.postMessage({
+                command: 'taskUpdated',
+                taskId,
+                success: true
+            });
+        } else {
+            webviewPanel?.webview.postMessage({
+                command: 'planError',
+                error: result.error
+            });
+        }
+    } catch (error) {
+        webviewPanel?.webview.postMessage({
+            command: 'planError',
+            error: `Failed to update task: ${error}`
+        });
+    }
+}
+
+/**
+ * Handle deleteTask message - remove a task from the plan
+ */
+async function handleDeleteTask(
+    projectPath: string,
+    taskId: string,
+    webviewPanel: vscode.WebviewPanel | undefined
+) {
+    if (!projectPath) {
+        webviewPanel?.webview.postMessage({
+            command: 'planError',
+            error: 'Project path is required'
+        });
+        return;
+    }
+
+    try {
+        const provider = getOrCreatePlanProvider(projectPath);
+        await provider.initialize();
+        
+        const result = await provider.deleteTask(taskId);
+        
+        if (result.success) {
+            webviewPanel?.webview.postMessage({
+                command: 'taskDeleted',
+                taskId,
+                success: true
+            });
+        } else {
+            webviewPanel?.webview.postMessage({
+                command: 'planError',
+                error: result.error
+            });
+        }
+    } catch (error) {
+        webviewPanel?.webview.postMessage({
+            command: 'planError',
+            error: `Failed to delete task: ${error}`
+        });
+    }
+}
+
+/**
+ * Handle moveTask message - reorder a task
+ */
+async function handleMoveTask(
+    projectPath: string,
+    taskId: string,
+    newOrdinal: number,
+    webviewPanel: vscode.WebviewPanel | undefined
+) {
+    if (!projectPath) {
+        webviewPanel?.webview.postMessage({
+            command: 'planError',
+            error: 'Project path is required'
+        });
+        return;
+    }
+
+    try {
+        const provider = getOrCreatePlanProvider(projectPath);
+        await provider.initialize();
+        
+        const result = await provider.moveTask(taskId, newOrdinal);
+        
+        if (result.success) {
+            webviewPanel?.webview.postMessage({
+                command: 'taskMoved',
+                taskId,
+                newOrdinal,
+                success: true
+            });
+        } else {
+            webviewPanel?.webview.postMessage({
+                command: 'planError',
+                error: result.error
+            });
+        }
+    } catch (error) {
+        webviewPanel?.webview.postMessage({
+            command: 'planError',
+            error: `Failed to move task: ${error}`
+        });
+    }
+}
+
+/**
+ * Handle logEdit message - log an MCP tool call for a task
+ */
+async function handleLogEdit(
+    projectPath: string,
+    taskId: string,
+    toolName: string,
+    request: Record<string, unknown>,
+    response: string | Record<string, unknown>,
+    webviewPanel: vscode.WebviewPanel | undefined
+) {
+    if (!projectPath) {
+        webviewPanel?.webview.postMessage({
+            command: 'planError',
+            error: 'Project path is required'
+        });
+        return;
+    }
+
+    try {
+        const provider = getOrCreatePlanProvider(projectPath);
+        await provider.initialize();
+        
+        const result = await provider.logEdit(taskId, toolName, request, response);
+        
+        if (result.success && result.edit) {
+            webviewPanel?.webview.postMessage({
+                command: 'editLogged',
+                edit: result.edit.toJSON(),
+                taskId,
+                success: true
+            });
+        } else {
+            webviewPanel?.webview.postMessage({
+                command: 'planError',
+                error: result.error || 'Failed to log edit'
+            });
+        }
+    } catch (error) {
+        webviewPanel?.webview.postMessage({
+            command: 'planError',
+            error: `Failed to log edit: ${error}`
+        });
     }
 }
 
