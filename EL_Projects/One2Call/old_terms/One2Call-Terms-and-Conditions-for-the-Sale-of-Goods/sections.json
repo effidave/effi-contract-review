@@ -1,0 +1,369 @@
+{
+  "doc_id": "One2Call-Terms-and-Conditions-for-the-Sale-of-Good",
+  "hierarchy_depth": 2,
+  "depth_max": 2,
+  "avg_blocks_per_section": 2.619047619047619,
+  "root": {
+    "children": [
+      {
+        "id": "a7a87c13-2588-4ecc-919a-030dd8d1e5a0",
+        "ltu_id": "ltu_a7a87c13-2588-4ecc-919a-030dd8d1e5a0",
+        "child_ids": [],
+        "title": "Front Matter",
+        "level": 1,
+        "block_ids": [
+          "63712CB3",
+          "5306AC58"
+        ],
+        "char_count": 49,
+        "children": [],
+        "role": "front_matter",
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "edc76e35-fe85-4fd4-978c-2b352e1572c0",
+        "ltu_id": "ltu_edc76e35-fe85-4fd4-978c-2b352e1572c0",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "420E87FB"
+        ],
+        "char_count": 11,
+        "children": [],
+        "role": "main_body",
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "3e0a5601-791c-4d9e-9bb3-d3ca13a390d6",
+        "ltu_id": "ltu_3e0a5601-791c-4d9e-9bb3-d3ca13a390d6",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "4283841F"
+        ],
+        "char_count": 10,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "92744d68-4abd-4e6a-8861-241d8f25b0e7",
+        "ltu_id": "ltu_92744d68-4abd-4e6a-8861-241d8f25b0e7",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "4A706E3B"
+        ],
+        "char_count": 5,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "3574f9f0-c4af-49cd-9c63-10f2fdf08d81",
+        "ltu_id": "ltu_3574f9f0-c4af-49cd-9c63-10f2fdf08d81",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "5641A686"
+        ],
+        "char_count": 20,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "1f342bb4-208d-4184-8d51-a51246f5b94b",
+        "ltu_id": "ltu_1f342bb4-208d-4184-8d51-a51246f5b94b",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "2F9E3B65"
+        ],
+        "char_count": 5,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "9900aad9-45a0-47f2-9b37-e49cc5ac9b36",
+        "ltu_id": "ltu_9900aad9-45a0-47f2-9b37-e49cc5ac9b36",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "64596DED"
+        ],
+        "char_count": 10,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "5e5891b4-43dd-4c4c-ad8e-2302f2684840",
+        "ltu_id": "ltu_5e5891b4-43dd-4c4c-ad8e-2302f2684840",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "55DB0DF0"
+        ],
+        "char_count": 21,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "936e3b92-cdf3-484b-a662-032229b7b8bf",
+        "ltu_id": "ltu_936e3b92-cdf3-484b-a662-032229b7b8bf",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "4FB29F28"
+        ],
+        "char_count": 23,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "2b481b58-0779-4594-b6e0-a455bbbac1b0",
+        "ltu_id": "ltu_2b481b58-0779-4594-b6e0-a455bbbac1b0",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "12909BBF"
+        ],
+        "char_count": 14,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "f65b9ef0-3b87-47f0-a272-2aa2e7db0fd6",
+        "ltu_id": "ltu_f65b9ef0-3b87-47f0-a272-2aa2e7db0fd6",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "50B3BC89"
+        ],
+        "char_count": 17,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "d3501b8a-ef5b-4126-a048-24fdb2c1f7d1",
+        "ltu_id": "ltu_d3501b8a-ef5b-4126-a048-24fdb2c1f7d1",
+        "child_ids": [],
+        "title": "1. Definitions",
+        "level": 1,
+        "block_ids": [
+          "1A54BEEB",
+          "402D0D78",
+          "1B6A951B",
+          "62E6DE7C",
+          "4DF2254B",
+          "5D8D9DD0"
+        ],
+        "char_count": 499,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "55e71f31-2d1c-4922-abe5-d448b006e220",
+        "ltu_id": "ltu_55e71f31-2d1c-4922-abe5-d448b006e220",
+        "child_ids": [
+          "ffaa11e9-af8a-48f9-9290-bbaf92c1a2db",
+          "a5baeb27-8cfe-4d5a-bf2c-a38d7e105228",
+          "6bc2e583-4674-4f5f-8cf0-fad1076fe12b",
+          "1ed11585-1da3-4a5d-95e1-5e4de103ef9d",
+          "9cb382ab-4305-4ca4-b14a-3c6ed5b4e96c",
+          "6063f589-b05d-4134-bc1f-3f060e355c8b",
+          "ba4cc1d7-0030-4dbf-99bb-acb40a1480ec",
+          "1060ede3-912d-4118-9d81-d5d511b3e0d8"
+        ],
+        "title": "2. Conditions",
+        "level": 1,
+        "block_ids": [
+          "1CEC2029",
+          "299A9871",
+          "2AD6EED5",
+          "12953BAC",
+          "021EE43E",
+          "4C4D04EA"
+        ],
+        "char_count": 959,
+        "children": [
+          {
+            "id": "ffaa11e9-af8a-48f9-9290-bbaf92c1a2db",
+            "ltu_id": "ltu_ffaa11e9-af8a-48f9-9290-bbaf92c1a2db",
+            "child_ids": [],
+            "title": "3. Price",
+            "level": 2,
+            "block_ids": [
+              "41C252B5",
+              "56EBD174",
+              "2FCF37F7"
+            ],
+            "char_count": 188,
+            "children": [],
+            "role": null,
+            "attachment_id": null,
+            "parent_id": "55e71f31-2d1c-4922-abe5-d448b006e220"
+          },
+          {
+            "id": "a5baeb27-8cfe-4d5a-bf2c-a38d7e105228",
+            "ltu_id": "ltu_a5baeb27-8cfe-4d5a-bf2c-a38d7e105228",
+            "child_ids": [],
+            "title": "4. Payment and Interest",
+            "level": 2,
+            "block_ids": [
+              "3BA2DCFE",
+              "7204C314",
+              "3BBCC90E",
+              "547A026A"
+            ],
+            "char_count": 582,
+            "children": [],
+            "role": null,
+            "attachment_id": null,
+            "parent_id": "55e71f31-2d1c-4922-abe5-d448b006e220"
+          },
+          {
+            "id": "6bc2e583-4674-4f5f-8cf0-fad1076fe12b",
+            "ltu_id": "ltu_6bc2e583-4674-4f5f-8cf0-fad1076fe12b",
+            "child_ids": [],
+            "title": "5. Goods",
+            "level": 2,
+            "block_ids": [
+              "67BB7EA9",
+              "1EF717A7"
+            ],
+            "char_count": 108,
+            "children": [],
+            "role": null,
+            "attachment_id": null,
+            "parent_id": "55e71f31-2d1c-4922-abe5-d448b006e220"
+          },
+          {
+            "id": "1ed11585-1da3-4a5d-95e1-5e4de103ef9d",
+            "ltu_id": "ltu_1ed11585-1da3-4a5d-95e1-5e4de103ef9d",
+            "child_ids": [],
+            "title": "6. Warranties",
+            "level": 2,
+            "block_ids": [
+              "0853179F",
+              "76BDD9D8"
+            ],
+            "char_count": 395,
+            "children": [],
+            "role": null,
+            "attachment_id": null,
+            "parent_id": "55e71f31-2d1c-4922-abe5-d448b006e220"
+          },
+          {
+            "id": "9cb382ab-4305-4ca4-b14a-3c6ed5b4e96c",
+            "ltu_id": "ltu_9cb382ab-4305-4ca4-b14a-3c6ed5b4e96c",
+            "child_ids": [],
+            "title": "7. Delivery of the Goods",
+            "level": 2,
+            "block_ids": [
+              "6C5B1E50",
+              "47E5D81F",
+              "57A107BC",
+              "57B29568",
+              "791A9603"
+            ],
+            "char_count": 1017,
+            "children": [],
+            "role": null,
+            "attachment_id": null,
+            "parent_id": "55e71f31-2d1c-4922-abe5-d448b006e220"
+          },
+          {
+            "id": "6063f589-b05d-4134-bc1f-3f060e355c8b",
+            "ltu_id": "ltu_6063f589-b05d-4134-bc1f-3f060e355c8b",
+            "child_ids": [],
+            "title": "8. Acceptance of the Goods",
+            "level": 2,
+            "block_ids": [
+              "0BF9EC20",
+              "0DE444FF",
+              "0937950D",
+              "345DBFDB"
+            ],
+            "char_count": 551,
+            "children": [],
+            "role": null,
+            "attachment_id": null,
+            "parent_id": "55e71f31-2d1c-4922-abe5-d448b006e220"
+          },
+          {
+            "id": "ba4cc1d7-0030-4dbf-99bb-acb40a1480ec",
+            "ltu_id": "ltu_ba4cc1d7-0030-4dbf-99bb-acb40a1480ec",
+            "child_ids": [],
+            "title": "9. Title and risk",
+            "level": 2,
+            "block_ids": [
+              "0B960DE0",
+              "169F11A2",
+              "6F7443B9",
+              "5A57022C",
+              "56FB3676",
+              "7E653CF5",
+              "0CE07905",
+              "1A8F6B97",
+              "0B1F513B"
+            ],
+            "char_count": 1018,
+            "children": [],
+            "role": null,
+            "attachment_id": null,
+            "parent_id": "55e71f31-2d1c-4922-abe5-d448b006e220"
+          },
+          {
+            "id": "1060ede3-912d-4118-9d81-d5d511b3e0d8",
+            "ltu_id": "ltu_1060ede3-912d-4118-9d81-d5d511b3e0d8",
+            "child_ids": [],
+            "title": "10. Carriage of Goods",
+            "level": 2,
+            "block_ids": [
+              "4B7C01F3",
+              "6F63A5FC"
+            ],
+            "char_count": 86,
+            "children": [],
+            "role": null,
+            "attachment_id": null,
+            "parent_id": "55e71f31-2d1c-4922-abe5-d448b006e220"
+          }
+        ],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      }
+    ]
+  }
+}

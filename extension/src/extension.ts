@@ -368,6 +368,15 @@ async function analyzeDocument(documentPath: string) {
     currentDocumentPath = documentPath;
     currentProjectPath = getProjectDir(documentPath);
     
+    // Notify Plan panel if it exists and project path changed
+    if (planWebviewPanel && currentProjectPath) {
+        planWebviewPanel.webview.postMessage({
+            command: 'setProjectPath',
+            projectPath: currentProjectPath
+        });
+        await handleGetPlan(currentProjectPath, planWebviewPanel);
+    }
+    
     if (!fs.existsSync(documentPath)) {
         vscode.window.showErrorMessage(`Document not found: ${documentPath}`);
         return;
@@ -426,6 +435,16 @@ async function reanalyzeAndRefresh(documentPath: string) {
 
 async function analyzeAndLoadDocument(context: vscode.ExtensionContext, documentPath: string) {
     currentDocumentPath = documentPath;
+    currentProjectPath = getProjectDir(documentPath);
+    
+    // Notify Plan panel if it exists and project path changed
+    if (planWebviewPanel && currentProjectPath) {
+        planWebviewPanel.webview.postMessage({
+            command: 'setProjectPath',
+            projectPath: currentProjectPath
+        });
+        await handleGetPlan(currentProjectPath, planWebviewPanel);
+    }
     
     // Calculate output directory: project/analysis/<filename_no_ext>
     const docDir = path.dirname(documentPath); // drafts/current_drafts
@@ -1573,16 +1592,22 @@ async function handleGetPlan(projectPath: string, webviewPanel: vscode.WebviewPa
     }
 
     try {
+        console.log('handleGetPlan: Loading plan for', projectPath);
         const provider = getOrCreatePlanProvider(projectPath);
         await provider.initialize();
-        const plan = await provider.getPlan();
+        // Use reloadPlan to force reading from disk (handles LLM edits)
+        const plan = await provider.reloadPlan();
+        console.log('handleGetPlan: Plan loaded, tasks:', plan.tasks.length);
         const data = provider.toWebviewData();
+        console.log('handleGetPlan: Webview data tasks:', data.tasks.length);
 
         webviewPanel?.webview.postMessage({
             command: 'planData',
             plan: data
         });
+        console.log('handleGetPlan: Message posted to webview');
     } catch (error) {
+        console.error('handleGetPlan: Error:', error);
         webviewPanel?.webview.postMessage({
             command: 'planError',
             error: `Failed to load plan: ${error}`

@@ -1205,4 +1205,91 @@ tasks:
             expect(plan.documents[0].filename).toBe('C:/Projects/nda.docx');
         });
     });
+
+    describe('Python YAML compatibility', () => {
+        test('should parse Python-generated YAML (no leading spaces before list items)', () => {
+            // Python's YAML library uses no indent before list items
+            const pythonYaml = `---
+tasks:
+- id: 905bd222
+  title: Fix critical drafting issues
+  description: Correct Schedule numbering inconsistency
+  status: pending
+  ordinal: 0
+  creationDate: '2025-12-09T19:51:13.454897Z'
+  completionDate: null
+  editIds: []
+- id: 09b4f841
+  title: Expand clause 21
+  description: Add exit/transition provisions
+  status: in_progress
+  ordinal: 1
+  creationDate: '2025-12-09T19:51:19.582753Z'
+  completionDate: null
+  editIds: []
+---
+
+# Work Plan
+`;
+
+            const plan = WorkPlan.fromYAMLFrontmatter(pythonYaml);
+
+            expect(plan.getTaskCount()).toBe(2);
+            expect(plan.tasks[0].id).toBe('905bd222');
+            expect(plan.tasks[0].title).toBe('Fix critical drafting issues');
+            expect(plan.tasks[0].status).toBe('pending');
+            expect(plan.tasks[1].id).toBe('09b4f841');
+            expect(plan.tasks[1].status).toBe('in_progress');
+        });
+
+        test('should parse Python YAML with multi-line descriptions', () => {
+            // Python wraps long descriptions across lines
+            const pythonYaml = `---
+tasks:
+- id: task1
+  title: Complex task
+  description: 'This is a long description that spans
+    multiple lines in the YAML file.'
+  status: pending
+  ordinal: 0
+  creationDate: '2025-12-09T10:00:00.000Z'
+  completionDate: null
+  editIds: []
+---
+`;
+
+            const plan = WorkPlan.fromYAMLFrontmatter(pythonYaml);
+
+            expect(plan.getTaskCount()).toBe(1);
+            expect(plan.tasks[0].title).toBe('Complex task');
+            // Multi-line description should be joined with spaces
+            expect(plan.tasks[0].description).toContain('long description that spans');
+            expect(plan.tasks[0].description).toContain('multiple lines');
+        });
+
+        test('should parse Python YAML with unquoted multi-line descriptions', () => {
+            // Real example from Python ruamel.yaml output
+            const pythonYaml = `---
+tasks:
+- id: 905bd222
+  title: 1.1 Fix critical drafting issues
+  description: Correct Schedule numbering inconsistency (Schedule 2 heading should
+    be Schedule 1). Add missing 'Data Protection Legislation' definition to clause
+    1 referencing UK GDPR and EU GDPR.
+  status: pending
+  ordinal: 0
+  creationDate: '2025-12-09T19:51:13.454897Z'
+  completionDate: null
+  editIds: []
+---
+`;
+
+            const plan = WorkPlan.fromYAMLFrontmatter(pythonYaml);
+
+            expect(plan.getTaskCount()).toBe(1);
+            expect(plan.tasks[0].description).toContain('Correct Schedule numbering');
+            expect(plan.tasks[0].description).toContain('be Schedule 1');
+            expect(plan.tasks[0].description).toContain('Data Protection Legislation');
+        });
+    });
 });

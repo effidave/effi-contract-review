@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "doc_id": "One2Call-Terms-and-Conditions-for-Phone-System-Mai",
+  "doc_format": "docx",
+  "source_filename": "One2Call-Terms-and-Conditions-for-Phone-System-Maintenance-services-v1.1.docx",
+  "char_count": 14318,
+  "block_count": 87,
+  "section_count": 20,
+  "ltu_count": 87,
+  "max_section_depth": 1,
+  "has_tag_ranges": true,
+  "schema_version": "1.0.0",
+  "filemap": {
+    "blocks": "blocks.jsonl",
+    "sections": "sections.json",
+    "styles": "styles.json",
+    "tag_ranges": "tag_ranges.jsonl"
+  }
+}

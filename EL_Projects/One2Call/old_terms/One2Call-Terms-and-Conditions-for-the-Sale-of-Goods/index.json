@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "doc_id": "One2Call-Terms-and-Conditions-for-the-Sale-of-Good",
+  "doc_format": "docx",
+  "source_filename": "One2Call-Terms-and-Conditions-for-the-Sale-of-Goods.docx",
+  "char_count": 5588,
+  "block_count": 55,
+  "section_count": 21,
+  "ltu_count": 55,
+  "max_section_depth": 2,
+  "has_tag_ranges": true,
+  "schema_version": "1.0.0",
+  "filemap": {
+    "blocks": "blocks.jsonl",
+    "sections": "sections.json",
+    "styles": "styles.json",
+    "tag_ranges": "tag_ranges.jsonl"
+  }
+}

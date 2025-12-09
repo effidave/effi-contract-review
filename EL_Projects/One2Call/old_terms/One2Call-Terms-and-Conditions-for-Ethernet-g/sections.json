@@ -1,0 +1,469 @@
+{
+  "doc_id": "One2Call-Terms-and-Conditions-for-Ethernet-g",
+  "hierarchy_depth": 2,
+  "depth_max": 2,
+  "avg_blocks_per_section": 7.714285714285714,
+  "root": {
+    "children": [
+      {
+        "id": "4ca44553-14ef-4c4f-965c-bd4bd5cbb8f4",
+        "ltu_id": "ltu_4ca44553-14ef-4c4f-965c-bd4bd5cbb8f4",
+        "child_ids": [],
+        "title": "Front Matter",
+        "level": 1,
+        "block_ids": [
+          "431FA920"
+        ],
+        "char_count": 80,
+        "children": [],
+        "role": "front_matter",
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "2485c00a-1948-41ce-889f-af533b0d726f",
+        "ltu_id": "ltu_2485c00a-1948-41ce-889f-af533b0d726f",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "30A7F988"
+        ],
+        "char_count": 39,
+        "children": [],
+        "role": "main_body",
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "433fbf9d-9873-481f-92fa-eec14d848179",
+        "ltu_id": "ltu_433fbf9d-9873-481f-92fa-eec14d848179",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "371CA621"
+        ],
+        "char_count": 51,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "b7fd8b72-6e9d-459d-9093-987080b6c92b",
+        "ltu_id": "ltu_b7fd8b72-6e9d-459d-9093-987080b6c92b",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "611E2404"
+        ],
+        "char_count": 34,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "5474a88d-86d1-411a-b7c2-f4b232df4030",
+        "ltu_id": "ltu_5474a88d-86d1-411a-b7c2-f4b232df4030",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "5C589A19",
+          "4E1C9975"
+        ],
+        "char_count": 79,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "dc363ad8-7628-486b-8474-b8965e300d50",
+        "ltu_id": "ltu_dc363ad8-7628-486b-8474-b8965e300d50",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "3A37F851",
+          "103E1AF6"
+        ],
+        "char_count": 580,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "80616a8e-7411-4160-ba21-43ffa31c47f3",
+        "ltu_id": "ltu_80616a8e-7411-4160-ba21-43ffa31c47f3",
+        "child_ids": [
+          "c09682b0-1638-4bf4-b3d7-e98ae3074b5a"
+        ],
+        "title": "1.THE SERVICE",
+        "level": 1,
+        "block_ids": [
+          "399D198C",
+          "5AE9E2F4",
+          "59B49556",
+          "7FD1F741",
+          "350771D9",
+          "79A767C6",
+          "2644FDE2",
+          "3FCC90C2",
+          "25DA2B29",
+          "3DB67EB7",
+          "1D27FC83",
+          "220EF2C0",
+          "32837C54",
+          "79456E6A",
+          "77A9D8C8",
+          "49EE6FA9",
+          "5B3E7BBD",
+          "071DD73B",
+          "1ED6B68C",
+          "2E25D09C",
+          "7BC0A98A",
+          "29350E2B",
+          "736D44FC",
+          "41FC6EAF",
+          "0C2F0239",
+          "02750599",
+          "5E647D98",
+          "50332735",
+          "5573F7D1",
+          "06CC0135",
+          "5B56FEBB",
+          "337739C8",
+          "7FF06C11",
+          "456ED424",
+          "47CD4E9B",
+          "2A4D6EDF",
+          "77A31D53",
+          "47A901D2",
+          "39B7BB1E",
+          "589241F8",
+          "7DF99949",
+          "6B7A8FAF",
+          "57E72AAD",
+          "5A5D23A9",
+          "422DEB0D",
+          "769F37B2",
+          "5528B008",
+          "14F6133A",
+          "3F4C5643",
+          "6E961909",
+          "0F4B602A",
+          "59B4E254",
+          "0B5B9DC4",
+          "54C0153C",
+          "67FB7F01",
+          "36442BE5",
+          "7054C48F"
+        ],
+        "char_count": 13260,
+        "children": [
+          {
+            "id": "c09682b0-1638-4bf4-b3d7-e98ae3074b5a",
+            "ltu_id": "ltu_c09682b0-1638-4bf4-b3d7-e98ae3074b5a",
+            "child_ids": [],
+            "title": "2.ACCEPTANCE",
+            "level": 2,
+            "block_ids": [
+              "7F059004",
+              "1372E337",
+              "39836EE7",
+              "0242570F"
+            ],
+            "char_count": 597,
+            "children": [],
+            "role": null,
+            "attachment_id": null,
+            "parent_id": "80616a8e-7411-4160-ba21-43ffa31c47f3"
+          }
+        ],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "0850dd69-11e3-4fa3-878f-f9feb96334de",
+        "ltu_id": "ltu_0850dd69-11e3-4fa3-878f-f9feb96334de",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "46128456",
+          "4F6B9F53"
+        ],
+        "char_count": 99,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "81295882-819c-4148-9a01-fc0f7069b320",
+        "ltu_id": "ltu_81295882-819c-4148-9a01-fc0f7069b320",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "6ECC19F4",
+          "270C8793"
+        ],
+        "char_count": 163,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "28adb311-140e-4bdf-9a5a-476ddc3f17b0",
+        "ltu_id": "ltu_28adb311-140e-4bdf-9a5a-476ddc3f17b0",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "26B9D577",
+          "423EFF83"
+        ],
+        "char_count": 817,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "ca3d5054-eb78-41de-be7b-3e39ce7dc273",
+        "ltu_id": "ltu_ca3d5054-eb78-41de-be7b-3e39ce7dc273",
+        "child_ids": [],
+        "title": "3.YOUR OBLIGATIONS",
+        "level": 2,
+        "block_ids": [
+          "05DD10CC",
+          "0CDA0B2C",
+          "23EB5F24",
+          "17ADBED9",
+          "7F7F4B57",
+          "517A57DE",
+          "5D89C4E0",
+          "0952AE6E",
+          "43FA5866",
+          "761E21DC",
+          "7D05E8D5",
+          "66C23394"
+        ],
+        "char_count": 2352,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "21fa3269-3117-4c98-867f-a8665bfe1514",
+        "ltu_id": "ltu_21fa3269-3117-4c98-867f-a8665bfe1514",
+        "child_ids": [],
+        "title": "4.YOUR USE OF THE SERVICE",
+        "level": 2,
+        "block_ids": [
+          "4341ACE0",
+          "4991EDBC"
+        ],
+        "char_count": 1164,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "2616b3b7-d836-44e7-b59a-d864da984a67",
+        "ltu_id": "ltu_2616b3b7-d836-44e7-b59a-d864da984a67",
+        "child_ids": [],
+        "title": "5.EQUIPMENT MAINTENANCE",
+        "level": 2,
+        "block_ids": [
+          "7E5A0F66",
+          "600DAE8B",
+          "07EDF952",
+          "4F8264B4",
+          "585E23C8",
+          "2E8F9A0E",
+          "5615E23A",
+          "2094AE6D",
+          "02F45FE5",
+          "740F94ED",
+          "14D145E8",
+          "3B739EC9",
+          "5D9F6620",
+          "6BA45990",
+          "1B0CDF1A",
+          "57D7B09A",
+          "089EDAB7"
+        ],
+        "char_count": 4100,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "1a326b40-344c-4ca0-b3b2-231146611071",
+        "ltu_id": "ltu_1a326b40-344c-4ca0-b3b2-231146611071",
+        "child_ids": [],
+        "title": "6.RISK AND WARRANTY",
+        "level": 2,
+        "block_ids": [
+          "51395EFE",
+          "20FE1F2D",
+          "4FFEC036",
+          "7B20C0AA",
+          "328C2CEC",
+          "46A43A9E"
+        ],
+        "char_count": 2152,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "92ab4385-2202-40c7-a286-5029b671789d",
+        "ltu_id": "ltu_92ab4385-2202-40c7-a286-5029b671789d",
+        "child_ids": [],
+        "title": "7.FEES AND PAYMENT",
+        "level": 2,
+        "block_ids": [
+          "256993EB",
+          "5E5C7403",
+          "1BDB8889",
+          "5011A365",
+          "4FB6394D",
+          "1CC1101F",
+          "3594443D"
+        ],
+        "char_count": 2237,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "fb1c5dfa-a48f-40e8-a49a-9f4b9a5b6941",
+        "ltu_id": "ltu_fb1c5dfa-a48f-40e8-a49a-9f4b9a5b6941",
+        "child_ids": [],
+        "title": "8.SERVICE SUSPENSION",
+        "level": 2,
+        "block_ids": [
+          "140A9CDF",
+          "7630E024",
+          "4C13A9B5",
+          "29625C7F",
+          "3D834283",
+          "6F9B7547",
+          "39EF0EE4",
+          "231B2276"
+        ],
+        "char_count": 1796,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "6122b3fa-4032-439e-9611-3e9df1800285",
+        "ltu_id": "ltu_6122b3fa-4032-439e-9611-3e9df1800285",
+        "child_ids": [],
+        "title": "9.TERM AND TERMINATION",
+        "level": 2,
+        "block_ids": [
+          "6305D657",
+          "71FCC0C3",
+          "087BEE08",
+          "15675FAF",
+          "39CE6795",
+          "3E68A302",
+          "4F42626F",
+          "40C72CF1",
+          "3413F39E",
+          "7C75B49C",
+          "4A9EB810",
+          "46080D29"
+        ],
+        "char_count": 3898,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "22ae8158-bdb8-4da1-ae4d-4000c3fe8e22",
+        "ltu_id": "ltu_22ae8158-bdb8-4da1-ae4d-4000c3fe8e22",
+        "child_ids": [],
+        "title": "10.LIABILITY",
+        "level": 2,
+        "block_ids": [
+          "3DEDC572",
+          "65BC814D",
+          "0BB94D7A",
+          "5EDE0760",
+          "06CDE7B6",
+          "243EF1EF",
+          "1DD415DF",
+          "6C57E0C1"
+        ],
+        "char_count": 1314,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "e0c53481-ebb3-4901-8ef2-134936fdac2f",
+        "ltu_id": "ltu_e0c53481-ebb3-4901-8ef2-134936fdac2f",
+        "child_ids": [],
+        "title": "11.DEFINITIONS",
+        "level": 2,
+        "block_ids": [
+          "025636AA",
+          "407BD69F",
+          "69E57AD0",
+          "23A5615E",
+          "1A952AE4",
+          "679B3B33",
+          "493B1394"
+        ],
+        "char_count": 1868,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "ae89e567-d818-41e2-bda4-63245b0284e7",
+        "ltu_id": "ltu_ae89e567-d818-41e2-bda4-63245b0284e7",
+        "child_ids": [],
+        "title": "Conditions for Ethernet Services",
+        "level": 1,
+        "block_ids": [
+          "7A6AFEDC",
+          "75C045EA",
+          "6C4715EB",
+          "7E20D892",
+          "4D215126",
+          "1232FF3E",
+          "4976983B",
+          "65BAFDCD"
+        ],
+        "char_count": 884,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      }
+    ]
+  }
+}

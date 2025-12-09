@@ -1,0 +1,603 @@
+{
+  "doc_id": "One2Call-Code-of-Practice",
+  "hierarchy_depth": 1,
+  "depth_max": 1,
+  "avg_blocks_per_section": 7.178571428571429,
+  "root": {
+    "children": [
+      {
+        "id": "1d1228fd-f7f0-4477-8745-f8247aefd662",
+        "ltu_id": "ltu_1d1228fd-f7f0-4477-8745-f8247aefd662",
+        "child_ids": [],
+        "title": "Front Matter",
+        "level": 1,
+        "block_ids": [
+          "7B58F59F",
+          "1ED3D784",
+          "3FFF9515",
+          "4B070DF6",
+          "68AF6D35",
+          "2CFD781A",
+          "12F53BDD",
+          "65064C86"
+        ],
+        "char_count": 937,
+        "children": [],
+        "role": "front_matter",
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "1f00438f-afcb-44ba-9d29-01b0c0dd28b1",
+        "ltu_id": "ltu_1f00438f-afcb-44ba-9d29-01b0c0dd28b1",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "3DB29635"
+        ],
+        "char_count": 45,
+        "children": [],
+        "role": "main_body",
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "8c3c049a-db97-4aae-8200-0f6e4d85e63b",
+        "ltu_id": "ltu_8c3c049a-db97-4aae-8200-0f6e4d85e63b",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "07394DD1"
+        ],
+        "char_count": 35,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "7cd7c4ce-2517-4012-b445-93d138049c0a",
+        "ltu_id": "ltu_7cd7c4ce-2517-4012-b445-93d138049c0a",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "3C6B073E",
+          "7101B7D4",
+          "69F625D7",
+          "2316A39E",
+          "368F9733",
+          "3DA85F36",
+          "7F5972BB",
+          "25936127",
+          "2202DA54",
+          "627E9517",
+          "2D2A859F",
+          "5354FEAD",
+          "7EBB0B7C",
+          "68B48FAD"
+        ],
+        "char_count": 1255,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "d00c3711-c80e-433b-8db7-4b8b184139ea",
+        "ltu_id": "ltu_d00c3711-c80e-433b-8db7-4b8b184139ea",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "71F8D4F5"
+        ],
+        "char_count": 39,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "9e54e58b-88e8-479e-b8a7-eeafab8860b8",
+        "ltu_id": "ltu_9e54e58b-88e8-479e-b8a7-eeafab8860b8",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "720EB788"
+        ],
+        "char_count": 46,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "d7d58b49-0057-4569-b177-7a017820c30e",
+        "ltu_id": "ltu_d7d58b49-0057-4569-b177-7a017820c30e",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "39A3D86A"
+        ],
+        "char_count": 41,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "2b576e3a-0def-41b8-8915-8b50c2c7fb1d",
+        "ltu_id": "ltu_2b576e3a-0def-41b8-8915-8b50c2c7fb1d",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "5DB225A9"
+        ],
+        "char_count": 42,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "766b3d76-5c50-4f18-9993-94d07b6c361b",
+        "ltu_id": "ltu_766b3d76-5c50-4f18-9993-94d07b6c361b",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "165BA55B"
+        ],
+        "char_count": 39,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "a72b7969-8509-4da1-b304-80bcd289ac15",
+        "ltu_id": "ltu_a72b7969-8509-4da1-b304-80bcd289ac15",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "54E3492F",
+          "2E7B6199",
+          "4E5BF609",
+          "38FA8DBD",
+          "7F1C56A9",
+          "7D358AC6"
+        ],
+        "char_count": 830,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "3dd18407-0cd4-4fbf-967e-9318cb5f9252",
+        "ltu_id": "ltu_3dd18407-0cd4-4fbf-967e-9318cb5f9252",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "0A19D807"
+        ],
+        "char_count": 133,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "528c0993-f6da-4097-988c-5f65d4d1e00a",
+        "ltu_id": "ltu_528c0993-f6da-4097-988c-5f65d4d1e00a",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "1C812F08"
+        ],
+        "char_count": 56,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "6acf8dd8-eb6b-48f8-ac6d-cece04fa9164",
+        "ltu_id": "ltu_6acf8dd8-eb6b-48f8-ac6d-cece04fa9164",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "22F5F902"
+        ],
+        "char_count": 49,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "0e3e564e-a87a-43b3-8b2e-ac80efec9f20",
+        "ltu_id": "ltu_0e3e564e-a87a-43b3-8b2e-ac80efec9f20",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "515E96EB"
+        ],
+        "char_count": 86,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "9e16997f-67db-4d31-b657-dddf2f7f1aa1",
+        "ltu_id": "ltu_9e16997f-67db-4d31-b657-dddf2f7f1aa1",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "34D0A35E"
+        ],
+        "char_count": 53,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "511bcbd0-8f45-48e8-93bf-f597f72dca6a",
+        "ltu_id": "ltu_511bcbd0-8f45-48e8-93bf-f597f72dca6a",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "43181980"
+        ],
+        "char_count": 68,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "7a186bfb-f9c0-4004-80b6-f085c9b9fbc1",
+        "ltu_id": "ltu_7a186bfb-f9c0-4004-80b6-f085c9b9fbc1",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "0E9720DD"
+        ],
+        "char_count": 97,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "0321f5da-0150-4134-bd02-1eff0dae9120",
+        "ltu_id": "ltu_0321f5da-0150-4134-bd02-1eff0dae9120",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "56D47E33"
+        ],
+        "char_count": 81,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "ca3cec81-06b3-496f-985c-1585f4444d39",
+        "ltu_id": "ltu_ca3cec81-06b3-496f-985c-1585f4444d39",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "30FA420B"
+        ],
+        "char_count": 60,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "4ce77eba-2136-4de5-bdeb-401a8a807317",
+        "ltu_id": "ltu_4ce77eba-2136-4de5-bdeb-401a8a807317",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "0BC47FD5"
+        ],
+        "char_count": 65,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "217d37fb-bb48-4a0b-8131-6bc99634f0de",
+        "ltu_id": "ltu_217d37fb-bb48-4a0b-8131-6bc99634f0de",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "0C68CE12",
+          "2BB64B27",
+          "0B6DDD01",
+          "10C42DEE",
+          "5122D0A3",
+          "3FAADA80",
+          "188D3FD0",
+          "7DD5C3D5",
+          "0CC6C834",
+          "40FB3640",
+          "005D1A68",
+          "0ECAC381",
+          "13BAD66D",
+          "01C0DC0A",
+          "5EC61965",
+          "70C918B4",
+          "6DC5B2B7",
+          "5466041A",
+          "68B82964",
+          "7C18DA42",
+          "607A1C9F"
+        ],
+        "char_count": 2908,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "7e4290c6-f66b-4a52-8c79-a7bd776847c4",
+        "ltu_id": "ltu_7e4290c6-f66b-4a52-8c79-a7bd776847c4",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "47A8E956"
+        ],
+        "char_count": 309,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "5d0dd795-32a0-4076-b6b5-3ebc0ba38ff9",
+        "ltu_id": "ltu_5d0dd795-32a0-4076-b6b5-3ebc0ba38ff9",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "360C5F76"
+        ],
+        "char_count": 128,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "f63b52f3-19e7-4a9b-97de-810122baef06",
+        "ltu_id": "ltu_f63b52f3-19e7-4a9b-97de-810122baef06",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "13B6F5D5"
+        ],
+        "char_count": 43,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "71eae413-3ba7-4056-9ab8-3a3339dbf674",
+        "ltu_id": "ltu_71eae413-3ba7-4056-9ab8-3a3339dbf674",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "6D019630",
+          "70EB96E9",
+          "19096301",
+          "1827E8AB",
+          "4E15B0A7",
+          "3126C9EA",
+          "381CE848",
+          "4807D691",
+          "5bd605de-1b95-4d58-8d8e-8b090cb202c6",
+          "6b5bdd5d-7157-49ac-b0dd-d7a795ae76f8",
+          "ab6765a1-18ab-436f-9672-e06a05c7e9cd",
+          "cb25360e-aa70-4d27-b754-a0e2ea5c62eb",
+          "ad1ac93f-bab2-4c59-a315-fcb50612e2a1",
+          "4d06028b-6be0-4cdc-af26-7d2591df2649",
+          "85b1d2c5-84f6-45ef-b69d-fdb58fab98e0",
+          "f0f63fa5-6319-4ca5-a49a-18feb147b6dd",
+          "030db64b-6727-4b08-b47e-b380775bf250",
+          "b62160b2-3fe7-49b2-b153-a8c2075f86e8",
+          "35747822-4041-4139-9c3b-dbe263161267",
+          "55f1e2b2-478b-44a2-b3cd-81ff728dfb69",
+          "099f5efd-14be-4bff-aed8-4dfc38474df0",
+          "211de590-c5e9-42ee-9c48-0c5f073f04c0",
+          "61aedb86-e354-4803-a7f0-1b08abd062b1",
+          "eee91c6b-5b39-4fe3-be75-8ca7e9a1e144",
+          "a0d97dad-4714-4f46-97d5-576a4b186e05",
+          "23a91b65-2c89-4300-a49b-bbe5eb416a93",
+          "01e9662c-5ac4-402d-8d9b-8eb7b1e08039",
+          "8d7f569c-1b10-49b7-af63-c9fbcf8e4897",
+          "256d0a08-1043-4dc4-a50e-288b9cbc2a71",
+          "5a7b0a4b-f929-472d-8e12-30a7c769026e",
+          "2bd3b441-c84c-4b9b-b847-680d51c29ee2",
+          "66c2a0d0-66db-4825-9a36-0b181227c70a",
+          "a3fd51eb-2886-487a-8669-7cefc68fa818",
+          "693ddebc-72a2-4966-bca0-03487b536e45",
+          "36252e4a-3a2e-4f6f-85d1-2a266ed9d041",
+          "4b3448ff-2b5b-4dab-90c6-307f2d494915",
+          "5ECD0916",
+          "df1ae600-0449-4cf4-8a4f-e546082457ce",
+          "20ed8ef5-f3fd-454a-80d9-a0b68f7241f1",
+          "661ae05d-4cf1-4a95-9101-db42a5f3ae22",
+          "effd74d6-7e1d-4f9c-9746-0d23d80871ff",
+          "2d236534-a0f1-464f-8396-1e611f1d812b",
+          "a97e3057-44f3-4627-88ec-50ab7ad24697",
+          "95630795-b500-4beb-bee5-11eb0c18aec9",
+          "23d2a00c-323a-42bb-a28a-fed117f2a786",
+          "5f97dbc4-efba-4989-b535-7db50c981336",
+          "50ae5074-61bf-4009-aaf8-9a8217c5114f",
+          "694ec216-768c-45f7-b896-b18f59984d15",
+          "20f87a19-14f0-4833-997c-dac34965842c",
+          "002c2fa9-25e0-48ac-863b-1d456526326f",
+          "f568ebea-1cbe-4ed8-84eb-aa3c4f07ce5d",
+          "e543ee78-e93d-4ef4-9b49-89adec99da7e",
+          "10c487e4-64f9-45f7-8c93-c21869a24284",
+          "940f53f5-e0c2-4470-a79f-bd35779f3956",
+          "1C1D8258",
+          "331E21B7",
+          "260048B7",
+          "73F26926",
+          "35B8BA63",
+          "0AD32AE1",
+          "6220B514",
+          "1BCFBB13",
+          "0B489695",
+          "7AC57AF6",
+          "050B2F59",
+          "1924261A"
+        ],
+        "char_count": 5064,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "77730c09-92ec-4934-8f43-ec62cf6c9557",
+        "ltu_id": "ltu_77730c09-92ec-4934-8f43-ec62cf6c9557",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "1AD672D6"
+        ],
+        "char_count": 95,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "6366d593-8b71-4c43-a680-7770fa354cef",
+        "ltu_id": "ltu_6366d593-8b71-4c43-a680-7770fa354cef",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "300048D8"
+        ],
+        "char_count": 80,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "f6e118ab-9a65-4e15-85d0-acc319bfa7eb",
+        "ltu_id": "ltu_f6e118ab-9a65-4e15-85d0-acc319bfa7eb",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "15F75CCA",
+          "4DAF6E73",
+          "5E2D0D0A",
+          "015A1B9E",
+          "78E22DD9",
+          "1805D98B",
+          "33776451",
+          "06504175",
+          "4FEBEAA9",
+          "28964856",
+          "2861D725",
+          "4C87805B",
+          "0553FBB4",
+          "01EBD74D",
+          "4FAF4D35",
+          "1331D8DA",
+          "7A58F191",
+          "413847BA",
+          "272494BF",
+          "416B25A0",
+          "468F347B",
+          "7EDD25DA",
+          "05020DDE",
+          "3ADA9FE4",
+          "7034C80A",
+          "33EB1C26",
+          "5DA3A2AA",
+          "69A42AD3",
+          "5A0BBD0A",
+          "0F60010D",
+          "71151015",
+          "5016F6F4",
+          "1C0CDC43",
+          "346AC637",
+          "7F42F794",
+          "4720F388",
+          "562B9188",
+          "607AE22D",
+          "6543B508",
+          "7184E831",
+          "12CC9C69",
+          "4E991E51",
+          "632CEFC7",
+          "4DF783C7",
+          "2B874502",
+          "7F6F1DC9",
+          "64D6B3D5",
+          "1BBDF07C",
+          "60BF936C",
+          "30876FED",
+          "56DD9AD5",
+          "0E89BF04",
+          "5571A391",
+          "039CC47A",
+          "302A24C8",
+          "5BD1E9CA",
+          "1F02E21F",
+          "4CA97CC7",
+          "1D24BD01",
+          "2573999F",
+          "5ED91C76",
+          "4A25C172",
+          "257AFF71",
+          "7AA66166"
+        ],
+        "char_count": 7648,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      }
+    ]
+  }
+}

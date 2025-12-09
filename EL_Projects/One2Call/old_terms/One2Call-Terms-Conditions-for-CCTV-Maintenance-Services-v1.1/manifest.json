@@ -1,0 +1,32 @@
+{
+  "doc_id": "One2Call-Terms-Conditions-for-CCTV-Maintenance-Ser",
+  "v": 1,
+  "created_at": "2025-12-09T21:41:50+00:00",
+  "tool_version": "sprint2-dev",
+  "doc_format": "docx",
+  "sdt_carrier": "content-controls",
+  "range_marker_carrier": "content-controls",
+  "range_marker_tag_prefix": "marker:",
+  "fallback_heading_label": "Body (no heading)",
+  "checksums": {
+    "blocks.jsonl": "sha256:2db0967f96dbffb0c91fd2b8e14453b85c4904b5059558a88926b5e14847556b",
+    "sections.json": "sha256:8f39626b84f3d91ee22ce52dc0ef337c58ac055f7c1a9adf1ac10ca67dd059dc",
+    "styles.json": "sha256:d028a0636709cb4245de06c86731e1010a968df3767756a5e50c9b63cbb14674",
+    "relationships.json": "sha256:bc37d2d066f3a4b7565fc45ee019787e59144205c63ee5e33c388790874f4ad6",
+    "tag_ranges.jsonl": "sha256:a3bbe0154e31d698a3696db3f170c96756ab20d406fa5764d0f3bf057e415ec6",
+    "index.json": "sha256:ff3ddf097faa88fb0b45b0ea145402ac20785619ae5186b6cc4f467a3829bb66"
+  },
+  "schema_checksums": {
+    "block.schema.json": "sha256:a79c29ccec8330bef4e2ed057adee57e544a0749ee71c8aac86b8f8e13d1550e",
+    "edit_plan.schema.json": "sha256:4d9432a9d9b1b61675f527817c7dfdd608ffa20a63f2c1f50d9f0cba9ac367b1",
+    "index.schema.json": "sha256:f305e73bdd196f01be5aba55a1bfe71dc0756218dbafc234fbd9e269c7f84557",
+    "labels.schema.json": "sha256:44e45c3f69aa8c9728872198061b34cbc23aa83a232a93debb3bce13f42e1052",
+    "manifest.schema.json": "sha256:cbab4e0766ffb0d8b0fb12cc0a6b7d75f39bdacc70fed82baaae6de0f102829d",
+    "relationships.schema.json": "sha256:0a6b82f199e7e009eb01866b591d10d35578bb937e794216a56a29c3f922246e",
+    "report.schema.json": "sha256:cc9454c8a3713921e540d0e7e1ce3fca7c8569e9704475ec39eae016541bf3be",
+    "sections.schema.json": "sha256:64d13ab3f694c5e4bcce3072c1d2823c614b2718aa50ba4850aea65c3b9fcdcc",
+    "styles.schema.json": "sha256:69bb206dd584e1ce1e19e6f752f510633761625ed9ba8905fa78c2bfdf731549",
+    "tag_range.schema.json": "sha256:38ae87688b3e7f53b0d7466d5699e6e741330b2da45ea6f784ae6da8bf002c3f"
+  },
+  "attachments": []
+}

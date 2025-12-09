@@ -91,8 +91,11 @@ function generateId(): string {
  * Parse YAML frontmatter from markdown content
  */
 function parseYAMLFrontmatter(content: string): { frontmatter: Record<string, unknown>; body: string } {
-    const match = content.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
+    // Normalize line endings to \n
+    const normalized = content.replace(/\r\n/g, '\n');
+    const match = normalized.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
     if (!match) {
+        console.log('parseYAMLFrontmatter: No frontmatter match found');
         return { frontmatter: {}, body: content };
     }
     
@@ -107,6 +110,7 @@ function parseYAMLFrontmatter(content: string): { frontmatter: Record<string, un
 
 /**
  * Simple YAML parser for our specific task structure
+ * Handles multi-line string values (folded style)
  */
 function parseSimpleYAML(yaml: string): Record<string, unknown> {
     const result: Record<string, unknown> = {};
@@ -121,9 +125,29 @@ function parseSimpleYAML(yaml: string): Record<string, unknown> {
     let nestedArrayKey = '';
     let nestedArray: string[] = [];
     
-    for (const line of lines) {
+    // Track multi-line value building
+    let lastPropertyKey = '';
+    let lastPropertyIndent = 0;
+    
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        
         // Skip empty lines
         if (line.trim() === '') continue;
+        
+        // Check if this is a continuation line (more indented than the property)
+        const lineIndent = line.match(/^(\s*)/)?.[1].length || 0;
+        if (lastPropertyKey && lineIndent > lastPropertyIndent && inObject) {
+            // This is a continuation of the previous value
+            const continuation = line.trim();
+            if (currentObject[lastPropertyKey] !== undefined) {
+                const existing = currentObject[lastPropertyKey];
+                if (typeof existing === 'string') {
+                    currentObject[lastPropertyKey] = existing + ' ' + continuation;
+                }
+            }
+            continue;
+        }
         
         // Top-level key with array indicator
         const topLevelArrayMatch = line.match(/^(\w+):$/);
@@ -140,11 +164,12 @@ function parseSimpleYAML(yaml: string): Record<string, unknown> {
             currentObject = {};
             inArray = true;
             inObject = false;
+            lastPropertyKey = '';
             continue;
         }
         
-        // Array item start
-        const arrayItemMatch = line.match(/^  - (\w+): (.*)$/);
+        // Array item start (handles both "- key: value" and "  - key: value")
+        const arrayItemMatch = line.match(/^([ ]{0,2})- (\w+): (.*)$/);
         if (arrayItemMatch && inArray) {
             // Save previous object if exists
             if (Object.keys(currentObject).length > 0) {
@@ -154,30 +179,33 @@ function parseSimpleYAML(yaml: string): Record<string, unknown> {
             inObject = true;
             inNestedArray = false;
             
-            const key = arrayItemMatch[1];
-            const value = parseYAMLValue(arrayItemMatch[2].trim());
+            const key = arrayItemMatch[2];
+            const value = parseYAMLValue(arrayItemMatch[3].trim());
             currentObject[key] = value;
+            lastPropertyKey = key;
+            lastPropertyIndent = (arrayItemMatch[1].length || 0) + 2; // "- " adds 2
             continue;
         }
         
-        // Nested array start
-        const nestedArrayStartMatch = line.match(/^    (\w+):$/);
+        // Nested array start (handles "  key:" or "    key:")
+        const nestedArrayStartMatch = line.match(/^[ ]{2,4}(\w+):$/);
         if (nestedArrayStartMatch && inObject) {
             nestedArrayKey = nestedArrayStartMatch[1];
             nestedArray = [];
             inNestedArray = true;
+            lastPropertyKey = '';
             continue;
         }
         
-        // Nested array item
-        const nestedArrayItemMatch = line.match(/^      - (.*)$/);
+        // Nested array item (handles "    - value" or "      - value")
+        const nestedArrayItemMatch = line.match(/^[ ]{4,6}- (.*)$/);
         if (nestedArrayItemMatch && inNestedArray) {
             nestedArray.push(parseYAMLValue(nestedArrayItemMatch[1].trim()) as string);
             continue;
         }
         
-        // Object property continuation
-        const objectPropMatch = line.match(/^    (\w+): (.*)$/);
+        // Object property continuation (handles "  key: value" or "    key: value")
+        const objectPropMatch = line.match(/^([ ]{2,4})(\w+): (.*)$/);
         if (objectPropMatch && inObject) {
             // Save nested array if we were building one
             if (inNestedArray && nestedArrayKey) {
@@ -187,9 +215,11 @@ function parseSimpleYAML(yaml: string): Record<string, unknown> {
                 nestedArray = [];
             }
             
-            const key = objectPropMatch[1];
-            const value = parseYAMLValue(objectPropMatch[2].trim());
+            const key = objectPropMatch[2];
+            const value = parseYAMLValue(objectPropMatch[3].trim());
             currentObject[key] = value;
+            lastPropertyKey = key;
+            lastPropertyIndent = objectPropMatch[1].length;
             continue;
         }
     }

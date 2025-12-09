@@ -217,6 +217,18 @@ class PlanPanel {
     }
     
     /**
+     * Refresh the plan from disk (reload any changes made by LLM)
+     */
+    refreshPlan() {
+        if (this.vscode && this.projectPath) {
+            this.vscode.postMessage({
+                command: 'getPlan',
+                projectPath: this.projectPath
+            });
+        }
+    }
+    
+    /**
      * Change a task's status
      * @param {string} taskId - The task ID
      * @param {string} status - The new status
@@ -247,13 +259,163 @@ class PlanPanel {
         const titleEl = taskEl.querySelector('.task-title');
         if (!titleEl) return;
         
+        // Don't allow multiple edits at once
+        if (taskEl.querySelector('.task-title-edit')) return;
+        
+        const originalTitle = titleEl.textContent;
+        
         // Create edit input
         const editInput = this._createElement('input', 'task-title-edit');
         editInput.type = 'text';
-        editInput.value = titleEl.textContent;
+        editInput.value = originalTitle;
+        
+        // Save on Enter, cancel on Escape
+        editInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const newTitle = editInput.value.trim();
+                if (newTitle && newTitle !== originalTitle) {
+                    this.submitTitleEdit(taskId, newTitle);
+                }
+                this._finishEditTitle(taskEl, titleEl, editInput, newTitle || originalTitle);
+            } else if (e.key === 'Escape') {
+                this._finishEditTitle(taskEl, titleEl, editInput, originalTitle);
+            }
+        });
+        
+        // Save on blur (click outside)
+        editInput.addEventListener('blur', () => {
+            const newTitle = editInput.value.trim();
+            if (newTitle && newTitle !== originalTitle) {
+                this.submitTitleEdit(taskId, newTitle);
+            }
+            this._finishEditTitle(taskEl, titleEl, editInput, newTitle || originalTitle);
+        });
         
         titleEl.style.display = 'none';
-        titleEl.parentElement.appendChild(editInput);
+        titleEl.parentElement.insertBefore(editInput, titleEl);
+        editInput.focus();
+        editInput.select();
+    }
+    
+    /**
+     * Finish editing a title - restore display
+     * @param {HTMLElement} taskEl - The task element
+     * @param {HTMLElement} titleEl - The title element
+     * @param {HTMLElement} editInput - The edit input
+     * @param {string} finalTitle - The final title value
+     */
+    _finishEditTitle(taskEl, titleEl, editInput, finalTitle) {
+        titleEl.textContent = finalTitle;
+        titleEl.style.display = '';
+        if (editInput.parentElement) {
+            editInput.remove();
+        }
+    }
+    
+    /**
+     * Start editing a task's description
+     * @param {string} taskId - The task ID
+     */
+    startEditDescription(taskId) {
+        const taskEl = this.listElement.querySelector(`[data-task-id="${taskId}"]`);
+        if (!taskEl) return;
+        
+        const descEl = taskEl.querySelector('.task-description');
+        const contentEl = taskEl.querySelector('.task-content');
+        if (!contentEl) return;
+        
+        // Don't allow multiple edits at once
+        if (taskEl.querySelector('.task-description-edit')) return;
+        
+        const task = this.tasks.find(t => t.id === taskId);
+        const originalDesc = task ? task.description : (descEl ? descEl.textContent : '');
+        
+        // Create edit textarea
+        const editTextarea = this._createElement('textarea', 'task-description-edit');
+        editTextarea.value = originalDesc;
+        editTextarea.rows = 3;
+        editTextarea.placeholder = 'Enter description...';
+        
+        // Save on Ctrl+Enter, cancel on Escape
+        editTextarea.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                const newDesc = editTextarea.value.trim();
+                if (newDesc !== originalDesc) {
+                    this.submitDescriptionEdit(taskId, newDesc);
+                }
+                this._finishEditDescription(taskEl, descEl, contentEl, editTextarea, newDesc);
+            } else if (e.key === 'Escape') {
+                this._finishEditDescription(taskEl, descEl, contentEl, editTextarea, originalDesc);
+            }
+        });
+        
+        // Save on blur (click outside)
+        editTextarea.addEventListener('blur', () => {
+            const newDesc = editTextarea.value.trim();
+            if (newDesc !== originalDesc) {
+                this.submitDescriptionEdit(taskId, newDesc);
+            }
+            this._finishEditDescription(taskEl, descEl, contentEl, editTextarea, newDesc);
+        });
+        
+        if (descEl) {
+            descEl.style.display = 'none';
+            contentEl.insertBefore(editTextarea, descEl);
+        } else {
+            contentEl.appendChild(editTextarea);
+        }
+        editTextarea.focus();
+    }
+    
+    /**
+     * Finish editing a description - restore display
+     */
+    _finishEditDescription(taskEl, descEl, contentEl, editTextarea, finalDesc) {
+        if (descEl) {
+            descEl.textContent = finalDesc;
+            descEl.style.display = '';
+        } else if (finalDesc) {
+            // Create new description element if it didn't exist
+            const newDescEl = this._createElement('p', 'task-description');
+            newDescEl.textContent = finalDesc;
+            newDescEl.addEventListener('dblclick', () => {
+                const taskId = taskEl.getAttribute('data-task-id');
+                this.startEditDescription(taskId);
+            });
+            const titleEl = contentEl.querySelector('.task-title');
+            if (titleEl && titleEl.nextSibling) {
+                contentEl.insertBefore(newDescEl, titleEl.nextSibling);
+            } else {
+                contentEl.appendChild(newDescEl);
+            }
+        }
+        if (editTextarea.parentElement) {
+            editTextarea.remove();
+        }
+    }
+    
+    /**
+     * Submit a description edit
+     * @param {string} taskId - The task ID
+     * @param {string} newDescription - The new description
+     */
+    submitDescriptionEdit(taskId, newDescription) {
+        // Update local state
+        const task = this.tasks.find(t => t.id === taskId);
+        if (task) {
+            task.description = newDescription;
+        }
+        
+        if (this.vscode) {
+            this.vscode.postMessage({
+                command: 'updateTask',
+                projectPath: this.projectPath,
+                taskId,
+                updates: { description: newDescription }
+            });
+        }
     }
     
     /**
@@ -262,6 +424,12 @@ class PlanPanel {
      * @param {string} newTitle - The new title
      */
     submitTitleEdit(taskId, newTitle) {
+        // Update local state
+        const task = this.tasks.find(t => t.id === taskId);
+        if (task) {
+            task.title = newTitle;
+        }
+        
         if (this.vscode) {
             this.vscode.postMessage({
                 command: 'updateTask',
@@ -417,8 +585,10 @@ class PlanPanel {
      * @param {Object} message - The message object
      */
     handleMessage(message) {
+        console.log('PlanPanel.handleMessage:', message.command, message);
         switch (message.command) {
             case 'planData':
+                console.log('PlanPanel: Received planData, tasks:', message.plan?.tasks?.length);
                 if (message.plan && message.plan.tasks) {
                     this.setTasks(message.plan.tasks);
                 }
@@ -533,11 +703,22 @@ class PlanPanel {
         title.textContent = 'Work Plan';
         this.headerElement.appendChild(title);
         
+        // Button container
+        const buttonContainer = this._createElement('div', 'plan-header-buttons');
+        this.headerElement.appendChild(buttonContainer);
+        
+        // Refresh button
+        const refreshBtn = this._createElement('button', 'plan-refresh-btn');
+        refreshBtn.textContent = '↻';
+        refreshBtn.title = 'Refresh plan from disk';
+        refreshBtn.addEventListener('click', () => this.refreshPlan());
+        buttonContainer.appendChild(refreshBtn);
+        
         // Add button
         const addBtn = this._createElement('button', 'plan-add-task-btn');
         addBtn.textContent = '+ Add Task';
         addBtn.addEventListener('click', () => this.showAddTaskForm());
-        this.headerElement.appendChild(addBtn);
+        buttonContainer.appendChild(addBtn);
         
         // Filter controls
         this._renderFilterControls();
@@ -608,7 +789,6 @@ class PlanPanel {
         
         // Clear existing
         this.listElement.innerHTML = '';
-        this.listElement.children = [];
         
         if (this.tasks.length === 0) {
             this._renderEmptyState();
@@ -666,15 +846,21 @@ class PlanPanel {
         // Title
         const titleEl = this._createElement('span', 'task-title');
         titleEl.textContent = task.title;
+        titleEl.title = 'Double-click to edit title';
         titleEl.addEventListener('dblclick', () => this.startEditTitle(task.id));
         contentEl.appendChild(titleEl);
         
         // Description
+        const descEl = this._createElement('p', 'task-description');
         if (task.description) {
-            const descEl = this._createElement('p', 'task-description');
             descEl.textContent = task.description;
-            contentEl.appendChild(descEl);
+        } else {
+            descEl.textContent = '(Click to add description)';
+            descEl.classList.add('task-description-placeholder');
         }
+        descEl.title = 'Double-click to edit description (Ctrl+Enter to save)';
+        descEl.addEventListener('dblclick', () => this.startEditDescription(task.id));
+        contentEl.appendChild(descEl);
         
         // Status badge
         const statusEl = this._createElement('span', 'task-status');
@@ -1048,4 +1234,9 @@ class PlanPanel {
 // Export for both Node.js (testing) and browser
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { PlanPanel };
+}
+
+// Also expose to window for browser/webview use
+if (typeof window !== 'undefined') {
+    window.PlanPanel = PlanPanel;
 }

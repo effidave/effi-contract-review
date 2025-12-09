@@ -1,0 +1,32 @@
+{
+  "doc_id": "One2Call-Terms-and-Conditions-for-Horizon-Services",
+  "v": 1,
+  "created_at": "2025-12-09T21:41:21+00:00",
+  "tool_version": "sprint2-dev",
+  "doc_format": "docx",
+  "sdt_carrier": "content-controls",
+  "range_marker_carrier": "content-controls",
+  "range_marker_tag_prefix": "marker:",
+  "fallback_heading_label": "Body (no heading)",
+  "checksums": {
+    "blocks.jsonl": "sha256:755c7cdb1f2a73c8a77d87a1f34aaba7ae0a04252f4558ac4c8f3b28a0605ca3",
+    "sections.json": "sha256:a552c1e47e3345fab01b1fe97c2995defcab39b00d83ed7dca2e897ed3bf0873",
+    "styles.json": "sha256:baab225c166a74fc2f4829563d9d3b457888ceffa42ecce073aa8864f832faf7",
+    "relationships.json": "sha256:12609dc9fd66130c4f2c7ff8fcae1ca3f103d41c0eade7be08479d995b61c2a0",
+    "tag_ranges.jsonl": "sha256:fad56c09fc461d28e0e77f077c56a143737bef8636f3adc897e06a92f33ee058",
+    "index.json": "sha256:db2c4d68fab57e7e8e9372ca66de23b0995d9424e06cf4297f650baaa73fda84"
+  },
+  "schema_checksums": {
+    "block.schema.json": "sha256:a79c29ccec8330bef4e2ed057adee57e544a0749ee71c8aac86b8f8e13d1550e",
+    "edit_plan.schema.json": "sha256:4d9432a9d9b1b61675f527817c7dfdd608ffa20a63f2c1f50d9f0cba9ac367b1",
+    "index.schema.json": "sha256:f305e73bdd196f01be5aba55a1bfe71dc0756218dbafc234fbd9e269c7f84557",
+    "labels.schema.json": "sha256:44e45c3f69aa8c9728872198061b34cbc23aa83a232a93debb3bce13f42e1052",
+    "manifest.schema.json": "sha256:cbab4e0766ffb0d8b0fb12cc0a6b7d75f39bdacc70fed82baaae6de0f102829d",
+    "relationships.schema.json": "sha256:0a6b82f199e7e009eb01866b591d10d35578bb937e794216a56a29c3f922246e",
+    "report.schema.json": "sha256:cc9454c8a3713921e540d0e7e1ce3fca7c8569e9704475ec39eae016541bf3be",
+    "sections.schema.json": "sha256:64d13ab3f694c5e4bcce3072c1d2823c614b2718aa50ba4850aea65c3b9fcdcc",
+    "styles.schema.json": "sha256:69bb206dd584e1ce1e19e6f752f510633761625ed9ba8905fa78c2bfdf731549",
+    "tag_range.schema.json": "sha256:38ae87688b3e7f53b0d7466d5699e6e741330b2da45ea6f784ae6da8bf002c3f"
+  },
+  "attachments": []
+}

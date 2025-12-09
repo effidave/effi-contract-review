@@ -1558,6 +1558,31 @@ del.revision-delete,
     flex: 1;
 }
 
+/* Header button container */
+.plan-header-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Refresh button */
+.plan-refresh-btn {
+    padding: 6px 10px;
+    font-size: 14px;
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-light);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.plan-refresh-btn:hover {
+    background: var(--bg-hover, #f1f5f9);
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
 .plan-add-task-btn {
     padding: 6px 12px;
     font-size: 12px;
@@ -1983,4 +2008,38 @@ del.revision-delete,
     border: 1px solid var(--accent);
     border-radius: 3px;
     outline: none;
+}
+
+/* Description edit textarea */
+.task-description-edit {
+    width: 100%;
+    padding: 6px 8px;
+    font-size: 12px;
+    border: 1px solid var(--accent);
+    border-radius: 3px;
+    outline: none;
+    resize: vertical;
+    min-height: 60px;
+    font-family: inherit;
+    line-height: 1.4;
+    margin-top: 4px;
+}
+
+/* Description placeholder */
+.task-description-placeholder {
+    color: var(--foreground-muted, #888);
+    font-style: italic;
+    cursor: pointer;
+}
+
+.task-description-placeholder:hover {
+    color: var(--accent);
+}
+
+/* Make title and description show cursor on hover */
+.task-title:hover,
+.task-description:hover:not(.task-description-placeholder) {
+    cursor: text;
+    background: var(--bg-hover, rgba(128, 128, 128, 0.1));
+    border-radius: 3px;
 }

@@ -207,4 +207,50 @@ disallow_any_generics = true
 no_implicit_optional = true
 ```
 
+## 15) Cross-Platform File Handling
+
+This project runs on Windows. When writing files that will be read by other components (TypeScript extension, other parsers):
+
+### Line Endings
+* **Always normalize line endings** when reading files that may have been created on Windows (`\r\n`) vs Unix (`\n`).
+* When writing structured files (YAML, JSON, Markdown), prefer explicit `\n` line endings for consistency.
+* TypeScript/JavaScript regex patterns like `/^---\n/` will fail on Windows files with `\r\n` endings.
+
+**Example - Reading files safely:**
+```python
+def read_normalized(path: str) -> str:
+    """Read file with normalized line endings."""
+    with open(path, 'r', encoding='utf-8') as f:
+        return f.read().replace('\r\n', '\n')
+```
+
+**Example - Writing with explicit line endings:**
+```python
+def write_yaml(path: str, content: str) -> None:
+    """Write file with Unix line endings for cross-platform compatibility."""
+    with open(path, 'w', encoding='utf-8', newline='\n') as f:
+        f.write(content)
+```
+
+### YAML Format Compatibility
+* Python's `yaml.dump()` produces lists with **no leading spaces** before `-`:
+  ```yaml
+  tasks:
+  - id: task1
+    title: First
+  ```
+* Some parsers expect **2-space indent** before `-`:
+  ```yaml
+  tasks:
+    - id: task1
+      title: First
+  ```
+* When writing parsers, handle **both formats** to ensure Python ↔ TypeScript interoperability.
+* When writing YAML, document which format is produced and ensure consumers can parse it.
+
+### Testing Cross-Platform Compatibility
+* Always include tests with **both line ending formats** (`\n` and `\r\n`).
+* Include tests with **both YAML indentation styles** (0-space and 2-space list items).
+* Test round-trips between Python and TypeScript serialization when both languages interact with the same files.
+
 Adhering to this guide keeps the Effi-Local codebase clean, testable, and maintainable.

@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "doc_id": "One2Call-Terms-Conditions-for-Access-Control-Maint",
+  "doc_format": "docx",
+  "source_filename": "One2Call-Terms-Conditions-for-Access-Control-Maintenance-Services-v1.0.docx",
+  "char_count": 14119,
+  "block_count": 82,
+  "section_count": 20,
+  "ltu_count": 82,
+  "max_section_depth": 1,
+  "has_tag_ranges": true,
+  "schema_version": "1.0.0",
+  "filemap": {
+    "blocks": "blocks.jsonl",
+    "sections": "sections.json",
+    "styles": "styles.json",
+    "tag_ranges": "tag_ranges.jsonl"
+  }
+}

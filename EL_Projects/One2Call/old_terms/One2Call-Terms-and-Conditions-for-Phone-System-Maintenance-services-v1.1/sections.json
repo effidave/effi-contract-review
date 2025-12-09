@@ -1,0 +1,377 @@
+{
+  "doc_id": "One2Call-Terms-and-Conditions-for-Phone-System-Mai",
+  "hierarchy_depth": 1,
+  "depth_max": 1,
+  "avg_blocks_per_section": 4.35,
+  "root": {
+    "children": [
+      {
+        "id": "91d2fb5b-c5a0-42b4-af2b-0af9167db80f",
+        "ltu_id": "ltu_91d2fb5b-c5a0-42b4-af2b-0af9167db80f",
+        "child_ids": [],
+        "title": "Front Matter",
+        "level": 1,
+        "block_ids": [
+          "02DA9E23",
+          "17F154AC"
+        ],
+        "char_count": 124,
+        "children": [],
+        "role": "front_matter",
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "2fa5b28b-11d5-4ab6-b2de-fade2d2eb5e5",
+        "ltu_id": "ltu_2fa5b28b-11d5-4ab6-b2de-fade2d2eb5e5",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "204A078E"
+        ],
+        "char_count": 50,
+        "children": [],
+        "role": "main_body",
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "5c71f9d8-4562-478e-85dc-e7dc270f0e49",
+        "ltu_id": "ltu_5c71f9d8-4562-478e-85dc-e7dc270f0e49",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "53109E7D"
+        ],
+        "char_count": 22,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "a964b834-70c8-4958-beee-f9341cac2b03",
+        "ltu_id": "ltu_a964b834-70c8-4958-beee-f9341cac2b03",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "3F9CFB53"
+        ],
+        "char_count": 20,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "8ecae8a3-6193-4077-83b6-7cc987b328a6",
+        "ltu_id": "ltu_8ecae8a3-6193-4077-83b6-7cc987b328a6",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "046277CC"
+        ],
+        "char_count": 71,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "effbbc3f-1f31-4608-ba28-a3f026b7399f",
+        "ltu_id": "ltu_effbbc3f-1f31-4608-ba28-a3f026b7399f",
+        "child_ids": [],
+        "title": "Body (no heading)",
+        "level": 1,
+        "block_ids": [
+          "509A7C04",
+          "5194740D"
+        ],
+        "char_count": 101,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "51d3ce58-f37d-464c-8525-c9c1943b770a",
+        "ltu_id": "ltu_51d3ce58-f37d-464c-8525-c9c1943b770a",
+        "child_ids": [],
+        "title": "General",
+        "level": 1,
+        "block_ids": [
+          "47350551",
+          "5819D229",
+          "71A051A6",
+          "2E693695",
+          "155FAD8D"
+        ],
+        "char_count": 990,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "e236afeb-23b9-4a92-8b48-2ce92e1a52af",
+        "ltu_id": "ltu_e236afeb-23b9-4a92-8b48-2ce92e1a52af",
+        "child_ids": [],
+        "title": "Our Duties",
+        "level": 1,
+        "block_ids": [
+          "1291AF46",
+          "79FDDAFB",
+          "1AC6C520",
+          "56850C81",
+          "493D8D53"
+        ],
+        "char_count": 842,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "4a2bc66f-7699-4184-9cbf-adc17147d238",
+        "ltu_id": "ltu_4a2bc66f-7699-4184-9cbf-adc17147d238",
+        "child_ids": [],
+        "title": "Your Duties",
+        "level": 1,
+        "block_ids": [
+          "59638889",
+          "5A79D260",
+          "0E888837",
+          "26DE6991",
+          "3D84B35F",
+          "26E2193B",
+          "4AEEBE7B"
+        ],
+        "char_count": 1218,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "32b52482-a26b-40e6-9b34-e7464b4ef9d8",
+        "ltu_id": "ltu_32b52482-a26b-40e6-9b34-e7464b4ef9d8",
+        "child_ids": [],
+        "title": "Payment",
+        "level": 1,
+        "block_ids": [
+          "440E4A8D",
+          "734EE334",
+          "346F35E1",
+          "2972D979",
+          "360DBD8A",
+          "482D3505",
+          "0957CB26",
+          "08192B7A"
+        ],
+        "char_count": 1931,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "323f11f0-68a8-4564-9115-f821fb89542f",
+        "ltu_id": "ltu_323f11f0-68a8-4564-9115-f821fb89542f",
+        "child_ids": [],
+        "title": "Warranty and Liability",
+        "level": 1,
+        "block_ids": [
+          "48A5A36A",
+          "157AE6E9",
+          "26F94479",
+          "43C4A8E7",
+          "6A9082AD",
+          "44F2221B",
+          "181337EF",
+          "3455824C",
+          "4F747979",
+          "4264E4F5",
+          "33B06837",
+          "119ADE53",
+          "7D4FCF8B",
+          "79DA0CF1",
+          "3D2F66B9",
+          "5E8493B5",
+          "1F23720E",
+          "2DDB3AC2",
+          "4E69FCBE",
+          "5311DDD0",
+          "6F7757C4"
+        ],
+        "char_count": 3358,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "ae14bb45-46cd-4254-8b1f-7cb084d89b45",
+        "ltu_id": "ltu_ae14bb45-46cd-4254-8b1f-7cb084d89b45",
+        "child_ids": [],
+        "title": "Termination",
+        "level": 1,
+        "block_ids": [
+          "506EE6EC",
+          "499DDB27",
+          "47ED44D4",
+          "747654CD",
+          "7AA029DD",
+          "6D730AFA",
+          "71791739",
+          "4D7CD008",
+          "48459327",
+          "302B2D9D",
+          "0381AFD6",
+          "21436961"
+        ],
+        "char_count": 2500,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "d5bd1ce3-8474-4cb7-b6a6-7ab545ba2530",
+        "ltu_id": "ltu_d5bd1ce3-8474-4cb7-b6a6-7ab545ba2530",
+        "child_ids": [],
+        "title": "Force Majeure",
+        "level": 1,
+        "block_ids": [
+          "322E7067",
+          "3A9AE1CE",
+          "62D57320",
+          "31AE83EB",
+          "0F079A6D",
+          "31BC0916",
+          "15B56165"
+        ],
+        "char_count": 1017,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "755c16e0-dda2-4320-92b9-27c122c913ec",
+        "ltu_id": "ltu_755c16e0-dda2-4320-92b9-27c122c913ec",
+        "child_ids": [],
+        "title": "Invalidity and severability",
+        "level": 1,
+        "block_ids": [
+          "6A660F58",
+          "686790E3"
+        ],
+        "char_count": 368,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "4d11c601-00d4-422a-89ff-71334c6d5fa4",
+        "ltu_id": "ltu_4d11c601-00d4-422a-89ff-71334c6d5fa4",
+        "child_ids": [],
+        "title": "Waiver",
+        "level": 1,
+        "block_ids": [
+          "682E4036",
+          "51623919"
+        ],
+        "char_count": 408,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "49b4f446-388e-400a-8f99-6cbe88dcd611",
+        "ltu_id": "ltu_49b4f446-388e-400a-8f99-6cbe88dcd611",
+        "child_ids": [],
+        "title": "Warranty",
+        "level": 1,
+        "block_ids": [
+          "403559FC",
+          "59C9F395"
+        ],
+        "char_count": 259,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "69b53d64-c1eb-4df4-aa31-2db080614ba6",
+        "ltu_id": "ltu_69b53d64-c1eb-4df4-aa31-2db080614ba6",
+        "child_ids": [],
+        "title": "Assignment",
+        "level": 1,
+        "block_ids": [
+          "33928F92",
+          "189A91DC"
+        ],
+        "char_count": 180,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "0e99a79c-af3b-47a6-98d9-7c3fd7c96fd0",
+        "ltu_id": "ltu_0e99a79c-af3b-47a6-98d9-7c3fd7c96fd0",
+        "child_ids": [],
+        "title": "Notices",
+        "level": 1,
+        "block_ids": [
+          "7CDA52C6",
+          "5EA67C6D"
+        ],
+        "char_count": 548,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "0d4b13a5-91e4-4df0-9335-53c85e4a3d93",
+        "ltu_id": "ltu_0d4b13a5-91e4-4df0-9335-53c85e4a3d93",
+        "child_ids": [],
+        "title": "Headings",
+        "level": 1,
+        "block_ids": [
+          "34003D3C",
+          "083A0642"
+        ],
+        "char_count": 138,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "3d64ac68-51d7-4c77-ba4e-02221c563d1d",
+        "ltu_id": "ltu_3d64ac68-51d7-4c77-ba4e-02221c563d1d",
+        "child_ids": [],
+        "title": "Law",
+        "level": 1,
+        "block_ids": [
+          "350ED530",
+          "151569A8"
+        ],
+        "char_count": 173,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      }
+    ]
+  }
+}

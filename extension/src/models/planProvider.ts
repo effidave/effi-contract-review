@@ -133,6 +133,14 @@ export class PlanProvider {
     }
 
     /**
+     * Force reload the plan from disk, discarding any cached state
+     */
+    async reloadPlan(): Promise<WorkPlan> {
+        this.currentPlan = null;
+        return this.getPlan();
+    }
+
+    /**
      * Save the plan to disk
      */
     async savePlan(plan: WorkPlan): Promise<OperationResult> {
