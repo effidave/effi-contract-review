@@ -155,6 +155,9 @@
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js"
   },
+  "dependencies": {
+    "marked": "^12.0.0"
+  },
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "@types/node": "20.x",

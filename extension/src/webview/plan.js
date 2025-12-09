@@ -25,6 +25,238 @@ const STATUS_LABELS = {
 };
 
 /**
+ * Allowed HTML tags for markdown sanitization.
+ * Only these tags will be kept; all others are stripped.
+ */
+const ALLOWED_TAGS = [
+    'p', 'br',
+    'strong', 'b', 'em', 'i', 'u',
+    'code', 'pre',
+    'ul', 'ol', 'li',
+    'a',
+    'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+    'blockquote',
+    'hr'
+];
+
+/**
+ * Allowed attributes per tag for markdown sanitization.
+ * Only these attributes on these tags will be kept.
+ */
+const ALLOWED_ATTRIBUTES = {
+    'a': ['href', 'title'],
+    '*': [] // No global attributes allowed
+};
+
+/**
+ * Patterns for dangerous attribute values (e.g., javascript: URLs)
+ */
+const DANGEROUS_URL_PATTERNS = [
+    /^javascript:/i,
+    /^data:/i,
+    /^vbscript:/i
+];
+
+/**
+ * Sanitize HTML from markdown output to prevent XSS attacks.
+ * Allows only safe tags and attributes; strips everything else.
+ * 
+ * @param {string} html - The HTML string to sanitize
+ * @returns {string} Sanitized HTML string
+ */
+function sanitizeMarkdownHtml(html) {
+    // Handle null/undefined/empty
+    if (!html) return '';
+    if (typeof html !== 'string') return '';
+    
+    // Create a temporary container to parse the HTML
+    // Use DOMParser for Node.js compatibility, or create element in browser
+    let doc;
+    if (typeof DOMParser !== 'undefined') {
+        const parser = new DOMParser();
+        doc = parser.parseFromString(`<div>${html}</div>`, 'text/html');
+    } else if (typeof document !== 'undefined') {
+        doc = document.implementation.createHTMLDocument('');
+        doc.body.innerHTML = `<div>${html}</div>`;
+    } else {
+        // Node.js test environment - use simple regex-based sanitization
+        return sanitizeHtmlRegex(html);
+    }
+    
+    const container = doc.body.firstChild || doc.body;
+    sanitizeNode(container);
+    
+    return container.innerHTML;
+}
+
+/**
+ * Recursively sanitize a DOM node and its children.
+ * @param {Node} node - The DOM node to sanitize
+ */
+function sanitizeNode(node) {
+    // Process children in reverse order (so we can remove nodes safely)
+    const children = Array.from(node.childNodes);
+    for (let i = children.length - 1; i >= 0; i--) {
+        const child = children[i];
+        
+        if (child.nodeType === 1) { // Element node
+            const tagName = child.tagName.toLowerCase();
+            
+            if (!ALLOWED_TAGS.includes(tagName)) {
+                // Tag not allowed - unwrap children (keep text content)
+                while (child.firstChild) {
+                    node.insertBefore(child.firstChild, child);
+                }
+                node.removeChild(child);
+            } else {
+                // Tag allowed - sanitize attributes
+                sanitizeAttributes(child, tagName);
+                // Recursively sanitize children
+                sanitizeNode(child);
+            }
+        }
+        // Text nodes (nodeType 3) are always kept as-is
+    }
+}
+
+/**
+ * Sanitize attributes on an element.
+ * @param {Element} element - The element to sanitize
+ * @param {string} tagName - The lowercase tag name
+ */
+function sanitizeAttributes(element, tagName) {
+    const allowedForTag = ALLOWED_ATTRIBUTES[tagName] || [];
+    const allowedGlobal = ALLOWED_ATTRIBUTES['*'] || [];
+    const allowed = [...allowedForTag, ...allowedGlobal];
+    
+    // Get all attribute names
+    const attrNames = Array.from(element.attributes).map(a => a.name);
+    
+    for (const attrName of attrNames) {
+        // Remove event handlers (on*)
+        if (attrName.startsWith('on')) {
+            element.removeAttribute(attrName);
+            continue;
+        }
+        
+        // Check if attribute is allowed
+        if (!allowed.includes(attrName)) {
+            element.removeAttribute(attrName);
+            continue;
+        }
+        
+        // For href, check for dangerous URL schemes
+        if (attrName === 'href') {
+            const value = element.getAttribute(attrName);
+            if (isDangerousUrl(value)) {
+                element.removeAttribute(attrName);
+            }
+        }
+    }
+}
+
+/**
+ * Check if a URL is dangerous (javascript:, data:, etc.)
+ * @param {string} url - The URL to check
+ * @returns {boolean} True if the URL is dangerous
+ */
+function isDangerousUrl(url) {
+    if (!url) return false;
+    const trimmed = url.trim();
+    return DANGEROUS_URL_PATTERNS.some(pattern => pattern.test(trimmed));
+}
+
+/**
+ * Regex-based HTML sanitization for Node.js test environment.
+ * This is a fallback when DOMParser is not available.
+ * @param {string} html - The HTML to sanitize
+ * @returns {string} Sanitized HTML
+ */
+function sanitizeHtmlRegex(html) {
+    if (!html) return '';
+    
+    let result = html;
+    
+    // Remove script, style, iframe, object, embed, form tags and their contents
+    const dangerousTags = ['script', 'style', 'iframe', 'object', 'embed', 'form', 'input', 'img'];
+    for (const tag of dangerousTags) {
+        // Remove opening and closing tags with content
+        result = result.replace(new RegExp(`<${tag}[^>]*>[\\s\\S]*?</${tag}>`, 'gi'), '');
+        // Remove self-closing tags
+        result = result.replace(new RegExp(`<${tag}[^>]*/?>`, 'gi'), '');
+    }
+    
+    // Remove event handlers from remaining tags
+    result = result.replace(/\s+on\w+\s*=\s*["'][^"']*["']/gi, '');
+    result = result.replace(/\s+on\w+\s*=\s*[^\s>]+/gi, '');
+    
+    // Remove javascript: and data: URLs from href
+    result = result.replace(/href\s*=\s*["']javascript:[^"']*["']/gi, '');
+    result = result.replace(/href\s*=\s*["']data:[^"']*["']/gi, '');
+    
+    // Remove disallowed tags but keep their text content
+    const disallowedTags = ['div', 'span', 'table', 'tr', 'td', 'th', 'tbody', 'thead', 'tfoot'];
+    for (const tag of disallowedTags) {
+        result = result.replace(new RegExp(`</?${tag}[^>]*>`, 'gi'), '');
+    }
+    
+    return result;
+}
+
+/**
+ * Render markdown text to sanitized HTML.
+ * Uses the marked library (must be loaded globally as window.marked).
+ * 
+ * @param {string} markdown - The markdown text to render
+ * @returns {string} Sanitized HTML string
+ */
+function renderMarkdown(markdown) {
+    // Handle null/undefined/empty
+    if (!markdown) return '';
+    if (typeof markdown !== 'string') return '';
+    
+    // Check if marked is available
+    const markedLib = typeof window !== 'undefined' ? window.marked : 
+                      typeof marked !== 'undefined' ? marked : null;
+    
+    if (!markedLib) {
+        // Fallback: escape HTML and return as-is
+        console.warn('marked library not available, returning plain text');
+        return escapeHtml(markdown);
+    }
+    
+    try {
+        // Parse markdown to HTML
+        const html = markedLib.parse(markdown);
+        // Sanitize the output
+        return sanitizeMarkdownHtml(html);
+    } catch (err) {
+        console.error('Error rendering markdown:', err);
+        return escapeHtml(markdown);
+    }
+}
+
+/**
+ * Escape HTML special characters for safe display.
+ * @param {string} text - The text to escape
+ * @returns {string} Escaped text
+ */
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = typeof document !== 'undefined' ? 
+                document.createElement('div') : 
+                { textContent: '', innerHTML: '' };
+    div.textContent = text;
+    return div.innerHTML || text.replace(/[&<>"']/g, char => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    })[char]);
+}
+
+/**
  * PlanPanel class - manages the work plan UI
  */
 class PlanPanel {
@@ -853,7 +1085,8 @@ class PlanPanel {
         // Description
         const descEl = this._createElement('p', 'task-description');
         if (task.description) {
-            descEl.textContent = task.description;
+            // Render markdown to sanitized HTML
+            descEl.innerHTML = renderMarkdown(task.description);
         } else {
             descEl.textContent = '(Click to add description)';
             descEl.classList.add('task-description-placeholder');
@@ -1233,10 +1466,18 @@ class PlanPanel {
 
 // Export for both Node.js (testing) and browser
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { PlanPanel };
+    module.exports = { 
+        PlanPanel,
+        sanitizeMarkdownHtml,
+        renderMarkdown,
+        ALLOWED_TAGS,
+        ALLOWED_ATTRIBUTES
+    };
 }
 
 // Also expose to window for browser/webview use
 if (typeof window !== 'undefined') {
     window.PlanPanel = PlanPanel;
+    window.sanitizeMarkdownHtml = sanitizeMarkdownHtml;
+    window.renderMarkdown = renderMarkdown;
 }

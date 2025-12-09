@@ -4,7 +4,8 @@ const production = process.argv.includes('--production');
 const watch = process.argv.includes('--watch');
 
 async function main() {
-  const ctx = await esbuild.context({
+  // Build 1: Extension host bundle (Node.js)
+  const extensionCtx = await esbuild.context({
     entryPoints: ['src/extension.ts'],
     bundle: true,
     format: 'cjs',
@@ -16,16 +17,31 @@ async function main() {
     external: ['vscode'],
     logLevel: 'silent',
     plugins: [
-      /* add to the end of plugins array */
+      esbuildProblemMatcherPlugin,
+    ],
+  });
+  
+  // Build 2: Plan webview bundle (Browser)
+  const planWebviewCtx = await esbuild.context({
+    entryPoints: ['src/webview/planBundle.js'],
+    bundle: true,
+    format: 'iife',
+    minify: production,
+    sourcemap: !production,
+    sourcesContent: false,
+    platform: 'browser',
+    outfile: 'dist/planBundle.js',
+    logLevel: 'silent',
+    plugins: [
       esbuildProblemMatcherPlugin,
     ],
   });
   
   if (watch) {
-    await ctx.watch();
+    await Promise.all([extensionCtx.watch(), planWebviewCtx.watch()]);
   } else {
-    await ctx.rebuild();
-    await ctx.dispose();
+    await Promise.all([extensionCtx.rebuild(), planWebviewCtx.rebuild()]);
+    await Promise.all([extensionCtx.dispose(), planWebviewCtx.dispose()]);
   }
 }
 

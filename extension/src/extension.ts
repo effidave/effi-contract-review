@@ -929,12 +929,11 @@ function getWebviewContent(context: vscode.ExtensionContext, webview: vscode.Web
  */
 function getPlanWebviewContent(context: vscode.ExtensionContext, webview: vscode.Webview): string {
     const stylePath = path.join(context.extensionPath, 'src', 'webview', 'style.css');
-    const planPath = path.join(context.extensionPath, 'src', 'webview', 'plan.js');
-    const planMainPath = path.join(context.extensionPath, 'src', 'webview', 'planMain.js');
+    // Use bundled script that includes marked + plan.js + planMain.js
+    const planBundlePath = path.join(context.extensionPath, 'dist', 'planBundle.js');
 
     const styleUri = webview.asWebviewUri(vscode.Uri.file(stylePath));
-    const planUri = webview.asWebviewUri(vscode.Uri.file(planPath));
-    const planMainUri = webview.asWebviewUri(vscode.Uri.file(planMainPath));
+    const planBundleUri = webview.asWebviewUri(vscode.Uri.file(planBundlePath));
 
     // Use CSP nonce for security
     const nonce = getNonce();
@@ -959,8 +958,7 @@ function getPlanWebviewContent(context: vscode.ExtensionContext, webview: vscode
     <script nonce="${nonce}">
         window.initialProjectPath = '${projectPathEscaped}';
     </script>
-    <script nonce="${nonce}" src="${planUri}"></script>
-    <script nonce="${nonce}" src="${planMainUri}"></script>
+    <script nonce="${nonce}" src="${planBundleUri}"></script>
 </body>
 </html>`;
 }
