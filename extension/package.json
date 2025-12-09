@@ -72,6 +72,14 @@
         "icon": "$(history)"
       }
     ],
+    "keybindings": [
+      {
+        "command": "effi-contract-viewer.refreshView",
+        "key": "ctrl+l",
+        "mac": "cmd+l",
+        "when": "effiContractViewerActive"
+      }
+    ],
     "menus": {
       "commandPalette": [
         {

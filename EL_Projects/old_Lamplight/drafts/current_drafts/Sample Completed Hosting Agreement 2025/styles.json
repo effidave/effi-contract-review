@@ -1,0 +1,20 @@
+{
+  "styles": [
+    {
+      "name": "List Paragraph",
+      "type": "unknown",
+      "count": 51,
+      "semantic_hint": "list_item",
+      "hint_scores": {
+        "list_item": 1.0
+      }
+    },
+    {
+      "name": "Normal",
+      "type": "paragraph",
+      "count": 272,
+      "semantic_hint": null,
+      "hint_scores": null
+    }
+  ]
+}

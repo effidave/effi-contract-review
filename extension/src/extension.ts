@@ -51,12 +51,16 @@ export function activate(context: vscode.ExtensionContext) {
         }
     );
 
-    // Register command to refresh view
+    // Register command to refresh view (re-analyzes document and reloads)
     const refreshCommand = vscode.commands.registerCommand(
         'effi-contract-viewer.refreshView',
-        () => {
+        async () => {
+            if (!currentDocumentPath) {
+                vscode.window.showWarningMessage('No document loaded to refresh');
+                return;
+            }
             if (webviewPanel) {
-                webviewPanel.webview.postMessage({ command: 'refresh' });
+                await reanalyzeAndRefresh(currentDocumentPath);
             }
         }
     );
@@ -182,7 +186,7 @@ function showContractWebview(context: vscode.ExtensionContext) {
                         jumpToClause(message.paraId);
                         break;
                     case 'sendToChat':
-                        await sendClausesToChat(message.clauseIds, message.query);
+                        await sendClausesToChat(message.clauseIds, message.query, message.clauseTexts);
                         break;
                     case 'ready':
                         console.log('Webview ready');
@@ -257,6 +261,50 @@ async function analyzeDocument(documentPath: string) {
     // TODO: Call Python MCP server to analyze document
     // For now, just try to load existing analysis
     await loadAnalysisData(documentPath);
+}
+
+/**
+ * Re-analyze the document and refresh the webview.
+ * This is called when the user presses Ctrl+L to see changes made by MCP tools.
+ */
+async function reanalyzeAndRefresh(documentPath: string) {
+    // Calculate output directory: project/analysis/<filename_no_ext>
+    const analysisDir = getAnalysisDir(documentPath);
+    
+    await vscode.window.withProgress({
+        location: vscode.ProgressLocation.Notification,
+        title: `Refreshing ${path.basename(documentPath)}...`,
+        cancellable: false
+    }, async (progress) => {
+        try {
+            const workspaceRoot = path.join(__dirname, '..', '..');
+            const pythonCmd = getPythonPath(workspaceRoot);
+            
+            // Re-analyze using the existing doc-id from manifest if available
+            let docId = '123e4567-e89b-12d3-a456-426614174000';
+            const manifestPath = path.join(analysisDir, 'manifest.json');
+            if (fs.existsSync(manifestPath)) {
+                try {
+                    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
+                    if (manifest.doc_id) {
+                        docId = manifest.doc_id;
+                    }
+                } catch (e) {
+                    // Use default doc-id
+                }
+            }
+            
+            const cmd = `cd "${workspaceRoot}" && "${pythonCmd}" -m effilocal.cli analyze "${documentPath}" --doc-id "${docId}" --out "${analysisDir}"`;
+            
+            await execAsync(cmd);
+            
+            // Load the updated analysis
+            await loadAnalysisData(documentPath);
+            
+        } catch (error) {
+            vscode.window.showErrorMessage(`Refresh failed: ${error}`);
+        }
+    });
 }
 
 async function analyzeAndLoadDocument(context: vscode.ExtensionContext, documentPath: string) {
@@ -623,9 +671,9 @@ function jumpToClause(paraId: string) {
     vscode.window.showInformationMessage(`Jump to clause: ${paraId}`);
 }
 
-async function sendClausesToChat(paraIds: string[], query: string) {
+async function sendClausesToChat(paraIds: string[], query: string, clauseTexts?: any[]) {
     try {
-        // Use para IDs as requested
+        // Use para IDs for context
         const clauseContext = paraIds.map(id => `- ${id}`).join('\n');
         const fullPrompt = `Context - Selected clauses from contract (Paragraph IDs):\n${clauseContext}\n\nQuestion: ${query}`;
 
@@ -633,7 +681,7 @@ async function sendClausesToChat(paraIds: string[], query: string) {
         await vscode.env.clipboard.writeText(fullPrompt);
         
         vscode.window.showInformationMessage(
-            `✓ Copied ${paraIds.length} paragraph ID${paraIds.length !== 1 ? 's' : ''} + question to clipboard`,
+            `✓ Copied ${paraIds.length} clause${paraIds.length !== 1 ? 's' : ''} + question to clipboard`,
             'Open Chat'
         ).then(action => {
             if (action === 'Open Chat') {
@@ -908,7 +956,9 @@ async function saveBlocksToDocument(blocks: any[], documentPath: string, webview
  * Sprint 3: Get all comments from a document
  */
 async function getComments(documentPath: string, webviewPanel: vscode.WebviewPanel | undefined) {
+    console.log('DEBUG getComments: documentPath=', documentPath);
     if (!documentPath || !fs.existsSync(documentPath)) {
+        console.log('DEBUG getComments: file not found or empty path');
         if (webviewPanel) {
             webviewPanel.webview.postMessage({ 
                 command: 'commentError', 
@@ -923,8 +973,10 @@ async function getComments(documentPath: string, webviewPanel: vscode.WebviewPan
         const pythonCmd = getPythonPath(workspaceRoot);
         const scriptPath = path.join(__dirname, '..', 'scripts', 'manage_comments.py');
         
+        console.log('DEBUG getComments: calling script', scriptPath);
         const { stdout } = await execAsync(`cd "${workspaceRoot}" && "${pythonCmd}" "${scriptPath}" get_comments "${documentPath}"`);
         const result = JSON.parse(stdout);
+        console.log('DEBUG getComments: result.success=', result.success, 'count=', result.comments?.length);
         
         if (result.success) {
             if (webviewPanel) {

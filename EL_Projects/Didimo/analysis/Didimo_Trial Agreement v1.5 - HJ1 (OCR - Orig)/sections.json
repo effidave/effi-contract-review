@@ -1,0 +1,789 @@
+{
+  "doc_id": "123e4567-e89b-12d3-a456-426614174000",
+  "hierarchy_depth": 2,
+  "depth_max": 2,
+  "avg_blocks_per_section": 6.405405405405405,
+  "root": {
+    "children": [
+      {
+        "id": "6ca83ac8-de30-495e-8194-ced9b37a0a0b",
+        "ltu_id": "ltu_6ca83ac8-de30-495e-8194-ced9b37a0a0b",
+        "child_ids": [],
+        "title": "Front Matter",
+        "level": 1,
+        "block_ids": [
+          "57610E80",
+          "41762801",
+          "6CE99098"
+        ],
+        "char_count": 530,
+        "children": [],
+        "role": "front_matter",
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "ecf7a736-8f5e-4410-94c1-95686fd83a74",
+        "ltu_id": "ltu_ecf7a736-8f5e-4410-94c1-95686fd83a74",
+        "child_ids": [],
+        "title": "TRIAL.  This Trial is intended only for a limited duration assessment of Vendor’s IP. Any use following the Term of this Trial may only proceed under a separate agreement in accordance with Company’s standards that is executed by the Parties.",
+        "level": 1,
+        "block_ids": [
+          "2459359C"
+        ],
+        "char_count": 242,
+        "children": [],
+        "role": "main_body",
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "1b1338c7-bb26-4e73-9bd2-996ff37b21f9",
+        "ltu_id": "ltu_1b1338c7-bb26-4e73-9bd2-996ff37b21f9",
+        "child_ids": [
+          "060b30b3-2bd2-486e-bdc8-cba08b1d498b",
+          "fda61731-00b6-4dd9-820a-8b37b1f24599",
+          "8ad797be-8478-426b-85fb-dffc8d0eb072",
+          "b85cf422-cc99-4381-9e1f-9ad4d475207d",
+          "989b6789-1bdf-480c-b3dd-ff6725b84e73"
+        ],
+        "title": "DEFINITIONS",
+        "level": 1,
+        "block_ids": [
+          "0D6A5B12"
+        ],
+        "char_count": 11,
+        "children": [
+          {
+            "id": "060b30b3-2bd2-486e-bdc8-cba08b1d498b",
+            "ltu_id": "ltu_060b30b3-2bd2-486e-bdc8-cba08b1d498b",
+            "child_ids": [],
+            "title": "“Affiliate” of a Party means any entity that (as of the Effective Date or thereafter) directly or indirectly, now or hereafter controls, is controlled by, or is under common control with that Party.",
+            "level": 2,
+            "block_ids": [
+              "44347A43"
+            ],
+            "char_count": 198,
+            "children": [],
+            "role": null,
+            "attachment_id": null,
+            "parent_id": "1b1338c7-bb26-4e73-9bd2-996ff37b21f9"
+          },
+          {
+            "id": "fda61731-00b6-4dd9-820a-8b37b1f24599",
+            "ltu_id": "ltu_fda61731-00b6-4dd9-820a-8b37b1f24599",
+            "child_ids": [],
+            "title": "“Intellectual Property Rights” means any and all tangible and intangible: (i) rights associated with works of authorship, including copyrights, moral rights, and derivative works thereof, (ii) trademark and trade name rights, (iii) trade secret rights, (iv) patents, design rights, and other industrial property rights, and, (v) all other intellectual property rights (of every kind and nature, however designated) whether arising by operation of law, treaty, contract, license, or otherwise, together with all registrations, initial applications, renewals, extensions, continuations, divisions or reissues thereof.",
+            "level": 2,
+            "block_ids": [
+              "2C432313"
+            ],
+            "char_count": 615,
+            "children": [],
+            "role": null,
+            "attachment_id": null,
+            "parent_id": "1b1338c7-bb26-4e73-9bd2-996ff37b21f9"
+          },
+          {
+            "id": "8ad797be-8478-426b-85fb-dffc8d0eb072",
+            "ltu_id": "ltu_8ad797be-8478-426b-85fb-dffc8d0eb072",
+            "child_ids": [],
+            "title": "“Vendor IP” means Vendor’s software package, data feed, or other materials made available under this Trial and described in Exhibit 1, together with any configuration thereof and any updates, upgrades or other modifications thereto that are made available to Company.",
+            "level": 2,
+            "block_ids": [
+              "26A5555D"
+            ],
+            "char_count": 267,
+            "children": [],
+            "role": null,
+            "attachment_id": null,
+            "parent_id": "1b1338c7-bb26-4e73-9bd2-996ff37b21f9"
+          },
+          {
+            "id": "b85cf422-cc99-4381-9e1f-9ad4d475207d",
+            "ltu_id": "ltu_b85cf422-cc99-4381-9e1f-9ad4d475207d",
+            "child_ids": [],
+            "title": "“Personnel” means, with respect to a Party, that Party’s employees, subcontractors, vendors, agents, officers, directors and other personnel.",
+            "level": 2,
+            "block_ids": [
+              "2FC892E0"
+            ],
+            "char_count": 141,
+            "children": [],
+            "role": null,
+            "attachment_id": null,
+            "parent_id": "1b1338c7-bb26-4e73-9bd2-996ff37b21f9"
+          },
+          {
+            "id": "989b6789-1bdf-480c-b3dd-ff6725b84e73",
+            "ltu_id": "ltu_989b6789-1bdf-480c-b3dd-ff6725b84e73",
+            "child_ids": [],
+            "title": "“Applicable Law” means all laws, rules, regulations, rulings, decrees, directives, or other requirements of any governmental authority, and all current industry self-regulatory principles that (a) apply to the services or (b) relate to the Parties’ rights and obligations in this Trial.",
+            "level": 2,
+            "block_ids": [
+              "3CB756CB"
+            ],
+            "char_count": 286,
+            "children": [],
+            "role": null,
+            "attachment_id": null,
+            "parent_id": "1b1338c7-bb26-4e73-9bd2-996ff37b21f9"
+          }
+        ],
+        "role": "definitions",
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "90733605-a458-440c-b7f8-52b63bd92b0d",
+        "ltu_id": "ltu_90733605-a458-440c-b7f8-52b63bd92b0d",
+        "child_ids": [
+          "37c64487-d578-4af9-aca6-039bed155c60",
+          "d02b2522-9bfb-46d2-bb63-9280ae8b3a7f",
+          "d09e319d-788c-47cd-8464-98b1396ce9ce",
+          "828d4d7f-4396-42b8-a702-77a973f090e1"
+        ],
+        "title": "VENDOR IP",
+        "level": 1,
+        "block_ids": [
+          "60898528"
+        ],
+        "char_count": 9,
+        "children": [
+          {
+            "id": "37c64487-d578-4af9-aca6-039bed155c60",
+            "ltu_id": "ltu_37c64487-d578-4af9-aca6-039bed155c60",
+            "child_ids": [],
+            "title": "License Grant.  Vendor hereby grants to Company and its Affiliates a non-exclusive, worldwide, non-transferable right and license to access and use (and have Company agents and subcontractors exercise such rights on Company’s behalf) the Vendor IP during the Term.",
+            "level": 2,
+            "block_ids": [
+              "16C64073"
+            ],
+            "char_count": 264,
+            "children": [],
+            "role": null,
+            "attachment_id": null,
+            "parent_id": "90733605-a458-440c-b7f8-52b63bd92b0d"
+          },
+          {
+            "id": "d02b2522-9bfb-46d2-bb63-9280ae8b3a7f",
+            "ltu_id": "ltu_d02b2522-9bfb-46d2-bb63-9280ae8b3a7f",
+            "child_ids": [],
+            "title": "Specifications.  Vendor will use reasonable efforts to cause the Vendor IP to perform or otherwise comply in all material respects in accordance with any specifications related to the Vendor IP provided to Company or otherwise made publicly available.",
+            "level": 2,
+            "block_ids": [
+              "33093838"
+            ],
+            "char_count": 251,
+            "children": [],
+            "role": null,
+            "attachment_id": null,
+            "parent_id": "90733605-a458-440c-b7f8-52b63bd92b0d"
+          },
+          {
+            "id": "d09e319d-788c-47cd-8464-98b1396ce9ce",
+            "ltu_id": "ltu_d09e319d-788c-47cd-8464-98b1396ce9ce",
+            "child_ids": [],
+            "title": "Artificial Intelligence Use.  Except as expressly disclosed by Vendor and authorized in writing by Company, the Vendor’s services will neither be performed by, nor include the use of, an artificial intelligence tool or model.",
+            "level": 2,
+            "block_ids": [
+              "3E7B0912"
+            ],
+            "char_count": 225,
+            "children": [],
+            "role": null,
+            "attachment_id": null,
+            "parent_id": "90733605-a458-440c-b7f8-52b63bd92b0d"
+          },
+          {
+            "id": "828d4d7f-4396-42b8-a702-77a973f090e1",
+            "ltu_id": "ltu_828d4d7f-4396-42b8-a702-77a973f090e1",
+            "child_ids": [],
+            "title": "Subcontractors/Vendor Personnel.  Vendor shall identify in writing any third party retained by Vendor for, or assisting Vendor in, the provision or support of the Vendor IP prior to providing such third party with access to Company Confidential Information (defined in Exhibit 2). Vendor shall be liable to Company and, as between the Parties, to all other persons, for the acts and omissions of such third parties and any other Vendor Personnel.",
+            "level": 2,
+            "block_ids": [
+              "698E91C9"
+            ],
+            "char_count": 446,
+            "children": [],
+            "role": null,
+            "attachment_id": null,
+            "parent_id": "90733605-a458-440c-b7f8-52b63bd92b0d"
+          }
+        ],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "7c32caeb-2281-4896-aa12-0f1c20ffd361",
+        "ltu_id": "ltu_7c32caeb-2281-4896-aa12-0f1c20ffd361",
+        "child_ids": [],
+        "title": "RESERVATION OF RIGHTS.  Company acknowledges and agrees that, subject to Company’s rights herein, Vendor retains all right, title and interest, including without limitation all Intellectual Property Rights, in and to the Vendor IP.  Vendor acknowledges and agrees that, subject to Vendor’s rights herein, Company retains all right, title and interest, including without limitation all Intellectual Property Rights, in and to any items and materials it (directly or indirectly) provides to Vendor, inputs into the Vendor’s service or which Vendor otherwise collects or generates (including as an output) on behalf Company (“NBCU Data”). Vendor may use such items and materials solely for the purpose of performing its obligations to Company under this Trial and shall not, nor permit any person or entity to, copy, use or disclose NBCU Data to develop, train or improve any automated tool or device without Company’s prior written approval.",
+        "level": 1,
+        "block_ids": [
+          "1D7BC0E9"
+        ],
+        "char_count": 939,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "5812aa06-acd7-4eae-8f79-df86763ed894",
+        "ltu_id": "ltu_5812aa06-acd7-4eae-8f79-df86763ed894",
+        "child_ids": [],
+        "title": "Fees & Payment.  In consideration for Vendor’s performance of its obligations hereunder, Company will pay to Vendor the fees set forth in Exhibit 1 within seventy-five (75) days of Company’s receipt of an undisputed, valid invoice separately stating the fees and any applicable sales tax or similar tax. Vendor agrees to provide Company with a properly completed and executed Internal Revenue Service Form W-9 and any other tax forms which Company reasonably requests from Vendor.",
+        "level": 1,
+        "block_ids": [
+          "2FA46BE9"
+        ],
+        "char_count": 480,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "17dd533b-d043-44e8-a169-c7c76dedb559",
+        "ltu_id": "ltu_17dd533b-d043-44e8-a169-c7c76dedb559",
+        "child_ids": [],
+        "title": "TERM AND TERMINATION.  The term of this Trial shall commence on the Effective Date and shall continue [for/until _______ () days/weeks/months] (“Term”).  Prior to the end of the Term, the Parties may agree in writing (email sufficing) to extend the Term for one additional week.  Upon termination of this Trial, or at any time upon Company’s request, Vendor shall cease handling NBCU Data and promptly, at no cost to Company, in a timeframe and format requested by Company, return to Company all NBCU Data obtained by Vendor as a result of this Trial, or, if specifically directed by Company, securely delete and destroy all NBCU Data such that it is rendered 'inaccessible' and 'unrecoverable'. The following shall survive termination of this Trial: Sections 4.0-12.0 of this Trial.",
+        "level": 1,
+        "block_ids": [
+          "51CC8523"
+        ],
+        "char_count": 783,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "e8a044a6-32e3-40b3-ba19-e126755735fb",
+        "ltu_id": "ltu_e8a044a6-32e3-40b3-ba19-e126755735fb",
+        "child_ids": [],
+        "title": "CONFIDENTIALITY.  The terms and conditions of Exhibit 2 shall govern all information provided or collected pursuant to this Trial.",
+        "level": 1,
+        "block_ids": [
+          "2E1C7219"
+        ],
+        "char_count": 130,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "cf803e5d-dac7-4a2b-96be-76db96d95b51",
+        "ltu_id": "ltu_cf803e5d-dac7-4a2b-96be-76db96d95b51",
+        "child_ids": [],
+        "title": "DATA SECURITY. Vendor shall comply with Exhibit 3 to this Trial.  Vendor shall not process personal data or personal information (as such terms are defined under Applicable Law).",
+        "level": 1,
+        "block_ids": [
+          "1CC217B8"
+        ],
+        "char_count": 178,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "c9ae6478-aea7-44f7-b30d-8dfbb8cc6239",
+        "ltu_id": "ltu_c9ae6478-aea7-44f7-b30d-8dfbb8cc6239",
+        "child_ids": [],
+        "title": "REPRESENTATIONS, WARRANTIES AND COVENANTS.  Vendor hereby represents, warrants and covenants to Company as follows: (i) it has all necessary authority to execute this Trial, to license the Vendor IP and to provide any related implementation services; (ii) the use or exploitation of any Vendor IP (and related implementation services including the generation and use of outputs, including those generated by automated means) or Vendor Confidential Information by Company does not and will not infringe, or constitute an infringement or misappropriation of, any Intellectual Property Rights or other rights or applicable terms of a third party and does not and will not entitle any third party to make a claim against Company for the unlawful use of confidential information; (iii) Vendor has employed leading methodologies and technologies to ensure that the Vendor IP does not contain and will not allow the introduction of a virus, “back door,” adware, or other malicious, harmful or destructive code into Company systems (e.g., software, hardware, digital properties, and other technology); (iv) Vendor has not trained its models or services to be biased or discriminatory and has taken reasonable steps to mitigate biased and discrimination in its model and any outputs; and (v) Vendor does and shall at all times comply with all applicable third party terms and Applicable Laws.  EXCEPT AS EXPRESSLY SET FORTH IN THIS TRIAL, BOTH PARTIES DISCLAIM ALL OTHER WARRANTIES, EXPRESS OR IMPLIED, INCLUDING, WITHOUT LIMITATION, WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.",
+        "level": 1,
+        "block_ids": [
+          "265E6AE7"
+        ],
+        "char_count": 1592,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "57b9553c-04b0-4242-b047-482de278abb4",
+        "ltu_id": "ltu_57b9553c-04b0-4242-b047-482de278abb4",
+        "child_ids": [],
+        "title": "INDEMNIFICATION.  Vendor shall indemnify, defend, and hold Company and each of its Affiliates, and their respective officers, directors, employees, representatives and agents harmless from and against any and all claims, losses, costs, damages, judgments, settlements and expenses of every kind and nature (including attorneys’ and experts’ fees, penalties and interest) and will reimburse such as they are incurred arising from (i) a third party claim arising from or related to an alleged breach of clause 9.0; or (ii) its alleged breach of Section 7.0 or 8.0 or a compromise of Company’s Confidential Information.",
+        "level": 1,
+        "block_ids": [
+          "0F37F27E"
+        ],
+        "char_count": 616,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "2e069bac-5550-49b3-92ec-361bbf641a54",
+        "ltu_id": "ltu_2e069bac-5550-49b3-92ec-361bbf641a54",
+        "child_ids": [],
+        "title": "INSURANCE. Vendor shall maintain with financially sound and reputable insurance companies, insurance with respect to its business and Vendor IP against loss or damage of the kinds customarily insured against by entities engaged in the same or similar business, of such types and in such amounts as are customarily carried under similar circumstances by such entities.",
+        "level": 1,
+        "block_ids": [
+          "705E85B1"
+        ],
+        "char_count": 367,
+        "children": [],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "503b9c28-deb0-4874-a91e-11c5bbf34a07",
+        "ltu_id": "ltu_503b9c28-deb0-4874-a91e-11c5bbf34a07",
+        "child_ids": [
+          "eb5fc80c-4040-4a02-9eea-ade349982e2d",
+          "c8a0d6c1-e091-4908-a147-c09ec5faf3b1",
+          "8d097c36-8be7-444a-9ae0-3daea357ccaf",
+          "1418c3c6-85d3-424b-9445-7d3f6cb34e57",
+          "5dd43ac7-0af7-44db-b9e0-c57665acb855",
+          "87b61fe7-31a8-4e35-848a-fac02ff3c63e"
+        ],
+        "title": "MISCELLANEOUS",
+        "level": 1,
+        "block_ids": [
+          "753BC0CC"
+        ],
+        "char_count": 13,
+        "children": [
+          {
+            "id": "eb5fc80c-4040-4a02-9eea-ade349982e2d",
+            "ltu_id": "ltu_eb5fc80c-4040-4a02-9eea-ade349982e2d",
+            "child_ids": [],
+            "title": "Entire Trial; Amendment; Waiver; Severability.  This Trial (together with the incorporated exhibits) sets forth the entire agreement of the Parties with respect to the subject matter of this Trial and supersedes any and all prior proposals, agreements, understandings, and contemporaneous discussions, whether oral or written, between the Parties with respect to the subject matter of this Trial, excluding NDA. No terms and conditions contained in any “click-wrap” license or similar electronic notification shall be of force or effect.  No waiver of any of the provisions of this Trial shall constitute a waiver of any other provision (whether or not similar) nor shall such waiver constitute a continuing waiver unless otherwise expressly provided.  If any portion of this Trial is held invalid or unenforceable, that portion will be construed consistent with Applicable Law as nearly as possible to reflect the original intentions of the Parties and, provided that the fundamental terms and conditions of this Trial remain legal and enforceable, the remaining portions will remain in full force and effect.",
+            "level": 2,
+            "block_ids": [
+              "106048B9"
+            ],
+            "char_count": 1110,
+            "children": [],
+            "role": null,
+            "attachment_id": null,
+            "parent_id": "503b9c28-deb0-4874-a91e-11c5bbf34a07"
+          },
+          {
+            "id": "c8a0d6c1-e091-4908-a147-c09ec5faf3b1",
+            "ltu_id": "ltu_c8a0d6c1-e091-4908-a147-c09ec5faf3b1",
+            "child_ids": [],
+            "title": "No Publicity.  Each Party agrees that it will not, without the prior written consent of the other Party use the other Party’s name or trademark in a press release or for the purposes of advertising publicity or other public announcement.",
+            "level": 2,
+            "block_ids": [
+              "58D2A95D"
+            ],
+            "char_count": 237,
+            "children": [],
+            "role": null,
+            "attachment_id": null,
+            "parent_id": "503b9c28-deb0-4874-a91e-11c5bbf34a07"
+          },
+          {
+            "id": "8d097c36-8be7-444a-9ae0-3daea357ccaf",
+            "ltu_id": "ltu_8d097c36-8be7-444a-9ae0-3daea357ccaf",
+            "child_ids": [],
+            "title": "Governing Law.  The validity, interpretation and performance of this Trial shall be governed by and decided in accordance with the laws of the State of New York, without regard to any conflicts of laws and principles thereof. The Parties hereby submit and consent to the exclusive jurisdiction of any state or federal court located within the County of New York, in the State of New York, and agree that all actions or proceedings relating to this Trial shall be litigated in such courts, and each of the Parties waives any objection which it may have based on improper venue or forum non conveniens.",
+            "level": 2,
+            "block_ids": [
+              "24B82B8E"
+            ],
+            "char_count": 600,
+            "children": [],
+            "role": null,
+            "attachment_id": null,
+            "parent_id": "503b9c28-deb0-4874-a91e-11c5bbf34a07"
+          },
+          {
+            "id": "1418c3c6-85d3-424b-9445-7d3f6cb34e57",
+            "ltu_id": "ltu_1418c3c6-85d3-424b-9445-7d3f6cb34e57",
+            "child_ids": [],
+            "title": "No Future Obligations; No Exclusivity.  Company is not under any obligation to acquire any products or services from Vendor and this Trial in no way establishes any exclusive arrangement between Vendor and Company.",
+            "level": 2,
+            "block_ids": [
+              "486BA719"
+            ],
+            "char_count": 214,
+            "children": [],
+            "role": null,
+            "attachment_id": null,
+            "parent_id": "503b9c28-deb0-4874-a91e-11c5bbf34a07"
+          },
+          {
+            "id": "5dd43ac7-0af7-44db-b9e0-c57665acb855",
+            "ltu_id": "ltu_5dd43ac7-0af7-44db-b9e0-c57665acb855",
+            "child_ids": [],
+            "title": "Vendor as Independent Contractor.  It is the express intention of the Parties that Vendor is an independent contractor and not an employee, agent, joint venturer or partner of Company or any Company Affiliate.",
+            "level": 2,
+            "block_ids": [
+              "64F652FB"
+            ],
+            "char_count": 209,
+            "children": [],
+            "role": null,
+            "attachment_id": null,
+            "parent_id": "503b9c28-deb0-4874-a91e-11c5bbf34a07"
+          },
+          {
+            "id": "87b61fe7-31a8-4e35-848a-fac02ff3c63e",
+            "ltu_id": "ltu_87b61fe7-31a8-4e35-848a-fac02ff3c63e",
+            "child_ids": [],
+            "title": "Exhibits. This Trial includes: Exhibit 1 – Trial Details; Exhibit 2- Confidential Information; Exhibit 3 – NBCUniversal Security Standards.",
+            "level": 2,
+            "block_ids": [
+              "58DA4C69",
+              "49B24132",
+              "23078c7d-bd0c-4c43-86ed-1066ba851412",
+              "8ba4f679-7a41-4414-bde8-32a1e0b492da",
+              "96d57982-0d6c-4a5a-ba40-e819f5563f53",
+              "5d9d0b6b-9822-4aae-afcb-a9df6feaac2f",
+              "21c2ca1a-2707-4585-8229-9de1af24b08e",
+              "4fbe1255-8715-41fb-bb87-3ff6a6b8c824"
+            ],
+            "char_count": 373,
+            "children": [],
+            "role": null,
+            "attachment_id": null,
+            "parent_id": "503b9c28-deb0-4874-a91e-11c5bbf34a07"
+          }
+        ],
+        "role": null,
+        "attachment_id": null,
+        "parent_id": null
+      },
+      {
+        "id": "5977a09e-bd75-41d5-aacb-ba73c5afd25d",
+        "ltu_id": "ltu_5977a09e-bd75-41d5-aacb-ba73c5afd25d",
+        "child_ids": [
+          "15932c51-e721-4fde-88e7-da9a454393f2"
+        ],
+        "title": "Exhibit 1",
+        "level": 1,
+        "block_ids": [
+          "620C14F8",
+          "048D605D",
+          "7AD952E1",
+          "3337cb3e-39bb-401d-8094-c00e62aceb6a",
+          "e59e6523-ad78-4889-a584-b5ac0484a0b3",
+          "1ea51012-0a67-47c6-aa32-4b083f64f55e",
+          "91cec5f9-cd68-4f1f-8954-6e0cb8580f96",
+          "729A321D",
+          "20816BF6",
+          "201785B9",
+          "27a5b1ec-eecc-4505-8e56-b3aad6ce2a86",
+          "7130a7b9-46ab-4e9f-8100-e5a3962f96d8",
+          "5710de1f-7e1f-48aa-8427-be72b8ae1b0d",
+          "13C14C2B",
+          "7fd9515b-b074-4ddc-b6ee-c45b70f2513a",
+          "2e5fecf7-21d4-4ead-a995-97ca1dbe843c",
+          "4913E71B",
+          "1B95E4BB"
+        ],
+        "char_count": 1059,
+        "children": [
+          {
+            "id": "15932c51-e721-4fde-88e7-da9a454393f2",
+            "ltu_id": "ltu_15932c51-e721-4fde-88e7-da9a454393f2",
+            "child_ids": [],
+            "title": "Exhibit 2",
+            "level": 2,
+            "block_ids": [
+              "7510C7E8",
+              "1FD1F530"
+            ],
+            "char_count": 33,
+            "children": [],
+            "role": null,
+            "attachment_id": "07ea4b7f-c725-4c9d-bee6-bbb6d03e9b32",
+            "parent_id": "5977a09e-bd75-41d5-aacb-ba73c5afd25d"
+          }
+        ],
+        "role": null,
+        "attachment_id": "23c1fbb8-d3ed-45c4-8743-f7c7db9c30e6",
+        "parent_id": null
+      },
+      {
+        "id": "a5501419-41f9-4c85-9e6e-ec1a13fa4d29",
+        "ltu_id": "ltu_a5501419-41f9-4c85-9e6e-ec1a13fa4d29",
+        "child_ids": [],
+        "title": "Confidentiality. Each Party shall maintain in confidence any and all information and materials disclosed or made available by or on behalf of the other Party (“Discloser”) or that the receiving Party (“Recipient”) obtains in connection with this Trial that is designated or that is reasonably expected to be confidential or proprietary under the circumstances (including the existence and terms of this Trial and the Parties’ trade secrets, business, technical and financial information not generally known to the public, such as business plans, strategies, metadata) (“Confidential Information”). NBCU Data and all metadata therein is NBCUniversal’s Confidential Information. Confidential Information does not include information that (a) Recipient rightfully possessed without a duty of confidentiality before obtaining it from Discloser; (b) is or becomes generally available to and known by the public through no fault of Recipient; (c) Recipient received on an unrestricted basis from a source unrelated to either Party and not under a duty of confidentiality with respect to the information; or (d) Recipient developed independently.",
+        "level": 1,
+        "block_ids": [
+          "2E2A119D"
+        ],
+        "char_count": 1139,
+        "children": [],
+        "role": null,
+        "attachment_id": "07ea4b7f-c725-4c9d-bee6-bbb6d03e9b32",
+        "parent_id": null
+      },
+      {
+        "id": "09a40a08-fb01-4608-8e1d-18505d9989de",
+        "ltu_id": "ltu_09a40a08-fb01-4608-8e1d-18505d9989de",
+        "child_ids": [],
+        "title": "Obligations. Recipient shall maintain in confidence Discloser’s Confidential Information and protect that Confidential Information from any unauthorized disclosure, access, use, destruction, alteration or loss, exercising at least the same degree of care as Recipient exercises for its own confidential and proprietary information, but not less than a reasonable degree of care. Subject to Sections 3, 4 and 7 of this Exhibit 2, Recipient shall not, nor permit or assist any person to, (a) use or copy Discloser’s Confidential Information, except as permitted in the Trial or as otherwise necessary to perform or receive the Vendor IP or to otherwise perform Recipient’s obligations under the Trial; or (b) disclose Discloser’s Confidential Information to any person other than disclosures to Recipients’ then-current Affiliates and its and their authorized Personnel, legal counsel, accountants, banks and other financing sources and advisors as strictly necessary for such parties to advise or perform on behalf of Recipient or its applicable Affiliates (such persons, “Authorized Persons”). Recipient shall ensure that its Authorized Persons with access to Discloser’s Confidential Information are bound by written confidentiality obligations, or are otherwise under a duty of confidentiality, sufficient to protect Discloser’s Confidential Information in a manner that is consistent with this Exhibit.",
+        "level": 1,
+        "block_ids": [
+          "1EF271DA"
+        ],
+        "char_count": 1405,
+        "children": [],
+        "role": null,
+        "attachment_id": "07ea4b7f-c725-4c9d-bee6-bbb6d03e9b32",
+        "parent_id": null
+      },
+      {
+        "id": "2d7df4c8-f79c-45cf-88cf-54fc0c344925",
+        "ltu_id": "ltu_2d7df4c8-f79c-45cf-88cf-54fc0c344925",
+        "child_ids": [],
+        "title": "Required Disclosure. Vendor shall, to the extent not prohibited by Applicable Law, (a) notify NBCUniversal within three (3)  business days (provided that Vendor shall give such notice at least one business day prior to the applicable deadline for response) if any Applicable Law requires, or a governmental authority of competent jurisdiction requires or requests, that Vendor disclose NBCUniversal’s Confidential Information; and (b) use reasonable efforts to allow NBCUniversal an opportunity to seek injunctive relief from, or a protective order with respect to, the contemplated disclosure. If notification to NBCUniversal is prohibited by Applicable Law, or if it is not prohibited and that relief or order is not obtained, Vendor (i) may disclose only that portion of NBCUniversal’s Confidential Information that Vendor’s counsel advises is not subject to privilege and must be disclosed; and (ii) shall, at NBCUniversal’s expense, cooperate with NBCUniversal’s efforts to the extent not prohibited by Applicable Law to ensure the disclosed Confidential Information is treated in a confidential manner after disclosure.",
+        "level": 1,
+        "block_ids": [
+          "56068C6A"
+        ],
+        "char_count": 1125,
+        "children": [],
+        "role": null,
+        "attachment_id": "07ea4b7f-c725-4c9d-bee6-bbb6d03e9b32",
+        "parent_id": null
+      },
+      {
+        "id": "46fbf0bc-bb4e-4121-af5f-effb147b5c2e",
+        "ltu_id": "ltu_46fbf0bc-bb4e-4121-af5f-effb147b5c2e",
+        "child_ids": [],
+        "title": "Newsworthy Information. Notwithstanding any other provision of the Trial, any disclosure by NBCUniversal or Affiliates of Confidential Information in the ordinary course of their business of disseminating news and information is not a breach of the Trial; provided that the individuals involved in such dissemination received such Confidential Information from a source other than the Personnel of NBCUniversal (not including Vendor or its Personnel) involved in the Trial.",
+        "level": 1,
+        "block_ids": [
+          "54459EA4"
+        ],
+        "char_count": 473,
+        "children": [],
+        "role": null,
+        "attachment_id": "07ea4b7f-c725-4c9d-bee6-bbb6d03e9b32",
+        "parent_id": null
+      },
+      {
+        "id": "e46fafa2-fd4a-402f-9aba-3498c68bc90d",
+        "ltu_id": "ltu_e46fafa2-fd4a-402f-9aba-3498c68bc90d",
+        "child_ids": [],
+        "title": "Destruction/Return of Information. At Discloser’s request, or following any termination of the Trial, Recipient shall stop using Discloser’s Confidential Information, and, except as necessary to comply with Applicable Law, return to Discloser or destroy, at Discloser’s option, all of Discloser’s Confidential Information in Recipient’s or its Authorized Persons’ possession or control. Where NBCUniversal is the Discloser, such return or destruction shall be consistent with the NBCUniversal Security Standards. Notwithstanding the foregoing, NBCUniversal is not required to return or destroy Vendor’s Confidential Information backed up from a computer system in the ordinary course of NBCUniversal’s business, but that Confidential Information remains subject to all applicable obligations under the Trial.",
+        "level": 1,
+        "block_ids": [
+          "0DE3D525"
+        ],
+        "char_count": 808,
+        "children": [],
+        "role": null,
+        "attachment_id": "07ea4b7f-c725-4c9d-bee6-bbb6d03e9b32",
+        "parent_id": null
+      },
+      {
+        "id": "588a9761-ba26-4f14-a968-9e41b99d7539",
+        "ltu_id": "ltu_588a9761-ba26-4f14-a968-9e41b99d7539",
+        "child_ids": [],
+        "title": "Confidentiality Term. Recipient’s obligations under this Exhibit regarding Discloser’s Confidential Information terminate five years after the end of the Term, except that Recipient’s obligations survive (a) for backed up Confidential Information, in accordance with Section 5 of this Exhibit 2; (b) for Data, in perpetuity; and (c) for Confidential Information that is a trade secret, for as long as such Confidential Information is a trade secret under Applicable Law.",
+        "level": 1,
+        "block_ids": [
+          "78749E91"
+        ],
+        "char_count": 470,
+        "children": [],
+        "role": null,
+        "attachment_id": "07ea4b7f-c725-4c9d-bee6-bbb6d03e9b32",
+        "parent_id": null
+      },
+      {
+        "id": "dd562e64-7751-4473-be2b-d25b8c96d807",
+        "ltu_id": "ltu_dd562e64-7751-4473-be2b-d25b8c96d807",
+        "child_ids": [],
+        "title": "Exhibit 3",
+        "level": 3,
+        "block_ids": [
+          "09C38D69",
+          "2D11C6BE",
+          "53DEB9BA",
+          "228808B6",
+          "57C2F66C",
+          "2743E2D3",
+          "20DF643F",
+          "14F94AFA",
+          "27AB5421",
+          "5F93F49F",
+          "3F39272A",
+          "369267BD",
+          "5C646923",
+          "27045B34",
+          "3DFFFC9C",
+          "066FE6F5",
+          "14D4AB3D",
+          "26147067",
+          "2E632A89",
+          "62D8E5B9",
+          "16DE1354",
+          "49F84DCE",
+          "5250A70C",
+          "65A83528",
+          "4C85F186",
+          "1F014BC9",
+          "173CDB4D",
+          "1FE6AD21",
+          "7E85AE40",
+          "2476CBED",
+          "736D1817",
+          "728A5729",
+          "425F30A0",
+          "2161D44B",
+          "1EEA6B0F",
+          "54ED5361",
+          "577FC55B",
+          "690C7347",
+          "6D9FEAB2",
+          "10799A20",
+          "27015225",
+          "6DEB4D4A",
+          "7E1AF603",
+          "631AF8E3",
+          "34C1B8B2",
+          "0B7A38C5",
+          "4296B6C6",
+          "203B8C2C",
+          "08EC59B2",
+          "37D86CE3",
+          "248DF614",
+          "546DABE1",
+          "3B8368B7",
+          "45A39909",
+          "2664B528",
+          "451E758C",
+          "09990121",
+          "4F87E283",
+          "283DDF94",
+          "4BB80C30",
+          "3167D719",
+          "42D3C460",
+          "0898090E",
+          "58B73CFF",
+          "486355E2",
+          "013A656B",
+          "23E5E326",
+          "7491FD05",
+          "07B07C20",
+          "63D045B1",
+          "6F140CDB",
+          "3F490558",
+          "238D196D",
+          "0473DF6F",
+          "3C0B76C4",
+          "60527130",
+          "3A1D56F6",
+          "5289B044",
+          "26D30C75",
+          "35689CDA",
+          "485F5211",
+          "175EEFD2",
+          "4A972B3C",
+          "724587AD",
+          "0205461E",
+          "3139A454",
+          "488A9D09",
+          "77B2398A",
+          "0C6FC918",
+          "1CC264BA",
+          "362EC535",
+          "163FE701",
+          "56F31032",
+          "223BF118",
+          "4C3C8539",
+          "654078D6",
+          "4A2747C7",
+          "000BA8A6",
+          "07CC5998",
+          "1CC40E91",
+          "5AB48C40",
+          "4048E3F0",
+          "617B7C62",
+          "47B1EB26",
+          "29BAA460",
+          "68F89522",
+          "3B3C5C3A",
+          "58737579",
+          "0CDB4B93",
+          "1170C45D",
+          "15CC7BAC",
+          "06A8809D",
+          "78560966",
+          "5B1831BE",
+          "10DAE12B",
+          "7F1B20FA",
+          "2EA55F95",
+          "47880CEE",
+          "3DBB9E9F",
+          "43FD9071",
+          "649E2571",
+          "3D88AD5D",
+          "3629838B",
+          "5DB85A16",
+          "3008A664",
+          "07CB28A0",
+          "5E628D45",
+          "73D3FF59",
+          "101BE651",
+          "7B4FE7DB",
+          "6D6D556B",
+          "4F996319",
+          "00EE46AE",
+          "15B51486",
+          "5EE10AA8",
+          "7A62AEC9",
+          "36D85A78",
+          "25137467",
+          "2A1AC5CD",
+          "3A90B977",
+          "5E261B0E",
+          "5C69DB7D",
+          "443F5178",
+          "4BD734FB",
+          "323254D2",
+          "4983DCD1",
+          "41B067AA",
+          "50698B34",
+          "45161343",
+          "0EC97EB3",
+          "350754A4",
+          "3DD0A5BC",
+          "3A88ED88",
+          "40A5B1C1",
+          "509D751B",
+          "49F7EC94",
+          "5A13EB42",
+          "14D618A7",
+          "681F257D",
+          "7FCE92C8",
+          "20FF616A",
+          "09DD8528",
+          "3AFAF3F1",
+          "2162AB16",
+          "78DDB572",
+          "09D354F2",
+          "28248124",
+          "599DBE10",
+          "4A714394",
+          "361E8B12",
+          "7D26654A",
+          "79BAAAB9",
+          "3CD123EE",
+          "46F6EEBC"
+        ],
+        "char_count": 27125,
+        "children": [],
+        "role": null,
+        "attachment_id": "56e84c07-2371-49e7-99b9-c867aff18db0",
+        "parent_id": null
+      }
+    ]
+  }
+}

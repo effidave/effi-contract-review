@@ -57,10 +57,12 @@ def extract_all_comments(doc: DocumentType) -> List[Dict[str, Any]]:
     
     try:
         # Access comments through document part
+        # The correct relationship type for the main comments part ends with '/comments'
+        # We must be specific to avoid matching commentsIds, commentsExtensible, etc.
+        COMMENTS_RELTYPE = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments'
         comments_part = None
         for rel_id, rel in doc.part.rels.items():
-            reltype = rel.reltype
-            if 'comments' in reltype and 'Extended' not in reltype:
+            if rel.reltype == COMMENTS_RELTYPE:
                 comments_part = rel.target_part
                 break
         
@@ -76,7 +78,9 @@ def extract_all_comments(doc: DocumentType) -> List[Dict[str, Any]]:
                     comments_map[cid] = comment_data
         
         # Scan paragraphs to map comments to locations
-        # This populates 'paragraph_index' and 'para_id' for comments found in the body
+        # This populates 'paragraph_index' and 'doc_para_id' for comments found in the body
+        # NOTE: 'para_id' holds the comment's INTERNAL paragraph ID (for linking to commentsExtended)
+        # 'doc_para_id' holds the DOCUMENT paragraph ID (where the comment reference appears)
         # Use iter_document_paragraphs to include SDT-wrapped paragraphs
         for i, p in enumerate(iter_document_paragraphs(doc)):
             p_element = p._element
@@ -86,10 +90,11 @@ def extract_all_comments(doc: DocumentType) -> List[Dict[str, Any]]:
                 cid = ref.get(qn('w:id'))
                 if cid in comments_map:
                     comments_map[cid]['paragraph_index'] = i
-                    # Also capture the paragraph's native para_id for clause matching
-                    para_id = p_element.get(qn('w14:paraId'))
-                    if para_id:
-                        comments_map[cid]['para_id'] = para_id
+                    # Capture the document paragraph's native para_id for clause matching
+                    # Store in 'doc_para_id' to avoid overwriting the comment's internal para_id
+                    doc_para_id = p_element.get(qn('w14:paraId'))
+                    if doc_para_id:
+                        comments_map[cid]['doc_para_id'] = doc_para_id
         
         # Also scan table cells for comment references
         # This captures comments in tables that iter_document_paragraphs misses
@@ -101,9 +106,10 @@ def extract_all_comments(doc: DocumentType) -> List[Dict[str, Any]]:
                     for ref in refs:
                         cid = ref.get(qn('w:id'))
                         if cid in comments_map:
-                            para_id = p_element.get(qn('w14:paraId'))
-                            if para_id:
-                                comments_map[cid]['para_id'] = para_id
+                            # Store document paragraph ID in doc_para_id (not para_id)
+                            doc_para_id = p_element.get(qn('w14:paraId'))
+                            if doc_para_id:
+                                comments_map[cid]['doc_para_id'] = doc_para_id
                     
         comments = list(comments_map.values())
         
@@ -186,7 +192,8 @@ def extract_comment_data(comment_element, index: int) -> Optional[Dict[str, Any]
         return {
             'id': f'comment_{index + 1}',
             'comment_id': comment_id,
-            'para_id': para_id,
+            'para_id': para_id,  # Internal paragraph ID (for linking to commentsExtended)
+            'doc_para_id': None,  # Document paragraph ID (where comment reference appears) - filled later
             'author': author,
             'initials': initials,
             'date': date,

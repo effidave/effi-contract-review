@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "doc_id": "123e4567-e89b-12d3-a456-426614174000",
+  "doc_format": "docx",
+  "source_filename": "Didimo_Trial Agreement v1.5 - HJ1 (OCR - Orig).docx",
+  "char_count": 44963,
+  "block_count": 237,
+  "section_count": 37,
+  "ltu_count": 237,
+  "max_section_depth": 2,
+  "has_tag_ranges": true,
+  "schema_version": "1.0.0",
+  "filemap": {
+    "blocks": "blocks.jsonl",
+    "sections": "sections.json",
+    "styles": "styles.json",
+    "tag_ranges": "tag_ranges.jsonl"
+  }
+}

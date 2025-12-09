@@ -1,0 +1,36 @@
+{
+  "styles": [
+    {
+      "name": "Body Text",
+      "type": "paragraph",
+      "count": 1,
+      "semantic_hint": null,
+      "hint_scores": null
+    },
+    {
+      "name": "Heading 1",
+      "type": "heading",
+      "count": 12,
+      "semantic_hint": "clause_heading",
+      "hint_scores": {
+        "clause_heading": 1.75
+      }
+    },
+    {
+      "name": "Heading 2",
+      "type": "heading",
+      "count": 21,
+      "semantic_hint": "clause_heading",
+      "hint_scores": {
+        "clause_heading": 1.75
+      }
+    },
+    {
+      "name": "Normal",
+      "type": "paragraph",
+      "count": 203,
+      "semantic_hint": null,
+      "hint_scores": null
+    }
+  ]
+}

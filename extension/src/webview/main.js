@@ -77,6 +77,7 @@ window.addEventListener('message', event => {
             break;
         case 'updateComments':
             // Handle comments data from extension
+            console.log('DEBUG: Received updateComments with', message.comments?.length || 0, 'comments');
             commentsData = message.comments || [];
             
             // Build set of para_ids that have comments
@@ -89,7 +90,10 @@ window.addEventListener('message', event => {
             
             // Update comment panel
             if (commentPanel) {
+                console.log('DEBUG: Setting comments on panel');
                 commentPanel.setComments(commentsData);
+            } else {
+                console.log('DEBUG: commentPanel is null, cannot set comments');
             }
             
             // Update inline comment indicators in editor
@@ -829,24 +833,35 @@ function sendToChat() {
         return;
     }
 
-    // Map selected block IDs to para_ids
-    const selectedParaIds = [];
+    console.log('DEBUG sendToChat: selectedClauses', Array.from(selectedClauses));
+    console.log('DEBUG sendToChat: allBlocks count', allBlocks.length);
+
+    // Map selected block IDs to para_ids and include text for context
+    const selectedClausesData = [];
     selectedClauses.forEach(blockId => {
         const block = allBlocks.find(b => b.id === blockId);
-        if (block && block.para_id) {
-            selectedParaIds.push(block.para_id);
+        console.log('DEBUG sendToChat: looking for block', blockId, 'found:', block ? 'yes' : 'no');
+        if (block) {
+            selectedClausesData.push({
+                para_id: block.para_id || blockId,
+                text: block.text || '',
+                ordinal: block.list?.ordinal || ''
+            });
         }
     });
 
-    if (selectedParaIds.length === 0) {
-        alert('Selected clauses do not have paragraph IDs (para_id).');
+    console.log('DEBUG sendToChat: selectedClausesData', selectedClausesData);
+
+    if (selectedClausesData.length === 0) {
+        alert('No clauses found for the selected IDs.');
         return;
     }
 
-    // Send message to extension with para IDs
+    // Send message to extension with clause data
     vscode.postMessage({
         command: 'sendToChat',
-        clauseIds: selectedParaIds,
+        clauseIds: selectedClausesData.map(c => c.para_id),
+        clauseTexts: selectedClausesData,
         query: query
     });
 }
@@ -916,6 +931,7 @@ function escapeHtml(text) {
  */
 function initializeCommentPanel() {
     const container = document.getElementById('comment-panel-container');
+    console.log('DEBUG initializeCommentPanel: container=', container, 'CommentPanel=', !!window.CommentPanel);
     if (!container || !window.CommentPanel) {
         console.log('CommentPanel not available or container not found');
         return;
@@ -1031,9 +1047,11 @@ function unresolveComment(paraId) {
  * Request comments from extension
  */
 function requestComments() {
+    const docPath = currentData?.documentPath || '';
+    console.log('DEBUG requestComments: documentPath=', docPath);
     vscode.postMessage({
         command: 'getComments',
-        documentPath: currentData?.documentPath || ''
+        documentPath: docPath
     });
 }
 

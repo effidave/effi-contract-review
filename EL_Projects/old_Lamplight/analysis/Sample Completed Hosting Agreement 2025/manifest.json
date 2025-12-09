@@ -1,0 +1,61 @@
+{
+  "doc_id": "123e4567-e89b-12d3-a456-426614174000",
+  "v": 1,
+  "created_at": "2025-12-04T22:46:58+00:00",
+  "tool_version": "sprint2-dev",
+  "doc_format": "docx",
+  "sdt_carrier": "content-controls",
+  "range_marker_carrier": "content-controls",
+  "range_marker_tag_prefix": "marker:",
+  "fallback_heading_label": "Body (no heading)",
+  "checksums": {
+    "blocks.jsonl": "sha256:744dede70f62c457c1ca4432d5d92f04032064468a83d89b9e34283cfba5a384",
+    "sections.json": "sha256:cba97698552d8a42f36ba4095f01c532749399c6dd42ef6a72a7c4bf1d66644f",
+    "styles.json": "sha256:a88fd1824589dff35fd5acb9adc370ec68808e4a0029871b87f9efa50c063caa",
+    "relationships.json": "sha256:59b8df6742e16281eb09405348a7f73a87768450b763b48d6392542d3212fbd3",
+    "tag_ranges.jsonl": "sha256:cffd1d0505a6f4592c45c8729d111d78b422d848875034ed87fc268427b5ccb8",
+    "index.json": "sha256:a5ccd24cfb67f6c723baf7daaa4076431ac3a88d9cb6417833dffb208b9df37f"
+  },
+  "schema_checksums": {
+    "block.schema.json": "sha256:a79c29ccec8330bef4e2ed057adee57e544a0749ee71c8aac86b8f8e13d1550e",
+    "edit_plan.schema.json": "sha256:4d9432a9d9b1b61675f527817c7dfdd608ffa20a63f2c1f50d9f0cba9ac367b1",
+    "index.schema.json": "sha256:f305e73bdd196f01be5aba55a1bfe71dc0756218dbafc234fbd9e269c7f84557",
+    "labels.schema.json": "sha256:44e45c3f69aa8c9728872198061b34cbc23aa83a232a93debb3bce13f42e1052",
+    "manifest.schema.json": "sha256:cbab4e0766ffb0d8b0fb12cc0a6b7d75f39bdacc70fed82baaae6de0f102829d",
+    "relationships.schema.json": "sha256:0a6b82f199e7e009eb01866b591d10d35578bb937e794216a56a29c3f922246e",
+    "report.schema.json": "sha256:cc9454c8a3713921e540d0e7e1ce3fca7c8569e9704475ec39eae016541bf3be",
+    "sections.schema.json": "sha256:64d13ab3f694c5e4bcce3072c1d2823c614b2718aa50ba4850aea65c3b9fcdcc",
+    "styles.schema.json": "sha256:69bb206dd584e1ce1e19e6f752f510633761625ed9ba8905fa78c2bfdf731549",
+    "tag_range.schema.json": "sha256:38ae87688b3e7f53b0d7466d5699e6e741330b2da45ea6f784ae6da8bf002c3f"
+  },
+  "attachments": [
+    {
+      "attachment_id": "0ffa3b7d-af0f-412f-9807-e602819babbf",
+      "type": "appendix",
+      "ordinal": "1",
+      "title": "GENERAL TERMS",
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "c930fdb9-a0d7-445b-808f-64a58fdf7c0c",
+      "type": "appendix",
+      "ordinal": "2",
+      "title": null,
+      "parent_attachment_id": "0ffa3b7d-af0f-412f-9807-e602819babbf"
+    },
+    {
+      "attachment_id": "e283c380-0f8f-49e8-a034-e2e0f0c4f6da",
+      "type": "appendix",
+      "ordinal": "3",
+      "title": null,
+      "parent_attachment_id": "c930fdb9-a0d7-445b-808f-64a58fdf7c0c"
+    },
+    {
+      "attachment_id": "625f7b15-3c12-4d99-b1cd-444be2ea2c3f",
+      "type": "appendix",
+      "ordinal": "4",
+      "title": "DATA PROTOCOL",
+      "parent_attachment_id": "e283c380-0f8f-49e8-a034-e2e0f0c4f6da"
+    }
+  ]
+}

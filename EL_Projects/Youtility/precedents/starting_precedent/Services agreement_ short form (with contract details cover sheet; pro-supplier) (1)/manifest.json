@@ -1,0 +1,61 @@
+{
+  "doc_id": "Services-agreement_-short-form-(with-contract-deta",
+  "v": 1,
+  "created_at": "2025-12-08T17:21:13+00:00",
+  "tool_version": "sprint2-dev",
+  "doc_format": "docx",
+  "sdt_carrier": "content-controls",
+  "range_marker_carrier": "content-controls",
+  "range_marker_tag_prefix": "marker:",
+  "fallback_heading_label": "Body (no heading)",
+  "checksums": {
+    "blocks.jsonl": "sha256:d540098cde55c9748c0abd6e60784efa9a67449a31ddd5806d0ceff5784169f1",
+    "sections.json": "sha256:729598e128a54f82a252c2038b9c27d1cfd8cf2beba15d50c64bf119f2e58ebf",
+    "styles.json": "sha256:1a5978725bbe5ec5a1d32835e378092f0010a3e2387040cf84de82e128a1e8eb",
+    "relationships.json": "sha256:33be7d3e00d7239f48c37a24ca58df2396696cf0afeed43fe88d103a0ea82dbe",
+    "tag_ranges.jsonl": "sha256:99ade62cbc284f293e475b36f5f83151032ce449ae9858503c15e74f9c4db6ea",
+    "index.json": "sha256:b9fac9c8c5596114aef75ec105b91814c3b50052655fbd7e5428a6c28f266640"
+  },
+  "schema_checksums": {
+    "block.schema.json": "sha256:a79c29ccec8330bef4e2ed057adee57e544a0749ee71c8aac86b8f8e13d1550e",
+    "edit_plan.schema.json": "sha256:4d9432a9d9b1b61675f527817c7dfdd608ffa20a63f2c1f50d9f0cba9ac367b1",
+    "index.schema.json": "sha256:f305e73bdd196f01be5aba55a1bfe71dc0756218dbafc234fbd9e269c7f84557",
+    "labels.schema.json": "sha256:44e45c3f69aa8c9728872198061b34cbc23aa83a232a93debb3bce13f42e1052",
+    "manifest.schema.json": "sha256:cbab4e0766ffb0d8b0fb12cc0a6b7d75f39bdacc70fed82baaae6de0f102829d",
+    "relationships.schema.json": "sha256:0a6b82f199e7e009eb01866b591d10d35578bb937e794216a56a29c3f922246e",
+    "report.schema.json": "sha256:cc9454c8a3713921e540d0e7e1ce3fca7c8569e9704475ec39eae016541bf3be",
+    "sections.schema.json": "sha256:64d13ab3f694c5e4bcce3072c1d2823c614b2718aa50ba4850aea65c3b9fcdcc",
+    "styles.schema.json": "sha256:69bb206dd584e1ce1e19e6f752f510633761625ed9ba8905fa78c2bfdf731549",
+    "tag_range.schema.json": "sha256:38ae87688b3e7f53b0d7466d5699e6e741330b2da45ea6f784ae6da8bf002c3f"
+  },
+  "attachments": [
+    {
+      "attachment_id": "43983b66-2946-4d9d-83a0-415b0bf80972",
+      "type": "schedule",
+      "ordinal": "1",
+      "title": null,
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "49c4a03c-4f8d-4e77-878c-603e1b58e7ae",
+      "type": "schedule",
+      "ordinal": "2",
+      "title": null,
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "9a0686e5-d599-4cff-b5f4-01bb28fa74ff",
+      "type": "schedule",
+      "ordinal": "3",
+      "title": null,
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "abbe9f91-19a7-4224-9498-13217ca8d6d0",
+      "type": "schedule",
+      "ordinal": "4",
+      "title": null,
+      "parent_attachment_id": null
+    }
+  ]
+}
