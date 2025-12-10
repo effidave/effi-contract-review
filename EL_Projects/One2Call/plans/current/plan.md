@@ -1,6 +1,6 @@
 ---
 tasks:
-- id: 2540deb3
+- id: wt2540deb3
   title: 0.0 PROJECT CONTEXT (Read First)
   description: '**PROJECT CONTEXT — READ FIRST**
 
@@ -142,7 +142,7 @@ tasks:
   creationDate: '2025-12-09T22:12:13.037368Z'
   completionDate: null
   editIds: []
-- id: 6be41a3d
+- id: wt6be41a3d
   title: 0.1 Record all Decisions for Client Info
   description: '**DECISIONS LOG — For Client Advice Note**
 
@@ -562,70 +562,34 @@ tasks:
     ---
 
 
-    **DECISION B2: Number Ownership**
+    **DECISION B2-B6: Telephone Numbers & Services (Entire Clause 4)**
 
 
-    **Gap:** Business Comms cl 4.5 states numbers are licensed, not owned by Customer.
+    **Gap:** Business Comms cl 4 covers all telephone number and service provisions:
 
-    **Decision:** Add to each relevant Annex separately (3D, 3E).
+    - Cl 4.1-4.4: Telephone number allocation and management
 
-    **Rationale:** Different services have different numbering considerations (DDIs
-    for VoIP, geographic numbers for connectivity). Each Annex should address its
-    own context.
+    - Cl 4.5: Number ownership (numbers are licensed, not owned)
 
+    - Cl 4.6: Number reallocation on reasonable notice
 
-    ---
+    - Cl 4.7: Number porting obligations and charges
 
+    - Cl 4.8-4.9: Call routing changes and CLI disclosure
 
-    **DECISION B3: Number Reallocation**
-
-
-    **Gap:** Business Comms cl 4.6 allows Supplier to reallocate numbers on reasonable
-    notice.
-
-    **Decision:** Add to each relevant Annex separately.
-
-    **Rationale:** Same reasoning as B2 — service-specific context.
+    - Cl 4.10-4.12: Inbound number provisions
 
 
-    ---
+    **Decision:** Keep ALL of Business Comms cl 4 in Annex 3E (Telecoms).
+
+    **Rationale:** These are telecoms-specific provisions that should remain together
+    in the telecoms annex. Keeping cl 4 intact maintains coherence and avoids fragmentation
+    across multiple documents.
 
 
-    **DECISION B4: Number Porting**
-
-
-    **Gap:** Business Comms cl 4.7 addresses number porting obligations and charges.
-
-    **Decision:** Add to each relevant Annex separately.
-
-    **Rationale:** Porting procedures differ by service type (mobile vs fixed vs VoIP).
-
-
-    ---
-
-
-    **DECISION B5: Call Routing**
-
-
-    **Gap:** Business Comms cl 4.8-4.9 addresses routing changes and CLI disclosure.
-
-    **Decision:** Add to each relevant Annex separately.
-
-    **Rationale:** Routing and CLI requirements are service-specific.
-
-
-    ---
-
-
-    **DECISION B6: Inbound Services**
-
-
-    **Gap:** Business Comms cl 4.10-4.12 covers inbound number provisions.
-
-    **Decision:** Expand Annex 3E to cover Inbound services.
-
-    **Rationale:** Inbound numbers are primarily a telecoms service; fits naturally
-    in Annex 3E rather than creating new Annex.
+    **Note:** Annex 3D (Connectivity) may need a cross-reference to Annex 3E for any
+    geographic numbers associated with connectivity services, but the substantive
+    provisions remain in 3E.
 
 
     ---
@@ -680,7 +644,7 @@ tasks:
     **Gap:** Business Comms cl 11.2 contains specific early termination payment formula
     (remaining contract value × discount percentage).
 
-    **Decision:** Add to each relevant Annex separately.
+    **Decision:** Add to each relevant Annex separately (3D, 3E).
 
     **Rationale:** Different services have different contract periods and commercial
     structures. Formula may vary by Annex.
@@ -695,7 +659,7 @@ tasks:
     **Gap:** Business Comms cl 11.4 requires clawback of subsidies on equipment if
     Customer terminates early.
 
-    **Decision:** Add to each relevant Annex separately.
+    **Decision:** Add to each relevant Annex separately (3D, 3E).
 
     **Rationale:** Subsidy arrangements are service-specific (e.g., handset subsidies
     for mobile, router subsidies for connectivity).
@@ -725,7 +689,7 @@ tasks:
   creationDate: '2025-12-09T23:18:31.326988Z'
   completionDate: null
   editIds: []
-- id: 905bd222
+- id: wt905bd222
   title: 1.1 Fix critical drafting issues
   description: '(a) Correct Schedule numbering — The Terms and Conditions are headed
     "Schedule 2" but should be "Schedule 1" per the cover document structure. Correct
@@ -742,7 +706,7 @@ tasks:
   creationDate: '2025-12-09T19:51:13.454897Z'
   completionDate: null
   editIds: []
-- id: 09b4f841
+- id: wt09b4f841
   title: 1.2 Expand clause 21 (exit/transition)
   description: 'Add exit/transition provisions covering:
 
@@ -770,7 +734,7 @@ tasks:
   creationDate: '2025-12-09T19:51:19.582753Z'
   completionDate: null
   editIds: []
-- id: 90c3d4e3
+- id: wt90c3d4e3
   title: 1.3 Clarify indemnity cap
   description: 'Add to clause 19.4: ''The liability of either party under clause 17
     (Indemnities) shall be subject to the cap set out in this clause 19.4.''
@@ -782,7 +746,7 @@ tasks:
   creationDate: '2025-12-09T19:51:25.068098Z'
   completionDate: null
   editIds: []
-- id: 1370e522
+- id: wt1370e522
   title: 1.4 Draft Security Schedule (Schedule 4)
   description: 'Create optional Security Schedule (Schedule 4) to be incorporated
     by reference in Orders that include cyber security services. Key areas:
@@ -817,7 +781,7 @@ tasks:
   creationDate: '2025-12-09T19:51:31.593909Z'
   completionDate: null
   editIds: []
-- id: 98ff7a67
+- id: wt98ff7a67
   title: 1.8 Enhance MSA core with general provisions
   description: "Add the following general provisions to the MSA core (Schedule 1 Terms\
     \ and Conditions) that will apply to all services.\n\n**TARGET DOCUMENT:** MSA\
@@ -878,7 +842,7 @@ tasks:
   creationDate: '2025-12-09T22:04:57.278344Z'
   completionDate: null
   editIds: []
-- id: 0f0350e3
+- id: wt0f0350e3
   title: 1.10 Review Fair Use & Legislation Compliance gaps
   description: "Review Business Communications fair use policies and legislation compliance\
     \ provisions to identify any gaps not already covered by the MSA.\n\n**SOURCE:**\
@@ -907,7 +871,7 @@ tasks:
   creationDate: '2025-12-10T00:51:45.164110Z'
   completionDate: null
   editIds: []
-- id: a2457b5d
+- id: wta2457b5d
   title: 1.9 Complete gap analysis for remaining old terms
   description: "Complete gap analysis for remaining old terms documents against MSA\
     \ and proposed Schedule 3/Annexes structure.\n\n**COMPLETED ANALYSES:**\n✅ Ethernet\
@@ -937,7 +901,7 @@ tasks:
   creationDate: '2025-12-09T22:05:15.837650Z'
   completionDate: null
   editIds: []
-- id: 9e3278d7
+- id: wt9e3278d7
   title: 1.5 Create Schedule 3 (Installation & Provisioning) with Annexes
   description: 'Create Schedule 3: Installation & Provisioning Services as a common
     framework with detachable service-specific Annexes.
@@ -1072,7 +1036,7 @@ tasks:
   creationDate: '2025-12-09T19:51:38.394289Z'
   completionDate: null
   editIds: []
-- id: c5de8ee8
+- id: wtc5de8ee8
   title: 1.6 Incorporate Maintenance Schedule (HJ1) as Schedule 5 with enhancements
   description: "Incorporate the existing Maintenance Schedule (HJ1) as Schedule 5:\
     \ Maintenance Schedule, with the following enhancements based on gap analysis\
@@ -1127,7 +1091,7 @@ tasks:
   creationDate: '2025-12-09T19:51:44.543695Z'
   completionDate: null
   editIds: []
-- id: 74ad3e5e
+- id: wt74ad3e5e
   title: 1.7 Add regulatory compliance clauses
   description: 'Add to clause 24 (General) with explanatory drafting notes:
 
@@ -1156,7 +1120,7 @@ tasks:
   creationDate: '2025-12-09T19:51:51.851235Z'
   completionDate: null
   editIds: []
-- id: 575ad48e
+- id: wt575ad48e
   title: 2.1 Create Systems Integration SOW template
   description: 'Create SOW template for project-based work (migrations, infrastructure
     deployments, consultancy) based on Systems Integration Agreement precedent. Key
@@ -1187,7 +1151,7 @@ tasks:
   creationDate: '2025-12-09T19:51:58.298663Z'
   completionDate: null
   editIds: []
-- id: 6ad41cae
+- id: wt6ad41cae
   title: 2.2 Complete Service Schedule detail
   description: 'Populate full detail for each Schedule 3 sub-schedule (3A-3F) including:
 
@@ -1214,7 +1178,7 @@ tasks:
   creationDate: '2025-12-09T19:52:05.354434Z'
   completionDate: null
   editIds: []
-- id: 4ec1b7e1
+- id: wt4ec1b7e1
   title: 2.3 Create Order Form template with service level options
   description: "Design Order Form template that serves as the \"front page\" of each\
     \ service engagement.\n\n**TARGET:** Create new Order Form template document\n\
@@ -1260,7 +1224,7 @@ tasks:
   creationDate: '2025-12-09T19:52:11.332451Z'
   completionDate: null
   editIds: []
-- id: c750b02c
+- id: wtc750b02c
   title: '3.1 Draft Annex 3E: Telecoms (Horizon/VoIP)'
   description: "Draft Annex 3E for Horizon/VoIP services. Mobile services to be assessed\
     \ separately (see Task 1.9 — Mobile has different structure).\n\n**TARGET DOCUMENT:**\
@@ -1380,7 +1344,7 @@ tasks:
   creationDate: '2025-12-09T22:09:36.695809Z'
   completionDate: null
   editIds: []
-- id: 0f5e68b4
+- id: wt0f5e68b4
   title: '3.2 Draft Annex 3D: Connectivity (Ethernet/Leased Lines)'
   description: "Draft Annex 3D for Connectivity services (Ethernet, Fibre, EFM, FTTC,\
     \ Leased Lines).\n\n**TARGET DOCUMENT:** Create new Annex 3D within Schedule 3\
@@ -1456,12 +1420,12 @@ tasks:
   completionDate: null
   editIds: []
 documents:
-- id: b34623a3
+- id: wtb34623a3
   filename: C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\drafts\current_drafts\One2call  -
     2025 Templates  - MSA Defined Services - HJ7.docx
   displayName: One2Call MSA (HJ7)
   addedDate: '2025-12-09T19:51:03.354901Z'
-- id: febbdea1
+- id: wtfebbdea1
   filename: C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\drafts\current_drafts\One2call  -
     2025 Templates  - Maintenance Schedule - HJ1.docx
   displayName: Maintenance Schedule (HJ1)
@@ -1775,43 +1739,20 @@ The following gaps were identified by comparing the Business Communications Gene
 
 ---
 
-**DECISION B2: Number Ownership**
+**DECISION B2-B6: Telephone Numbers & Services (Entire Clause 4)**
 
-**Gap:** Business Comms cl 4.5 states numbers are licensed, not owned by Customer.
-**Decision:** Add to each relevant Annex separately (3D, 3E).
-**Rationale:** Different services have different numbering considerations (DDIs for VoIP, geographic numbers for connectivity). Each Annex should address its own context.
+**Gap:** Business Comms cl 4 covers all telephone number and service provisions:
+- Cl 4.1-4.4: Telephone number allocation and management
+- Cl 4.5: Number ownership (numbers are licensed, not owned)
+- Cl 4.6: Number reallocation on reasonable notice
+- Cl 4.7: Number porting obligations and charges
+- Cl 4.8-4.9: Call routing changes and CLI disclosure
+- Cl 4.10-4.12: Inbound number provisions
 
----
+**Decision:** Keep ALL of Business Comms cl 4 in Annex 3E (Telecoms).
+**Rationale:** These are telecoms-specific provisions that should remain together in the telecoms annex. Keeping cl 4 intact maintains coherence and avoids fragmentation across multiple documents.
 
-**DECISION B3: Number Reallocation**
-
-**Gap:** Business Comms cl 4.6 allows Supplier to reallocate numbers on reasonable notice.
-**Decision:** Add to each relevant Annex separately.
-**Rationale:** Same reasoning as B2 — service-specific context.
-
----
-
-**DECISION B4: Number Porting**
-
-**Gap:** Business Comms cl 4.7 addresses number porting obligations and charges.
-**Decision:** Add to each relevant Annex separately.
-**Rationale:** Porting procedures differ by service type (mobile vs fixed vs VoIP).
-
----
-
-**DECISION B5: Call Routing**
-
-**Gap:** Business Comms cl 4.8-4.9 addresses routing changes and CLI disclosure.
-**Decision:** Add to each relevant Annex separately.
-**Rationale:** Routing and CLI requirements are service-specific.
-
----
-
-**DECISION B6: Inbound Services**
-
-**Gap:** Business Comms cl 4.10-4.12 covers inbound number provisions.
-**Decision:** Expand Annex 3E to cover Inbound services.
-**Rationale:** Inbound numbers are primarily a telecoms service; fits naturally in Annex 3E rather than creating new Annex.
+**Note:** Annex 3D (Connectivity) may need a cross-reference to Annex 3E for any geographic numbers associated with connectivity services, but the substantive provisions remain in 3E.
 
 ---
 
@@ -1842,7 +1783,7 @@ The following gaps were identified by comparing the Business Communications Gene
 **DECISION B10: Early Termination Formula**
 
 **Gap:** Business Comms cl 11.2 contains specific early termination payment formula (remaining contract value × discount percentage).
-**Decision:** Add to each relevant Annex separately.
+**Decision:** Add to each relevant Annex separately (3D, 3E).
 **Rationale:** Different services have different contract periods and commercial structures. Formula may vary by Annex.
 
 ---
@@ -1850,7 +1791,7 @@ The following gaps were identified by comparing the Business Communications Gene
 **DECISION B11: Subsidy/Equipment Clawback**
 
 **Gap:** Business Comms cl 11.4 requires clawback of subsidies on equipment if Customer terminates early.
-**Decision:** Add to each relevant Annex separately.
+**Decision:** Add to each relevant Annex separately (3D, 3E).
 **Rationale:** Subsidy arrangements are service-specific (e.g., handset subsidies for mobile, router subsidies for connectivity).
 
 ---
