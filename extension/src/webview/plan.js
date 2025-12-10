@@ -292,6 +292,7 @@ class PlanPanel {
         this.selectedTaskId = null;
         this.expandedTaskIds = new Set();
         this.expandedEditIds = new Set();
+        this.expandedDescriptions = new Set(); // Track which task descriptions are expanded
         
         // DOM elements
         this.panelElement = null;
@@ -753,6 +754,26 @@ class PlanPanel {
     }
     
     /**
+     * Toggle task description expansion (collapsed/expanded view)
+     * @param {string} taskId - The task ID
+     */
+    toggleDescriptionExpansion(taskId) {
+        const taskEl = this.listElement.querySelector(`[data-task-id="${taskId}"]`);
+        if (!taskEl) return;
+        
+        const descEl = taskEl.querySelector('.task-description');
+        if (!descEl) return;
+        
+        if (this.expandedDescriptions.has(taskId)) {
+            this.expandedDescriptions.delete(taskId);
+            descEl.classList.remove('expanded');
+        } else {
+            this.expandedDescriptions.add(taskId);
+            descEl.classList.add('expanded');
+        }
+    }
+    
+    /**
      * Expand an edit to show details
      * @param {string} editId - The edit ID
      */
@@ -1057,17 +1078,27 @@ class PlanPanel {
             taskEl.classList.add('task-completed');
         }
         
-        // Click handler for selection
+        // Track expanded state for this task's description
+        const isExpanded = this.expandedDescriptions && this.expandedDescriptions.has(task.id);
+        
+        // Click handler for toggling description expansion
         taskEl.addEventListener('click', (e) => {
-            if (!e.target.classList.contains('task-delete-btn') &&
-                !e.target.classList.contains('task-complete-btn') &&
-                !e.target.classList.contains('task-move-up') &&
-                !e.target.classList.contains('task-move-down') &&
-                !e.target.classList.contains('task-expand-btn')) {
-                this.selectTask(task.id);
-                if (this.options.onTaskSelect) {
-                    this.options.onTaskSelect(task.id);
-                }
+            // Ignore clicks on buttons
+            if (e.target.classList.contains('task-delete-btn') ||
+                e.target.classList.contains('task-complete-btn') ||
+                e.target.classList.contains('task-move-up') ||
+                e.target.classList.contains('task-move-down') ||
+                e.target.classList.contains('task-expand-btn')) {
+                return;
+            }
+            
+            // Toggle description expansion
+            this.toggleDescriptionExpansion(task.id);
+            
+            // Also select the task
+            this.selectTask(task.id);
+            if (this.options.onTaskSelect) {
+                this.options.onTaskSelect(task.id);
             }
         });
         
@@ -1089,6 +1120,9 @@ class PlanPanel {
         
         // Description
         const descEl = this._createElement('p', 'task-description');
+        if (isExpanded) {
+            descEl.classList.add('expanded');
+        }
         if (task.description) {
             // Render markdown to sanitized HTML
             descEl.innerHTML = renderMarkdown(task.description);

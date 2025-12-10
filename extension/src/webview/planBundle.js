@@ -18,7 +18,7 @@ marked.setOptions({
     // Disable HTML passthrough to reduce XSS surface
     // Our sanitizer will still clean the output, but this adds defense in depth
     gfm: true,        // GitHub Flavored Markdown
-    breaks: false,    // Don't convert \n to <br>
+    breaks: true,     // Convert \n to <br> for better line break handling
 });
 
 // Expose marked globally for plan.js to use
