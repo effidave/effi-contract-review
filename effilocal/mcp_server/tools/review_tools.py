@@ -20,12 +20,13 @@ from docx.parts.comments import CommentsPart
 
 from word_document_server.utils.file_utils import ensure_docx_extension, check_file_writeable
 
-
-# Default metadata to keep internal/external comments distinguishable
-DEFAULT_INTERNAL_AUTHOR = "Internal Counsel"
-DEFAULT_INTERNAL_INITIALS = "IC"
-DEFAULT_EXTERNAL_AUTHOR = "Counterparty Comment"
-DEFAULT_EXTERNAL_INITIALS = "EC"
+# Import centralized defaults for author names
+from effilocal.config.defaults import (
+    DEFAULT_INTERNAL_AUTHOR,
+    DEFAULT_INTERNAL_INITIALS,
+    DEFAULT_EXTERNAL_AUTHOR,
+    DEFAULT_EXTERNAL_INITIALS,
+)
 
 EFFI_CODE_PREFIX = "EFFI-C-"
 EFFI_CODE_PATTERN = re.compile(rf"{EFFI_CODE_PREFIX}[A-Za-z0-9\-]+")

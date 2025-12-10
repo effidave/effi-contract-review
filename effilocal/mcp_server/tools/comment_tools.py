@@ -23,6 +23,7 @@ from docx.parts.comments import CommentsPart
 
 from word_document_server.utils.file_utils import ensure_docx_extension
 from effilocal.mcp_server.utils.document_utils import iter_document_paragraphs
+from effilocal.config.defaults import DEFAULT_AUTHOR, DEFAULT_INITIALS
 
 # Import from effilocal core.comments (which has status support)
 from effilocal.mcp_server.core.comments import (
@@ -199,8 +200,8 @@ async def add_comment_after_text(
         comments_part = _get_or_add_comments_part(doc.part)
         comment = comments_part.comments.add_comment(
             text=comment_text or "",
-            author=author or "",
-            initials=initials if initials is not None else "",
+            author=author or DEFAULT_AUTHOR,
+            initials=initials if initials is not None else DEFAULT_INITIALS,
         )
         cid = comment.comment_id
         _wrap_run_with_comment(target_run, cid)
@@ -270,8 +271,8 @@ async def add_comment_for_paragraph(
         comments_part = _get_or_add_comments_part(doc.part)
         comment = comments_part.comments.add_comment(
             text=comment_text or "",
-            author=author or "",
-            initials=initials if initials is not None else "",
+            author=author or DEFAULT_AUTHOR,
+            initials=initials if initials is not None else DEFAULT_INITIALS,
         )
         cid = comment.comment_id
         _wrap_run_with_comment(r, cid)
