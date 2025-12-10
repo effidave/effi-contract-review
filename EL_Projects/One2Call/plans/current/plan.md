@@ -185,7 +185,7 @@ tasks:
 
     │   ├── Annex 3D: Connectivity (Ethernet — 36m/60d defaults)
 
-    │   ├── Annex 3E: Telecoms (Horizon/VoIP — 24m/60d defaults)
+    │   ├── Annex 3E: Telecoms (Business Comms adapted — 24m/60d defaults)
 
     │   └── Annex 3F: Hardware Provision & Maintenance
 
@@ -261,6 +261,70 @@ tasks:
 
 
     **Rationale:** Avoids repetition; ensures consistency across installed services.
+
+
+    ---
+
+
+    **DECISION S4: Business Communications → Annex 3E (Keep Almost All)**
+
+
+    **Decision:** Adapt Business Communications General Terms as the basis for Annex
+    3E (Telecoms), keeping almost all provisions intact.
+
+
+    **CLAUSES TO KEEP:**
+
+    - Cl 1: Definitions
+
+    - Cl 2: Service provisions / No-resale
+
+    - Cl 3: Fair use policies
+
+    - Cl 4: Telephone numbers & services (entire clause)
+
+    - Cl 5: Charges provisions
+
+    - Cl 6: Call monitoring
+
+    - Cl 7: Rental Equipment (7.1-7.9)
+
+    - Cl 8: Compliance with legislation
+
+    - Cl 10: Paying charges
+
+    - Cl 11: Term and termination (early termination formula, subsidy clawback)
+
+    - Cl 12: Suspension
+
+    - Cl 15: Termination consequences
+
+    - Cl 16: Warranties
+
+    - Cl 17: Network/Service changes
+
+    - Cl 18: Minimum term/spend
+
+    - Cl 19: Changes to agreement
+
+    - Cl 20: General provisions (as applicable)
+
+
+    **CLAUSES TO REMOVE (MSA covers):**
+
+    - Cl 9: Data Protection → replace with reference to MSA Schedule 2
+
+    - Cl 13: Limitation of Liability → MSA cl 19 covers
+
+    - Cl 14: Force Majeure → MSA covers
+
+    - Cls 21-27: General/Boilerplate (Notices, Entire Agreement, Waiver, Severability,
+    Third Party Rights, Assignment, Governing Law) → MSA covers
+
+
+    **Rationale:** Business Communications is comprehensive and telecoms-specific.
+    Rather than extracting individual provisions, keep it substantially intact as
+    Annex 3E. Only remove clauses that would duplicate MSA core terms.
 
 
     ---
@@ -451,7 +515,7 @@ tasks:
     ---
 
 
-    ## ANNEX 3E (HORIZON/VoIP) DECISIONS
+    ## ANNEX 3E (TELECOMS) DECISIONS
 
 
     **DECISION V1: Emergency Services Warning Placement**
@@ -523,15 +587,17 @@ tasks:
     ---
 
 
-    **DECISION R2: Retire Business Communications General Terms**
+    **DECISION R2: Business Communications → Annex 3E (Not Retired)**
 
 
-    **Decision:** The Business Communications General Terms will be replaced by the
-    enhanced MSA (HJ7).
+    **Decision:** Business Communications General Terms will be adapted as Annex 3E
+    (Telecoms), NOT retired.
 
 
-    **Rationale:** Business Communications is the current "master" document. The MSA
-    will assume this role with improved provisions and modular structure.
+    **Rationale:** Business Communications contains comprehensive telecoms-specific
+    provisions (numbering, rental equipment, fair use, suspension, etc.) that should
+    be preserved. Rather than extracting individual clauses, adapt the document as
+    Annex 3E with only minor removals (see Decision S4).
 
 
     **Old Document Path:** `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\One2Call-Business-Communications-General-Terms-and-Conditions.pdf\`
@@ -543,56 +609,9 @@ tasks:
     ## BUSINESS COMMUNICATIONS GAP DECISIONS
 
 
-    The following gaps were identified by comparing the Business Communications General
-    Terms against the MSA. Decisions made on where each provision should be placed
-    in the new document structure.
-
-
-    **DECISION B1: No-Resale Provision**
-
-
-    **Gap:** Business Comms cl 2.1-2.2 restricts resale and bandwidth-sharing.
-
-    **Decision:** Add to MSA cl 12 (general) + leased-line context in Annex 3E.
-
-    **Rationale:** General restriction belongs in MSA core; leased-line-specific language
-    in Annex where it''s most relevant.
-
-
-    ---
-
-
-    **DECISION B2-B6: Telephone Numbers & Services (Entire Clause 4)**
-
-
-    **Gap:** Business Comms cl 4 covers all telephone number and service provisions:
-
-    - Cl 4.1-4.4: Telephone number allocation and management
-
-    - Cl 4.5: Number ownership (numbers are licensed, not owned)
-
-    - Cl 4.6: Number reallocation on reasonable notice
-
-    - Cl 4.7: Number porting obligations and charges
-
-    - Cl 4.8-4.9: Call routing changes and CLI disclosure
-
-    - Cl 4.10-4.12: Inbound number provisions
-
-
-    **Decision:** Keep ALL of Business Comms cl 4 in Annex 3E (Telecoms).
-
-    **Rationale:** These are telecoms-specific provisions that should remain together
-    in the telecoms annex. Keeping cl 4 intact maintains coherence and avoids fragmentation
-    across multiple documents.
-
-
-    **Note:** Annex 3D (Connectivity) may need a cross-reference to Annex 3E for any
-    geographic numbers associated with connectivity services, but the substantive
-    provisions remain in 3E.
-
-
-    ---
+    **NOTE:** Following Decision S4, most Business Communications provisions are retained
+    in Annex 3E rather than being extracted to MSA core or other locations. The below
+    decisions remain valid for provisions that DO need to go elsewhere.
 
 
     **DECISION B7: Credit Check Consent**
@@ -619,50 +638,6 @@ tasks:
 
     **Rationale:** This is a data protection/RIPA compliance matter, not service-specific.
     Fits with existing DP clause.
-
-
-    ---
-
-
-    **DECISION B9: No Third-Party Repairs**
-
-
-    **Gap:** Business Comms cl 7.1 requires all repairs through Supplier.
-
-    **Decision:** Add to Schedule 3 (common framework).
-
-    **Rationale:** This is a general equipment/service protection provision that applies
-    across all installed services, not specific to any one Annex.
-
-
-    ---
-
-
-    **DECISION B10: Early Termination Formula**
-
-
-    **Gap:** Business Comms cl 11.2 contains specific early termination payment formula
-    (remaining contract value × discount percentage).
-
-    **Decision:** Add to each relevant Annex separately (3D, 3E).
-
-    **Rationale:** Different services have different contract periods and commercial
-    structures. Formula may vary by Annex.
-
-
-    ---
-
-
-    **DECISION B11: Subsidy/Equipment Clawback**
-
-
-    **Gap:** Business Comms cl 11.4 requires clawback of subsidies on equipment if
-    Customer terminates early.
-
-    **Decision:** Add to each relevant Annex separately (3D, 3E).
-
-    **Rationale:** Subsidy arrangements are service-specific (e.g., handset subsidies
-    for mobile, router subsidies for connectivity).
 
 
     ---
@@ -808,35 +783,31 @@ tasks:
     **Clause 12 (Intellectual Property) — Add new sub-clause:**\n(f) No-resale — Customer\
     \ shall not resell, share, or permit third-party use of the Services or any bandwidth\
     \ provided under any Order, except with the Supplier's prior written consent.\
-    \ [Business Comms cl 2.1-2.2] → See also Decision B1\n\n**Clause 14 (Charges)\
-    \ — Add new sub-clause:**\n(g) Credit check consent — The Customer consents to\
-    \ the Supplier conducting credit checks on the Customer before entering into or\
-    \ during the term of any Order. The Supplier may decline to provide Services,\
-    \ or require a deposit or other security, if the results of such checks are not\
-    \ satisfactory. [Business Comms cl 5.6] → See Decision B7\n\n**Clause 18 (Data\
-    \ Protection) — Add new sub-clause:**\n(h) Call monitoring disclosure — Where\
-    \ the Services include call recording, call monitoring, or similar functionality,\
-    \ the Customer shall ensure that it has notified its employees, agents, and other\
-    \ users of the Services that their calls may be monitored or recorded, and has\
-    \ obtained any necessary consents in accordance with the Regulation of Investigatory\
-    \ Powers Act 2000 and Data Protection Legislation. [Business Comms cl 6] → See\
-    \ Decision B8\n\n**Clause 24 (General) — Add new sub-clause:**\n(i) Marketing\
-    \ consent — The Customer consents to the Supplier:\n    (i) using the Customer's\
-    \ name and logo in the Supplier's marketing materials as a reference customer;\
-    \ and\n    (ii) sending the Customer information about the Supplier's products\
-    \ and services by email or other means,\nprovided that the Customer may withdraw\
-    \ either consent by written notice to the Supplier. [Business Comms cl 14] → See\
-    \ Decision B12\n\n---\n\n**WHY THESE BELONG IN MSA CORE:**\nThese provisions apply\
-    \ to ALL services and represent general obligations that should apply across the\
-    \ board rather than being repeated in each Annex.\n\n**SOURCE DOCUMENTS:**\n•\
-    \ Ethernet: `C:\\Users\\DavidSant\\effi-contract-review\\EL_Projects\\One2Call\\\
-    old_terms\\One2Call-Terms-and-Conditions-for-Ethernet-g\\One2Call-Terms-and-Conditions-for-Ethernet-g.md`\n\
-    • Horizon: `C:\\Users\\DavidSant\\effi-contract-review\\EL_Projects\\One2Call\\\
-    old_terms\\One2Call-Terms-and-Conditions-for-Horizon-Services-g-v1.2\\One2Call-Terms-and-Conditions-for-Horizon-Services-g-v1.2.md`\n\
-    • Business Comms: `C:\\Users\\DavidSant\\effi-contract-review\\EL_Projects\\One2Call\\\
-    old_terms\\One2Call-Business-Communications-General-Terms-and-Conditions.pdf\\\
-    One2Call-Business-Communications-General-Terms-and-Conditions.pdf.md`\n\n**PRECEDENT\
-    \ REFERENCE:** Managed services agreement (1).docx — for drafting style"
+    \ [Business Comms cl 2.1-2.2] → See Decision B1\n\n**Clause 14 (Charges) — Add\
+    \ new sub-clause:**\n(g) Credit check consent — The Customer consents to the Supplier\
+    \ conducting credit checks on the Customer before entering into or during the\
+    \ term of any Order. The Supplier may decline to provide Services, or require\
+    \ a deposit or other security, if the results of such checks are not satisfactory.\
+    \ [Business Comms cl 5.6] → See Decision B7\n\n**Clause 24 (General) — Add new\
+    \ sub-clause:**\n(h) Marketing consent — The Customer consents to the Supplier:\n\
+    \    (i) using the Customer's name and logo in the Supplier's marketing materials\
+    \ as a reference customer; and\n    (ii) sending the Customer information about\
+    \ the Supplier's products and services by email or other means,\nprovided that\
+    \ the Customer may withdraw either consent by written notice to the Supplier.\
+    \ [Business Comms cl 14] → See Decision B12\n\n---\n\n**REMOVED FROM THIS TASK:**\n\
+    ~~Call monitoring disclosure~~ — Stays in Annex 3E (Business Comms cl 6) as telecoms-specific\
+    \ provision. Not moved to MSA cl 18.\n\n---\n\n**WHY THESE BELONG IN MSA CORE:**\n\
+    These provisions apply to ALL services and represent general obligations that\
+    \ should apply across the board rather than being repeated in each Annex.\n\n\
+    **SOURCE DOCUMENTS:**\n• Ethernet: `C:\\Users\\DavidSant\\effi-contract-review\\\
+    EL_Projects\\One2Call\\old_terms\\One2Call-Terms-and-Conditions-for-Ethernet-g\\\
+    One2Call-Terms-and-Conditions-for-Ethernet-g.md`\n• Horizon: `C:\\Users\\DavidSant\\\
+    effi-contract-review\\EL_Projects\\One2Call\\old_terms\\One2Call-Terms-and-Conditions-for-Horizon-Services-g-v1.2\\\
+    One2Call-Terms-and-Conditions-for-Horizon-Services-g-v1.2.md`\n• Business Comms:\
+    \ `C:\\Users\\DavidSant\\effi-contract-review\\EL_Projects\\One2Call\\old_terms\\\
+    One2Call-Business-Communications-General-Terms-and-Conditions.pdf\\One2Call-Business-Communications-General-Terms-and-Conditions.pdf.md`\n\
+    \n**PRECEDENT REFERENCE:** Managed services agreement (1).docx — for drafting\
+    \ style"
   status: pending
   ordinal: 6
   creationDate: '2025-12-09T22:04:57.278344Z'
@@ -871,6 +842,150 @@ tasks:
   creationDate: '2025-12-10T00:51:45.164110Z'
   completionDate: null
   editIds: []
+- id: e4148ed7
+  title: 1.11 Add Rental Equipment provisions to Annex 3E
+  description: 'Incorporate Business Communications cl 7 (Rental Equipment) into Annex
+    3E (Telecoms).
+
+
+    **SOURCE:** Business Communications General Terms cl 7.1-7.9
+
+    **PATH:** `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\One2Call-Business-Communications-General-Terms-and-Conditions.pdf\One2Call-Business-Communications-General-Terms-and-Conditions.pdf.md`
+
+
+    **PROVISIONS TO ADD:**
+
+
+    | Clause | Content |
+
+    |--------|---------|
+
+    | **7.1** | Supplier owns Rental Equipment at all times; Customer shall not sell,
+    assign, sub-license, or allow third-party use; Customer shall not remove labels
+    or prejudice Supplier''s rights; Supplier may replace with equivalent or better
+    specification |
+
+    | **7.2** | Supplier obligations: install at agreed time/date; use reasonable
+    endeavours to repair faults per standard procedures |
+
+    | **7.3** | Customer responsible for care of Rental Equipment; pays for replacement/repair
+    if lost, stolen, or damaged |
+
+    | **7.4** | Customer to notify faults, repairs needed, loss/theft/damage promptly
+    |
+
+    | **7.5** | Customer to use Rental Equipment only with relevant Services; comply
+    with Supplier''s reasonable instructions |
+
+    | **7.6** | Customer must insure Rental Equipment; obtain necessary licences/consents/approvals
+    for installation and use |
+
+    | **7.7** | No third-party repairs/modifications without consent; Supplier not
+    liable for third-party work; Customer indemnifies Supplier |
+
+    | **7.8** | Return on termination in reasonable condition (fair wear and tear);
+    if not returned, Supplier may invoice original cost less depreciation plus recovery
+    costs |
+
+    | **7.9** | If returned equipment not received, Customer remains liable absent
+    evidence of delivery |
+
+
+    **ALSO REFERENCE (from Business Comms cl 10.5):**
+
+    - Rental charges invoiced monthly in advance
+
+    - First invoice includes advance month plus part-month from commencement
+
+
+    **TARGET:** Annex 3E (Telecoms) — new section "Rental Equipment"
+
+
+    **RATIONALE:** Rental Equipment provisions are integral to telecoms services where
+    handsets, routers, and other equipment may be rented rather than sold. Keeping
+    in Annex 3E (per user decision) rather than Schedule 3 common framework.
+
+
+    **NOTE:** Consider whether Annex 3D (Connectivity) also needs rental provisions
+    for routers/NTEs, or whether cross-reference to 3E is sufficient.'
+  status: pending
+  ordinal: 8
+  creationDate: '2025-12-10T01:04:18.172106Z'
+  completionDate: null
+  editIds: []
+- id: 09886f5d
+  title: 1.12 Add document hierarchy/priority clause to MSA
+  description: 'Add a priority of documents clause to the MSA establishing the hierarchy
+    for resolving conflicts between contractual documents.
+
+
+    **TARGET DOCUMENT:** MSA (HJ7) — Schedule 1 Terms and Conditions
+
+    **PATH:** `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\drafts\current_drafts\One2call  -
+    2025 Templates  - MSA Defined Services - HJ7.docx`
+
+
+    **SUGGESTED LOCATION:** Clause 1 (Definitions/Interpretation) or Clause 24 (General)
+
+
+    **PRIORITY ORDER (highest to lowest):**
+
+    1. Order Form
+
+    2. Annexes (e.g., Annex 3E Telecoms)
+
+    3. Schedules (e.g., Schedule 3, Schedule 5)
+
+    4. MSA Terms and Conditions (Schedule 1)
+
+
+    **DRAFT CLAUSE:**
+
+
+    > **Priority of Documents**
+
+    >
+
+    > In the event of any conflict or inconsistency between the documents forming
+    part of this Agreement, the following order of precedence shall apply (with documents
+    higher in the list taking priority over documents lower in the list):
+
+    >
+
+    > (a) the Order Form;
+
+    > (b) any Annex to a Schedule;
+
+    > (c) any Schedule (other than these Terms and Conditions);
+
+    > (d) these Terms and Conditions.
+
+    >
+
+    > For the avoidance of doubt, any express term in the Order Form shall override
+    any default term in an Annex or Schedule.
+
+
+    **RATIONALE:**
+
+    - Order Form is the deal-specific document and should take precedence (e.g., for
+    term/notice overrides)
+
+    - Annexes contain service-specific provisions that should override general Schedule
+    provisions
+
+    - Schedules contain framework provisions
+
+    - MSA core terms are the baseline
+
+
+    **NOTE:** Also ensure Order Form template (Task 2.3) includes a statement referencing
+    this hierarchy.'
+  status: pending
+  ordinal: 9
+  creationDate: '2025-12-10T01:21:02.362392Z'
+  completionDate: null
+  editIds: []
 - id: wta2457b5d
   title: 1.9 Complete gap analysis for remaining old terms
   description: "Complete gap analysis for remaining old terms documents against MSA\
@@ -897,7 +1012,7 @@ tasks:
     \ with MSA\n\nReference: Markdown conversions in `C:\\Users\\DavidSant\\effi-contract-review\\\
     EL_Projects\\One2Call\\old_terms\\`"
   status: pending
-  ordinal: 8
+  ordinal: 10
   creationDate: '2025-12-09T22:05:15.837650Z'
   completionDate: null
   editIds: []
@@ -1032,7 +1147,7 @@ tasks:
 
     • Business Comms: `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\One2Call-Business-Communications-General-Terms-and-Conditions.pdf\One2Call-Business-Communications-General-Terms-and-Conditions.pdf.md`'
   status: pending
-  ordinal: 9
+  ordinal: 11
   creationDate: '2025-12-09T19:51:38.394289Z'
   completionDate: null
   editIds: []
@@ -1087,7 +1202,7 @@ tasks:
     `\n• CCTV: `C:\\Users\\DavidSant\\effi-contract-review\\EL_Projects\\One2Call\\\
     old_terms\\One2Call-Terms-Conditions-for-CCTV-Maintenance-Services-v1.1\\`"
   status: pending
-  ordinal: 10
+  ordinal: 12
   creationDate: '2025-12-09T19:51:44.543695Z'
   completionDate: null
   editIds: []
@@ -1116,7 +1231,7 @@ tasks:
     • Managed services agreement (1).docx — clause 29 (Anti-bribery), clause 30 (Anti-slavery),
     clause 35 (Dispute resolution)'
   status: pending
-  ordinal: 11
+  ordinal: 13
   creationDate: '2025-12-09T19:51:51.851235Z'
   completionDate: null
   editIds: []
@@ -1147,7 +1262,7 @@ tasks:
     • Systems integration agreement (pro-supplier) (1).docx — Primary reference for
     SOW structure'
   status: pending
-  ordinal: 12
+  ordinal: 14
   creationDate: '2025-12-09T19:51:58.298663Z'
   completionDate: null
   editIds: []
@@ -1174,7 +1289,7 @@ tasks:
     • Software maintenance_ service level agreement.docx — SLA structure and service
     credits'
   status: pending
-  ordinal: 13
+  ordinal: 15
   creationDate: '2025-12-09T19:52:05.354434Z'
   completionDate: null
   editIds: []
@@ -1220,127 +1335,59 @@ tasks:
     \ Order Form only needs override fields if customer wants something different.\n\
     \n**PRECEDENT REFERENCE:** MSA (HJ7) cover page for existing format"
   status: pending
-  ordinal: 14
+  ordinal: 16
   creationDate: '2025-12-09T19:52:11.332451Z'
   completionDate: null
   editIds: []
 - id: wtc750b02c
   title: '3.1 Draft Annex 3E: Telecoms (Horizon/VoIP)'
-  description: "Draft Annex 3E for Horizon/VoIP services. Mobile services to be assessed\
-    \ separately (see Task 1.9 — Mobile has different structure).\n\n**TARGET DOCUMENT:**\
-    \ Create new Annex 3E within Schedule 3 framework in MSA (HJ7)\n**SOURCE DOCUMENTS:**\
-    \ \n• Horizon: `C:\\Users\\DavidSant\\effi-contract-review\\EL_Projects\\One2Call\\\
-    old_terms\\One2Call-Terms-and-Conditions-for-Horizon-Services-g-v1.2\\One2Call-Terms-and-Conditions-for-Horizon-Services-g-v1.2.md`\n\
-    • Business Comms: `C:\\Users\\DavidSant\\effi-contract-review\\EL_Projects\\One2Call\\\
-    old_terms\\One2Call-Business-Communications-General-Terms-and-Conditions.pdf\\\
+  description: "Draft Annex 3E for Telecoms services by adapting the Business Communications\
+    \ General Terms.\n\n**REVISED APPROACH (per user instruction 10 Dec 2025):**\n\
+    Keep almost all of Business Communications intact in Annex 3E. This is the primary\
+    \ telecoms schedule.\n\n**TARGET DOCUMENT:** Create new Annex 3E within Schedule\
+    \ 3 framework in MSA (HJ7)\n\n**SOURCE DOCUMENT:** \n`C:\\Users\\DavidSant\\effi-contract-review\\\
+    EL_Projects\\One2Call\\old_terms\\One2Call-Business-Communications-General-Terms-and-Conditions.pdf\\\
     One2Call-Business-Communications-General-Terms-and-Conditions.pdf.md`\n\n---\n\
-    \n## REGULATORY / SAFETY — PROMINENT PLACEMENT:\n\n(a) Emergency services (999/112)\
-    \ warning — **MAKE THIS PROMINENT AT START OF ANNEX**\nVoIP 999/112 calls do not\
-    \ operate the same as PSTN fixed lines; connection may not be possible during\
-    \ service outages (loss of internet connectivity); emergency services may not\
-    \ be able to identify caller location/number; Customer should use alternative\
-    \ line in outage. [Horizon cl 1.21]\n\n**[COMMENT FOR CLIENT]:** \"This warning\
-    \ is a regulatory compliance requirement for VoIP services. Ofcom requires providers\
-    \ to inform customers about the limitations of VoIP emergency calling. We have\
-    \ made this prominent in Annex 3E to ensure customers are clearly informed. Failure\
-    \ to provide adequate warning could expose One2Call to regulatory action and liability\
-    \ claims if a customer is unable to reach emergency services during an outage.\"\
-    \n\n---\n\n## SERVICE FEATURES:\n\n(b) User-based features — Auto attendant, hunt\
-    \ groups, call park, call pickup, call queues etc; unallocated features may be\
-    \ recovered by Supplier. [Horizon cl 1.25]\n(c) Music on hold — Customer responsible\
-    \ for obtaining licences for uploaded music; indemnifies Supplier for failure.\
-    \ [Horizon cl 3.6]\n(d) Internet portal account — Supplier provides online control\
-    \ portal; reasonable endeavours to maintain 24/7 access; no liability for access\
-    \ restrictions. [Horizon cl 1.19]\n(e) IP address — No IP address ownership; internet\
-    \ authorities control; Supplier may change if unavailable. [Horizon cl 1.18]\n\
-    (f) Bandwidth upgrades — Additional charges for upgrades; Supplier to advise at\
-    \ time of request. [Horizon cl 1.20]\n\n---\n\n## INSTALLATION:\n\n(g) Third-party\
-    \ installer — If Customer uses third-party installer, Customer indemnifies Supplier\
-    \ for direct/indirect losses; affects Demarcation Point. [Horizon cl 1.23]\n(h)\
-    \ Daily sign-off — Customer to sign off work daily during installation (not Acceptance).\
-    \ [Horizon cl 1.24]\n\n---\n\n## CUSTOMER-SUPPLIED ELEMENTS:\n\n(i) Customer-supplied\
-    \ access — If Customer provides own broadband/Ethernet/leased line, Customer responsible\
-    \ for meeting requirements (per non-One2Call access requirements document); affects\
-    \ Demarcation Point; Supplier may charge for visits caused by Customer-supplied\
-    \ access faults. [Horizon cl 1.22]\n(j) Customer-supplied router — Same responsibility\
-    \ transfer; affects Demarcation Point. [Horizon cl 1.17]\n\n---\n\n## DEMARCATION\
-    \ POINTS (tiered):\n\n(k) Define Service Demarcation Point tiers:\n    • Main\
-    \ Horizon service: SBC connection within network\n    • One2Call-supplied access\
-    \ + router: Customer-side port on router\n    • Access + Installation + Equipment\
-    \ Maintenance: Handset\n    • Customer-supplied access/router: Adjusted (Customer\
-    \ responsibility)\n[Horizon cl 11 Definitions]\n\n---\n\n## BUSINESS COMMUNICATIONS\
-    \ GAP PROVISIONS (from B1-B6, B10-B11):\n\n**Number Management:**\n(l) Number\
-    \ ownership — Telephone numbers allocated under this Annex are licensed to the\
-    \ Customer for the duration of the Service only. The Customer does not own any\
-    \ telephone number and has no right to retain any number after termination of\
-    \ the relevant Service, except as provided in clause [porting]. [Business Comms\
-    \ cl 4.5] → Decision B2\n\n(m) Number reallocation — The Supplier may, on reasonable\
-    \ written notice, reallocate any telephone number allocated to the Customer if\
-    \ required by Ofcom, any network operator, or for technical or operational reasons.\
-    \ The Supplier shall use reasonable endeavours to minimise disruption and, where\
-    \ practicable, provide a replacement number. [Business Comms cl 4.6] → Decision\
-    \ B3\n\n(n) Number porting — On termination of the Service:\n    (i) the Customer\
-    \ may request that the Supplier port eligible telephone numbers to another provider,\
-    \ subject to the receiving provider's acceptance and applicable regulatory procedures;\n\
-    \    (ii) the Customer shall give not less than 30 days' written notice of such\
-    \ request;\n    (iii) the Customer shall pay the Supplier's reasonable administrative\
-    \ charges for porting; and\n    (iv) the Supplier shall co-operate with the receiving\
-    \ provider in accordance with Ofcom's General Conditions.\n[Business Comms cl\
-    \ 4.7] → Decision B4\n\n**Call Routing:**\n(o) Routing changes — The Supplier\
-    \ may change call routing arrangements from time to time for operational, technical,\
-    \ or regulatory reasons. The Supplier shall give reasonable notice of any material\
-    \ change that will affect the Customer's use of the Service. [Business Comms cl\
-    \ 4.8] → Decision B5\n\n(p) CLI disclosure — The Customer acknowledges that the\
-    \ Supplier may be required to disclose calling line identification (CLI) information\
-    \ to network operators, emergency services, or other parties in accordance with\
-    \ applicable law and regulation. [Business Comms cl 4.9] → Decision B5\n\n**No-Resale\
-    \ (leased line context):**\n(q) No bandwidth sharing — Without limiting the general\
-    \ no-resale provisions in Schedule 1, the Customer shall not share, resell, or\
-    \ permit third-party use of any leased line capacity, dedicated bandwidth, or\
-    \ SIP channels provided under this Annex, except for the Customer's own internal\
-    \ business purposes at the Service Location(s). [Business Comms cl 2.1-2.2] →\
-    \ Decision B1\n\n**Inbound Services:**\n(r) Inbound numbers — Where the Supplier\
-    \ provides inbound telephone numbers (including non-geographic numbers, freephone\
-    \ numbers, or local rate numbers):\n    (i) such numbers are licensed to the Customer\
-    \ on the same terms as other telephone numbers under this Annex;\n    (ii) the\
-    \ Customer shall comply with all Ofcom and Advertising Standards Authority requirements\
-    \ regarding the display and advertising of such numbers;\n    (iii) call charges\
-    \ for inbound services shall be as set out in the Order or the Supplier's published\
-    \ tariff; and\n    (iv) the Supplier may suspend inbound services if the Customer's\
-    \ account is in arrears.\n[Business Comms cl 4.10-4.12] → Decision B6\n\n---\n\
-    \n## TERMINATION PROVISIONS:\n\n**Early termination formula:**\n(s) If the Customer\
-    \ terminates this Annex before the end of the Initial Period or any Renewal Period\
-    \ (other than for Supplier breach), the Customer shall pay to the Supplier:\n\
-    \    (i) all outstanding Charges up to the date of termination; plus\n    (ii)\
-    \ the Monthly Charges that would have been payable for the remainder of the Initial\
-    \ Period or Renewal Period, discounted to present value at a rate of [X]% per\
-    \ annum.\n[Business Comms cl 11.2] → Decision B10\n\n**[NOTE FOR DRAFTING]:**\
-    \ Client to confirm discount rate for present value calculation.\n\n**Subsidy/equipment\
-    \ clawback:**\n(t) If the Supplier has provided Equipment (including handsets,\
-    \ routers, or other hardware) at a subsidised price or at no charge on the basis\
-    \ of the Customer's commitment to the Initial Period, and the Customer terminates\
-    \ before the end of the Initial Period (other than for Supplier breach), the Customer\
-    \ shall pay to the Supplier the subsidy amount, calculated as:\n    (i) the unsubsidised\
-    \ price of the Equipment; less\n    (ii) the subsidised price paid by the Customer;\
-    \ less\n    (iii) an amount equal to [1/36th] of the subsidy for each complete\
-    \ month of the Initial Period that has elapsed.\n[Business Comms cl 11.4] → Decision\
-    \ B11\n\n**[NOTE FOR DRAFTING]:** Client to confirm subsidy recovery period (e.g.,\
-    \ 36 months for handsets).\n\n---\n\n## EQUIPMENT MAINTENANCE:\n\n(u) If Equipment\
-    \ Maintenance is included in the Order, Schedule 5 (Maintenance Schedule) shall\
-    \ apply to the Maintained Equipment specified in the Order.\n\n---\n\n## DEFAULT\
-    \ TERM & NOTICE:\n\n(v) Default Initial Term: **24 months** (if not specified\
-    \ in Order) — NOTE: Different from Connectivity (36 months)\n(w) Auto-renewal:\
-    \ 12 months rolling\n(x) Default termination notice: **60 days**\n(y) Include\
-    \ statement: \"These defaults may be overridden by express terms in the Order\
-    \ Form\"\n\n---\n\n## MANUFACTURER WARRANTY:\n\n(z) 30-day defect warranty for\
-    \ equipment [Horizon cl 6.2]\n(aa) Supplier will honour manufacturer warranty\
-    \ on handsets [Horizon cl 11 Definitions]\n\n---\n\n## RELATIONSHIP TO OTHER DOCUMENTS:\n\
-    \n• Schedule 3 common provisions (site surveys, acceptance, equipment ownership,\
-    \ no third-party repairs) apply — see Task 1.5\n• Schedule 5 (Maintenance Schedule)\
-    \ applies if Equipment Maintenance selected in Order — see Task 1.6\n• Order Form\
-    \ specifies whether Equipment Maintenance included — see Task 2.3"
+    \n## CLAUSES TO KEEP (adapt as needed):\n\n**Cl 1:** Definitions — retain and\
+    \ adapt\n**Cl 2:** Service provisions / No-resale — retain\n**Cl 3:** Fair use\
+    \ policies — retain\n**Cl 4:** Telephone numbers & services — retain in full\n\
+    **Cl 5:** Charges provisions — retain (adapt to reference MSA where duplicative)\n\
+    **Cl 6:** Call monitoring — retain\n**Cl 7:** Rental Equipment — retain in full\
+    \ (7.1-7.9)\n**Cl 8:** Compliance with legislation — retain\n**Cl 10:** Paying\
+    \ charges — retain (adapt to reference MSA)\n**Cl 11:** Term and termination —\
+    \ retain (early termination formula, subsidy clawback)\n**Cl 12:** Suspension\
+    \ — retain\n**Cl 15:** Termination consequences — retain\n**Cl 16:** Warranties\
+    \ — retain\n**Cl 17:** Network/Service changes — retain\n**Cl 18:** Minimum term/spend\
+    \ — retain\n**Cl 19:** Changes to agreement — retain\n**Cl 20:** General provisions\
+    \ — retain (as applicable to telecoms)\n\n---\n\n## CLAUSES TO REMOVE (MSA covers\
+    \ these):\n\n**Cl 9:** Data Protection — **REMOVE** and replace with:\n> \"Data\
+    \ protection matters are governed by Schedule 2 (Data Protection) of the Master\
+    \ Services Agreement.\"\n\n**Cl 13:** Limitation of Liability — **REMOVE** (MSA\
+    \ cl 19 covers)\n\n**Cl 14:** Force Majeure — **REMOVE** (MSA covers)\n\n**Cls\
+    \ 21-27:** General/Boilerplate — **REMOVE** (MSA covers):\n- Cl 21: Notices\n\
+    - Cl 22: Entire agreement\n- Cl 23: Waiver\n- Cl 24: Severability\n- Cl 25: Third\
+    \ party rights\n- Cl 26: Assignment\n- Cl 27: Governing law/jurisdiction\n\n---\n\
+    \n## ADDITIONS FROM HORIZON TERMS:\n\nAdd the following Horizon-specific provisions\
+    \ not in Business Comms:\n\n(a) **Emergency services (999/112) warning** — PROMINENT\
+    \ AT START\n(b) User-based features (auto attendant, hunt groups, etc.)\n(c) Music\
+    \ on hold licensing\n(d) Internet portal account\n(e) IP address provisions\n\
+    (f) Bandwidth upgrades\n(g) Third-party installer indemnity\n(h) Daily sign-off\
+    \ during installation\n(i) Customer-supplied access/router provisions\n(j) Demarcation\
+    \ point tiers\n(k) Manufacturer warranty\n\n**SOURCE:** `C:\\Users\\DavidSant\\\
+    effi-contract-review\\EL_Projects\\One2Call\\old_terms\\One2Call-Terms-and-Conditions-for-Horizon-Services-g-v1.2\\\
+    One2Call-Terms-and-Conditions-for-Horizon-Services-g-v1.2.md`\n\n---\n\n## DEFAULT\
+    \ TERM & NOTICE:\n\n- Default Initial Term: **24 months**\n- Auto-renewal: 12\
+    \ months rolling\n- Default termination notice: **60 days**\n- Statement: \"These\
+    \ defaults may be overridden by express terms in the Order Form\"\n\n---\n\n##\
+    \ RELATIONSHIP TO OTHER DOCUMENTS:\n\n- Schedule 3 common provisions apply (site\
+    \ surveys, acceptance, equipment ownership)\n- Schedule 5 (Maintenance Schedule)\
+    \ applies if Equipment Maintenance selected\n- Order Form specifies services and\
+    \ any overrides\n\n---\n\n## DRAFTING NOTE:\n\nThis approach preserves the comprehensive\
+    \ telecoms-specific provisions from Business Communications while avoiding duplication\
+    \ of MSA core terms. The result is a substantial Annex that can stand alone for\
+    \ telecoms services."
   status: pending
-  ordinal: 15
+  ordinal: 17
   creationDate: '2025-12-09T22:09:36.695809Z'
   completionDate: null
   editIds: []
@@ -1415,8 +1462,69 @@ tasks:
     \ Maintenance selected in Order — see Task 1.6\n• Order Form specifies whether\
     \ Equipment Maintenance included — see Task 2.3"
   status: pending
-  ordinal: 16
+  ordinal: 18
   creationDate: '2025-12-10T00:48:39.994407Z'
+  completionDate: null
+  editIds: []
+- id: e9ff0f88
+  title: '3.3 Draft Annex 3G: Mobile Services'
+  description: "Draft Annex 3G for Mobile Services by adapting the Mobile Services\
+    \ Terms.\n\n**APPROACH (per user instruction 10 Dec 2025):**\nKeep almost all\
+    \ of Mobile Services Terms intact in Annex 3G. The Network Provider references\
+    \ distinguish this from other annexes.\n\n**TARGET DOCUMENT:** Create new Annex\
+    \ 3G within Schedule 3 framework in MSA (HJ7)\n\n**SOURCE DOCUMENT:** \n`C:\\\
+    Users\\DavidSant\\effi-contract-review\\EL_Projects\\One2Call\\old_terms\\One2Call-Terms-and-Conditions-for-Mobile-Services-g-v1.1\\\
+    One2Call-Terms-and-Conditions-for-Mobile-Services-g-v1.1.md`\n\n---\n\n## CLAUSES\
+    \ TO KEEP (all mobile-specific provisions):\n\n**Cl 1:** Provision of Services\
+    \ — services via SIM/Equipment; Connection Date; renewal\n**Cl 2:** Phone Number\
+    \ & SIM — SIM ownership; lost/stolen; number allocation; porting\n**Cl 3:** Services\
+    \ & Coverage — coverage; roaming; content upload licence\n**Cl 4:** Limitation\
+    \ of Services — coverage limitations; **MultiNet Service**\n**Cl 5:** Disruption\
+    \ to Services — no fault-free guarantee; maintenance; force majeure\n**Cl 6:**\
+    \ Suspension of Services — immediate suspension rights; GSM Gateway prohibition\n\
+    **Cl 7:** Equipment — risk; title; warranty; network-locked; no tampering\n**Cl\
+    \ 8:** Orders & Charges — Bundles; fair use; bolt-ons; tariff migrations; roaming\
+    \ billing; **Hardware Fund**\n**Cl 9:** Software Licence — non-exclusive; single\
+    \ user\n**Cl 10:** No Responsibility Areas — PIN security; FDN errors; port failures\n\
+    **Cl 11:** Third-Party Content — no responsibility\n**Cl 12:** Use Obligations\
+    \ — End User supply; authorised equipment; no illegal use\n**Cl 13:** PIN/Password\
+    \ Security — keep SIM safe\n**Cl 14:** Responsible Use — personal use; no resale;\
+    \ acceptable use\n**Cl 15:** Messaging/Storage — no spam; no offensive content\n\
+    **Cl 16:** Age Restricted Services — 18+ only\n**Cl 17:** Use Outside UK — foreign\
+    \ law compliance\n**Cl 18:** Ending Agreement — 30 days' notice; Cancellation\
+    \ Fee; PAC; porting\n**Cl 19:** Effect of Ending — Disconnection; forfeit Hardware\
+    \ Fund\n**Cl 20:** Variations — 30 days' notice; RPI-linked; short notice variable\
+    \ services\n**Cl 21:** Intellectual Property — IP ownership (keep — Network Provider\
+    \ specific)\n**Cl 22:** Liability Limits — **REMOVE** (MSA cl 19 applies — £100k\
+    \ not £3k)\n**Cl 23:** Privacy — **KEEP** (Network Provider data sharing is mobile-specific)\n\
+    **Cl 24:** Third Party Rights — **KEEP** (Network Provider enforcement rights)\n\
+    **Cl 25:** Definitions — adapt as needed; keep mobile-specific definitions\n\n\
+    ---\n\n## CLAUSES TO REMOVE (MSA covers):\n\n**Cl 22:** Liability Limits — **REMOVE**\
+    \ and replace with:\n> \"The limitation of liability provisions in the Master\
+    \ Services Agreement apply to Services provided under this Annex.\"\n\n**NOTE:**\
+    \ Unlike Business Comms, we keep cls 21, 23, 24 because they contain Network Provider-specific\
+    \ provisions that don't appear elsewhere.\n\n---\n\n## KEY MOBILE-SPECIFIC FEATURES\
+    \ TO PRESERVE:\n\n1. SIM Card provisions — ownership remains with One2Call; lost/stolen\
+    \ procedures\n2. MultiNet Service — automatic fallback to alternative networks\n\
+    3. Hardware Fund — equipment subsidy mechanism\n4. Bolt-ons — tariff add-ons;\
+    \ cannot remove mid-term\n5. Roaming charges — delayed billing up to 12 months\
+    \ in arrears\n6. Network-locked equipment — unlocking is customer's responsibility\n\
+    7. GSM Gateway prohibition — immediate suspension right\n8. Cancellation Fee formula\
+    \ — comprehensive clawback mechanism\n9. Network Provider third-party rights —\
+    \ can enforce directly\n\n---\n\n## DEFAULT TERM & NOTICE:\n\n- Default Minimum\
+    \ Term: As specified in Service Agreement/Tariff (typically 24 months)\n- Notice\
+    \ period: **30 days** (per cl 18)\n- Post-Minimum Term: 30-day rolling basis\n\
+    \n---\n\n## RELATIONSHIP TO OTHER DOCUMENTS:\n\n- MSA core terms apply (especially\
+    \ cl 19 Liability)\n- Schedule 3 common provisions apply where relevant\n- Order\
+    \ Form specifies tariff, equipment, bolt-ons\n- This Annex is SEPARATE from Annex\
+    \ 3E (Telecoms/VoIP) — different network provider arrangements\n\n---\n\n## DRAFTING\
+    \ NOTE:\n\nMobile services operate through Network Providers with their own terms\
+    \ and enforcement rights. This justifies keeping Mobile as a separate, comprehensive\
+    \ Annex rather than merging with Annex 3E (Telecoms). The £3,000 liability cap\
+    \ in the old terms is replaced by MSA's £100k cap."
+  status: pending
+  ordinal: 19
+  creationDate: '2025-12-10T01:24:12.146647Z'
   completionDate: null
   editIds: []
 documents:
@@ -1532,7 +1640,7 @@ MSA (HJ7)
 │   ├── Annex 3B: Cyber Security Services
 │   ├── Annex 3C: Cloud Management
 │   ├── Annex 3D: Connectivity (Ethernet — 36m/60d defaults)
-│   ├── Annex 3E: Telecoms (Horizon/VoIP — 24m/60d defaults)
+│   ├── Annex 3E: Telecoms (Business Comms adapted — 24m/60d defaults)
 │   └── Annex 3F: Hardware Provision & Maintenance
 ├── Schedule 4: Security Schedule (optional — for cyber services)
 └── Schedule 5: Maintenance Schedule (from HJ1)
@@ -1573,6 +1681,39 @@ MSA (HJ7)
 10. Appointment scheduling
 
 **Rationale:** Avoids repetition; ensures consistency across installed services.
+
+---
+
+**DECISION S4: Business Communications → Annex 3E (Keep Almost All)**
+
+**Decision:** Adapt Business Communications General Terms as the basis for Annex 3E (Telecoms), keeping almost all provisions intact.
+
+**CLAUSES TO KEEP:**
+- Cl 1: Definitions
+- Cl 2: Service provisions / No-resale
+- Cl 3: Fair use policies
+- Cl 4: Telephone numbers & services (entire clause)
+- Cl 5: Charges provisions
+- Cl 6: Call monitoring
+- Cl 7: Rental Equipment (7.1-7.9)
+- Cl 8: Compliance with legislation
+- Cl 10: Paying charges
+- Cl 11: Term and termination (early termination formula, subsidy clawback)
+- Cl 12: Suspension
+- Cl 15: Termination consequences
+- Cl 16: Warranties
+- Cl 17: Network/Service changes
+- Cl 18: Minimum term/spend
+- Cl 19: Changes to agreement
+- Cl 20: General provisions (as applicable)
+
+**CLAUSES TO REMOVE (MSA covers):**
+- Cl 9: Data Protection → replace with reference to MSA Schedule 2
+- Cl 13: Limitation of Liability → MSA cl 19 covers
+- Cl 14: Force Majeure → MSA covers
+- Cls 21-27: General/Boilerplate (Notices, Entire Agreement, Waiver, Severability, Third Party Rights, Assignment, Governing Law) → MSA covers
+
+**Rationale:** Business Communications is comprehensive and telecoms-specific. Rather than extracting individual provisions, keep it substantially intact as Annex 3E. Only remove clauses that would duplicate MSA core terms.
 
 ---
 
@@ -1678,7 +1819,7 @@ MSA (HJ7)
 
 ---
 
-## ANNEX 3E (HORIZON/VoIP) DECISIONS
+## ANNEX 3E (TELECOMS) DECISIONS
 
 **DECISION V1: Emergency Services Warning Placement**
 
@@ -1717,11 +1858,11 @@ MSA (HJ7)
 
 ---
 
-**DECISION R2: Retire Business Communications General Terms**
+**DECISION R2: Business Communications → Annex 3E (Not Retired)**
 
-**Decision:** The Business Communications General Terms will be replaced by the enhanced MSA (HJ7).
+**Decision:** Business Communications General Terms will be adapted as Annex 3E (Telecoms), NOT retired.
 
-**Rationale:** Business Communications is the current "master" document. The MSA will assume this role with improved provisions and modular structure.
+**Rationale:** Business Communications contains comprehensive telecoms-specific provisions (numbering, rental equipment, fair use, suspension, etc.) that should be preserved. Rather than extracting individual clauses, adapt the document as Annex 3E with only minor removals (see Decision S4).
 
 **Old Document Path:** `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\One2Call-Business-Communications-General-Terms-and-Conditions.pdf\`
 
@@ -1729,32 +1870,7 @@ MSA (HJ7)
 
 ## BUSINESS COMMUNICATIONS GAP DECISIONS
 
-The following gaps were identified by comparing the Business Communications General Terms against the MSA. Decisions made on where each provision should be placed in the new document structure.
-
-**DECISION B1: No-Resale Provision**
-
-**Gap:** Business Comms cl 2.1-2.2 restricts resale and bandwidth-sharing.
-**Decision:** Add to MSA cl 12 (general) + leased-line context in Annex 3E.
-**Rationale:** General restriction belongs in MSA core; leased-line-specific language in Annex where it's most relevant.
-
----
-
-**DECISION B2-B6: Telephone Numbers & Services (Entire Clause 4)**
-
-**Gap:** Business Comms cl 4 covers all telephone number and service provisions:
-- Cl 4.1-4.4: Telephone number allocation and management
-- Cl 4.5: Number ownership (numbers are licensed, not owned)
-- Cl 4.6: Number reallocation on reasonable notice
-- Cl 4.7: Number porting obligations and charges
-- Cl 4.8-4.9: Call routing changes and CLI disclosure
-- Cl 4.10-4.12: Inbound number provisions
-
-**Decision:** Keep ALL of Business Comms cl 4 in Annex 3E (Telecoms).
-**Rationale:** These are telecoms-specific provisions that should remain together in the telecoms annex. Keeping cl 4 intact maintains coherence and avoids fragmentation across multiple documents.
-
-**Note:** Annex 3D (Connectivity) may need a cross-reference to Annex 3E for any geographic numbers associated with connectivity services, but the substantive provisions remain in 3E.
-
----
+**NOTE:** Following Decision S4, most Business Communications provisions are retained in Annex 3E rather than being extracted to MSA core or other locations. The below decisions remain valid for provisions that DO need to go elsewhere.
 
 **DECISION B7: Credit Check Consent**
 
@@ -1769,30 +1885,6 @@ The following gaps were identified by comparing the Business Communications Gene
 **Gap:** Business Comms cl 6 requires Customer to disclose call monitoring to its staff.
 **Decision:** Add to MSA cl 18 (Data Protection).
 **Rationale:** This is a data protection/RIPA compliance matter, not service-specific. Fits with existing DP clause.
-
----
-
-**DECISION B9: No Third-Party Repairs**
-
-**Gap:** Business Comms cl 7.1 requires all repairs through Supplier.
-**Decision:** Add to Schedule 3 (common framework).
-**Rationale:** This is a general equipment/service protection provision that applies across all installed services, not specific to any one Annex.
-
----
-
-**DECISION B10: Early Termination Formula**
-
-**Gap:** Business Comms cl 11.2 contains specific early termination payment formula (remaining contract value × discount percentage).
-**Decision:** Add to each relevant Annex separately (3D, 3E).
-**Rationale:** Different services have different contract periods and commercial structures. Formula may vary by Annex.
-
----
-
-**DECISION B11: Subsidy/Equipment Clawback**
-
-**Gap:** Business Comms cl 11.4 requires clawback of subsidies on equipment if Customer terminates early.
-**Decision:** Add to each relevant Annex separately (3D, 3E).
-**Rationale:** Subsidy arrangements are service-specific (e.g., handset subsidies for mobile, router subsidies for connectivity).
 
 ---
 
@@ -1882,19 +1974,21 @@ Add the following general provisions to the MSA core (Schedule 1 Terms and Condi
 ## FROM BUSINESS COMMUNICATIONS GAP ANALYSIS
 
 **Clause 12 (Intellectual Property) — Add new sub-clause:**
-(f) No-resale — Customer shall not resell, share, or permit third-party use of the Services or any bandwidth provided under any Order, except with the Supplier's prior written consent. [Business Comms cl 2.1-2.2] → See also Decision B1
+(f) No-resale — Customer shall not resell, share, or permit third-party use of the Services or any bandwidth provided under any Order, except with the Supplier's prior written consent. [Business Comms cl 2.1-2.2] → See Decision B1
 
 **Clause 14 (Charges) — Add new sub-clause:**
 (g) Credit check consent — The Customer consents to the Supplier conducting credit checks on the Customer before entering into or during the term of any Order. The Supplier may decline to provide Services, or require a deposit or other security, if the results of such checks are not satisfactory. [Business Comms cl 5.6] → See Decision B7
 
-**Clause 18 (Data Protection) — Add new sub-clause:**
-(h) Call monitoring disclosure — Where the Services include call recording, call monitoring, or similar functionality, the Customer shall ensure that it has notified its employees, agents, and other users of the Services that their calls may be monitored or recorded, and has obtained any necessary consents in accordance with the Regulation of Investigatory Powers Act 2000 and Data Protection Legislation. [Business Comms cl 6] → See Decision B8
-
 **Clause 24 (General) — Add new sub-clause:**
-(i) Marketing consent — The Customer consents to the Supplier:
+(h) Marketing consent — The Customer consents to the Supplier:
     (i) using the Customer's name and logo in the Supplier's marketing materials as a reference customer; and
     (ii) sending the Customer information about the Supplier's products and services by email or other means,
 provided that the Customer may withdraw either consent by written notice to the Supplier. [Business Comms cl 14] → See Decision B12
+
+---
+
+**REMOVED FROM THIS TASK:**
+~~Call monitoring disclosure~~ — Stays in Annex 3E (Business Comms cl 6) as telecoms-specific provision. Not moved to MSA cl 18.
 
 ---
 
@@ -1942,7 +2036,76 @@ Review Business Communications fair use policies and legislation compliance prov
 
 **CONTEXT:** This task was created because Business Comms cls 3, 8-9 were not explicitly covered in the B1-B12 gap analysis, which focused on numbering, termination, and commercial provisions.
 
-## 9. 1.9 Complete gap analysis for remaining old terms
+## 9. 1.11 Add Rental Equipment provisions to Annex 3E
+**Status:** pending
+
+Incorporate Business Communications cl 7 (Rental Equipment) into Annex 3E (Telecoms).
+
+**SOURCE:** Business Communications General Terms cl 7.1-7.9
+**PATH:** `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\One2Call-Business-Communications-General-Terms-and-Conditions.pdf\One2Call-Business-Communications-General-Terms-and-Conditions.pdf.md`
+
+**PROVISIONS TO ADD:**
+
+| Clause | Content |
+|--------|---------|
+| **7.1** | Supplier owns Rental Equipment at all times; Customer shall not sell, assign, sub-license, or allow third-party use; Customer shall not remove labels or prejudice Supplier's rights; Supplier may replace with equivalent or better specification |
+| **7.2** | Supplier obligations: install at agreed time/date; use reasonable endeavours to repair faults per standard procedures |
+| **7.3** | Customer responsible for care of Rental Equipment; pays for replacement/repair if lost, stolen, or damaged |
+| **7.4** | Customer to notify faults, repairs needed, loss/theft/damage promptly |
+| **7.5** | Customer to use Rental Equipment only with relevant Services; comply with Supplier's reasonable instructions |
+| **7.6** | Customer must insure Rental Equipment; obtain necessary licences/consents/approvals for installation and use |
+| **7.7** | No third-party repairs/modifications without consent; Supplier not liable for third-party work; Customer indemnifies Supplier |
+| **7.8** | Return on termination in reasonable condition (fair wear and tear); if not returned, Supplier may invoice original cost less depreciation plus recovery costs |
+| **7.9** | If returned equipment not received, Customer remains liable absent evidence of delivery |
+
+**ALSO REFERENCE (from Business Comms cl 10.5):**
+- Rental charges invoiced monthly in advance
+- First invoice includes advance month plus part-month from commencement
+
+**TARGET:** Annex 3E (Telecoms) — new section "Rental Equipment"
+
+**RATIONALE:** Rental Equipment provisions are integral to telecoms services where handsets, routers, and other equipment may be rented rather than sold. Keeping in Annex 3E (per user decision) rather than Schedule 3 common framework.
+
+**NOTE:** Consider whether Annex 3D (Connectivity) also needs rental provisions for routers/NTEs, or whether cross-reference to 3E is sufficient.
+
+## 10. 1.12 Add document hierarchy/priority clause to MSA
+**Status:** pending
+
+Add a priority of documents clause to the MSA establishing the hierarchy for resolving conflicts between contractual documents.
+
+**TARGET DOCUMENT:** MSA (HJ7) — Schedule 1 Terms and Conditions
+**PATH:** `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\drafts\current_drafts\One2call  - 2025 Templates  - MSA Defined Services - HJ7.docx`
+
+**SUGGESTED LOCATION:** Clause 1 (Definitions/Interpretation) or Clause 24 (General)
+
+**PRIORITY ORDER (highest to lowest):**
+1. Order Form
+2. Annexes (e.g., Annex 3E Telecoms)
+3. Schedules (e.g., Schedule 3, Schedule 5)
+4. MSA Terms and Conditions (Schedule 1)
+
+**DRAFT CLAUSE:**
+
+> **Priority of Documents**
+>
+> In the event of any conflict or inconsistency between the documents forming part of this Agreement, the following order of precedence shall apply (with documents higher in the list taking priority over documents lower in the list):
+>
+> (a) the Order Form;
+> (b) any Annex to a Schedule;
+> (c) any Schedule (other than these Terms and Conditions);
+> (d) these Terms and Conditions.
+>
+> For the avoidance of doubt, any express term in the Order Form shall override any default term in an Annex or Schedule.
+
+**RATIONALE:**
+- Order Form is the deal-specific document and should take precedence (e.g., for term/notice overrides)
+- Annexes contain service-specific provisions that should override general Schedule provisions
+- Schedules contain framework provisions
+- MSA core terms are the baseline
+
+**NOTE:** Also ensure Order Form template (Task 2.3) includes a statement referencing this hierarchy.
+
+## 11. 1.9 Complete gap analysis for remaining old terms
 **Status:** pending
 
 Complete gap analysis for remaining old terms documents against MSA and proposed Schedule 3/Annexes structure.
@@ -1975,7 +2138,7 @@ Old terms hierarchy:
 
 Reference: Markdown conversions in `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\`
 
-## 10. 1.5 Create Schedule 3 (Installation & Provisioning) with Annexes
+## 12. 1.5 Create Schedule 3 (Installation & Provisioning) with Annexes
 **Status:** pending
 
 Create Schedule 3: Installation & Provisioning Services as a common framework with detachable service-specific Annexes.
@@ -2032,7 +2195,7 @@ The old terms (Ethernet, Horizon) share common installation/provisioning provisi
 • Horizon: `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\One2Call-Terms-and-Conditions-for-Horizon-Services-g-v1.2\One2Call-Terms-and-Conditions-for-Horizon-Services-g-v1.2.md`
 • Business Comms: `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\One2Call-Business-Communications-General-Terms-and-Conditions.pdf\One2Call-Business-Communications-General-Terms-and-Conditions.pdf.md`
 
-## 11. 1.6 Incorporate Maintenance Schedule (HJ1) as Schedule 5 with enhancements
+## 13. 1.6 Incorporate Maintenance Schedule (HJ1) as Schedule 5 with enhancements
 **Status:** pending
 
 Incorporate the existing Maintenance Schedule (HJ1) as Schedule 5: Maintenance Schedule, with the following enhancements based on gap analysis of old maintenance terms (Phone, Access Control, CCTV).
@@ -2082,7 +2245,7 @@ Add to clause 10:
 • Access Control: `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\One2Call-Terms-Conditions-for-Access-Control-Maintenance-Services-v1.0\`
 • CCTV: `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\One2Call-Terms-Conditions-for-CCTV-Maintenance-Services-v1.1\`
 
-## 12. 1.7 Add regulatory compliance clauses
+## 14. 1.7 Add regulatory compliance clauses
 **Status:** pending
 
 Add to clause 24 (General) with explanatory drafting notes:
@@ -2096,7 +2259,7 @@ Add to clause 24 (General) with explanatory drafting notes:
 Reference:
 • Managed services agreement (1).docx — clause 29 (Anti-bribery), clause 30 (Anti-slavery), clause 35 (Dispute resolution)
 
-## 13. 2.1 Create Systems Integration SOW template
+## 15. 2.1 Create Systems Integration SOW template
 **Status:** pending
 
 Create SOW template for project-based work (migrations, infrastructure deployments, consultancy) based on Systems Integration Agreement precedent. Key areas:
@@ -2112,7 +2275,7 @@ Create SOW template for project-based work (migrations, infrastructure deploymen
 Reference:
 • Systems integration agreement (pro-supplier) (1).docx — Primary reference for SOW structure
 
-## 14. 2.2 Complete Service Schedule detail
+## 16. 2.2 Complete Service Schedule detail
 **Status:** pending
 
 Populate full detail for each Schedule 3 sub-schedule (3A-3F) including:
@@ -2126,7 +2289,7 @@ References:
 • Managed services agreement (1).docx — Schedule 4 (Service Description), Schedule 5 (Governance), Schedule 6 (Service Levels)
 • Software maintenance_ service level agreement.docx — SLA structure and service credits
 
-## 15. 2.3 Create Order Form template with service level options
+## 17. 2.3 Create Order Form template with service level options
 **Status:** pending
 
 Design Order Form template that serves as the "front page" of each service engagement.
@@ -2203,144 +2366,105 @@ Design Order Form template that serves as the "front page" of each service engag
 
 **PRECEDENT REFERENCE:** MSA (HJ7) cover page for existing format
 
-## 16. 3.1 Draft Annex 3E: Telecoms (Horizon/VoIP)
+## 18. 3.1 Draft Annex 3E: Telecoms (Horizon/VoIP)
 **Status:** pending
 
-Draft Annex 3E for Horizon/VoIP services. Mobile services to be assessed separately (see Task 1.9 — Mobile has different structure).
+Draft Annex 3E for Telecoms services by adapting the Business Communications General Terms.
+
+**REVISED APPROACH (per user instruction 10 Dec 2025):**
+Keep almost all of Business Communications intact in Annex 3E. This is the primary telecoms schedule.
 
 **TARGET DOCUMENT:** Create new Annex 3E within Schedule 3 framework in MSA (HJ7)
-**SOURCE DOCUMENTS:** 
-• Horizon: `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\One2Call-Terms-and-Conditions-for-Horizon-Services-g-v1.2\One2Call-Terms-and-Conditions-for-Horizon-Services-g-v1.2.md`
-• Business Comms: `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\One2Call-Business-Communications-General-Terms-and-Conditions.pdf\One2Call-Business-Communications-General-Terms-and-Conditions.pdf.md`
+
+**SOURCE DOCUMENT:** 
+`C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\One2Call-Business-Communications-General-Terms-and-Conditions.pdf\One2Call-Business-Communications-General-Terms-and-Conditions.pdf.md`
 
 ---
 
-## REGULATORY / SAFETY — PROMINENT PLACEMENT:
+## CLAUSES TO KEEP (adapt as needed):
 
-(a) Emergency services (999/112) warning — **MAKE THIS PROMINENT AT START OF ANNEX**
-VoIP 999/112 calls do not operate the same as PSTN fixed lines; connection may not be possible during service outages (loss of internet connectivity); emergency services may not be able to identify caller location/number; Customer should use alternative line in outage. [Horizon cl 1.21]
-
-**[COMMENT FOR CLIENT]:** "This warning is a regulatory compliance requirement for VoIP services. Ofcom requires providers to inform customers about the limitations of VoIP emergency calling. We have made this prominent in Annex 3E to ensure customers are clearly informed. Failure to provide adequate warning could expose One2Call to regulatory action and liability claims if a customer is unable to reach emergency services during an outage."
-
----
-
-## SERVICE FEATURES:
-
-(b) User-based features — Auto attendant, hunt groups, call park, call pickup, call queues etc; unallocated features may be recovered by Supplier. [Horizon cl 1.25]
-(c) Music on hold — Customer responsible for obtaining licences for uploaded music; indemnifies Supplier for failure. [Horizon cl 3.6]
-(d) Internet portal account — Supplier provides online control portal; reasonable endeavours to maintain 24/7 access; no liability for access restrictions. [Horizon cl 1.19]
-(e) IP address — No IP address ownership; internet authorities control; Supplier may change if unavailable. [Horizon cl 1.18]
-(f) Bandwidth upgrades — Additional charges for upgrades; Supplier to advise at time of request. [Horizon cl 1.20]
-
----
-
-## INSTALLATION:
-
-(g) Third-party installer — If Customer uses third-party installer, Customer indemnifies Supplier for direct/indirect losses; affects Demarcation Point. [Horizon cl 1.23]
-(h) Daily sign-off — Customer to sign off work daily during installation (not Acceptance). [Horizon cl 1.24]
+**Cl 1:** Definitions — retain and adapt
+**Cl 2:** Service provisions / No-resale — retain
+**Cl 3:** Fair use policies — retain
+**Cl 4:** Telephone numbers & services — retain in full
+**Cl 5:** Charges provisions — retain (adapt to reference MSA where duplicative)
+**Cl 6:** Call monitoring — retain
+**Cl 7:** Rental Equipment — retain in full (7.1-7.9)
+**Cl 8:** Compliance with legislation — retain
+**Cl 10:** Paying charges — retain (adapt to reference MSA)
+**Cl 11:** Term and termination — retain (early termination formula, subsidy clawback)
+**Cl 12:** Suspension — retain
+**Cl 15:** Termination consequences — retain
+**Cl 16:** Warranties — retain
+**Cl 17:** Network/Service changes — retain
+**Cl 18:** Minimum term/spend — retain
+**Cl 19:** Changes to agreement — retain
+**Cl 20:** General provisions — retain (as applicable to telecoms)
 
 ---
 
-## CUSTOMER-SUPPLIED ELEMENTS:
+## CLAUSES TO REMOVE (MSA covers these):
 
-(i) Customer-supplied access — If Customer provides own broadband/Ethernet/leased line, Customer responsible for meeting requirements (per non-One2Call access requirements document); affects Demarcation Point; Supplier may charge for visits caused by Customer-supplied access faults. [Horizon cl 1.22]
-(j) Customer-supplied router — Same responsibility transfer; affects Demarcation Point. [Horizon cl 1.17]
+**Cl 9:** Data Protection — **REMOVE** and replace with:
+> "Data protection matters are governed by Schedule 2 (Data Protection) of the Master Services Agreement."
 
----
+**Cl 13:** Limitation of Liability — **REMOVE** (MSA cl 19 covers)
 
-## DEMARCATION POINTS (tiered):
+**Cl 14:** Force Majeure — **REMOVE** (MSA covers)
 
-(k) Define Service Demarcation Point tiers:
-    • Main Horizon service: SBC connection within network
-    • One2Call-supplied access + router: Customer-side port on router
-    • Access + Installation + Equipment Maintenance: Handset
-    • Customer-supplied access/router: Adjusted (Customer responsibility)
-[Horizon cl 11 Definitions]
-
----
-
-## BUSINESS COMMUNICATIONS GAP PROVISIONS (from B1-B6, B10-B11):
-
-**Number Management:**
-(l) Number ownership — Telephone numbers allocated under this Annex are licensed to the Customer for the duration of the Service only. The Customer does not own any telephone number and has no right to retain any number after termination of the relevant Service, except as provided in clause [porting]. [Business Comms cl 4.5] → Decision B2
-
-(m) Number reallocation — The Supplier may, on reasonable written notice, reallocate any telephone number allocated to the Customer if required by Ofcom, any network operator, or for technical or operational reasons. The Supplier shall use reasonable endeavours to minimise disruption and, where practicable, provide a replacement number. [Business Comms cl 4.6] → Decision B3
-
-(n) Number porting — On termination of the Service:
-    (i) the Customer may request that the Supplier port eligible telephone numbers to another provider, subject to the receiving provider's acceptance and applicable regulatory procedures;
-    (ii) the Customer shall give not less than 30 days' written notice of such request;
-    (iii) the Customer shall pay the Supplier's reasonable administrative charges for porting; and
-    (iv) the Supplier shall co-operate with the receiving provider in accordance with Ofcom's General Conditions.
-[Business Comms cl 4.7] → Decision B4
-
-**Call Routing:**
-(o) Routing changes — The Supplier may change call routing arrangements from time to time for operational, technical, or regulatory reasons. The Supplier shall give reasonable notice of any material change that will affect the Customer's use of the Service. [Business Comms cl 4.8] → Decision B5
-
-(p) CLI disclosure — The Customer acknowledges that the Supplier may be required to disclose calling line identification (CLI) information to network operators, emergency services, or other parties in accordance with applicable law and regulation. [Business Comms cl 4.9] → Decision B5
-
-**No-Resale (leased line context):**
-(q) No bandwidth sharing — Without limiting the general no-resale provisions in Schedule 1, the Customer shall not share, resell, or permit third-party use of any leased line capacity, dedicated bandwidth, or SIP channels provided under this Annex, except for the Customer's own internal business purposes at the Service Location(s). [Business Comms cl 2.1-2.2] → Decision B1
-
-**Inbound Services:**
-(r) Inbound numbers — Where the Supplier provides inbound telephone numbers (including non-geographic numbers, freephone numbers, or local rate numbers):
-    (i) such numbers are licensed to the Customer on the same terms as other telephone numbers under this Annex;
-    (ii) the Customer shall comply with all Ofcom and Advertising Standards Authority requirements regarding the display and advertising of such numbers;
-    (iii) call charges for inbound services shall be as set out in the Order or the Supplier's published tariff; and
-    (iv) the Supplier may suspend inbound services if the Customer's account is in arrears.
-[Business Comms cl 4.10-4.12] → Decision B6
+**Cls 21-27:** General/Boilerplate — **REMOVE** (MSA covers):
+- Cl 21: Notices
+- Cl 22: Entire agreement
+- Cl 23: Waiver
+- Cl 24: Severability
+- Cl 25: Third party rights
+- Cl 26: Assignment
+- Cl 27: Governing law/jurisdiction
 
 ---
 
-## TERMINATION PROVISIONS:
+## ADDITIONS FROM HORIZON TERMS:
 
-**Early termination formula:**
-(s) If the Customer terminates this Annex before the end of the Initial Period or any Renewal Period (other than for Supplier breach), the Customer shall pay to the Supplier:
-    (i) all outstanding Charges up to the date of termination; plus
-    (ii) the Monthly Charges that would have been payable for the remainder of the Initial Period or Renewal Period, discounted to present value at a rate of [X]% per annum.
-[Business Comms cl 11.2] → Decision B10
+Add the following Horizon-specific provisions not in Business Comms:
 
-**[NOTE FOR DRAFTING]:** Client to confirm discount rate for present value calculation.
+(a) **Emergency services (999/112) warning** — PROMINENT AT START
+(b) User-based features (auto attendant, hunt groups, etc.)
+(c) Music on hold licensing
+(d) Internet portal account
+(e) IP address provisions
+(f) Bandwidth upgrades
+(g) Third-party installer indemnity
+(h) Daily sign-off during installation
+(i) Customer-supplied access/router provisions
+(j) Demarcation point tiers
+(k) Manufacturer warranty
 
-**Subsidy/equipment clawback:**
-(t) If the Supplier has provided Equipment (including handsets, routers, or other hardware) at a subsidised price or at no charge on the basis of the Customer's commitment to the Initial Period, and the Customer terminates before the end of the Initial Period (other than for Supplier breach), the Customer shall pay to the Supplier the subsidy amount, calculated as:
-    (i) the unsubsidised price of the Equipment; less
-    (ii) the subsidised price paid by the Customer; less
-    (iii) an amount equal to [1/36th] of the subsidy for each complete month of the Initial Period that has elapsed.
-[Business Comms cl 11.4] → Decision B11
-
-**[NOTE FOR DRAFTING]:** Client to confirm subsidy recovery period (e.g., 36 months for handsets).
-
----
-
-## EQUIPMENT MAINTENANCE:
-
-(u) If Equipment Maintenance is included in the Order, Schedule 5 (Maintenance Schedule) shall apply to the Maintained Equipment specified in the Order.
+**SOURCE:** `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\One2Call-Terms-and-Conditions-for-Horizon-Services-g-v1.2\One2Call-Terms-and-Conditions-for-Horizon-Services-g-v1.2.md`
 
 ---
 
 ## DEFAULT TERM & NOTICE:
 
-(v) Default Initial Term: **24 months** (if not specified in Order) — NOTE: Different from Connectivity (36 months)
-(w) Auto-renewal: 12 months rolling
-(x) Default termination notice: **60 days**
-(y) Include statement: "These defaults may be overridden by express terms in the Order Form"
-
----
-
-## MANUFACTURER WARRANTY:
-
-(z) 30-day defect warranty for equipment [Horizon cl 6.2]
-(aa) Supplier will honour manufacturer warranty on handsets [Horizon cl 11 Definitions]
+- Default Initial Term: **24 months**
+- Auto-renewal: 12 months rolling
+- Default termination notice: **60 days**
+- Statement: "These defaults may be overridden by express terms in the Order Form"
 
 ---
 
 ## RELATIONSHIP TO OTHER DOCUMENTS:
 
-• Schedule 3 common provisions (site surveys, acceptance, equipment ownership, no third-party repairs) apply — see Task 1.5
-• Schedule 5 (Maintenance Schedule) applies if Equipment Maintenance selected in Order — see Task 1.6
-• Order Form specifies whether Equipment Maintenance included — see Task 2.3
+- Schedule 3 common provisions apply (site surveys, acceptance, equipment ownership)
+- Schedule 5 (Maintenance Schedule) applies if Equipment Maintenance selected
+- Order Form specifies services and any overrides
 
-## 17. 3.2 Draft Annex 3D: Connectivity (Ethernet/Leased Lines)
+---
+
+## DRAFTING NOTE:
+
+This approach preserves the comprehensive telecoms-specific provisions from Business Communications while avoiding duplication of MSA core terms. The result is a substantial Annex that can stand alone for telecoms services.
+
+## 19. 3.2 Draft Annex 3D: Connectivity (Ethernet/Leased Lines)
 **Status:** pending
 
 Draft Annex 3D for Connectivity services (Ethernet, Fibre, EFM, FTTC, Leased Lines).
@@ -2420,3 +2544,92 @@ Draft Annex 3D for Connectivity services (Ethernet, Fibre, EFM, FTTC, Leased Lin
 • Schedule 3 common provisions (site surveys, acceptance, equipment ownership, no third-party repairs) apply — see Task 1.5
 • Schedule 5 (Maintenance Schedule) applies if Equipment Maintenance selected in Order — see Task 1.6
 • Order Form specifies whether Equipment Maintenance included — see Task 2.3
+
+## 20. 3.3 Draft Annex 3G: Mobile Services
+**Status:** pending
+
+Draft Annex 3G for Mobile Services by adapting the Mobile Services Terms.
+
+**APPROACH (per user instruction 10 Dec 2025):**
+Keep almost all of Mobile Services Terms intact in Annex 3G. The Network Provider references distinguish this from other annexes.
+
+**TARGET DOCUMENT:** Create new Annex 3G within Schedule 3 framework in MSA (HJ7)
+
+**SOURCE DOCUMENT:** 
+`C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\One2Call-Terms-and-Conditions-for-Mobile-Services-g-v1.1\One2Call-Terms-and-Conditions-for-Mobile-Services-g-v1.1.md`
+
+---
+
+## CLAUSES TO KEEP (all mobile-specific provisions):
+
+**Cl 1:** Provision of Services — services via SIM/Equipment; Connection Date; renewal
+**Cl 2:** Phone Number & SIM — SIM ownership; lost/stolen; number allocation; porting
+**Cl 3:** Services & Coverage — coverage; roaming; content upload licence
+**Cl 4:** Limitation of Services — coverage limitations; **MultiNet Service**
+**Cl 5:** Disruption to Services — no fault-free guarantee; maintenance; force majeure
+**Cl 6:** Suspension of Services — immediate suspension rights; GSM Gateway prohibition
+**Cl 7:** Equipment — risk; title; warranty; network-locked; no tampering
+**Cl 8:** Orders & Charges — Bundles; fair use; bolt-ons; tariff migrations; roaming billing; **Hardware Fund**
+**Cl 9:** Software Licence — non-exclusive; single user
+**Cl 10:** No Responsibility Areas — PIN security; FDN errors; port failures
+**Cl 11:** Third-Party Content — no responsibility
+**Cl 12:** Use Obligations — End User supply; authorised equipment; no illegal use
+**Cl 13:** PIN/Password Security — keep SIM safe
+**Cl 14:** Responsible Use — personal use; no resale; acceptable use
+**Cl 15:** Messaging/Storage — no spam; no offensive content
+**Cl 16:** Age Restricted Services — 18+ only
+**Cl 17:** Use Outside UK — foreign law compliance
+**Cl 18:** Ending Agreement — 30 days' notice; Cancellation Fee; PAC; porting
+**Cl 19:** Effect of Ending — Disconnection; forfeit Hardware Fund
+**Cl 20:** Variations — 30 days' notice; RPI-linked; short notice variable services
+**Cl 21:** Intellectual Property — IP ownership (keep — Network Provider specific)
+**Cl 22:** Liability Limits — **REMOVE** (MSA cl 19 applies — £100k not £3k)
+**Cl 23:** Privacy — **KEEP** (Network Provider data sharing is mobile-specific)
+**Cl 24:** Third Party Rights — **KEEP** (Network Provider enforcement rights)
+**Cl 25:** Definitions — adapt as needed; keep mobile-specific definitions
+
+---
+
+## CLAUSES TO REMOVE (MSA covers):
+
+**Cl 22:** Liability Limits — **REMOVE** and replace with:
+> "The limitation of liability provisions in the Master Services Agreement apply to Services provided under this Annex."
+
+**NOTE:** Unlike Business Comms, we keep cls 21, 23, 24 because they contain Network Provider-specific provisions that don't appear elsewhere.
+
+---
+
+## KEY MOBILE-SPECIFIC FEATURES TO PRESERVE:
+
+1. SIM Card provisions — ownership remains with One2Call; lost/stolen procedures
+2. MultiNet Service — automatic fallback to alternative networks
+3. Hardware Fund — equipment subsidy mechanism
+4. Bolt-ons — tariff add-ons; cannot remove mid-term
+5. Roaming charges — delayed billing up to 12 months in arrears
+6. Network-locked equipment — unlocking is customer's responsibility
+7. GSM Gateway prohibition — immediate suspension right
+8. Cancellation Fee formula — comprehensive clawback mechanism
+9. Network Provider third-party rights — can enforce directly
+
+---
+
+## DEFAULT TERM & NOTICE:
+
+- Default Minimum Term: As specified in Service Agreement/Tariff (typically 24 months)
+- Notice period: **30 days** (per cl 18)
+- Post-Minimum Term: 30-day rolling basis
+
+---
+
+## RELATIONSHIP TO OTHER DOCUMENTS:
+
+- MSA core terms apply (especially cl 19 Liability)
+- Schedule 3 common provisions apply where relevant
+- Order Form specifies tariff, equipment, bolt-ons
+- This Annex is SEPARATE from Annex 3E (Telecoms/VoIP) — different network provider arrangements
+
+---
+
+## DRAFTING NOTE:
+
+Mobile services operate through Network Providers with their own terms and enforcement rights. This justifies keeping Mobile as a separate, comprehensive Annex rather than merging with Annex 3E (Telecoms). The £3,000 liability cap in the old terms is replaced by MSA's £100k cap.

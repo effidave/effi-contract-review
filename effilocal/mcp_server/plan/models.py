@@ -23,8 +23,12 @@ TaskStatus = Literal["pending", "in_progress", "completed", "blocked"]
 
 
 def generate_id() -> str:
-    """Generate an 8-character hex ID matching TypeScript's crypto.randomBytes(4).toString('hex')."""
-    return secrets.token_hex(4)
+    """Generate a prefixed ID that won't be parsed as a number by YAML.
+    
+    Format: wt + 8-character hex = "wt1a2b3c4d"
+    Matches TypeScript's generateId() in workplan.ts.
+    """
+    return "wt" + secrets.token_hex(4)
 
 
 def normalize_path(path: str) -> str:

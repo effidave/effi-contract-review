@@ -36,10 +36,11 @@ from effilocal.mcp_server.tools import plan_tools
 class TestGenerateId:
     """Tests for generate_id function."""
     
-    def test_returns_8_char_hex(self):
+    def test_returns_wt_prefixed_hex(self):
         id = generate_id()
-        assert len(id) == 8
-        assert all(c in '0123456789abcdef' for c in id)
+        assert len(id) == 10  # wt + 8 hex chars
+        assert id.startswith('wt')
+        assert all(c in '0123456789abcdef' for c in id[2:])  # Check hex part
     
     def test_generates_unique_ids(self):
         ids = [generate_id() for _ in range(100)]
