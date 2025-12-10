@@ -81,11 +81,12 @@ export interface LegalDocumentJSON {
 // ============================================================================
 
 /**
- * Generate an 8-character hex hash ID
+ * Generate a prefixed ID that won't be parsed as a number by YAML.
+ * Format: wt + 8-character hex = "wt1a2b3c4d"
  */
 function generateId(): string {
     const bytes = crypto.randomBytes(4);
-    return bytes.toString('hex');
+    return 'wt' + bytes.toString('hex');
 }
 
 /**

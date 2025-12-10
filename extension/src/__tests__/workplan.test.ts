@@ -27,7 +27,7 @@ describe('Edit class', () => {
             });
 
             expect(edit.id).toBeDefined();
-            expect(edit.id).toMatch(/^[a-f0-9]{8}$/); // 8-char hex hash
+            expect(edit.id).toMatch(/^wt[a-f0-9]{8}$/); // wt + 8-char hex hash
             expect(edit.taskId).toBe('task123');
             expect(edit.toolName).toBe('search_and_replace');
             expect(edit.request).toEqual({ filename: 'doc.docx', find_text: 'foo', replace_text: 'bar' });
@@ -152,7 +152,7 @@ describe('WorkTask class', () => {
             });
 
             expect(task.id).toBeDefined();
-            expect(task.id).toMatch(/^[a-f0-9]{8}$/);
+            expect(task.id).toMatch(/^wt[a-f0-9]{8}$/);
             expect(task.title).toBe('Review liability clause');
             expect(task.description).toBe('Check limitation of liability terms against precedent');
             expect(task.status).toBe('pending');
@@ -782,9 +782,9 @@ describe('ID generation', () => {
         const task2 = new WorkTask({ title: 'T2', description: 'D' });
         const edit1 = new Edit({ taskId: 't', toolName: 'tool', request: {}, response: {} });
 
-        expect(task1.id).toMatch(/^[a-f0-9]{8}$/);
-        expect(task2.id).toMatch(/^[a-f0-9]{8}$/);
-        expect(edit1.id).toMatch(/^[a-f0-9]{8}$/);
+        expect(task1.id).toMatch(/^wt[a-f0-9]{8}$/);
+        expect(task2.id).toMatch(/^wt[a-f0-9]{8}$/);
+        expect(edit1.id).toMatch(/^wt[a-f0-9]{8}$/);
     });
 
     test('should generate unique IDs', () => {
@@ -809,7 +809,7 @@ describe('LegalDocument class', () => {
             });
 
             expect(doc.id).toBeDefined();
-            expect(doc.id).toMatch(/^[a-f0-9]{8}$/);
+            expect(doc.id).toMatch(/^wt[a-f0-9]{8}$/);
             expect(doc.filename).toBe('C:/Projects/Acme/drafts/nda.docx');
             expect(doc.displayName).toBe('nda.docx'); // Auto-derived from filename
             expect(doc.addedDate).toBeInstanceOf(Date);
