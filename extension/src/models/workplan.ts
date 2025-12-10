@@ -15,7 +15,7 @@ import * as yaml from 'js-yaml';
 // Types
 // ============================================================================
 
-export type TaskStatus = 'pending' | 'in_progress' | 'completed' | 'blocked';
+export type TaskStatus = 'pending' | 'in_progress' | 'completed' | 'blocked' | 'notes';
 
 export interface EditData {
     id?: string;
@@ -314,10 +314,29 @@ export class WorkTask {
     }
 
     /**
-     * Check if task is open (not completed)
+     * Convert this task to a note
+     */
+    convertToNote(): void {
+        this.status = 'notes';
+    }
+
+    /**
+     * Unblock a blocked task (set to pending)
+     * @returns true if task was unblocked, false if task was not blocked
+     */
+    unblock(): boolean {
+        if (this.status === 'blocked') {
+            this.status = 'pending';
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check if task is open (not completed and not a note)
      */
     isOpen(): boolean {
-        return this.status !== 'completed';
+        return this.status !== 'completed' && this.status !== 'notes';
     }
 
     /**
@@ -405,10 +424,24 @@ export class WorkPlan {
     }
 
     /**
-     * Get the number of tasks
+     * Get the number of actionable tasks (excludes notes)
      */
     getTaskCount(): number {
-        return this.tasks.length;
+        return this.tasks.filter(t => t.status !== 'notes').length;
+    }
+
+    /**
+     * Get the number of completed tasks
+     */
+    getCompletedCount(): number {
+        return this.tasks.filter(t => t.status === 'completed').length;
+    }
+
+    /**
+     * Check if the plan has any notes
+     */
+    hasNotes(): boolean {
+        return this.tasks.some(t => t.status === 'notes');
     }
 
     /**

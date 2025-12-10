@@ -21,7 +21,8 @@ const STATUS_LABELS = {
     pending: 'Pending',
     in_progress: 'In Progress',
     completed: 'Completed',
-    blocked: 'Blocked'
+    blocked: 'Blocked',
+    notes: 'Notes'
 };
 
 /**
@@ -332,6 +333,7 @@ class PlanPanel {
         
         this._renderTasks();
         this._renderProgress();
+        this._updateNotesFilterButton();  // Update Notes button styling based on current tasks
         
         // Re-apply selection if task still exists
         if (this.selectedTaskId) {
@@ -989,7 +991,9 @@ class PlanPanel {
         const filters = this._createElement('div', 'plan-filter-controls');
         this.headerElement.appendChild(filters);
         
-        const filterOptions = ['all', 'pending', 'in_progress', 'completed', 'blocked'];
+        const filterOptions = ['all', 'pending', 'in_progress', 'completed', 'blocked', 'notes'];
+        const hasNotes = this.tasks.some(t => t.status === 'notes');
+        console.log('[PlanPanel] _renderFilterControls: hasNotes =', hasNotes, 'tasks =', this.tasks.map(t => ({id: t.id, status: t.status})));
         
         for (const filterValue of filterOptions) {
             const btn = this._createElement('button', `filter-${filterValue}`);
@@ -997,9 +1001,69 @@ class PlanPanel {
             if (filterValue === this.filter) {
                 btn.classList.add('filter-active');
             }
-            btn.textContent = filterValue === 'all' ? 'All' : STATUS_LABELS[filterValue] || filterValue;
+            
+            // Set button text
+            let buttonText = filterValue === 'all' ? 'All' : STATUS_LABELS[filterValue] || filterValue;
+            
+
+            
+            // Add has-notes class to notes button when notes exist
+            if (filterValue === 'notes' && hasNotes) {
+                btn.classList.add('has-notes');
+                // Apply inline styles as fallback since CSS may not be loading properly
+                if (filterValue === this.filter) {
+                    // Active state - bright orange
+                    btn.style.background = '#f97316';
+                    btn.style.color = 'white';
+                    btn.style.borderColor = '#ea580c';
+                } else {
+                    // Inactive state - pale orange
+                    btn.style.background = '#fed7aa';
+                    btn.style.color = '#9a3412';
+                    btn.style.borderColor = '#fdba74';
+                }
+                console.log('[PlanPanel] Added has-notes class and inline styles to notes button');
+            }
+            btn.textContent = buttonText;
             btn.addEventListener('click', () => this.setFilter(filterValue));
             filters.appendChild(btn);
+        }
+    }
+    
+    /**
+     * Update the Notes filter button styling based on whether notes exist.
+     * Called when tasks change to dynamically update the has-notes indicator.
+     */
+    _updateNotesFilterButton() {
+        const notesBtn = this.panelElement?.querySelector('.filter-notes');
+        if (!notesBtn) return;
+        
+        const hasNotes = this.tasks.some(t => t.status === 'notes');
+        const isActive = this.filter === 'notes';
+        
+        console.log('[PlanPanel] _updateNotesFilterButton: hasNotes =', hasNotes, 'isActive =', isActive);
+        
+        // Update button text
+        notesBtn.textContent = 'Notes';
+        
+        if (hasNotes) {
+            notesBtn.classList.add('has-notes');
+            // Apply inline styles as fallback
+            if (isActive) {
+                notesBtn.style.background = '#f97316';
+                notesBtn.style.color = 'white';
+                notesBtn.style.borderColor = '#ea580c';
+            } else {
+                notesBtn.style.background = '#fed7aa';
+                notesBtn.style.color = '#9a3412';
+                notesBtn.style.borderColor = '#fdba74';
+            }
+        } else {
+            notesBtn.classList.remove('has-notes');
+            // Reset to default styles
+            notesBtn.style.background = '';
+            notesBtn.style.color = '';
+            notesBtn.style.borderColor = '';
         }
     }
     
@@ -1013,8 +1077,10 @@ class PlanPanel {
         
         this.progressElement = this._createElement('div', 'plan-progress-summary');
         
-        const completedCount = this.tasks.filter(t => t.status === 'completed').length;
-        const totalCount = this.tasks.length;
+        // Exclude notes from progress counting
+        const actionableTasks = this.tasks.filter(t => t.status !== 'notes');
+        const completedCount = actionableTasks.filter(t => t.status === 'completed').length;
+        const totalCount = actionableTasks.length;
         const percentage = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
         
         // Summary text

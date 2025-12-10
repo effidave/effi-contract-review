@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "doc_id": "One2Call-Order---notes",
+  "doc_format": "docx",
+  "source_filename": "One2Call Order - notes.docx",
+  "char_count": 448,
+  "block_count": 5,
+  "section_count": 1,
+  "ltu_count": 5,
+  "max_section_depth": 1,
+  "has_tag_ranges": true,
+  "schema_version": "1.0.0",
+  "filemap": {
+    "blocks": "blocks.jsonl",
+    "sections": "sections.json",
+    "styles": "styles.json",
+    "tag_ranges": "tag_ranges.jsonl"
+  }
+}

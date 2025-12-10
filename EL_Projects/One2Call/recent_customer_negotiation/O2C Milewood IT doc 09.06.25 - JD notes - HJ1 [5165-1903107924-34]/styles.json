@@ -1,0 +1,11 @@
+{
+  "styles": [
+    {
+      "name": "Normal",
+      "type": "table_cell",
+      "count": 60,
+      "semantic_hint": null,
+      "hint_scores": null
+    }
+  ]
+}

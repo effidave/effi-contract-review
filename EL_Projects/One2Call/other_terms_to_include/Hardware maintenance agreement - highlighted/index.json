@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "doc_id": "Hardware-maintenance-agreement---highlighted",
+  "doc_format": "docx",
+  "source_filename": "Hardware maintenance agreement - highlighted.docx",
+  "char_count": 20090,
+  "block_count": 140,
+  "section_count": 133,
+  "ltu_count": 140,
+  "max_section_depth": 4,
+  "has_tag_ranges": true,
+  "schema_version": "1.0.0",
+  "filemap": {
+    "blocks": "blocks.jsonl",
+    "sections": "sections.json",
+    "styles": "styles.json",
+    "tag_ranges": "tag_ranges.jsonl"
+  }
+}

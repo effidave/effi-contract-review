@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "doc_id": "24-Months-Managed-IT-&-Cyber-MSA-for-Milewood-Heal",
+  "doc_format": "docx",
+  "source_filename": "24 Months Managed IT & Cyber MSA for Milewood Healthcare Limited.pdf.docx",
+  "char_count": 129552,
+  "block_count": 1102,
+  "section_count": 403,
+  "ltu_count": 1102,
+  "max_section_depth": 4,
+  "has_tag_ranges": true,
+  "schema_version": "1.0.0",
+  "filemap": {
+    "blocks": "blocks.jsonl",
+    "sections": "sections.json",
+    "styles": "styles.json",
+    "tag_ranges": "tag_ranges.jsonl"
+  }
+}

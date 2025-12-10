@@ -941,13 +941,16 @@ function getPlanWebviewContent(context: vscode.ExtensionContext, webview: vscode
     // Include project path in the page for initialization
     const projectPathEscaped = currentProjectPath ? currentProjectPath.replace(/\\/g, '\\\\').replace(/'/g, "\\'") : '';
 
+    // Cache bust for style.css
+    const cacheBust = Date.now();
+
     return `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource} 'unsafe-inline'; script-src 'nonce-${nonce}';">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="${styleUri}" rel="stylesheet">
+    <link href="${styleUri}?v=${cacheBust}" rel="stylesheet">
     <title>Work Plan</title>
 </head>
 <body class="plan-webview">

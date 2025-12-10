@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "doc_id": "One2call-Limited_-Service-Level-Agreement-(SLA)-Po",
+  "doc_format": "docx",
+  "source_filename": "One2call Limited_ Service Level Agreement (SLA) Policy  Guide.docx",
+  "char_count": 14408,
+  "block_count": 245,
+  "section_count": 88,
+  "ltu_count": 245,
+  "max_section_depth": 2,
+  "has_tag_ranges": true,
+  "schema_version": "1.0.0",
+  "filemap": {
+    "blocks": "blocks.jsonl",
+    "sections": "sections.json",
+    "styles": "styles.json",
+    "tag_ranges": "tag_ranges.jsonl"
+  }
+}

@@ -37,7 +37,7 @@ tasks:
     • Precedents: `C:\Users\DavidSant\effi-contract-review\EL_Projects\Precedents\Pro-Supplier\managed_it_services\`
 
 
-    **Approved Document Architecture (Option B):**
+    **Approved Document Architecture (Option B — Updated):**
 
     ```
 
@@ -60,9 +60,11 @@ tasks:
 
     │   ├── Annex 3D: Connectivity (Ethernet — 36m/60d defaults)
 
-    │   ├── Annex 3E: Telecoms (Horizon/VoIP — 24m/60d defaults)
+    │   ├── Annex 3E: Telecoms (Business Comms adapted — 24m/60d defaults)
 
-    │   └── Annex 3F: Hardware Provision & Maintenance
+    │   ├── Annex 3F: Hardware Provision & Maintenance
+
+    │   └── Annex 3G: Mobile Services (Mobile Terms adapted — 24m/30d defaults)
 
     ├── Schedule 4: Security Schedule (optional — for cyber services)
 
@@ -71,22 +73,23 @@ tasks:
     ```
 
 
-    **Hierarchy of Documents:**
+    **Hierarchy of Documents (Task 1.12):**
 
     1. Order Form (highest — overrides Annex defaults)
 
-    2. Schedule 1 (Terms and Conditions)
+    2. Annexes
 
-    3. Schedule 3 + selected Annexes
+    3. Schedules
 
-    4. Other Schedules
+    4. MSA Terms and Conditions (Schedule 1)
 
 
     **Gap Analysis Status:**
 
-    ✅ Ethernet terms → Task 1.5 (Schedule 3), Task 1.8 (MSA core), Annex 3D specifics
+    ✅ Ethernet terms → Task 1.5 (Schedule 3), Task 1.8 (MSA core), Task 3.2 (Annex
+    3D)
 
-    ✅ Horizon terms → Task 3.1 (Annex 3E with prominent 999 warning + client comment)
+    ✅ Horizon terms → Task 3.1 (Annex 3E additions)
 
     ✅ Phone Maintenance → Task 1.6 (Schedule 5 enhancements)
 
@@ -94,14 +97,11 @@ tasks:
 
     ✅ CCTV Maintenance → Task 1.6 (Schedule 5 enhancements)
 
+    ✅ Sale of Goods → **RETIRED** — MSA cl 4-8 already covers goods
 
-    **Gap Analysis Remaining (Task 1.9):**
+    ✅ Business Communications → Task 3.1 (Annex 3E — keep almost all intact)
 
-    • Mobile terms — Different structure (25 clauses); may need separate treatment
-
-    • Business Comms — To be analysed
-
-    • Sale of Goods — To be analysed
+    ✅ Mobile Terms → Task 3.3 (Annex 3G — keep almost all intact, separate from 3E)
 
 
     **Key Decisions Made:**
@@ -121,6 +121,14 @@ tasks:
     • Equipment theft/destruction: Softer approach than old terms (30-day termination
     right); client comment explaining departure
 
+    • Business Comms → Annex 3E: Keep almost all intact; remove only cls 9, 13, 14,
+    21-27 (MSA covers)
+
+    • Mobile Terms → Annex 3G: Keep almost all intact; remove only cl 22 (MSA liability
+    applies)
+
+    • Document hierarchy: Order > Annex > Schedule > MSA
+
 
     **MSA Provisions Already Adequate (no duplication needed):**
 
@@ -129,7 +137,8 @@ tasks:
 
     • Interest on late payment: MSA cl 14.14 (8% above BoE base rate)
 
-    • Liability cap: MSA cl 19.4 (£100k per client instruction)
+    • Liability cap: MSA cl 19.4 (£100k per client instruction — applies to all Annexes
+    including Mobile)
 
 
     **Drafting Style:** British English per grammar.md (-ise, -our, licence/license
@@ -137,7 +146,7 @@ tasks:
 
 
     **Jurisdiction:** English law, UK GDPR, EU GDPR'
-  status: pending
+  status: notes
   ordinal: 0
   creationDate: '2025-12-09T22:12:13.037368Z'
   completionDate: null
@@ -187,7 +196,9 @@ tasks:
 
     │   ├── Annex 3E: Telecoms (Business Comms adapted — 24m/60d defaults)
 
-    │   └── Annex 3F: Hardware Provision & Maintenance
+    │   ├── Annex 3F: Hardware Provision & Maintenance
+
+    │   └── Annex 3G: Mobile Services (Mobile Terms adapted — 24m/30d defaults)
 
     ├── Schedule 4: Security Schedule (optional — for cyber services)
 
@@ -196,8 +207,8 @@ tasks:
     ```
 
 
-    **Hierarchy:** Order Form (highest) → Schedule 1 → Schedule 3 + Annexes → Other
-    Schedules
+    **Hierarchy:** Order Form (highest) → Annexes → Schedules → Schedule 1 (Terms
+    and Conditions)
 
 
     **Rationale:** Provides flexibility to assemble contract per engagement while
@@ -210,20 +221,21 @@ tasks:
     **DECISION S2: Separate Mobile from Horizon**
 
 
-    **Decision:** Create separate Annex for Mobile services (not combined with Horizon
-    VoIP in Annex 3E).
+    **Decision:** Create separate Annex for Mobile services (Annex 3G) — NOT combined
+    with Horizon VoIP in Annex 3E.
 
 
     **Rationale:** Mobile terms have fundamentally different structure (25 clauses
     vs 11) and cover different subject matter:
 
-    - Mobile: SIM cards, handsets, porting, roaming, network coverage, MultiNet
+    - Mobile: SIM cards, handsets, porting, roaming, network coverage, MultiNet, Hardware
+    Fund, Network Provider rights
 
     - Horizon: VoIP, SBC, IP addresses, emergency services warning
 
 
-    **Impact:** May need Annex 3E-VoIP and Annex 3E-Mobile, or renumber to 3E and
-    3G.
+    **Impact:** Annex 3E (Telecoms/VoIP) and Annex 3G (Mobile) are separate, detachable
+    annexes.
 
 
     ---
@@ -325,6 +337,69 @@ tasks:
     **Rationale:** Business Communications is comprehensive and telecoms-specific.
     Rather than extracting individual provisions, keep it substantially intact as
     Annex 3E. Only remove clauses that would duplicate MSA core terms.
+
+
+    ---
+
+
+    **DECISION S5: Mobile Terms → Annex 3G (Keep Almost All)**
+
+
+    **Decision:** Adapt Mobile Services Terms as the basis for Annex 3G, keeping almost
+    all provisions intact.
+
+
+    **CLAUSES TO KEEP:**
+
+    - Cl 1: Provision of Services (SIM/Equipment; Connection Date)
+
+    - Cl 2: Phone Number & SIM (ownership; lost/stolen; porting)
+
+    - Cl 3: Services & Coverage (roaming; content licence)
+
+    - Cl 4: Limitation of Services (coverage; MultiNet Service)
+
+    - Cl 5: Disruption to Services
+
+    - Cl 6: Suspension of Services (GSM Gateway prohibition)
+
+    - Cl 7: Equipment (risk; title; warranty; network-locked)
+
+    - Cl 8: Orders & Charges (Bundles; bolt-ons; Hardware Fund)
+
+    - Cl 9: Software Licence
+
+    - Cls 10-17: Use obligations, security, responsible use, messaging, age-restricted
+
+    - Cl 18: Ending Agreement (30 days'' notice; Cancellation Fee; PAC; porting)
+
+    - Cl 19: Effect of Ending (Disconnection; forfeit Hardware Fund)
+
+    - Cl 20: Variations (30 days'' notice; RPI-linked)
+
+    - Cl 21: Intellectual Property
+
+    - Cl 23: Privacy (Network Provider data sharing — mobile-specific)
+
+    - Cl 24: Third Party Rights (Network Provider enforcement rights)
+
+    - Cl 25: Definitions (mobile-specific definitions)
+
+
+    **CLAUSES TO REMOVE (MSA covers):**
+
+    - Cl 22: Liability Limits → MSA cl 19 applies (£100k cap, not mobile''s £3,000)
+
+
+    **KEY DIFFERENCE FROM 3E:** Keep cls 21, 23, 24 because they contain Network Provider-specific
+    provisions that don''t appear elsewhere. Network Provider can enforce directly
+    under Contracts (Rights of Third Parties) Act 1999.
+
+
+    **Rationale:** Mobile terms are supplementary to Business Communications (per
+    cl 32 of old Mobile terms) but cover fundamentally different subject matter. The
+    Network Provider references and unique features (MultiNet, Hardware Fund, SIM
+    provisions) justify a separate, comprehensive Annex.
 
 
     ---
@@ -509,7 +584,8 @@ tasks:
     **Decision:** MSA cl 19.4 already has £100,000 liability cap per client instruction.
 
 
-    **Rationale:** Client has already made commercial decision on cap level.
+    **Rationale:** Client has already made commercial decision on cap level. This
+    applies to ALL services including Mobile (replacing Mobile''s £3,000 cap).
 
 
     ---
@@ -606,6 +682,24 @@ tasks:
     ---
 
 
+    **DECISION R3: Mobile Terms → Annex 3G (Not Retired)**
+
+
+    **Decision:** Mobile Services Terms will be adapted as Annex 3G, NOT retired.
+
+
+    **Rationale:** Mobile terms contain comprehensive mobile-specific provisions (SIM
+    ownership, MultiNet, Hardware Fund, Network Provider rights) that should be preserved.
+    Rather than extracting individual clauses, adapt the document as Annex 3G with
+    only minor removals (see Decision S5).
+
+
+    **Old Document Path:** `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\One2Call-Terms-and-Conditions-for-Mobile-Services-g-v1.1\`
+
+
+    ---
+
+
     ## BUSINESS COMMUNICATIONS GAP DECISIONS
 
 
@@ -634,10 +728,10 @@ tasks:
     **Gap:** Business Comms cl 6 requires Customer to disclose call monitoring to
     its staff.
 
-    **Decision:** Add to MSA cl 18 (Data Protection).
+    **Decision:** **KEEP IN ANNEX 3E** — not moved to MSA cl 18.
 
-    **Rationale:** This is a data protection/RIPA compliance matter, not service-specific.
-    Fits with existing DP clause.
+    **Rationale:** Call monitoring is telecoms-specific. Stays with other telecoms
+    provisions.
 
 
     ---
@@ -659,7 +753,7 @@ tasks:
 
 
     *Additional decisions to be added as they are made during this project.*'
-  status: pending
+  status: notes
   ordinal: 1
   creationDate: '2025-12-09T23:18:31.326988Z'
   completionDate: null
@@ -676,14 +770,22 @@ tasks:
 
 
     Reference: Managed services agreement (1).docx'
-  status: pending
+  status: completed
   ordinal: 2
   creationDate: '2025-12-09T19:51:13.454897Z'
-  completionDate: null
+  completionDate: '2025-12-10T08:51:52.367513Z'
   editIds: []
 - id: wt09b4f841
   title: 1.2 Expand clause 21 (exit/transition)
-  description: 'Add exit/transition provisions covering:
+  description: '**NOT IMPLEMENTED — Client Decision**
+
+
+    The following exit/transition provisions were considered but intentionally not
+    added per client instruction (10 Dec 2025). The existing MSA provisions (clause
+    21 Consequences of Termination) are considered adequate.
+
+
+    **Provisions considered but not implemented:**
 
 
     (a) Customer data extraction right — Customer may request return or deletion of
@@ -702,12 +804,16 @@ tasks:
     or purchased at net book value.
 
 
+    **Rationale:** Client confirmed existing clause 21 provisions are sufficient for
+    One2Call''s business model.
+
+
     Reference: Managed services agreement (1).docx — clause 21 (Exit Plan and Transition
     Services)'
-  status: pending
+  status: completed
   ordinal: 3
   creationDate: '2025-12-09T19:51:19.582753Z'
-  completionDate: null
+  completionDate: '2025-12-10T08:58:10.957331Z'
   editIds: []
 - id: wt90c3d4e3
   title: 1.3 Clarify indemnity cap
@@ -721,196 +827,56 @@ tasks:
   creationDate: '2025-12-09T19:51:25.068098Z'
   completionDate: null
   editIds: []
-- id: wt1370e522
-  title: 1.4 Draft Security Schedule (Schedule 4)
-  description: 'Create optional Security Schedule (Schedule 4) to be incorporated
-    by reference in Orders that include cyber security services. Key areas:
+- id: wt74ad3e5e
+  title: 1.7 Add regulatory compliance clauses
+  description: 'Add to clause 24 (General) with explanatory drafting notes:
 
 
-    (a) Security standards compliance — ISO 27001 certification, Cyber Essentials
-    Plus accreditation, compliance obligations.
+    (a) Anti-bribery — Compliance with Bribery Act 2010; no bribes or facilitation
+    payments; right to terminate for breach. [Note: May be required by larger clients
+    and public sector customers.]
 
 
-    (b) Incident definitions — Define Incident, Known Vulnerability, Latent Vulnerability,
-    Virus, and Mitigate.
+    (b) Anti-slavery — Compliance with Modern Slavery Act 2015; due diligence on supply
+    chain; annual statement. [Note: May be required by larger clients and public sector
+    customers.]
 
 
-    (c) Incident handling procedures — Detection, escalation, response, resolution,
-    post-incident review.
+    (c) Dispute escalation — Before commencing litigation, disputes to be escalated
+    to senior management for good faith resolution discussions for 14 days. [Note:
+    May reduce legal costs and preserve commercial relationships.]
 
 
-    (d) Vulnerability management — Scanning, patching, remediation timelines.
+    Reference:
 
-
-    (e) Business continuity/disaster recovery — DR plan, testing, RTO/RPO commitments.
-
-
-    (f) Notification obligations — Timing and content of security incident notifications
-    to Customer.
-
-
-    Reference: Managed services agreement (1).docx — clause 8 (Security) and Schedule
-    12 (Security)'
+    • Managed services agreement (1).docx — clause 29 (Anti-bribery), clause 30 (Anti-slavery),
+    clause 35 (Dispute resolution)'
   status: pending
   ordinal: 5
-  creationDate: '2025-12-09T19:51:31.593909Z'
+  creationDate: '2025-12-09T19:51:51.851235Z'
   completionDate: null
   editIds: []
-- id: wt98ff7a67
-  title: 1.8 Enhance MSA core with general provisions
-  description: "Add the following general provisions to the MSA core (Schedule 1 Terms\
-    \ and Conditions) that will apply to all services.\n\n**TARGET DOCUMENT:** MSA\
-    \ (HJ7) — Schedule 1 Terms and Conditions\n**PATH:** `C:\\Users\\DavidSant\\effi-contract-review\\\
-    EL_Projects\\One2Call\\drafts\\current_drafts\\One2call  - 2025 Templates  - MSA\
-    \ Defined Services - HJ7.docx`\n\n---\n\n## FROM ETHERNET/HORIZON GAP ANALYSIS\n\
-    \n**Clause 10 (Customer Obligations) — Add new sub-clauses:**\n(a) Named contacts\
-    \ — Customer to provide authorised contacts with appropriate authority level for\
-    \ each Order, and notify Supplier of any changes. [Ethernet cl 1.7/3.2, Horizon\
-    \ cl 1.7/3.2]\n(b) Third-party consents — Customer responsible for obtaining all\
-    \ necessary consents (landlord, wayleave, access) for installation or service\
-    \ delivery at Customer premises; Customer bears cost of obtaining consents. [Ethernet\
-    \ cl 3.1, Horizon cl 3.1]\n(c) Health & safety — Customer to ensure Supplier staff\
-    \ have safe working environment; notify Supplier of applicable H&S rules; Supplier\
-    \ to comply with reasonable site rules. [Ethernet cl 3.3, Horizon cl 3.3]\n\n\
-    **Clause 11 (Charges) — Add new sub-clauses:**\n(d) Deposits & guarantees — Supplier\
-    \ may require deposit or parent company guarantee as condition of service provision;\
-    \ Customer agrees to enter into any agreement reasonably required. [Ethernet cl\
-    \ 7.6, Horizon cl 7.6]\n(e) Aborted visit charges — If Supplier attends site and\
-    \ cannot complete work due to Customer default (no access, site not ready, appointment\
-    \ broken, failure to prepare site), Supplier may charge standard aborted visit\
-    \ fee; rescheduled appointments subject to new lead-times. [Ethernet cl 1.13,\
-    \ Horizon cl 1.13]\n\n---\n\n## FROM BUSINESS COMMUNICATIONS GAP ANALYSIS\n\n\
-    **Clause 12 (Intellectual Property) — Add new sub-clause:**\n(f) No-resale — Customer\
-    \ shall not resell, share, or permit third-party use of the Services or any bandwidth\
-    \ provided under any Order, except with the Supplier's prior written consent.\
-    \ [Business Comms cl 2.1-2.2] → See Decision B1\n\n**Clause 14 (Charges) — Add\
-    \ new sub-clause:**\n(g) Credit check consent — The Customer consents to the Supplier\
-    \ conducting credit checks on the Customer before entering into or during the\
-    \ term of any Order. The Supplier may decline to provide Services, or require\
-    \ a deposit or other security, if the results of such checks are not satisfactory.\
-    \ [Business Comms cl 5.6] → See Decision B7\n\n**Clause 24 (General) — Add new\
-    \ sub-clause:**\n(h) Marketing consent — The Customer consents to the Supplier:\n\
-    \    (i) using the Customer's name and logo in the Supplier's marketing materials\
-    \ as a reference customer; and\n    (ii) sending the Customer information about\
-    \ the Supplier's products and services by email or other means,\nprovided that\
-    \ the Customer may withdraw either consent by written notice to the Supplier.\
-    \ [Business Comms cl 14] → See Decision B12\n\n---\n\n**REMOVED FROM THIS TASK:**\n\
-    ~~Call monitoring disclosure~~ — Stays in Annex 3E (Business Comms cl 6) as telecoms-specific\
-    \ provision. Not moved to MSA cl 18.\n\n---\n\n**WHY THESE BELONG IN MSA CORE:**\n\
-    These provisions apply to ALL services and represent general obligations that\
-    \ should apply across the board rather than being repeated in each Annex.\n\n\
-    **SOURCE DOCUMENTS:**\n• Ethernet: `C:\\Users\\DavidSant\\effi-contract-review\\\
-    EL_Projects\\One2Call\\old_terms\\One2Call-Terms-and-Conditions-for-Ethernet-g\\\
-    One2Call-Terms-and-Conditions-for-Ethernet-g.md`\n• Horizon: `C:\\Users\\DavidSant\\\
-    effi-contract-review\\EL_Projects\\One2Call\\old_terms\\One2Call-Terms-and-Conditions-for-Horizon-Services-g-v1.2\\\
-    One2Call-Terms-and-Conditions-for-Horizon-Services-g-v1.2.md`\n• Business Comms:\
-    \ `C:\\Users\\DavidSant\\effi-contract-review\\EL_Projects\\One2Call\\old_terms\\\
-    One2Call-Business-Communications-General-Terms-and-Conditions.pdf\\One2Call-Business-Communications-General-Terms-and-Conditions.pdf.md`\n\
-    \n**PRECEDENT REFERENCE:** Managed services agreement (1).docx — for drafting\
-    \ style"
+- id: aff8ea33
+  title: Add no verbal/physical abuse clause to client obligations
+  description: Add provision from Milewood General T&Cs cl 5.1.5 giving One2Call the
+    right to suspend services if client subjects any One2Call employee, contractor
+    or representative to verbal, physical or other abuse. This is a modern, employee-protective
+    provision. Consider adding to MSA client obligations section.
   status: pending
   ordinal: 6
-  creationDate: '2025-12-09T22:04:57.278344Z'
+  creationDate: '2025-12-10T02:03:21.569422Z'
   completionDate: null
   editIds: []
-- id: wt0f0350e3
-  title: 1.10 Review Fair Use & Legislation Compliance gaps
-  description: "Review Business Communications fair use policies and legislation compliance\
-    \ provisions to identify any gaps not already covered by the MSA.\n\n**SOURCE:**\
-    \ Business Communications General Terms cl 3 (Fair Use Policies) and cl 8-9 (Compliance\
-    \ with Legislation)\n**PATH:** `C:\\Users\\DavidSant\\effi-contract-review\\EL_Projects\\\
-    One2Call\\old_terms\\One2Call-Business-Communications-General-Terms-and-Conditions.pdf\\\
-    One2Call-Business-Communications-General-Terms-and-Conditions.pdf.md`\n\n**REVIEW\
-    \ STEPS:**\n\n1. **Extract Business Comms provisions:**\n   - Cl 3: Fair Use Policies\
-    \ — acceptable use, bandwidth caps, abuse prevention\n   - Cl 8: Compliance with\
-    \ legislation — RIPA, Telecoms Act, Ofcom requirements\n   - Cl 9: Equipment compliance\
-    \ — CE marking, type approval, interference\n\n2. **Compare against MSA (HJ7):**\n\
-    \   - Check Schedule 1 (Terms and Conditions) for existing compliance clauses\n\
-    \   - Check cl 12 (Use restrictions / acceptable use)\n   - Check cl 18 (Data\
-    \ Protection) for RIPA coverage\n   - Check any equipment clauses for compliance\
-    \ requirements\n\n3. **Identify gaps:**\n   - List any Business Comms provisions\
-    \ NOT covered by MSA\n   - Note any MSA provisions that are weaker than Business\
-    \ Comms\n\n4. **Decision required:** For each gap, decide placement:\n   - MSA\
-    \ core (if applies to all services)\n   - Schedule 3 common framework (if applies\
-    \ to all installed services)\n   - Specific Annex (if service-specific, e.g.,\
-    \ telecoms-only regulations)\n\n**OUTPUT:** Update Task 0.1 (Decisions Log) with\
-    \ findings and decisions.\n\n**CONTEXT:** This task was created because Business\
-    \ Comms cls 3, 8-9 were not explicitly covered in the B1-B12 gap analysis, which\
-    \ focused on numbering, termination, and commercial provisions."
+- id: 5d103576
+  title: 'Query: Include detailed returns policy in goods provisions?'
+  description: Add comment to MSA goods/equipment provisions querying whether to include
+    the detailed 16-point returns policy from Milewood General T&Cs cl 4.8. That policy
+    includes specific timeframes (14 days for unused goods, 30 days for faulty), restocking
+    fees, and detailed procedures. Query whether client wants this level of detail
+    in MSA or Annex 3F (Hardware Provision).
   status: pending
   ordinal: 7
-  creationDate: '2025-12-10T00:51:45.164110Z'
-  completionDate: null
-  editIds: []
-- id: e4148ed7
-  title: 1.11 Add Rental Equipment provisions to Annex 3E
-  description: 'Incorporate Business Communications cl 7 (Rental Equipment) into Annex
-    3E (Telecoms).
-
-
-    **SOURCE:** Business Communications General Terms cl 7.1-7.9
-
-    **PATH:** `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\One2Call-Business-Communications-General-Terms-and-Conditions.pdf\One2Call-Business-Communications-General-Terms-and-Conditions.pdf.md`
-
-
-    **PROVISIONS TO ADD:**
-
-
-    | Clause | Content |
-
-    |--------|---------|
-
-    | **7.1** | Supplier owns Rental Equipment at all times; Customer shall not sell,
-    assign, sub-license, or allow third-party use; Customer shall not remove labels
-    or prejudice Supplier''s rights; Supplier may replace with equivalent or better
-    specification |
-
-    | **7.2** | Supplier obligations: install at agreed time/date; use reasonable
-    endeavours to repair faults per standard procedures |
-
-    | **7.3** | Customer responsible for care of Rental Equipment; pays for replacement/repair
-    if lost, stolen, or damaged |
-
-    | **7.4** | Customer to notify faults, repairs needed, loss/theft/damage promptly
-    |
-
-    | **7.5** | Customer to use Rental Equipment only with relevant Services; comply
-    with Supplier''s reasonable instructions |
-
-    | **7.6** | Customer must insure Rental Equipment; obtain necessary licences/consents/approvals
-    for installation and use |
-
-    | **7.7** | No third-party repairs/modifications without consent; Supplier not
-    liable for third-party work; Customer indemnifies Supplier |
-
-    | **7.8** | Return on termination in reasonable condition (fair wear and tear);
-    if not returned, Supplier may invoice original cost less depreciation plus recovery
-    costs |
-
-    | **7.9** | If returned equipment not received, Customer remains liable absent
-    evidence of delivery |
-
-
-    **ALSO REFERENCE (from Business Comms cl 10.5):**
-
-    - Rental charges invoiced monthly in advance
-
-    - First invoice includes advance month plus part-month from commencement
-
-
-    **TARGET:** Annex 3E (Telecoms) — new section "Rental Equipment"
-
-
-    **RATIONALE:** Rental Equipment provisions are integral to telecoms services where
-    handsets, routers, and other equipment may be rented rather than sold. Keeping
-    in Annex 3E (per user decision) rather than Schedule 3 common framework.
-
-
-    **NOTE:** Consider whether Annex 3D (Connectivity) also needs rental provisions
-    for routers/NTEs, or whether cross-reference to 3E is sufficient.'
-  status: pending
-  ordinal: 8
-  creationDate: '2025-12-10T01:04:18.172106Z'
+  creationDate: '2025-12-10T07:00:44.378647Z'
   completionDate: null
   editIds: []
 - id: 09886f5d
@@ -982,39 +948,320 @@ tasks:
     **NOTE:** Also ensure Order Form template (Task 2.3) includes a statement referencing
     this hierarchy.'
   status: pending
-  ordinal: 9
+  ordinal: 8
   creationDate: '2025-12-10T01:21:02.362392Z'
   completionDate: null
   editIds: []
-- id: wta2457b5d
-  title: 1.9 Complete gap analysis for remaining old terms
-  description: "Complete gap analysis for remaining old terms documents against MSA\
-    \ and proposed Schedule 3/Annexes structure.\n\n**COMPLETED ANALYSES:**\n✅ Ethernet\
-    \ terms → Task 1.5 (Schedule 3), Task 1.8 (MSA core), Annex 3D specifics\n✅ Horizon\
-    \ terms → Task 3.1 (Annex 3E)\n✅ Phone Maintenance → Task 1.6 (Schedule 5 enhancements)\n\
-    ✅ Access Control Maintenance → Task 1.6 (Schedule 5 enhancements)\n✅ CCTV Maintenance\
-    \ → Task 1.6 (Schedule 5 enhancements)\n✅ Sale of Goods → **RETIRED** — MSA cl\
-    \ 4-8 already covers goods; see Task 0.1 (Decisions Log)\n✅ Business Communications\
-    \ → **MASTER TERMS** — to be replaced by enhanced MSA\n\n**REMAINING DOCUMENTS\
-    \ TO ANALYSE:**\n• Mobile terms → for new Annex 3E-Mobile (separate from Horizon\
-    \ VoIP)\n  Path: `C:\\Users\\DavidSant\\effi-contract-review\\EL_Projects\\One2Call\\\
-    old_terms\\One2Call-Terms-and-Conditions-for-Mobile-Services-g-v1.1\\One2Call-Terms-and-Conditions-for-Mobile-Services-g-v1.1.md`\n\
-    \  **FINDING:** Mobile terms are SUPPLEMENTARY to Business Communications (see\
-    \ cl 32). They have a different structure (25 clauses) covering SIM cards, handsets,\
-    \ porting, roaming, network coverage — very different from Horizon VoIP. Should\
-    \ be a separate Annex.\n\n**KEY STRUCTURAL FINDING:**\nOld terms hierarchy:\n\
-    • **Business Communications** = Master general terms (equivalent to MSA)\n• **Supplementary\
-    \ Conditions** = Ethernet, Horizon, Mobile, Maintenance (service-specific)\n•\
-    \ **Sale of Goods** = Standalone (now retired — MSA covers)\n\n**For Mobile terms,\
-    \ identify:**\n(a) Provisions already covered by MSA core (Schedule 1)\n(b) Provisions\
-    \ that should be in Schedule 3 common framework\n(c) Mobile-specific provisions\
-    \ for new Annex 3E-Mobile\n(d) Any terms that need special treatment or may conflict\
-    \ with MSA\n\nReference: Markdown conversions in `C:\\Users\\DavidSant\\effi-contract-review\\\
-    EL_Projects\\One2Call\\old_terms\\`"
+- id: wt1370e522
+  title: 1.4 Draft Security Schedule (Schedule 4)
+  description: 'Create optional Security Schedule (Schedule 4) to be incorporated
+    by reference in Orders that include cyber security services. Key areas:
+
+
+    (a) Security standards compliance — ISO 27001 certification, Cyber Essentials
+    Plus accreditation, compliance obligations.
+
+
+    (b) Incident definitions — Define Incident, Known Vulnerability, Latent Vulnerability,
+    Virus, and Mitigate.
+
+
+    (c) Incident handling procedures — Detection, escalation, response, resolution,
+    post-incident review.
+
+
+    (d) Vulnerability management — Scanning, patching, remediation timelines.
+
+
+    (e) Business continuity/disaster recovery — DR plan, testing, RTO/RPO commitments.
+
+
+    (f) Notification obligations — Timing and content of security incident notifications
+    to Customer.
+
+
+    Reference: Managed services agreement (1).docx — clause 8 (Security) and Schedule
+    12 (Security)'
+  status: pending
+  ordinal: 9
+  creationDate: '2025-12-09T19:51:31.593909Z'
+  completionDate: null
+  editIds: []
+- id: wt98ff7a67
+  title: 1.8 Enhance MSA core with general provisions
+  description: "Add the following general provisions to the MSA core (Schedule 1 Terms\
+    \ and Conditions) that will apply to all services.\n\n**TARGET DOCUMENT:** MSA\
+    \ (HJ7) — Schedule 1 Terms and Conditions\n**PATH:** `C:\\Users\\DavidSant\\effi-contract-review\\\
+    EL_Projects\\One2Call\\drafts\\current_drafts\\One2call  - 2025 Templates  - MSA\
+    \ Defined Services - HJ7.docx`\n\n---\n\n## FROM ETHERNET/HORIZON GAP ANALYSIS\n\
+    \n**Clause 10 (Customer Obligations) — Add new sub-clauses:**\n(a) Named contacts\
+    \ — Customer to provide authorised contacts with appropriate authority level for\
+    \ each Order, and notify Supplier of any changes. [Ethernet cl 1.7/3.2, Horizon\
+    \ cl 1.7/3.2]\n(b) Third-party consents — Customer responsible for obtaining all\
+    \ necessary consents (landlord, wayleave, access) for installation or service\
+    \ delivery at Customer premises; Customer bears cost of obtaining consents. [Ethernet\
+    \ cl 3.1, Horizon cl 3.1]\n(c) Health & safety — Customer to ensure Supplier staff\
+    \ have safe working environment; notify Supplier of applicable H&S rules; Supplier\
+    \ to comply with reasonable site rules. [Ethernet cl 3.3, Horizon cl 3.3]\n\n\
+    **Clause 11 (Charges) — Add new sub-clauses:**\n(d) Deposits & guarantees — Supplier\
+    \ may require deposit or parent company guarantee as condition of service provision;\
+    \ Customer agrees to enter into any agreement reasonably required. [Ethernet cl\
+    \ 7.6, Horizon cl 7.6]\n(e) Aborted visit charges — If Supplier attends site and\
+    \ cannot complete work due to Customer default (no access, site not ready, appointment\
+    \ broken, failure to prepare site), Supplier may charge standard aborted visit\
+    \ fee; rescheduled appointments subject to new lead-times. [Ethernet cl 1.13,\
+    \ Horizon cl 1.13]\n\n---\n\n## FROM BUSINESS COMMUNICATIONS GAP ANALYSIS\n\n\
+    **Clause 12 (Intellectual Property) — Add new sub-clause:**\n(f) No-resale — Customer\
+    \ shall not resell, share, or permit third-party use of the Services or any bandwidth\
+    \ provided under any Order, except with the Supplier's prior written consent.\
+    \ [Business Comms cl 2.1-2.2] → See Decision B1\n\n**Clause 14 (Charges) — Add\
+    \ new sub-clause:**\n(g) Credit check consent — The Customer consents to the Supplier\
+    \ conducting credit checks on the Customer before entering into or during the\
+    \ term of any Order. The Supplier may decline to provide Services, or require\
+    \ a deposit or other security, if the results of such checks are not satisfactory.\
+    \ [Business Comms cl 5.6] → See Decision B7\n\n**Clause 24 (General) — Add new\
+    \ sub-clause:**\n(h) Marketing consent — The Customer consents to the Supplier:\n\
+    \    (i) using the Customer's name and logo in the Supplier's marketing materials\
+    \ as a reference customer; and\n    (ii) sending the Customer information about\
+    \ the Supplier's products and services by email or other means,\nprovided that\
+    \ the Customer may withdraw either consent by written notice to the Supplier.\
+    \ [Business Comms cl 14] → See Decision B12\n\n---\n\n## CLIENT QUERY — NON-SOLICITATION\
+    \ OF EMPLOYEES\n\n**[QUERY FOR CLIENT]:** \"Standard managed services agreements\
+    \ often include a non-solicitation clause preventing customers from poaching the\
+    \ supplier's staff. This protects One2Call's investment in its engineers and technical\
+    \ personnel. Would you like us to add such a provision?\"\n\n**Draft clause if\
+    \ required:**\n\n> **Non-Solicitation of Employees**\n>\n> During the term of\
+    \ any Order and for a period of 6 months thereafter, the Customer shall not (either\
+    \ directly or indirectly, whether for itself or on behalf of any other person)\
+    \ solicit, entice away, or offer employment to any employee of the Supplier who\
+    \ has been materially involved in providing the Services to the Customer, without\
+    \ the prior written consent of the Supplier.\n>\n> This clause shall not prevent\
+    \ the Customer from:\n> (a) placing job advertisements in the general press or\
+    \ on general job boards; or\n> (b) making offers of employment in response to\
+    \ unsolicited applications.\n>\n> If the Customer breaches this clause, it shall\
+    \ pay to the Supplier, as a reasonable pre-estimate of the Supplier's loss, an\
+    \ amount equal to 6 months' gross remuneration of the employee concerned.\n\n\
+    **Source:** Standard provision in managed services agreements. Seen in customer-proposed\
+    \ terms (Milewood Healthcare MSA Section 10) — this provision protects the supplier.\n\
+    \n---\n\n**REMOVED FROM THIS TASK:**\n~~Call monitoring disclosure~~ — Stays in\
+    \ Annex 3E (Business Comms cl 6) as telecoms-specific provision. Not moved to\
+    \ MSA cl 18.\n\n---\n\n**WHY THESE BELONG IN MSA CORE:**\nThese provisions apply\
+    \ to ALL services and represent general obligations that should apply across the\
+    \ board rather than being repeated in each Annex.\n\n**SOURCE DOCUMENTS:**\n•\
+    \ Ethernet: `C:\\Users\\DavidSant\\effi-contract-review\\EL_Projects\\One2Call\\\
+    old_terms\\One2Call-Terms-and-Conditions-for-Ethernet-g\\One2Call-Terms-and-Conditions-for-Ethernet-g.md`\n\
+    • Horizon: `C:\\Users\\DavidSant\\effi-contract-review\\EL_Projects\\One2Call\\\
+    old_terms\\One2Call-Terms-and-Conditions-for-Horizon-Services-g-v1.2\\One2Call-Terms-and-Conditions-for-Horizon-Services-g-v1.2.md`\n\
+    • Business Comms: `C:\\Users\\DavidSant\\effi-contract-review\\EL_Projects\\One2Call\\\
+    old_terms\\One2Call-Business-Communications-General-Terms-and-Conditions.pdf\\\
+    One2Call-Business-Communications-General-Terms-and-Conditions.pdf.md`\n• Milewood\
+    \ Healthcare MSA (customer-proposed): `C:\\Users\\DavidSant\\effi-contract-review\\\
+    EL_Projects\\One2Call\\recent_customer_negotiation\\24 Months Managed IT & Cyber\
+    \ MSA for Milewood Healthcare Limited.pdf\\`\n\n**PRECEDENT REFERENCE:** Managed\
+    \ services agreement (1).docx — for drafting style"
   status: pending
   ordinal: 10
-  creationDate: '2025-12-09T22:05:15.837650Z'
+  creationDate: '2025-12-09T22:04:57.278344Z'
   completionDate: null
+  editIds: []
+- id: wt0f0350e3
+  title: 1.10 Review Fair Use & Legislation Compliance gaps
+  description: "**RESOLVED — NO FURTHER ACTION REQUIRED** ✅\n\nThis task was created\
+    \ to review Business Communications fair use policies (cl 3) and legislation compliance\
+    \ provisions (cls 8-9) for gaps.\n\n**Resolution:** Per Decision S4, we are keeping\
+    \ Business Communications General Terms almost entirely intact as Annex 3E. This\
+    \ means:\n\n- **Cl 3 (Fair Use Policies)** — Retained in Annex 3E\n- **Cl 8 (Compliance\
+    \ with Legislation)** — Retained in Annex 3E  \n- **Cl 9 (Equipment Compliance)**\
+    \ — Retained in Annex 3E\n\nSince these provisions remain in the Annex rather\
+    \ than being extracted to the MSA core, no gap analysis is needed — the provisions\
+    \ are preserved as-is.\n\n**Original Task Description:**\nReview Business Communications\
+    \ fair use policies and legislation compliance provisions to identify any gaps\
+    \ not already covered by the MSA.\n\n**SOURCE:** Business Communications General\
+    \ Terms cl 3 (Fair Use Policies) and cl 8-9 (Compliance with Legislation)"
+  status: completed
+  ordinal: 11
+  creationDate: '2025-12-10T00:51:45.164110Z'
+  completionDate: '2025-12-10T08:27:48.725020Z'
+  editIds: []
+- id: e4148ed7
+  title: 1.11 Add Rental Equipment provisions to Annex 3E
+  description: '**RESOLVED — NO FURTHER ACTION REQUIRED** ✅
+
+
+    This task was created to incorporate Business Communications cl 7 (Rental Equipment)
+    into Annex 3E.
+
+
+    **Resolution:** Per Decision S4, we are keeping Business Communications General
+    Terms almost entirely intact as Annex 3E. This means:
+
+
+    - **Cl 7 (Rental Equipment)** — All provisions (7.1-7.9) are retained in Annex
+    3E
+
+
+    Since Annex 3E is based on the full Business Communications document (with only
+    cls 9, 13, 14, 21-27 removed), the Rental Equipment provisions are already included.
+    No separate incorporation task is needed.
+
+
+    See Task 3.1 (Draft Annex 3E) at ordinal 18 for the full approach.
+
+
+    **Original Task Description:**
+
+    Incorporate Business Communications cl 7 (Rental Equipment) into Annex 3E (Telecoms).
+
+
+    **SOURCE:** Business Communications General Terms cl 7.1-7.9'
+  status: completed
+  ordinal: 12
+  creationDate: '2025-12-10T01:04:18.172106Z'
+  completionDate: '2025-12-10T08:36:25.590438Z'
+  editIds: []
+- id: wta2457b5d
+  title: 1.9 Complete gap analysis for remaining old terms
+  description: '**ALL GAP ANALYSES COMPLETE** ✅
+
+
+    ---
+
+
+    ## DOCUMENT GROUPS REVIEWED
+
+
+    ### Group 1: Supplementary Conditions (Ethernet, Horizon, Maintenance)
+
+    **Location:** `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\`
+
+
+    These are service-specific terms that supplement the Business Communications master
+    terms:
+
+
+    | Document | Outcome |
+
+    |----------|---------|
+
+    | Ethernet Terms | → Task 1.5 (Schedule 3), Task 1.8 (MSA core), Task 3.2 (Annex
+    3D) |
+
+    | Horizon Terms | → Task 3.1 (Annex 3E additions) |
+
+    | Phone Maintenance | → Task 1.6 (Schedule 5 enhancements) |
+
+    | Access Control Maintenance | → Task 1.6 (Schedule 5 enhancements) |
+
+    | CCTV Maintenance | → Task 1.6 (Schedule 5 enhancements) |
+
+
+    ---
+
+
+    ### Group 2: Business Communications & Mobile (Master Terms)
+
+    **Location:** `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\`
+
+
+    These are comprehensive master terms that form the basis for Annexes 3E and 3G:
+
+
+    | Document | Outcome |
+
+    |----------|---------|
+
+    | Business Communications | → **Annex 3E** — keep almost all intact; see Decision
+    S4 |
+
+    | Mobile Terms | → **Annex 3G** — keep almost all intact; see Decision S5 |
+
+
+    **Hierarchy Finding:** Business Communications = Master general terms; Mobile
+    supplements it but is kept separate due to Network Provider provisions
+
+
+    ---
+
+
+    ### Group 3: Sale of Goods (Retired)
+
+    **Location:** `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\`
+
+
+    | Document | Outcome |
+
+    |----------|---------|
+
+    | Sale of Goods Terms | → **RETIRED** — MSA cl 4-8 already covers goods; see Decision
+    R1 |
+
+
+    ---
+
+
+    ### Group 4: Other Terms to Include (Precedents & Internal Policies)
+
+    **Location:** `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\other_terms_to_include\`
+
+
+    These are precedent documents and internal policies reviewed for useful provisions:
+
+
+    | Document | Type | Outcome |
+
+    |----------|------|---------|
+
+    | Hardware Maintenance Agreement | Precedent | → Task 1.6 client queries (e-h):
+    spare parts threshold, ownership, off-site repairs, PM frequency |
+
+    | SLA Policy & Guide | Internal policy | → Task 1.13: SLA clock stop provision
+    for Schedule 5 |
+
+
+    ---
+
+
+    ### Group 5: Recent Customer Negotiation (Actual Customer Contracts)
+
+    **Location:** `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\recent_customer_negotiation\`
+
+
+    Actual customer contracts reviewed for provisions worth incorporating:
+
+
+    | Document | Type | Outcome |
+
+    |----------|------|---------|
+
+    | Milewood Healthcare MSA | Customer-proposed | → Task 1.8: Non-solicitation clause
+    (client query) — NOTE: SLA was customer''s, not One2Call''s preferred |
+
+    | Milewood General T&Cs | One2Call''s T&Cs | → Task 1.14: No abuse clause; Task
+    1.15: Returns policy query |
+
+
+    ---
+
+
+    ## RESULTING STRUCTURE
+
+
+    **Annexes Created:**
+
+    • Annex 3D: Connectivity (from Ethernet)
+
+    • Annex 3E: Telecoms (from Business Comms + Horizon)
+
+    • Annex 3G: Mobile Services (from Mobile — separate from 3E)
+
+    • Schedule 5: Maintenance (from HJ1 + maintenance terms + SLA clock stop)
+
+
+    **THIS TASK IS COMPLETE — proceed to implementation tasks.**'
+  status: completed
+  ordinal: 13
+  creationDate: '2025-12-09T22:05:15.837650Z'
+  completionDate: '2025-12-10T01:29:36.992270Z'
   editIds: []
 - id: wt9e3278d7
   title: 1.5 Create Schedule 3 (Installation & Provisioning) with Annexes
@@ -1147,7 +1394,7 @@ tasks:
 
     • Business Comms: `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\One2Call-Business-Communications-General-Terms-and-Conditions.pdf\One2Call-Business-Communications-General-Terms-and-Conditions.pdf.md`'
   status: pending
-  ordinal: 11
+  ordinal: 14
   creationDate: '2025-12-09T19:51:38.394289Z'
   completionDate: null
   editIds: []
@@ -1191,152 +1438,131 @@ tasks:
     \ this to allow either party to terminate on 30 days' notice, with fees payable\
     \ up to termination. This is a more balanced approach that avoids the Customer\
     \ being locked into paying for maintenance of equipment that no longer exists.\"\
-    \n\n**NO CHANGES NEEDED FOR:**\n- Price increases: MSA cl 11.7 already covers\
-    \ (pass-through + once per 12m + >10% termination right)\n- Interest on late payment:\
-    \ MSA cl 14.14 already has 8% above BoE base rate\n- Liability cap: MSA cl 19.4\
-    \ already has £100k cap per client instruction\n\n**OLD MAINTENANCE TERMS ANALYSED:**\n\
-    • Phone: `C:\\Users\\DavidSant\\effi-contract-review\\EL_Projects\\One2Call\\\
-    old_terms\\One2Call-Terms-and-Conditions-for-Phone-System-Maintenance-services-v1.1\\\
+    \n\n---\n\n## CLIENT QUERIES — FROM HARDWARE MAINTENANCE PRECEDENT\n\nThe following\
+    \ provisions appear in standard hardware maintenance precedents but are not currently\
+    \ in HJ1. We recommend discussing with the client whether to include them.\n\n\
+    **(e) Spare parts threshold:**\n\n**[QUERY FOR CLIENT]:** \"Standard hardware\
+    \ maintenance agreements often include a threshold for spare parts costs — e.g.,\
+    \ parts under £50-100 are included in the maintenance fee, while parts above that\
+    \ threshold are charged separately. Would you like us to add such a provision?\
+    \ If so, what threshold would you prefer?\"\n\n**Draft clause if required:**\n\
+    > \"The Standard Maintenance Fees include the cost of spare parts where the individual\
+    \ part cost is less than £[50/100]. Where a spare part costs £[50/100] or more,\
+    \ the Supplier shall notify the Customer before ordering and may charge the Customer\
+    \ separately for the part.\"\n\n**(f) Spare parts ownership:**\n\n**[QUERY FOR\
+    \ CLIENT]:** \"Standard agreements clarify that new parts installed become the\
+    \ Customer's property, while removed parts become the Supplier's property. Your\
+    \ current terms are silent on this. Would you like us to add a clarifying provision?\"\
+    \n\n**Draft clause if required:**\n> \"Any spare parts or components installed\
+    \ in the Maintained Equipment by the Supplier shall become the property of the\
+    \ Customer. Any parts or components removed from the Maintained Equipment by the\
+    \ Supplier shall become the property of the Supplier.\"\n\n**(g) Off-site repairs:**\n\
+    \n**[QUERY FOR CLIENT]:** \"Standard agreements allow the Supplier to remove equipment\
+    \ for off-site repair where on-site repair is not practicable. Your current terms\
+    \ don't expressly permit this. Would you like us to add such a provision?\"\n\n\
+    **Draft clause if required:**\n> \"Where the Supplier cannot reasonably complete\
+    \ a repair at the Location within a reasonable time, the Supplier may remove the\
+    \ Maintained Equipment (or the relevant part) for off-site repair. The Supplier\
+    \ shall return the repaired equipment as soon as reasonably practicable.\"\n\n\
+    **(h) Preventative maintenance frequency:**\n\n**[QUERY FOR CLIENT]:** \"Standard\
+    \ agreements specify how often the Supplier will perform preventative maintenance\
+    \ (e.g., quarterly inspections). Your current terms don't specify a frequency.\
+    \ Would you like us to add a provision, or leave this to be determined on a case-by-case\
+    \ basis?\"\n\n**Draft clause if required:**\n> \"The Supplier shall perform Preventative\
+    \ Maintenance at a frequency reasonably determined by the Supplier, having regard\
+    \ to the manufacturer's recommendations and the operating environment of the Maintained\
+    \ Equipment.\"\n\n---\n\n**NO CHANGES NEEDED FOR:**\n- Price increases: MSA cl\
+    \ 11.7 already covers (pass-through + once per 12m + >10% termination right)\n\
+    - Interest on late payment: MSA cl 14.14 already has 8% above BoE base rate (precedent\
+    \ only has 4%)\n- Liability cap: MSA cl 19.4 already has £100k cap per client\
+    \ instruction\n- Supplier warranties: MSA covers skill and care, compliance, etc.\n\
+    \n**OLD MAINTENANCE TERMS ANALYSED:**\n• Phone: `C:\\Users\\DavidSant\\effi-contract-review\\\
+    EL_Projects\\One2Call\\old_terms\\One2Call-Terms-and-Conditions-for-Phone-System-Maintenance-services-v1.1\\\
     `\n• Access Control: `C:\\Users\\DavidSant\\effi-contract-review\\EL_Projects\\\
     One2Call\\old_terms\\One2Call-Terms-Conditions-for-Access-Control-Maintenance-Services-v1.0\\\
     `\n• CCTV: `C:\\Users\\DavidSant\\effi-contract-review\\EL_Projects\\One2Call\\\
-    old_terms\\One2Call-Terms-Conditions-for-CCTV-Maintenance-Services-v1.1\\`"
+    old_terms\\One2Call-Terms-Conditions-for-CCTV-Maintenance-Services-v1.1\\`\n\n\
+    **PRECEDENT REVIEWED:**\n• Hardware Maintenance Agreement: `C:\\Users\\DavidSant\\\
+    effi-contract-review\\EL_Projects\\One2Call\\other_terms_to_include\\Hardware\
+    \ maintenance agreement - highlighted\\Hardware maintenance agreement - highlighted.md`"
   status: pending
-  ordinal: 12
+  ordinal: 15
   creationDate: '2025-12-09T19:51:44.543695Z'
   completionDate: null
   editIds: []
-- id: wt74ad3e5e
-  title: 1.7 Add regulatory compliance clauses
-  description: 'Add to clause 24 (General) with explanatory drafting notes:
+- id: 7127b501
+  title: 1.13 Add SLA clock stop provision to Schedule 5
+  description: 'Add an SLA clock stop/pause provision to Schedule 5 (Maintenance Schedule)
+    to protect One2Call when response time is affected by factors outside their control.
 
 
-    (a) Anti-bribery — Compliance with Bribery Act 2010; no bribes or facilitation
-    payments; right to terminate for breach. [Note: May be required by larger clients
-    and public sector customers.]
+    **TARGET DOCUMENT:** Maintenance Schedule (HJ1) → Schedule 5
+
+    **PATH:** `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\drafts\current_drafts\One2call  -
+    2025 Templates  - Maintenance Schedule - HJ1.docx`
 
 
-    (b) Anti-slavery — Compliance with Modern Slavery Act 2015; due diligence on supply
-    chain; annual statement. [Note: May be required by larger clients and public sector
-    customers.]
+    **SUGGESTED LOCATION:** After the Response Time provisions (likely clause 5 or
+    6)
 
 
-    (c) Dispute escalation — Before commencing litigation, disputes to be escalated
-    to senior management for good faith resolution discussions for 14 days. [Note:
-    May reduce legal costs and preserve commercial relationships.]
+    **DRAFT CLAUSE:**
 
 
-    Reference:
+    > **SLA Clock Pause**
 
-    • Managed services agreement (1).docx — clause 29 (Anti-bribery), clause 30 (Anti-slavery),
-    clause 35 (Dispute resolution)'
-  status: pending
-  ordinal: 13
-  creationDate: '2025-12-09T19:51:51.851235Z'
-  completionDate: null
-  editIds: []
-- id: wt575ad48e
-  title: 2.1 Create Systems Integration SOW template
-  description: 'Create SOW template for project-based work (migrations, infrastructure
-    deployments, consultancy) based on Systems Integration Agreement precedent. Key
-    areas:
+    >
 
+    > The Response Time shall be paused (and shall not be counted towards any service
+    level measurement) during any period in which the Supplier is:
 
-    (a) Project scope and deliverables
+    >
 
-    (b) Milestones and timeline
+    > (a) waiting for a response, information, access, or testing from the Customer
+    that is reasonably required to diagnose or resolve the fault;
 
-    (c) Acceptance testing procedures
+    >
 
-    (d) Change control procedure
+    > (b) waiting for action from an external third-party vendor, manufacturer, or
+    network operator that is outside the Supplier''s reasonable control;
 
-    (e) Payment milestones
+    >
 
-    (f) Project-specific IP provisions (if bespoke work)
+    > (c) unable to access the Location or the Maintained Equipment due to circumstances
+    attributable to the Customer; or
 
-    (g) Go-live and handover
+    >
 
+    > (d) waiting for the Customer to approve costs, replacement parts, or remedial
+    action where such approval is required under this Schedule.
 
-    Reference:
+    >
 
-    • Systems integration agreement (pro-supplier) (1).docx — Primary reference for
-    SOW structure'
-  status: pending
-  ordinal: 14
-  creationDate: '2025-12-09T19:51:58.298663Z'
-  completionDate: null
-  editIds: []
-- id: wt6ad41cae
-  title: 2.2 Complete Service Schedule detail
-  description: 'Populate full detail for each Schedule 3 sub-schedule (3A-3F) including:
-
-    • Detailed service descriptions aligned to One2Call website offerings
-
-    • Specific SLA metrics (response times, fix times, uptime percentages)
-
-    • Service credit calculations
-
-    • Pricing structure frameworks
-
-    • Standard exclusions and customer obligations
+    > The Response Time shall resume when the relevant dependency is resolved. The
+    Supplier shall notify the Customer promptly when the Response Time is paused and
+    when it resumes.
 
 
-    References:
+    **RATIONALE:**
 
-    • Managed services agreement (1).docx — Schedule 4 (Service Description), Schedule
-    5 (Governance), Schedule 6 (Service Levels)
+    This provision is standard in IT service level agreements and protects the Supplier
+    from SLA breaches caused by customer delays or third-party dependencies. It aligns
+    with One2Call''s internal SLA Policy & Guide which includes similar clock stop
+    conditions.
 
-    • Software maintenance_ service level agreement.docx — SLA structure and service
-    credits'
-  status: pending
-  ordinal: 15
-  creationDate: '2025-12-09T19:52:05.354434Z'
-  completionDate: null
-  editIds: []
-- id: wt4ec1b7e1
-  title: 2.3 Create Order Form template with service level options
-  description: "Design Order Form template that serves as the \"front page\" of each\
-    \ service engagement.\n\n**TARGET:** Create new Order Form template document\n\
-    **OUTPUT PATH:** `C:\\Users\\DavidSant\\effi-contract-review\\EL_Projects\\One2Call\\\
-    drafts\\current_drafts\\` (new file)\n\n**ORDER FORM CONTENTS:**\n\n1. **Parties\
-    \ & Locations**\n   • Supplier: One2Call Limited\n   • Customer: [Name, address,\
-    \ company number]\n   • Service location(s): [Site addresses]\n\n2. **Schedule\
-    \ & Annex Selection** (checkbox approach)\n   ☐ Schedule 1: Terms and Conditions\
-    \ (always applies)\n   ☐ Schedule 2: Data Protection (always applies)\n   ☐ Schedule\
-    \ 3: Installation & Provisioning Services\n      ☐ Annex 3A: Managed IT Services\n\
-    \      ☐ Annex 3B: Cyber Security Services\n      ☐ Annex 3C: Cloud Management\n\
-    \      ☐ Annex 3D: Connectivity\n      ☐ Annex 3E: Telecoms (Horizon/VoIP)\n \
-    \     ☐ Annex 3F: Hardware Provision & Maintenance\n   ☐ Schedule 4: Security\
-    \ Schedule\n   ☐ Schedule 5: Maintenance Schedule\n      ☐ Equipment Maintenance\
-    \ included: Yes / No\n\n3. **Commercial Terms**\n   • Charges: [Monthly fee /\
-    \ One-off fee / Usage rates]\n   • Payment terms: [Override if different from\
-    \ Schedule 1]\n   • Service term: [Override Annex default if different]\n   •\
-    \ Notice period: [Override Annex default if different]\n\n4. **Default Term Reference\
-    \ Table** (for information)\n   | Service | Default Term | Default Notice |\n\
-    \   |---------|--------------|----------------|\n   | Connectivity (3D) | 36 months\
-    \ | 60 days |\n   | Telecoms (3E) | 24 months | 60 days |\n   | Maintenance (Sch\
-    \ 5) | 12 months | 60 days |\n   | Other | 12 months | 30 days |\n\n5. **Maintenance\
-    \ Services (if Schedule 5 selected)**\n   • Maintained Equipment: [Description\
-    \ / Equipment List reference]\n   • Location(s): [Site addresses]\n   \n   **Default\
-    \ Service Levels** (from Schedule 5 — apply automatically):\n   • Response Time\
-    \ (>50% failure): 4 hours\n   • Response Time (other faults): 8 hours (9 hours\
-    \ for telephone systems)\n   • Business Hours: 8am-6pm Mon-Fri\n   \n   **Override\
-    \ Service Levels** (complete only if different from defaults):\n   • Response\
-    \ Time (>50% failure): ___\n   • Response Time (other faults): ___\n   • Business\
-    \ Hours: ___\n   \n   **Service Credits:**\n   [ ] £50 per breach\n   [ ] 5% of\
-    \ monthly fee per breach\n   [ ] 10% of monthly fee per breach\n   [ ] Custom:\
-    \ ___\n   \n   **Equipment-specific exclusions:** [e.g., additional items beyond\
-    \ 2-wire devices]\n\n6. **Hierarchy Statement**\n   \"In the event of conflict\
-    \ between the terms of this Order and any Schedule or Annex, the terms of this\
-    \ Order shall prevail.\"\n\n7. **Signatures / Electronic Acceptance**\n   • Customer\
-    \ signature block\n   • Date\n   • Reference to electronic acceptance if applicable\n\
-    \n**NOTE:** Default service levels are now in Schedule 5 (Task 1.6). Phone system\
-    \ 9h response time is handled via conditional clause in Schedule 5 clause 7.3(b).\
-    \ Order Form only needs override fields if customer wants something different.\n\
-    \n**PRECEDENT REFERENCE:** MSA (HJ7) cover page for existing format"
+
+    **SOURCE REFERENCE:**
+
+    One2Call SLA Policy & Guide: `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\other_terms_to_include\One2call
+    Limited_ Service Level Agreement (SLA) Policy  Guide\One2call Limited_ Service
+    Level Agreement (SLA) Policy  Guide.md`
+
+
+    Section 5.2: "SLA Pause Conditions: The SLA clock will be temporarily paused when
+    resolution is dependent on factors outside of our direct control."'
   status: pending
   ordinal: 16
-  creationDate: '2025-12-09T19:52:11.332451Z'
+  creationDate: '2025-12-10T01:43:37.237028Z'
   completionDate: null
   editIds: []
 - id: wtc750b02c
@@ -1527,6 +1753,213 @@ tasks:
   creationDate: '2025-12-10T01:24:12.146647Z'
   completionDate: null
   editIds: []
+- id: wt575ad48e
+  title: 2.1 Create Systems Integration SOW template
+  description: 'Create SOW template for project-based work (migrations, infrastructure
+    deployments, consultancy) based on Systems Integration Agreement precedent. Key
+    areas:
+
+
+    (a) Project scope and deliverables
+
+    (b) Milestones and timeline
+
+    (c) Acceptance testing procedures
+
+    (d) Change control procedure
+
+    (e) Payment milestones
+
+    (f) Project-specific IP provisions (if bespoke work)
+
+    (g) Go-live and handover
+
+
+    Reference:
+
+    • Systems integration agreement (pro-supplier) (1).docx — Primary reference for
+    SOW structure'
+  status: pending
+  ordinal: 20
+  creationDate: '2025-12-09T19:51:58.298663Z'
+  completionDate: null
+  editIds: []
+- id: wt6ad41cae
+  title: 2.2 Draft remaining Annexes (3A, 3B, 3C, 3F)
+  description: '**REVISED SCOPE:** Draft the remaining Annexes that don''t have dedicated
+    drafting tasks.
+
+
+    **NOTE:** Annexes 3D, 3E, and 3G are covered by separate tasks:
+
+    - Annex 3D (Connectivity) → Task 3.2
+
+    - Annex 3E (Telecoms) → Task 3.1
+
+    - Annex 3G (Mobile) → Task 3.3
+
+
+    ---
+
+
+    ## ANNEXES TO DRAFT IN THIS TASK:
+
+
+    ### Annex 3A: Managed IT Services
+
+    - Remote monitoring & management (RMM)
+
+    - Helpdesk / service desk
+
+    - Patch management
+
+    - Backup monitoring
+
+    - Proactive maintenance
+
+    - Reporting
+
+
+    **Source:** One2Call website offerings; precedent managed services agreements
+
+
+    ### Annex 3B: Cyber Security Services
+
+    - Security monitoring (SOC/SIEM)
+
+    - Endpoint detection & response (EDR)
+
+    - Vulnerability scanning
+
+    - Penetration testing
+
+    - Security awareness training
+
+    - Incident response
+
+
+    **Source:** One2Call website offerings; Schedule 4 (Security Schedule) for definitions;
+    precedent security services agreements
+
+
+    ### Annex 3C: Cloud Management
+
+    - Cloud platform management (Azure, AWS, M365)
+
+    - Cloud migration services
+
+    - Backup & disaster recovery
+
+    - Cloud optimisation
+
+    - Licence management
+
+
+    **Source:** One2Call website offerings; precedent cloud services agreements
+
+
+    ### Annex 3F: Hardware Provision & Maintenance
+
+    - Hardware supply terms (beyond MSA cl 4-8)
+
+    - Hardware maintenance (link to Schedule 5)
+
+    - RMA procedures
+
+    - Warranty pass-through
+
+    - End-of-life / refresh
+
+
+    **Source:** One2Call website offerings; Hardware Maintenance Agreement precedent
+    (reviewed in Task 1.6); MSA goods provisions (cl 4-8)
+
+
+    ---
+
+
+    ## FOR EACH ANNEX, INCLUDE:
+
+
+    1. **Service description** — Aligned to One2Call website offerings
+
+    2. **Service levels** — Response times, fix times, uptime (where applicable)
+
+    3. **Exclusions** — What''s not covered
+
+    4. **Customer obligations** — Specific to that service
+
+    5. **Default term/notice** — If different from MSA defaults
+
+    6. **Relationship to other documents** — Schedule 3 common provisions, Schedule
+    5 if maintenance applies
+
+
+    ---
+
+
+    ## REFERENCES:
+
+
+    - Managed services agreement (1).docx — Schedule 4 (Service Description), Schedule
+    5 (Governance), Schedule 6 (Service Levels)
+
+    - Software maintenance SLA.docx — SLA structure and service credits
+
+    - One2Call website — for service offerings
+
+    - Schedule 3 common provisions (Task 1.5) — for framework these Annexes plug into'
+  status: pending
+  ordinal: 21
+  creationDate: '2025-12-09T19:52:05.354434Z'
+  completionDate: null
+  editIds: []
+- id: wt4ec1b7e1
+  title: 2.3 Create Order Form template with service level options
+  description: "Design Order Form template that serves as the \"front page\" of each\
+    \ service engagement.\n\n**TARGET:** Create new Order Form template document\n\
+    **OUTPUT PATH:** `C:\\Users\\DavidSant\\effi-contract-review\\EL_Projects\\One2Call\\\
+    drafts\\current_drafts\\` (new file)\n\n**ORDER FORM CONTENTS:**\n\n1. **Parties\
+    \ & Locations**\n   • Supplier: One2Call Limited\n   • Customer: [Name, address,\
+    \ company number]\n   • Service location(s): [Site addresses]\n\n2. **Schedule\
+    \ & Annex Selection** (checkbox approach)\n   ☐ Schedule 1: Terms and Conditions\
+    \ (always applies)\n   ☐ Schedule 2: Data Protection (always applies)\n   ☐ Schedule\
+    \ 3: Installation & Provisioning Services\n      ☐ Annex 3A: Managed IT Services\n\
+    \      ☐ Annex 3B: Cyber Security Services\n      ☐ Annex 3C: Cloud Management\n\
+    \      ☐ Annex 3D: Connectivity\n      ☐ Annex 3E: Telecoms (Horizon/VoIP)\n \
+    \     ☐ Annex 3F: Hardware Provision & Maintenance\n   ☐ Schedule 4: Security\
+    \ Schedule\n   ☐ Schedule 5: Maintenance Schedule\n      ☐ Equipment Maintenance\
+    \ included: Yes / No\n\n3. **Commercial Terms**\n   • Charges: [Monthly fee /\
+    \ One-off fee / Usage rates]\n   • Payment terms: [Override if different from\
+    \ Schedule 1]\n   • Service term: [Override Annex default if different]\n   •\
+    \ Notice period: [Override Annex default if different]\n\n4. **Default Term Reference\
+    \ Table** (for information)\n   | Service | Default Term | Default Notice |\n\
+    \   |---------|--------------|----------------|\n   | Connectivity (3D) | 36 months\
+    \ | 60 days |\n   | Telecoms (3E) | 24 months | 60 days |\n   | Maintenance (Sch\
+    \ 5) | 12 months | 60 days |\n   | Other | 12 months | 30 days |\n\n5. **Maintenance\
+    \ Services (if Schedule 5 selected)**\n   • Maintained Equipment: [Description\
+    \ / Equipment List reference]\n   • Location(s): [Site addresses]\n   \n   **Default\
+    \ Service Levels** (from Schedule 5 — apply automatically):\n   • Response Time\
+    \ (>50% failure): 4 hours\n   • Response Time (other faults): 8 hours (9 hours\
+    \ for telephone systems)\n   • Business Hours: 8am-6pm Mon-Fri\n   \n   **Override\
+    \ Service Levels** (complete only if different from defaults):\n   • Response\
+    \ Time (>50% failure): ___\n   • Response Time (other faults): ___\n   • Business\
+    \ Hours: ___\n   \n   **Service Credits:**\n   [ ] £50 per breach\n   [ ] 5% of\
+    \ monthly fee per breach\n   [ ] 10% of monthly fee per breach\n   [ ] Custom:\
+    \ ___\n   \n   **Equipment-specific exclusions:** [e.g., additional items beyond\
+    \ 2-wire devices]\n\n6. **Hierarchy Statement**\n   \"In the event of conflict\
+    \ between the terms of this Order and any Schedule or Annex, the terms of this\
+    \ Order shall prevail.\"\n\n7. **Signatures / Electronic Acceptance**\n   • Customer\
+    \ signature block\n   • Date\n   • Reference to electronic acceptance if applicable\n\
+    \n**NOTE:** Default service levels are now in Schedule 5 (Task 1.6). Phone system\
+    \ 9h response time is handled via conditional clause in Schedule 5 clause 7.3(b).\
+    \ Order Form only needs override fields if customer wants something different.\n\
+    \n**PRECEDENT REFERENCE:** MSA (HJ7) cover page for existing format"
+  status: pending
+  ordinal: 22
+  creationDate: '2025-12-09T19:52:11.332451Z'
+  completionDate: null
+  editIds: []
 documents:
 - id: wtb34623a3
   filename: C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\drafts\current_drafts\One2call  -
@@ -1543,7 +1976,7 @@ documents:
 # Work Plan
 
 ## 1. 0.0 PROJECT CONTEXT (Read First)
-**Status:** pending
+**Status:** notes
 
 **PROJECT CONTEXT — READ FIRST**
 
@@ -1562,7 +1995,7 @@ documents:
 • Old terms (markdown conversions): `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\[DocumentName]\[DocumentName].md`
 • Precedents: `C:\Users\DavidSant\effi-contract-review\EL_Projects\Precedents\Pro-Supplier\managed_it_services\`
 
-**Approved Document Architecture (Option B):**
+**Approved Document Architecture (Option B — Updated):**
 ```
 MSA (HJ7)
 ├── Cover / Order Form (commercial details, service selection, term/notice overrides)
@@ -1573,29 +2006,28 @@ MSA (HJ7)
 │   ├── Annex 3B: Cyber Security Services
 │   ├── Annex 3C: Cloud Management
 │   ├── Annex 3D: Connectivity (Ethernet — 36m/60d defaults)
-│   ├── Annex 3E: Telecoms (Horizon/VoIP — 24m/60d defaults)
-│   └── Annex 3F: Hardware Provision & Maintenance
+│   ├── Annex 3E: Telecoms (Business Comms adapted — 24m/60d defaults)
+│   ├── Annex 3F: Hardware Provision & Maintenance
+│   └── Annex 3G: Mobile Services (Mobile Terms adapted — 24m/30d defaults)
 ├── Schedule 4: Security Schedule (optional — for cyber services)
 └── Schedule 5: Maintenance Schedule (from HJ1 — enhanced per Task 1.6)
 ```
 
-**Hierarchy of Documents:**
+**Hierarchy of Documents (Task 1.12):**
 1. Order Form (highest — overrides Annex defaults)
-2. Schedule 1 (Terms and Conditions)
-3. Schedule 3 + selected Annexes
-4. Other Schedules
+2. Annexes
+3. Schedules
+4. MSA Terms and Conditions (Schedule 1)
 
 **Gap Analysis Status:**
-✅ Ethernet terms → Task 1.5 (Schedule 3), Task 1.8 (MSA core), Annex 3D specifics
-✅ Horizon terms → Task 3.1 (Annex 3E with prominent 999 warning + client comment)
+✅ Ethernet terms → Task 1.5 (Schedule 3), Task 1.8 (MSA core), Task 3.2 (Annex 3D)
+✅ Horizon terms → Task 3.1 (Annex 3E additions)
 ✅ Phone Maintenance → Task 1.6 (Schedule 5 enhancements)
 ✅ Access Control Maintenance → Task 1.6 (Schedule 5 enhancements)
 ✅ CCTV Maintenance → Task 1.6 (Schedule 5 enhancements)
-
-**Gap Analysis Remaining (Task 1.9):**
-• Mobile terms — Different structure (25 clauses); may need separate treatment
-• Business Comms — To be analysed
-• Sale of Goods — To be analysed
+✅ Sale of Goods → **RETIRED** — MSA cl 4-8 already covers goods
+✅ Business Communications → Task 3.1 (Annex 3E — keep almost all intact)
+✅ Mobile Terms → Task 3.3 (Annex 3G — keep almost all intact, separate from 3E)
 
 **Key Decisions Made:**
 • Default response times: 4h (>50% failure) / 8h (other) — in Schedule 5
@@ -1604,18 +2036,21 @@ MSA (HJ7)
 • Equipment Maintenance: Indicated in Order Form; if selected, Schedule 5 applies
 • 999 emergency warning: Prominent in Annex 3E (not Order Form); client comment explaining regulatory significance
 • Equipment theft/destruction: Softer approach than old terms (30-day termination right); client comment explaining departure
+• Business Comms → Annex 3E: Keep almost all intact; remove only cls 9, 13, 14, 21-27 (MSA covers)
+• Mobile Terms → Annex 3G: Keep almost all intact; remove only cl 22 (MSA liability applies)
+• Document hierarchy: Order > Annex > Schedule > MSA
 
 **MSA Provisions Already Adequate (no duplication needed):**
 • Price increases: MSA cl 11.7 (pass-through + once per 12m + >10% termination right)
 • Interest on late payment: MSA cl 14.14 (8% above BoE base rate)
-• Liability cap: MSA cl 19.4 (£100k per client instruction)
+• Liability cap: MSA cl 19.4 (£100k per client instruction — applies to all Annexes including Mobile)
 
 **Drafting Style:** British English per grammar.md (-ise, -our, licence/license distinction, UK date format, no Oxford comma)
 
 **Jurisdiction:** English law, UK GDPR, EU GDPR
 
 ## 2. 0.1 Record all Decisions for Client Info
-**Status:** pending
+**Status:** notes
 
 **DECISIONS LOG — For Client Advice Note**
 
@@ -1641,12 +2076,13 @@ MSA (HJ7)
 │   ├── Annex 3C: Cloud Management
 │   ├── Annex 3D: Connectivity (Ethernet — 36m/60d defaults)
 │   ├── Annex 3E: Telecoms (Business Comms adapted — 24m/60d defaults)
-│   └── Annex 3F: Hardware Provision & Maintenance
+│   ├── Annex 3F: Hardware Provision & Maintenance
+│   └── Annex 3G: Mobile Services (Mobile Terms adapted — 24m/30d defaults)
 ├── Schedule 4: Security Schedule (optional — for cyber services)
 └── Schedule 5: Maintenance Schedule (from HJ1)
 ```
 
-**Hierarchy:** Order Form (highest) → Schedule 1 → Schedule 3 + Annexes → Other Schedules
+**Hierarchy:** Order Form (highest) → Annexes → Schedules → Schedule 1 (Terms and Conditions)
 
 **Rationale:** Provides flexibility to assemble contract per engagement while maintaining consistent core terms. Avoids repetition across service-specific documents.
 
@@ -1654,13 +2090,13 @@ MSA (HJ7)
 
 **DECISION S2: Separate Mobile from Horizon**
 
-**Decision:** Create separate Annex for Mobile services (not combined with Horizon VoIP in Annex 3E).
+**Decision:** Create separate Annex for Mobile services (Annex 3G) — NOT combined with Horizon VoIP in Annex 3E.
 
 **Rationale:** Mobile terms have fundamentally different structure (25 clauses vs 11) and cover different subject matter:
-- Mobile: SIM cards, handsets, porting, roaming, network coverage, MultiNet
+- Mobile: SIM cards, handsets, porting, roaming, network coverage, MultiNet, Hardware Fund, Network Provider rights
 - Horizon: VoIP, SBC, IP addresses, emergency services warning
 
-**Impact:** May need Annex 3E-VoIP and Annex 3E-Mobile, or renumber to 3E and 3G.
+**Impact:** Annex 3E (Telecoms/VoIP) and Annex 3G (Mobile) are separate, detachable annexes.
 
 ---
 
@@ -1714,6 +2150,38 @@ MSA (HJ7)
 - Cls 21-27: General/Boilerplate (Notices, Entire Agreement, Waiver, Severability, Third Party Rights, Assignment, Governing Law) → MSA covers
 
 **Rationale:** Business Communications is comprehensive and telecoms-specific. Rather than extracting individual provisions, keep it substantially intact as Annex 3E. Only remove clauses that would duplicate MSA core terms.
+
+---
+
+**DECISION S5: Mobile Terms → Annex 3G (Keep Almost All)**
+
+**Decision:** Adapt Mobile Services Terms as the basis for Annex 3G, keeping almost all provisions intact.
+
+**CLAUSES TO KEEP:**
+- Cl 1: Provision of Services (SIM/Equipment; Connection Date)
+- Cl 2: Phone Number & SIM (ownership; lost/stolen; porting)
+- Cl 3: Services & Coverage (roaming; content licence)
+- Cl 4: Limitation of Services (coverage; MultiNet Service)
+- Cl 5: Disruption to Services
+- Cl 6: Suspension of Services (GSM Gateway prohibition)
+- Cl 7: Equipment (risk; title; warranty; network-locked)
+- Cl 8: Orders & Charges (Bundles; bolt-ons; Hardware Fund)
+- Cl 9: Software Licence
+- Cls 10-17: Use obligations, security, responsible use, messaging, age-restricted
+- Cl 18: Ending Agreement (30 days' notice; Cancellation Fee; PAC; porting)
+- Cl 19: Effect of Ending (Disconnection; forfeit Hardware Fund)
+- Cl 20: Variations (30 days' notice; RPI-linked)
+- Cl 21: Intellectual Property
+- Cl 23: Privacy (Network Provider data sharing — mobile-specific)
+- Cl 24: Third Party Rights (Network Provider enforcement rights)
+- Cl 25: Definitions (mobile-specific definitions)
+
+**CLAUSES TO REMOVE (MSA covers):**
+- Cl 22: Liability Limits → MSA cl 19 applies (£100k cap, not mobile's £3,000)
+
+**KEY DIFFERENCE FROM 3E:** Keep cls 21, 23, 24 because they contain Network Provider-specific provisions that don't appear elsewhere. Network Provider can enforce directly under Contracts (Rights of Third Parties) Act 1999.
+
+**Rationale:** Mobile terms are supplementary to Business Communications (per cl 32 of old Mobile terms) but cover fundamentally different subject matter. The Network Provider references and unique features (MultiNet, Hardware Fund, SIM provisions) justify a separate, comprehensive Annex.
 
 ---
 
@@ -1815,7 +2283,7 @@ MSA (HJ7)
 
 **Decision:** MSA cl 19.4 already has £100,000 liability cap per client instruction.
 
-**Rationale:** Client has already made commercial decision on cap level.
+**Rationale:** Client has already made commercial decision on cap level. This applies to ALL services including Mobile (replacing Mobile's £3,000 cap).
 
 ---
 
@@ -1868,6 +2336,16 @@ MSA (HJ7)
 
 ---
 
+**DECISION R3: Mobile Terms → Annex 3G (Not Retired)**
+
+**Decision:** Mobile Services Terms will be adapted as Annex 3G, NOT retired.
+
+**Rationale:** Mobile terms contain comprehensive mobile-specific provisions (SIM ownership, MultiNet, Hardware Fund, Network Provider rights) that should be preserved. Rather than extracting individual clauses, adapt the document as Annex 3G with only minor removals (see Decision S5).
+
+**Old Document Path:** `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\One2Call-Terms-and-Conditions-for-Mobile-Services-g-v1.1\`
+
+---
+
 ## BUSINESS COMMUNICATIONS GAP DECISIONS
 
 **NOTE:** Following Decision S4, most Business Communications provisions are retained in Annex 3E rather than being extracted to MSA core or other locations. The below decisions remain valid for provisions that DO need to go elsewhere.
@@ -1883,8 +2361,8 @@ MSA (HJ7)
 **DECISION B8: Call Monitoring Disclosure**
 
 **Gap:** Business Comms cl 6 requires Customer to disclose call monitoring to its staff.
-**Decision:** Add to MSA cl 18 (Data Protection).
-**Rationale:** This is a data protection/RIPA compliance matter, not service-specific. Fits with existing DP clause.
+**Decision:** **KEEP IN ANNEX 3E** — not moved to MSA cl 18.
+**Rationale:** Call monitoring is telecoms-specific. Stays with other telecoms provisions.
 
 ---
 
@@ -1899,7 +2377,7 @@ MSA (HJ7)
 *Additional decisions to be added as they are made during this project.*
 
 ## 3. 1.1 Fix critical drafting issues
-**Status:** pending
+**Status:** completed
 
 (a) Correct Schedule numbering — The Terms and Conditions are headed "Schedule 2" but should be "Schedule 1" per the cover document structure. Correct this inconsistency.
 
@@ -1908,9 +2386,13 @@ MSA (HJ7)
 Reference: Managed services agreement (1).docx
 
 ## 4. 1.2 Expand clause 21 (exit/transition)
-**Status:** pending
+**Status:** completed
 
-Add exit/transition provisions covering:
+**NOT IMPLEMENTED — Client Decision**
+
+The following exit/transition provisions were considered but intentionally not added per client instruction (10 Dec 2025). The existing MSA provisions (clause 21 Consequences of Termination) are considered adequate.
+
+**Provisions considered but not implemented:**
 
 (a) Customer data extraction right — Customer may request return or deletion of Customer Data within 30 days of termination.
 
@@ -1919,6 +2401,8 @@ Add exit/transition provisions covering:
 (c) Data deletion certification — Following data return, Supplier to confirm deletion of Customer Data (subject to legal retention requirements).
 
 (d) Equipment — Customer equipment to be returned; Supplier equipment to be collected or purchased at net book value.
+
+**Rationale:** Client confirmed existing clause 21 provisions are sufficient for One2Call's business model.
 
 Reference: Managed services agreement (1).docx — clause 21 (Exit Plan and Transition Services)
 
@@ -1929,7 +2413,68 @@ Add to clause 19.4: 'The liability of either party under clause 17 (Indemnities)
 
 Reference: Managed services agreement (1).docx — clause 19 (Limitation of Liability)
 
-## 6. 1.4 Draft Security Schedule (Schedule 4)
+## 6. 1.7 Add regulatory compliance clauses
+**Status:** pending
+
+Add to clause 24 (General) with explanatory drafting notes:
+
+(a) Anti-bribery — Compliance with Bribery Act 2010; no bribes or facilitation payments; right to terminate for breach. [Note: May be required by larger clients and public sector customers.]
+
+(b) Anti-slavery — Compliance with Modern Slavery Act 2015; due diligence on supply chain; annual statement. [Note: May be required by larger clients and public sector customers.]
+
+(c) Dispute escalation — Before commencing litigation, disputes to be escalated to senior management for good faith resolution discussions for 14 days. [Note: May reduce legal costs and preserve commercial relationships.]
+
+Reference:
+• Managed services agreement (1).docx — clause 29 (Anti-bribery), clause 30 (Anti-slavery), clause 35 (Dispute resolution)
+
+## 7. Add no verbal/physical abuse clause to client obligations
+**Status:** pending
+
+Add provision from Milewood General T&Cs cl 5.1.5 giving One2Call the right to suspend services if client subjects any One2Call employee, contractor or representative to verbal, physical or other abuse. This is a modern, employee-protective provision. Consider adding to MSA client obligations section.
+
+## 8. Query: Include detailed returns policy in goods provisions?
+**Status:** pending
+
+Add comment to MSA goods/equipment provisions querying whether to include the detailed 16-point returns policy from Milewood General T&Cs cl 4.8. That policy includes specific timeframes (14 days for unused goods, 30 days for faulty), restocking fees, and detailed procedures. Query whether client wants this level of detail in MSA or Annex 3F (Hardware Provision).
+
+## 9. 1.12 Add document hierarchy/priority clause to MSA
+**Status:** pending
+
+Add a priority of documents clause to the MSA establishing the hierarchy for resolving conflicts between contractual documents.
+
+**TARGET DOCUMENT:** MSA (HJ7) — Schedule 1 Terms and Conditions
+**PATH:** `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\drafts\current_drafts\One2call  - 2025 Templates  - MSA Defined Services - HJ7.docx`
+
+**SUGGESTED LOCATION:** Clause 1 (Definitions/Interpretation) or Clause 24 (General)
+
+**PRIORITY ORDER (highest to lowest):**
+1. Order Form
+2. Annexes (e.g., Annex 3E Telecoms)
+3. Schedules (e.g., Schedule 3, Schedule 5)
+4. MSA Terms and Conditions (Schedule 1)
+
+**DRAFT CLAUSE:**
+
+> **Priority of Documents**
+>
+> In the event of any conflict or inconsistency between the documents forming part of this Agreement, the following order of precedence shall apply (with documents higher in the list taking priority over documents lower in the list):
+>
+> (a) the Order Form;
+> (b) any Annex to a Schedule;
+> (c) any Schedule (other than these Terms and Conditions);
+> (d) these Terms and Conditions.
+>
+> For the avoidance of doubt, any express term in the Order Form shall override any default term in an Annex or Schedule.
+
+**RATIONALE:**
+- Order Form is the deal-specific document and should take precedence (e.g., for term/notice overrides)
+- Annexes contain service-specific provisions that should override general Schedule provisions
+- Schedules contain framework provisions
+- MSA core terms are the baseline
+
+**NOTE:** Also ensure Order Form template (Task 2.3) includes a statement referencing this hierarchy.
+
+## 10. 1.4 Draft Security Schedule (Schedule 4)
 **Status:** pending
 
 Create optional Security Schedule (Schedule 4) to be incorporated by reference in Orders that include cyber security services. Key areas:
@@ -1948,7 +2493,7 @@ Create optional Security Schedule (Schedule 4) to be incorporated by reference i
 
 Reference: Managed services agreement (1).docx — clause 8 (Security) and Schedule 12 (Security)
 
-## 7. 1.8 Enhance MSA core with general provisions
+## 11. 1.8 Enhance MSA core with general provisions
 **Status:** pending
 
 Add the following general provisions to the MSA core (Schedule 1 Terms and Conditions) that will apply to all services.
@@ -1987,6 +2532,26 @@ provided that the Customer may withdraw either consent by written notice to the 
 
 ---
 
+## CLIENT QUERY — NON-SOLICITATION OF EMPLOYEES
+
+**[QUERY FOR CLIENT]:** "Standard managed services agreements often include a non-solicitation clause preventing customers from poaching the supplier's staff. This protects One2Call's investment in its engineers and technical personnel. Would you like us to add such a provision?"
+
+**Draft clause if required:**
+
+> **Non-Solicitation of Employees**
+>
+> During the term of any Order and for a period of 6 months thereafter, the Customer shall not (either directly or indirectly, whether for itself or on behalf of any other person) solicit, entice away, or offer employment to any employee of the Supplier who has been materially involved in providing the Services to the Customer, without the prior written consent of the Supplier.
+>
+> This clause shall not prevent the Customer from:
+> (a) placing job advertisements in the general press or on general job boards; or
+> (b) making offers of employment in response to unsolicited applications.
+>
+> If the Customer breaches this clause, it shall pay to the Supplier, as a reasonable pre-estimate of the Supplier's loss, an amount equal to 6 months' gross remuneration of the employee concerned.
+
+**Source:** Standard provision in managed services agreements. Seen in customer-proposed terms (Milewood Healthcare MSA Section 10) — this provision protects the supplier.
+
+---
+
 **REMOVED FROM THIS TASK:**
 ~~Call monitoring disclosure~~ — Stays in Annex 3E (Business Comms cl 6) as telecoms-specific provision. Not moved to MSA cl 18.
 
@@ -1999,146 +2564,132 @@ These provisions apply to ALL services and represent general obligations that sh
 • Ethernet: `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\One2Call-Terms-and-Conditions-for-Ethernet-g\One2Call-Terms-and-Conditions-for-Ethernet-g.md`
 • Horizon: `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\One2Call-Terms-and-Conditions-for-Horizon-Services-g-v1.2\One2Call-Terms-and-Conditions-for-Horizon-Services-g-v1.2.md`
 • Business Comms: `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\One2Call-Business-Communications-General-Terms-and-Conditions.pdf\One2Call-Business-Communications-General-Terms-and-Conditions.pdf.md`
+• Milewood Healthcare MSA (customer-proposed): `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\recent_customer_negotiation\24 Months Managed IT & Cyber MSA for Milewood Healthcare Limited.pdf\`
 
 **PRECEDENT REFERENCE:** Managed services agreement (1).docx — for drafting style
 
-## 8. 1.10 Review Fair Use & Legislation Compliance gaps
-**Status:** pending
+## 12. 1.10 Review Fair Use & Legislation Compliance gaps
+**Status:** completed
 
+**RESOLVED — NO FURTHER ACTION REQUIRED** ✅
+
+This task was created to review Business Communications fair use policies (cl 3) and legislation compliance provisions (cls 8-9) for gaps.
+
+**Resolution:** Per Decision S4, we are keeping Business Communications General Terms almost entirely intact as Annex 3E. This means:
+
+- **Cl 3 (Fair Use Policies)** — Retained in Annex 3E
+- **Cl 8 (Compliance with Legislation)** — Retained in Annex 3E  
+- **Cl 9 (Equipment Compliance)** — Retained in Annex 3E
+
+Since these provisions remain in the Annex rather than being extracted to the MSA core, no gap analysis is needed — the provisions are preserved as-is.
+
+**Original Task Description:**
 Review Business Communications fair use policies and legislation compliance provisions to identify any gaps not already covered by the MSA.
 
 **SOURCE:** Business Communications General Terms cl 3 (Fair Use Policies) and cl 8-9 (Compliance with Legislation)
-**PATH:** `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\One2Call-Business-Communications-General-Terms-and-Conditions.pdf\One2Call-Business-Communications-General-Terms-and-Conditions.pdf.md`
 
-**REVIEW STEPS:**
+## 13. 1.11 Add Rental Equipment provisions to Annex 3E
+**Status:** completed
 
-1. **Extract Business Comms provisions:**
-   - Cl 3: Fair Use Policies — acceptable use, bandwidth caps, abuse prevention
-   - Cl 8: Compliance with legislation — RIPA, Telecoms Act, Ofcom requirements
-   - Cl 9: Equipment compliance — CE marking, type approval, interference
+**RESOLVED — NO FURTHER ACTION REQUIRED** ✅
 
-2. **Compare against MSA (HJ7):**
-   - Check Schedule 1 (Terms and Conditions) for existing compliance clauses
-   - Check cl 12 (Use restrictions / acceptable use)
-   - Check cl 18 (Data Protection) for RIPA coverage
-   - Check any equipment clauses for compliance requirements
+This task was created to incorporate Business Communications cl 7 (Rental Equipment) into Annex 3E.
 
-3. **Identify gaps:**
-   - List any Business Comms provisions NOT covered by MSA
-   - Note any MSA provisions that are weaker than Business Comms
+**Resolution:** Per Decision S4, we are keeping Business Communications General Terms almost entirely intact as Annex 3E. This means:
 
-4. **Decision required:** For each gap, decide placement:
-   - MSA core (if applies to all services)
-   - Schedule 3 common framework (if applies to all installed services)
-   - Specific Annex (if service-specific, e.g., telecoms-only regulations)
+- **Cl 7 (Rental Equipment)** — All provisions (7.1-7.9) are retained in Annex 3E
 
-**OUTPUT:** Update Task 0.1 (Decisions Log) with findings and decisions.
+Since Annex 3E is based on the full Business Communications document (with only cls 9, 13, 14, 21-27 removed), the Rental Equipment provisions are already included. No separate incorporation task is needed.
 
-**CONTEXT:** This task was created because Business Comms cls 3, 8-9 were not explicitly covered in the B1-B12 gap analysis, which focused on numbering, termination, and commercial provisions.
+See Task 3.1 (Draft Annex 3E) at ordinal 18 for the full approach.
 
-## 9. 1.11 Add Rental Equipment provisions to Annex 3E
-**Status:** pending
-
+**Original Task Description:**
 Incorporate Business Communications cl 7 (Rental Equipment) into Annex 3E (Telecoms).
 
 **SOURCE:** Business Communications General Terms cl 7.1-7.9
-**PATH:** `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\One2Call-Business-Communications-General-Terms-and-Conditions.pdf\One2Call-Business-Communications-General-Terms-and-Conditions.pdf.md`
 
-**PROVISIONS TO ADD:**
+## 14. 1.9 Complete gap analysis for remaining old terms
+**Status:** completed
 
-| Clause | Content |
-|--------|---------|
-| **7.1** | Supplier owns Rental Equipment at all times; Customer shall not sell, assign, sub-license, or allow third-party use; Customer shall not remove labels or prejudice Supplier's rights; Supplier may replace with equivalent or better specification |
-| **7.2** | Supplier obligations: install at agreed time/date; use reasonable endeavours to repair faults per standard procedures |
-| **7.3** | Customer responsible for care of Rental Equipment; pays for replacement/repair if lost, stolen, or damaged |
-| **7.4** | Customer to notify faults, repairs needed, loss/theft/damage promptly |
-| **7.5** | Customer to use Rental Equipment only with relevant Services; comply with Supplier's reasonable instructions |
-| **7.6** | Customer must insure Rental Equipment; obtain necessary licences/consents/approvals for installation and use |
-| **7.7** | No third-party repairs/modifications without consent; Supplier not liable for third-party work; Customer indemnifies Supplier |
-| **7.8** | Return on termination in reasonable condition (fair wear and tear); if not returned, Supplier may invoice original cost less depreciation plus recovery costs |
-| **7.9** | If returned equipment not received, Customer remains liable absent evidence of delivery |
+**ALL GAP ANALYSES COMPLETE** ✅
 
-**ALSO REFERENCE (from Business Comms cl 10.5):**
-- Rental charges invoiced monthly in advance
-- First invoice includes advance month plus part-month from commencement
+---
 
-**TARGET:** Annex 3E (Telecoms) — new section "Rental Equipment"
+## DOCUMENT GROUPS REVIEWED
 
-**RATIONALE:** Rental Equipment provisions are integral to telecoms services where handsets, routers, and other equipment may be rented rather than sold. Keeping in Annex 3E (per user decision) rather than Schedule 3 common framework.
+### Group 1: Supplementary Conditions (Ethernet, Horizon, Maintenance)
+**Location:** `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\`
 
-**NOTE:** Consider whether Annex 3D (Connectivity) also needs rental provisions for routers/NTEs, or whether cross-reference to 3E is sufficient.
+These are service-specific terms that supplement the Business Communications master terms:
 
-## 10. 1.12 Add document hierarchy/priority clause to MSA
-**Status:** pending
+| Document | Outcome |
+|----------|---------|
+| Ethernet Terms | → Task 1.5 (Schedule 3), Task 1.8 (MSA core), Task 3.2 (Annex 3D) |
+| Horizon Terms | → Task 3.1 (Annex 3E additions) |
+| Phone Maintenance | → Task 1.6 (Schedule 5 enhancements) |
+| Access Control Maintenance | → Task 1.6 (Schedule 5 enhancements) |
+| CCTV Maintenance | → Task 1.6 (Schedule 5 enhancements) |
 
-Add a priority of documents clause to the MSA establishing the hierarchy for resolving conflicts between contractual documents.
+---
 
-**TARGET DOCUMENT:** MSA (HJ7) — Schedule 1 Terms and Conditions
-**PATH:** `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\drafts\current_drafts\One2call  - 2025 Templates  - MSA Defined Services - HJ7.docx`
+### Group 2: Business Communications & Mobile (Master Terms)
+**Location:** `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\`
 
-**SUGGESTED LOCATION:** Clause 1 (Definitions/Interpretation) or Clause 24 (General)
+These are comprehensive master terms that form the basis for Annexes 3E and 3G:
 
-**PRIORITY ORDER (highest to lowest):**
-1. Order Form
-2. Annexes (e.g., Annex 3E Telecoms)
-3. Schedules (e.g., Schedule 3, Schedule 5)
-4. MSA Terms and Conditions (Schedule 1)
+| Document | Outcome |
+|----------|---------|
+| Business Communications | → **Annex 3E** — keep almost all intact; see Decision S4 |
+| Mobile Terms | → **Annex 3G** — keep almost all intact; see Decision S5 |
 
-**DRAFT CLAUSE:**
+**Hierarchy Finding:** Business Communications = Master general terms; Mobile supplements it but is kept separate due to Network Provider provisions
 
-> **Priority of Documents**
->
-> In the event of any conflict or inconsistency between the documents forming part of this Agreement, the following order of precedence shall apply (with documents higher in the list taking priority over documents lower in the list):
->
-> (a) the Order Form;
-> (b) any Annex to a Schedule;
-> (c) any Schedule (other than these Terms and Conditions);
-> (d) these Terms and Conditions.
->
-> For the avoidance of doubt, any express term in the Order Form shall override any default term in an Annex or Schedule.
+---
 
-**RATIONALE:**
-- Order Form is the deal-specific document and should take precedence (e.g., for term/notice overrides)
-- Annexes contain service-specific provisions that should override general Schedule provisions
-- Schedules contain framework provisions
-- MSA core terms are the baseline
+### Group 3: Sale of Goods (Retired)
+**Location:** `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\`
 
-**NOTE:** Also ensure Order Form template (Task 2.3) includes a statement referencing this hierarchy.
+| Document | Outcome |
+|----------|---------|
+| Sale of Goods Terms | → **RETIRED** — MSA cl 4-8 already covers goods; see Decision R1 |
 
-## 11. 1.9 Complete gap analysis for remaining old terms
-**Status:** pending
+---
 
-Complete gap analysis for remaining old terms documents against MSA and proposed Schedule 3/Annexes structure.
+### Group 4: Other Terms to Include (Precedents & Internal Policies)
+**Location:** `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\other_terms_to_include\`
 
-**COMPLETED ANALYSES:**
-✅ Ethernet terms → Task 1.5 (Schedule 3), Task 1.8 (MSA core), Annex 3D specifics
-✅ Horizon terms → Task 3.1 (Annex 3E)
-✅ Phone Maintenance → Task 1.6 (Schedule 5 enhancements)
-✅ Access Control Maintenance → Task 1.6 (Schedule 5 enhancements)
-✅ CCTV Maintenance → Task 1.6 (Schedule 5 enhancements)
-✅ Sale of Goods → **RETIRED** — MSA cl 4-8 already covers goods; see Task 0.1 (Decisions Log)
-✅ Business Communications → **MASTER TERMS** — to be replaced by enhanced MSA
+These are precedent documents and internal policies reviewed for useful provisions:
 
-**REMAINING DOCUMENTS TO ANALYSE:**
-• Mobile terms → for new Annex 3E-Mobile (separate from Horizon VoIP)
-  Path: `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\One2Call-Terms-and-Conditions-for-Mobile-Services-g-v1.1\One2Call-Terms-and-Conditions-for-Mobile-Services-g-v1.1.md`
-  **FINDING:** Mobile terms are SUPPLEMENTARY to Business Communications (see cl 32). They have a different structure (25 clauses) covering SIM cards, handsets, porting, roaming, network coverage — very different from Horizon VoIP. Should be a separate Annex.
+| Document | Type | Outcome |
+|----------|------|---------|
+| Hardware Maintenance Agreement | Precedent | → Task 1.6 client queries (e-h): spare parts threshold, ownership, off-site repairs, PM frequency |
+| SLA Policy & Guide | Internal policy | → Task 1.13: SLA clock stop provision for Schedule 5 |
 
-**KEY STRUCTURAL FINDING:**
-Old terms hierarchy:
-• **Business Communications** = Master general terms (equivalent to MSA)
-• **Supplementary Conditions** = Ethernet, Horizon, Mobile, Maintenance (service-specific)
-• **Sale of Goods** = Standalone (now retired — MSA covers)
+---
 
-**For Mobile terms, identify:**
-(a) Provisions already covered by MSA core (Schedule 1)
-(b) Provisions that should be in Schedule 3 common framework
-(c) Mobile-specific provisions for new Annex 3E-Mobile
-(d) Any terms that need special treatment or may conflict with MSA
+### Group 5: Recent Customer Negotiation (Actual Customer Contracts)
+**Location:** `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\recent_customer_negotiation\`
 
-Reference: Markdown conversions in `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\`
+Actual customer contracts reviewed for provisions worth incorporating:
 
-## 12. 1.5 Create Schedule 3 (Installation & Provisioning) with Annexes
+| Document | Type | Outcome |
+|----------|------|---------|
+| Milewood Healthcare MSA | Customer-proposed | → Task 1.8: Non-solicitation clause (client query) — NOTE: SLA was customer's, not One2Call's preferred |
+| Milewood General T&Cs | One2Call's T&Cs | → Task 1.14: No abuse clause; Task 1.15: Returns policy query |
+
+---
+
+## RESULTING STRUCTURE
+
+**Annexes Created:**
+• Annex 3D: Connectivity (from Ethernet)
+• Annex 3E: Telecoms (from Business Comms + Horizon)
+• Annex 3G: Mobile Services (from Mobile — separate from 3E)
+• Schedule 5: Maintenance (from HJ1 + maintenance terms + SLA clock stop)
+
+**THIS TASK IS COMPLETE — proceed to implementation tasks.**
+
+## 15. 1.5 Create Schedule 3 (Installation & Provisioning) with Annexes
 **Status:** pending
 
 Create Schedule 3: Installation & Provisioning Services as a common framework with detachable service-specific Annexes.
@@ -2195,7 +2746,7 @@ The old terms (Ethernet, Horizon) share common installation/provisioning provisi
 • Horizon: `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\One2Call-Terms-and-Conditions-for-Horizon-Services-g-v1.2\One2Call-Terms-and-Conditions-for-Horizon-Services-g-v1.2.md`
 • Business Comms: `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\One2Call-Business-Communications-General-Terms-and-Conditions.pdf\One2Call-Business-Communications-General-Terms-and-Conditions.pdf.md`
 
-## 13. 1.6 Incorporate Maintenance Schedule (HJ1) as Schedule 5 with enhancements
+## 16. 1.6 Incorporate Maintenance Schedule (HJ1) as Schedule 5 with enhancements
 **Status:** pending
 
 Incorporate the existing Maintenance Schedule (HJ1) as Schedule 5: Maintenance Schedule, with the following enhancements based on gap analysis of old maintenance terms (Phone, Access Control, CCTV).
@@ -2235,136 +2786,89 @@ Add to clause 10:
 
 **[COMMENT FOR CLIENT]:** "This clause departs from your old maintenance terms, which stated that theft/destruction of equipment would not affect the Customer's payment obligations. We have softened this to allow either party to terminate on 30 days' notice, with fees payable up to termination. This is a more balanced approach that avoids the Customer being locked into paying for maintenance of equipment that no longer exists."
 
+---
+
+## CLIENT QUERIES — FROM HARDWARE MAINTENANCE PRECEDENT
+
+The following provisions appear in standard hardware maintenance precedents but are not currently in HJ1. We recommend discussing with the client whether to include them.
+
+**(e) Spare parts threshold:**
+
+**[QUERY FOR CLIENT]:** "Standard hardware maintenance agreements often include a threshold for spare parts costs — e.g., parts under £50-100 are included in the maintenance fee, while parts above that threshold are charged separately. Would you like us to add such a provision? If so, what threshold would you prefer?"
+
+**Draft clause if required:**
+> "The Standard Maintenance Fees include the cost of spare parts where the individual part cost is less than £[50/100]. Where a spare part costs £[50/100] or more, the Supplier shall notify the Customer before ordering and may charge the Customer separately for the part."
+
+**(f) Spare parts ownership:**
+
+**[QUERY FOR CLIENT]:** "Standard agreements clarify that new parts installed become the Customer's property, while removed parts become the Supplier's property. Your current terms are silent on this. Would you like us to add a clarifying provision?"
+
+**Draft clause if required:**
+> "Any spare parts or components installed in the Maintained Equipment by the Supplier shall become the property of the Customer. Any parts or components removed from the Maintained Equipment by the Supplier shall become the property of the Supplier."
+
+**(g) Off-site repairs:**
+
+**[QUERY FOR CLIENT]:** "Standard agreements allow the Supplier to remove equipment for off-site repair where on-site repair is not practicable. Your current terms don't expressly permit this. Would you like us to add such a provision?"
+
+**Draft clause if required:**
+> "Where the Supplier cannot reasonably complete a repair at the Location within a reasonable time, the Supplier may remove the Maintained Equipment (or the relevant part) for off-site repair. The Supplier shall return the repaired equipment as soon as reasonably practicable."
+
+**(h) Preventative maintenance frequency:**
+
+**[QUERY FOR CLIENT]:** "Standard agreements specify how often the Supplier will perform preventative maintenance (e.g., quarterly inspections). Your current terms don't specify a frequency. Would you like us to add a provision, or leave this to be determined on a case-by-case basis?"
+
+**Draft clause if required:**
+> "The Supplier shall perform Preventative Maintenance at a frequency reasonably determined by the Supplier, having regard to the manufacturer's recommendations and the operating environment of the Maintained Equipment."
+
+---
+
 **NO CHANGES NEEDED FOR:**
 - Price increases: MSA cl 11.7 already covers (pass-through + once per 12m + >10% termination right)
-- Interest on late payment: MSA cl 14.14 already has 8% above BoE base rate
+- Interest on late payment: MSA cl 14.14 already has 8% above BoE base rate (precedent only has 4%)
 - Liability cap: MSA cl 19.4 already has £100k cap per client instruction
+- Supplier warranties: MSA covers skill and care, compliance, etc.
 
 **OLD MAINTENANCE TERMS ANALYSED:**
 • Phone: `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\One2Call-Terms-and-Conditions-for-Phone-System-Maintenance-services-v1.1\`
 • Access Control: `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\One2Call-Terms-Conditions-for-Access-Control-Maintenance-Services-v1.0\`
 • CCTV: `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\old_terms\One2Call-Terms-Conditions-for-CCTV-Maintenance-Services-v1.1\`
 
-## 14. 1.7 Add regulatory compliance clauses
+**PRECEDENT REVIEWED:**
+• Hardware Maintenance Agreement: `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\other_terms_to_include\Hardware maintenance agreement - highlighted\Hardware maintenance agreement - highlighted.md`
+
+## 17. 1.13 Add SLA clock stop provision to Schedule 5
 **Status:** pending
 
-Add to clause 24 (General) with explanatory drafting notes:
+Add an SLA clock stop/pause provision to Schedule 5 (Maintenance Schedule) to protect One2Call when response time is affected by factors outside their control.
 
-(a) Anti-bribery — Compliance with Bribery Act 2010; no bribes or facilitation payments; right to terminate for breach. [Note: May be required by larger clients and public sector customers.]
+**TARGET DOCUMENT:** Maintenance Schedule (HJ1) → Schedule 5
+**PATH:** `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\drafts\current_drafts\One2call  - 2025 Templates  - Maintenance Schedule - HJ1.docx`
 
-(b) Anti-slavery — Compliance with Modern Slavery Act 2015; due diligence on supply chain; annual statement. [Note: May be required by larger clients and public sector customers.]
+**SUGGESTED LOCATION:** After the Response Time provisions (likely clause 5 or 6)
 
-(c) Dispute escalation — Before commencing litigation, disputes to be escalated to senior management for good faith resolution discussions for 14 days. [Note: May reduce legal costs and preserve commercial relationships.]
+**DRAFT CLAUSE:**
 
-Reference:
-• Managed services agreement (1).docx — clause 29 (Anti-bribery), clause 30 (Anti-slavery), clause 35 (Dispute resolution)
+> **SLA Clock Pause**
+>
+> The Response Time shall be paused (and shall not be counted towards any service level measurement) during any period in which the Supplier is:
+>
+> (a) waiting for a response, information, access, or testing from the Customer that is reasonably required to diagnose or resolve the fault;
+>
+> (b) waiting for action from an external third-party vendor, manufacturer, or network operator that is outside the Supplier's reasonable control;
+>
+> (c) unable to access the Location or the Maintained Equipment due to circumstances attributable to the Customer; or
+>
+> (d) waiting for the Customer to approve costs, replacement parts, or remedial action where such approval is required under this Schedule.
+>
+> The Response Time shall resume when the relevant dependency is resolved. The Supplier shall notify the Customer promptly when the Response Time is paused and when it resumes.
 
-## 15. 2.1 Create Systems Integration SOW template
-**Status:** pending
+**RATIONALE:**
+This provision is standard in IT service level agreements and protects the Supplier from SLA breaches caused by customer delays or third-party dependencies. It aligns with One2Call's internal SLA Policy & Guide which includes similar clock stop conditions.
 
-Create SOW template for project-based work (migrations, infrastructure deployments, consultancy) based on Systems Integration Agreement precedent. Key areas:
+**SOURCE REFERENCE:**
+One2Call SLA Policy & Guide: `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\other_terms_to_include\One2call Limited_ Service Level Agreement (SLA) Policy  Guide\One2call Limited_ Service Level Agreement (SLA) Policy  Guide.md`
 
-(a) Project scope and deliverables
-(b) Milestones and timeline
-(c) Acceptance testing procedures
-(d) Change control procedure
-(e) Payment milestones
-(f) Project-specific IP provisions (if bespoke work)
-(g) Go-live and handover
-
-Reference:
-• Systems integration agreement (pro-supplier) (1).docx — Primary reference for SOW structure
-
-## 16. 2.2 Complete Service Schedule detail
-**Status:** pending
-
-Populate full detail for each Schedule 3 sub-schedule (3A-3F) including:
-• Detailed service descriptions aligned to One2Call website offerings
-• Specific SLA metrics (response times, fix times, uptime percentages)
-• Service credit calculations
-• Pricing structure frameworks
-• Standard exclusions and customer obligations
-
-References:
-• Managed services agreement (1).docx — Schedule 4 (Service Description), Schedule 5 (Governance), Schedule 6 (Service Levels)
-• Software maintenance_ service level agreement.docx — SLA structure and service credits
-
-## 17. 2.3 Create Order Form template with service level options
-**Status:** pending
-
-Design Order Form template that serves as the "front page" of each service engagement.
-
-**TARGET:** Create new Order Form template document
-**OUTPUT PATH:** `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\drafts\current_drafts\` (new file)
-
-**ORDER FORM CONTENTS:**
-
-1. **Parties & Locations**
-   • Supplier: One2Call Limited
-   • Customer: [Name, address, company number]
-   • Service location(s): [Site addresses]
-
-2. **Schedule & Annex Selection** (checkbox approach)
-   ☐ Schedule 1: Terms and Conditions (always applies)
-   ☐ Schedule 2: Data Protection (always applies)
-   ☐ Schedule 3: Installation & Provisioning Services
-      ☐ Annex 3A: Managed IT Services
-      ☐ Annex 3B: Cyber Security Services
-      ☐ Annex 3C: Cloud Management
-      ☐ Annex 3D: Connectivity
-      ☐ Annex 3E: Telecoms (Horizon/VoIP)
-      ☐ Annex 3F: Hardware Provision & Maintenance
-   ☐ Schedule 4: Security Schedule
-   ☐ Schedule 5: Maintenance Schedule
-      ☐ Equipment Maintenance included: Yes / No
-
-3. **Commercial Terms**
-   • Charges: [Monthly fee / One-off fee / Usage rates]
-   • Payment terms: [Override if different from Schedule 1]
-   • Service term: [Override Annex default if different]
-   • Notice period: [Override Annex default if different]
-
-4. **Default Term Reference Table** (for information)
-   | Service | Default Term | Default Notice |
-   |---------|--------------|----------------|
-   | Connectivity (3D) | 36 months | 60 days |
-   | Telecoms (3E) | 24 months | 60 days |
-   | Maintenance (Sch 5) | 12 months | 60 days |
-   | Other | 12 months | 30 days |
-
-5. **Maintenance Services (if Schedule 5 selected)**
-   • Maintained Equipment: [Description / Equipment List reference]
-   • Location(s): [Site addresses]
-   
-   **Default Service Levels** (from Schedule 5 — apply automatically):
-   • Response Time (>50% failure): 4 hours
-   • Response Time (other faults): 8 hours (9 hours for telephone systems)
-   • Business Hours: 8am-6pm Mon-Fri
-   
-   **Override Service Levels** (complete only if different from defaults):
-   • Response Time (>50% failure): ___
-   • Response Time (other faults): ___
-   • Business Hours: ___
-   
-   **Service Credits:**
-   [ ] £50 per breach
-   [ ] 5% of monthly fee per breach
-   [ ] 10% of monthly fee per breach
-   [ ] Custom: ___
-   
-   **Equipment-specific exclusions:** [e.g., additional items beyond 2-wire devices]
-
-6. **Hierarchy Statement**
-   "In the event of conflict between the terms of this Order and any Schedule or Annex, the terms of this Order shall prevail."
-
-7. **Signatures / Electronic Acceptance**
-   • Customer signature block
-   • Date
-   • Reference to electronic acceptance if applicable
-
-**NOTE:** Default service levels are now in Schedule 5 (Task 1.6). Phone system 9h response time is handled via conditional clause in Schedule 5 clause 7.3(b). Order Form only needs override fields if customer wants something different.
-
-**PRECEDENT REFERENCE:** MSA (HJ7) cover page for existing format
+Section 5.2: "SLA Pause Conditions: The SLA clock will be temporarily paused when resolution is dependent on factors outside of our direct control."
 
 ## 18. 3.1 Draft Annex 3E: Telecoms (Horizon/VoIP)
 **Status:** pending
@@ -2633,3 +3137,168 @@ Keep almost all of Mobile Services Terms intact in Annex 3G. The Network Provide
 ## DRAFTING NOTE:
 
 Mobile services operate through Network Providers with their own terms and enforcement rights. This justifies keeping Mobile as a separate, comprehensive Annex rather than merging with Annex 3E (Telecoms). The £3,000 liability cap in the old terms is replaced by MSA's £100k cap.
+
+## 21. 2.1 Create Systems Integration SOW template
+**Status:** pending
+
+Create SOW template for project-based work (migrations, infrastructure deployments, consultancy) based on Systems Integration Agreement precedent. Key areas:
+
+(a) Project scope and deliverables
+(b) Milestones and timeline
+(c) Acceptance testing procedures
+(d) Change control procedure
+(e) Payment milestones
+(f) Project-specific IP provisions (if bespoke work)
+(g) Go-live and handover
+
+Reference:
+• Systems integration agreement (pro-supplier) (1).docx — Primary reference for SOW structure
+
+## 22. 2.2 Draft remaining Annexes (3A, 3B, 3C, 3F)
+**Status:** pending
+
+**REVISED SCOPE:** Draft the remaining Annexes that don't have dedicated drafting tasks.
+
+**NOTE:** Annexes 3D, 3E, and 3G are covered by separate tasks:
+- Annex 3D (Connectivity) → Task 3.2
+- Annex 3E (Telecoms) → Task 3.1
+- Annex 3G (Mobile) → Task 3.3
+
+---
+
+## ANNEXES TO DRAFT IN THIS TASK:
+
+### Annex 3A: Managed IT Services
+- Remote monitoring & management (RMM)
+- Helpdesk / service desk
+- Patch management
+- Backup monitoring
+- Proactive maintenance
+- Reporting
+
+**Source:** One2Call website offerings; precedent managed services agreements
+
+### Annex 3B: Cyber Security Services
+- Security monitoring (SOC/SIEM)
+- Endpoint detection & response (EDR)
+- Vulnerability scanning
+- Penetration testing
+- Security awareness training
+- Incident response
+
+**Source:** One2Call website offerings; Schedule 4 (Security Schedule) for definitions; precedent security services agreements
+
+### Annex 3C: Cloud Management
+- Cloud platform management (Azure, AWS, M365)
+- Cloud migration services
+- Backup & disaster recovery
+- Cloud optimisation
+- Licence management
+
+**Source:** One2Call website offerings; precedent cloud services agreements
+
+### Annex 3F: Hardware Provision & Maintenance
+- Hardware supply terms (beyond MSA cl 4-8)
+- Hardware maintenance (link to Schedule 5)
+- RMA procedures
+- Warranty pass-through
+- End-of-life / refresh
+
+**Source:** One2Call website offerings; Hardware Maintenance Agreement precedent (reviewed in Task 1.6); MSA goods provisions (cl 4-8)
+
+---
+
+## FOR EACH ANNEX, INCLUDE:
+
+1. **Service description** — Aligned to One2Call website offerings
+2. **Service levels** — Response times, fix times, uptime (where applicable)
+3. **Exclusions** — What's not covered
+4. **Customer obligations** — Specific to that service
+5. **Default term/notice** — If different from MSA defaults
+6. **Relationship to other documents** — Schedule 3 common provisions, Schedule 5 if maintenance applies
+
+---
+
+## REFERENCES:
+
+- Managed services agreement (1).docx — Schedule 4 (Service Description), Schedule 5 (Governance), Schedule 6 (Service Levels)
+- Software maintenance SLA.docx — SLA structure and service credits
+- One2Call website — for service offerings
+- Schedule 3 common provisions (Task 1.5) — for framework these Annexes plug into
+
+## 23. 2.3 Create Order Form template with service level options
+**Status:** pending
+
+Design Order Form template that serves as the "front page" of each service engagement.
+
+**TARGET:** Create new Order Form template document
+**OUTPUT PATH:** `C:\Users\DavidSant\effi-contract-review\EL_Projects\One2Call\drafts\current_drafts\` (new file)
+
+**ORDER FORM CONTENTS:**
+
+1. **Parties & Locations**
+   • Supplier: One2Call Limited
+   • Customer: [Name, address, company number]
+   • Service location(s): [Site addresses]
+
+2. **Schedule & Annex Selection** (checkbox approach)
+   ☐ Schedule 1: Terms and Conditions (always applies)
+   ☐ Schedule 2: Data Protection (always applies)
+   ☐ Schedule 3: Installation & Provisioning Services
+      ☐ Annex 3A: Managed IT Services
+      ☐ Annex 3B: Cyber Security Services
+      ☐ Annex 3C: Cloud Management
+      ☐ Annex 3D: Connectivity
+      ☐ Annex 3E: Telecoms (Horizon/VoIP)
+      ☐ Annex 3F: Hardware Provision & Maintenance
+   ☐ Schedule 4: Security Schedule
+   ☐ Schedule 5: Maintenance Schedule
+      ☐ Equipment Maintenance included: Yes / No
+
+3. **Commercial Terms**
+   • Charges: [Monthly fee / One-off fee / Usage rates]
+   • Payment terms: [Override if different from Schedule 1]
+   • Service term: [Override Annex default if different]
+   • Notice period: [Override Annex default if different]
+
+4. **Default Term Reference Table** (for information)
+   | Service | Default Term | Default Notice |
+   |---------|--------------|----------------|
+   | Connectivity (3D) | 36 months | 60 days |
+   | Telecoms (3E) | 24 months | 60 days |
+   | Maintenance (Sch 5) | 12 months | 60 days |
+   | Other | 12 months | 30 days |
+
+5. **Maintenance Services (if Schedule 5 selected)**
+   • Maintained Equipment: [Description / Equipment List reference]
+   • Location(s): [Site addresses]
+   
+   **Default Service Levels** (from Schedule 5 — apply automatically):
+   • Response Time (>50% failure): 4 hours
+   • Response Time (other faults): 8 hours (9 hours for telephone systems)
+   • Business Hours: 8am-6pm Mon-Fri
+   
+   **Override Service Levels** (complete only if different from defaults):
+   • Response Time (>50% failure): ___
+   • Response Time (other faults): ___
+   • Business Hours: ___
+   
+   **Service Credits:**
+   [ ] £50 per breach
+   [ ] 5% of monthly fee per breach
+   [ ] 10% of monthly fee per breach
+   [ ] Custom: ___
+   
+   **Equipment-specific exclusions:** [e.g., additional items beyond 2-wire devices]
+
+6. **Hierarchy Statement**
+   "In the event of conflict between the terms of this Order and any Schedule or Annex, the terms of this Order shall prevail."
+
+7. **Signatures / Electronic Acceptance**
+   • Customer signature block
+   • Date
+   • Reference to electronic acceptance if applicable
+
+**NOTE:** Default service levels are now in Schedule 5 (Task 1.6). Phone system 9h response time is handled via conditional clause in Schedule 5 clause 7.3(b). Order Form only needs override fields if customer wants something different.
+
+**PRECEDENT REFERENCE:** MSA (HJ7) cover page for existing format

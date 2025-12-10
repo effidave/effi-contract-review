@@ -1,0 +1,13 @@
+{
+  "styles": [
+    {
+      "name": "Normal",
+      "type": "paragraph",
+      "count": 5,
+      "semantic_hint": "list_item",
+      "hint_scores": {
+        "list_item": 0.75
+      }
+    }
+  ]
+}

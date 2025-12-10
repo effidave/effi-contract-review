@@ -1911,6 +1911,34 @@ del.revision-delete,
     color: #991b1b;
 }
 
+.task-status.status-notes {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+/* Notes filter button - base styling (always visible, subtle) */
+.plan-filter-controls .filter-btn.filter-notes {
+    /* Subtle indicator that this is a special category */
+}
+
+/* Notes filter button - orange styling when notes exist */
+.plan-filter-controls .filter-btn.filter-notes.has-notes {
+    background: #fed7aa !important;
+    color: #9a3412 !important;
+    border-color: #fdba74 !important;
+}
+
+.plan-filter-controls .filter-btn.filter-notes.has-notes:hover {
+    background: #fdba74 !important;
+    color: #7c2d12 !important;
+}
+
+.plan-filter-controls .filter-btn.filter-notes.has-notes.filter-active {
+    background: #f97316 !important;
+    color: white !important;
+    border-color: #ea580c !important;
+}
+
 /* Edit count badge */
 .task-edit-count {
     display: inline-flex;

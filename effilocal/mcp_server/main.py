@@ -579,6 +579,21 @@ def register_tools():
         return await plan_tools.block_task(filename, task_id)
 
     @mcp.tool()
+    async def unblock_task(filename: str, task_id: str):
+        """Unblock a blocked task (sets status to pending). Only works if currently blocked."""
+        return await plan_tools.unblock_task(filename, task_id)
+
+    @mcp.tool()
+    async def convert_to_note(filename: str, task_id: str):
+        """Convert a task to a note. Notes are not counted towards task completion totals."""
+        return await plan_tools.convert_to_note(filename, task_id)
+
+    @mcp.tool()
+    async def convert_to_task(filename: str, task_id: str):
+        """Convert a note back to a regular task (pending status). Only works if currently a note."""
+        return await plan_tools.convert_to_task(filename, task_id)
+
+    @mcp.tool()
     async def add_plan_document(filename: str, display_name: str = None):
         """Add the specified document to the work plan's tracked documents."""
         return await plan_tools.add_plan_document(filename, display_name)

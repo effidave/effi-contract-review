@@ -62,7 +62,8 @@ class TestLegalDocument:
     
     def test_creates_with_defaults(self):
         doc = LegalDocument(filename="C:/test/contract.docx")
-        assert len(doc.id) == 8
+        assert len(doc.id) == 10  # wt + 8 hex chars
+        assert doc.id.startswith('wt')
         assert doc.filename == "C:/test/contract.docx"
         assert doc.display_name == "contract.docx"  # Auto-derived
         assert isinstance(doc.added_date, datetime)
@@ -118,7 +119,8 @@ class TestWorkTask:
     
     def test_creates_with_defaults(self):
         task = WorkTask(title="Review clause", description="Check the indemnity")
-        assert len(task.id) == 8
+        assert len(task.id) == 10  # wt + 8 hex chars
+        assert task.id.startswith('wt')
         assert task.title == "Review clause"
         assert task.description == "Check the indemnity"
         assert task.status == "pending"
@@ -650,3 +652,261 @@ class TestPlanTools:
         result = await plan_tools.update_task(filename, "nonexistent", title="New")
         assert "Error" in result
         assert "not found" in result
+
+
+# =============================================================================
+# Notes Status Tests
+# =============================================================================
+
+class TestNotesStatus:
+    """Tests for the 'notes' status category.
+    
+    Notes are special tasks that don't count towards pending/completed counts.
+    They can be converted to/from regular tasks.
+    """
+    
+    def test_notes_is_valid_status(self):
+        """Notes should be a valid TaskStatus value."""
+        task = WorkTask(title="A note", description="Some info", status="notes")
+        assert task.status == "notes"
+    
+    def test_convert_to_note_method(self):
+        """WorkTask should have convert_to_note() method."""
+        task = WorkTask(title="Task", description="", status="pending")
+        
+        task.convert_to_note()
+        
+        assert task.status == "notes"
+    
+    def test_convert_to_note_from_any_status(self):
+        """convert_to_note() should work from any status."""
+        for status in ["pending", "in_progress", "completed", "blocked"]:
+            task = WorkTask(title="Task", description="", status=status)
+            task.convert_to_note()
+            assert task.status == "notes"
+    
+    def test_unblock_method_from_blocked(self):
+        """unblock() should set status to pending when blocked."""
+        task = WorkTask(title="Task", description="", status="blocked")
+        
+        result = task.unblock()
+        
+        assert result == True
+        assert task.status == "pending"
+    
+    def test_unblock_method_from_non_blocked(self):
+        """unblock() should return False and not change status when not blocked."""
+        for status in ["pending", "in_progress", "completed", "notes"]:
+            task = WorkTask(title="Task", description="", status=status)
+            original_status = task.status
+            
+            result = task.unblock()
+            
+            assert result == False
+            assert task.status == original_status
+    
+    def test_notes_not_counted_as_open(self):
+        """Notes should not be considered 'open' tasks."""
+        task = WorkTask(title="Note", description="", status="notes")
+        
+        # Notes are not actionable, so is_open should be False
+        assert task.is_open() == False
+    
+    def test_notes_serialization(self):
+        """Notes status should serialize and deserialize correctly."""
+        task = WorkTask(title="Note", description="Info", status="notes")
+        
+        data = task.to_dict()
+        assert data["status"] == "notes"
+        
+        restored = WorkTask.from_dict(data)
+        assert restored.status == "notes"
+
+
+class TestNotesStatusMCPTools:
+    """Tests for MCP tools related to notes status."""
+    
+    @pytest.fixture
+    def project_dir(self, tmp_path):
+        """Create a valid project directory structure."""
+        project = tmp_path / "EL_Projects" / "TestProject"
+        project.mkdir(parents=True)
+        filename = str(project / "contract.docx")
+        Path(filename).write_bytes(b"dummy")
+        return project, filename
+    
+    @pytest.mark.asyncio
+    async def test_convert_to_note_tool(self, project_dir):
+        """convert_to_note() tool should change task status to notes."""
+        project, filename = project_dir
+        
+        # Add a task
+        result = await plan_tools.add_task(filename, "Test task", "Description")
+        task_id = result.split("id: ")[1].split(",")[0]
+        
+        # Convert to note
+        result = await plan_tools.convert_to_note(filename, task_id)
+        
+        assert "notes" in result.lower() or "note" in result.lower()
+        
+        plan = load_plan(str(project))
+        task = plan.get_task_by_id(task_id)
+        assert task.status == "notes"
+    
+    @pytest.mark.asyncio
+    async def test_convert_to_task_tool_from_note(self, project_dir):
+        """convert_to_task() should change notes back to pending."""
+        project, filename = project_dir
+        
+        # Add a task and convert to note
+        result = await plan_tools.add_task(filename, "Test task", "Description")
+        task_id = result.split("id: ")[1].split(",")[0]
+        await plan_tools.convert_to_note(filename, task_id)
+        
+        # Convert back to task
+        result = await plan_tools.convert_to_task(filename, task_id)
+        
+        assert "pending" in result.lower() or "task" in result.lower()
+        
+        plan = load_plan(str(project))
+        task = plan.get_task_by_id(task_id)
+        assert task.status == "pending"
+    
+    @pytest.mark.asyncio
+    async def test_convert_to_task_tool_warning_if_not_note(self, project_dir):
+        """convert_to_task() should return warning if task is not a note."""
+        project, filename = project_dir
+        
+        # Add a regular task (pending status)
+        result = await plan_tools.add_task(filename, "Test task", "Description")
+        task_id = result.split("id: ")[1].split(",")[0]
+        
+        # Try to convert to task when it's already a task
+        result = await plan_tools.convert_to_task(filename, task_id)
+        
+        assert "not a note" in result.lower() or "warning" in result.lower() or "pending" in result.lower()
+        
+        # Status should be unchanged
+        plan = load_plan(str(project))
+        task = plan.get_task_by_id(task_id)
+        assert task.status == "pending"
+    
+    @pytest.mark.asyncio
+    async def test_unblock_task_tool_from_blocked(self, project_dir):
+        """unblock_task() should set blocked task to pending."""
+        project, filename = project_dir
+        
+        # Add and block a task
+        result = await plan_tools.add_task(filename, "Test task", "Description")
+        task_id = result.split("id: ")[1].split(",")[0]
+        await plan_tools.block_task(filename, task_id)
+        
+        # Unblock it
+        result = await plan_tools.unblock_task(filename, task_id)
+        
+        assert "pending" in result.lower() or "unblocked" in result.lower()
+        
+        plan = load_plan(str(project))
+        task = plan.get_task_by_id(task_id)
+        assert task.status == "pending"
+    
+    @pytest.mark.asyncio
+    async def test_unblock_task_tool_warning_if_not_blocked(self, project_dir):
+        """unblock_task() should return warning if task is not blocked."""
+        project, filename = project_dir
+        
+        # Add a task (pending status)
+        result = await plan_tools.add_task(filename, "Test task", "Description")
+        task_id = result.split("id: ")[1].split(",")[0]
+        
+        # Try to unblock when not blocked
+        result = await plan_tools.unblock_task(filename, task_id)
+        
+        assert "not blocked" in result.lower() or "warning" in result.lower()
+        
+        # Status should be unchanged
+        plan = load_plan(str(project))
+        task = plan.get_task_by_id(task_id)
+        assert task.status == "pending"
+    
+    @pytest.mark.asyncio
+    async def test_unblock_task_tool_warning_for_completed(self, project_dir):
+        """unblock_task() should return warning for completed tasks."""
+        project, filename = project_dir
+        
+        # Add and complete a task
+        result = await plan_tools.add_task(filename, "Test task", "Description")
+        task_id = result.split("id: ")[1].split(",")[0]
+        await plan_tools.complete_task(filename, task_id)
+        
+        # Try to unblock completed task
+        result = await plan_tools.unblock_task(filename, task_id)
+        
+        assert "not blocked" in result.lower() or "completed" in result.lower()
+        
+        # Status should be unchanged
+        plan = load_plan(str(project))
+        task = plan.get_task_by_id(task_id)
+        assert task.status == "completed"
+    
+    @pytest.mark.asyncio
+    async def test_update_task_with_notes_status(self, project_dir):
+        """update_task() should accept 'notes' as a valid status."""
+        project, filename = project_dir
+        
+        # Add a task
+        result = await plan_tools.add_task(filename, "Test task", "Description")
+        task_id = result.split("id: ")[1].split(",")[0]
+        
+        # Update status to notes
+        result = await plan_tools.update_task(filename, task_id, status="notes")
+        
+        assert "updated" in result.lower() or "notes" in result.lower()
+        
+        plan = load_plan(str(project))
+        task = plan.get_task_by_id(task_id)
+        assert task.status == "notes"
+    
+    @pytest.mark.asyncio
+    async def test_notes_excluded_from_task_count_in_summary(self, project_dir):
+        """Notes should not count towards taskCount in get_work_plan summary."""
+        project, filename = project_dir
+        
+        # Add tasks: 2 regular + 1 note
+        await plan_tools.add_task(filename, "Task 1", "")
+        await plan_tools.add_task(filename, "Task 2", "")
+        result = await plan_tools.add_task(filename, "Note 1", "")
+        note_id = result.split("id: ")[1].split(",")[0]
+        await plan_tools.convert_to_note(filename, note_id)
+        
+        # Get summary
+        result = await plan_tools.get_work_plan(filename)
+        import json
+        data = json.loads(result)
+        
+        # taskCount should exclude notes (data has nested summary and plan)
+        assert data["summary"]["taskCount"] == 2  # Only 2 regular tasks
+        assert data["summary"]["pending"] == 2    # Both regular tasks are pending
+    
+    @pytest.mark.asyncio
+    async def test_notes_still_in_tasks_list(self, project_dir):
+        """Notes should still appear in the tasks list, just not counted."""
+        project, filename = project_dir
+        
+        # Add a note
+        result = await plan_tools.add_task(filename, "Note 1", "Info")
+        note_id = result.split("id: ")[1].split(",")[0]
+        await plan_tools.convert_to_note(filename, note_id)
+        
+        # Get summary
+        result = await plan_tools.get_work_plan(filename)
+        import json
+        data = json.loads(result)
+        
+        # Note should be in tasks list (plan.tasks)
+        assert len(data["plan"]["tasks"]) == 1
+        assert data["plan"]["tasks"][0]["status"] == "notes"
+        
+        # But taskCount should be 0
+        assert data["summary"]["taskCount"] == 0
+

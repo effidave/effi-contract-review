@@ -1,0 +1,31 @@
+{
+  "styles": [
+    {
+      "name": "Heading 1",
+      "type": "heading",
+      "count": 22,
+      "semantic_hint": "clause_heading",
+      "hint_scores": {
+        "clause_heading": 1.75,
+        "list_item": 0.75
+      }
+    },
+    {
+      "name": "Heading 2",
+      "type": "heading",
+      "count": 12,
+      "semantic_hint": "clause_heading",
+      "hint_scores": {
+        "clause_heading": 1.75,
+        "list_item": 0.75
+      }
+    },
+    {
+      "name": "Normal",
+      "type": "table_cell",
+      "count": 1068,
+      "semantic_hint": null,
+      "hint_scores": null
+    }
+  ]
+}

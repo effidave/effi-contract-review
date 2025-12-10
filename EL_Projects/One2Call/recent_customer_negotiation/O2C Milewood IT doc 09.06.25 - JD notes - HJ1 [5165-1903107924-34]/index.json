@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "doc_id": "O2C-Milewood-IT-doc-09.06.25---JD-notes---HJ1-[516",
+  "doc_format": "docx",
+  "source_filename": "O2C Milewood IT doc 09.06.25 - JD notes - HJ1 [5165-1903107924-34].docx",
+  "char_count": 15769,
+  "block_count": 60,
+  "section_count": 1,
+  "ltu_count": 60,
+  "max_section_depth": 1,
+  "has_tag_ranges": true,
+  "schema_version": "1.0.0",
+  "filemap": {
+    "blocks": "blocks.jsonl",
+    "sections": "sections.json",
+    "styles": "styles.json",
+    "tag_ranges": "tag_ranges.jsonl"
+  }
+}

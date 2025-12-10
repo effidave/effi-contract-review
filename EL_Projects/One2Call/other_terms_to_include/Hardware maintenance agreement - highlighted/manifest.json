@@ -1,0 +1,47 @@
+{
+  "doc_id": "Hardware-maintenance-agreement---highlighted",
+  "v": 1,
+  "created_at": "2025-12-10T01:26:52+00:00",
+  "tool_version": "sprint2-dev",
+  "doc_format": "docx",
+  "sdt_carrier": "content-controls",
+  "range_marker_carrier": "content-controls",
+  "range_marker_tag_prefix": "marker:",
+  "fallback_heading_label": "Body (no heading)",
+  "checksums": {
+    "blocks.jsonl": "sha256:5a8d29a128c46031387e7c888651f61a43526e1d9c5e6253d0fcb37ae5276707",
+    "sections.json": "sha256:87a77efc53ef1a18de7095ba1fa3aba659b784bcc82f4bbba736f04ebb070c88",
+    "styles.json": "sha256:4fed2cf739e4c8d59f91946684a301379d77af97afa4c6b2111a1e6b143d6841",
+    "relationships.json": "sha256:147514c8fcef123162fb59b2b6b61bd0e5c49d4bd1bb13cab910fe93309f6592",
+    "tag_ranges.jsonl": "sha256:076fe7b443ff53061e9cb68aebe004ea8b7c267c7d3e92d92ba29241e17dbce3",
+    "index.json": "sha256:fff562f0d9140918c77402396b69e908a02749211a70901d7ae52d1c2545794c"
+  },
+  "schema_checksums": {
+    "block.schema.json": "sha256:a79c29ccec8330bef4e2ed057adee57e544a0749ee71c8aac86b8f8e13d1550e",
+    "edit_plan.schema.json": "sha256:4d9432a9d9b1b61675f527817c7dfdd608ffa20a63f2c1f50d9f0cba9ac367b1",
+    "index.schema.json": "sha256:f305e73bdd196f01be5aba55a1bfe71dc0756218dbafc234fbd9e269c7f84557",
+    "labels.schema.json": "sha256:44e45c3f69aa8c9728872198061b34cbc23aa83a232a93debb3bce13f42e1052",
+    "manifest.schema.json": "sha256:cbab4e0766ffb0d8b0fb12cc0a6b7d75f39bdacc70fed82baaae6de0f102829d",
+    "relationships.schema.json": "sha256:0a6b82f199e7e009eb01866b591d10d35578bb937e794216a56a29c3f922246e",
+    "report.schema.json": "sha256:cc9454c8a3713921e540d0e7e1ce3fca7c8569e9704475ec39eae016541bf3be",
+    "sections.schema.json": "sha256:64d13ab3f694c5e4bcce3072c1d2823c614b2718aa50ba4850aea65c3b9fcdcc",
+    "styles.schema.json": "sha256:69bb206dd584e1ce1e19e6f752f510633761625ed9ba8905fa78c2bfdf731549",
+    "tag_range.schema.json": "sha256:38ae87688b3e7f53b0d7466d5699e6e741330b2da45ea6f784ae6da8bf002c3f"
+  },
+  "attachments": [
+    {
+      "attachment_id": "6ed5002e-7b36-410f-a5cf-957bef4943c7",
+      "type": "schedule",
+      "ordinal": "1",
+      "title": null,
+      "parent_attachment_id": null
+    },
+    {
+      "attachment_id": "fd8d07b9-8187-4163-858b-9fe062414dae",
+      "type": "schedule",
+      "ordinal": "2",
+      "title": null,
+      "parent_attachment_id": null
+    }
+  ]
+}

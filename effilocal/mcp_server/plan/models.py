@@ -19,7 +19,7 @@ from typing import Literal
 
 
 # Type alias for task status
-TaskStatus = Literal["pending", "in_progress", "completed", "blocked"]
+TaskStatus = Literal["pending", "in_progress", "completed", "blocked", "notes"]
 
 
 def generate_id() -> str:
@@ -118,9 +118,24 @@ class WorkTask:
         self.status = "pending"
         self.completion_date = None
     
+    def convert_to_note(self) -> None:
+        """Convert this task to a note."""
+        self.status = "notes"
+    
+    def unblock(self) -> bool:
+        """Unblock a blocked task (set to pending).
+        
+        Returns:
+            True if task was unblocked, False if task was not blocked.
+        """
+        if self.status == "blocked":
+            self.status = "pending"
+            return True
+        return False
+    
     def is_open(self) -> bool:
-        """Check if task is open (not completed)."""
-        return self.status != "completed"
+        """Check if task is open (not completed and not a note)."""
+        return self.status not in ("completed", "notes")
     
     def add_edit_id(self, edit_id: str) -> None:
         """Add an edit ID to this task."""

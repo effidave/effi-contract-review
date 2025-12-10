@@ -1293,3 +1293,185 @@ tasks:
         });
     });
 });
+
+// ============================================================================
+// SECTION 5: Notes Status Tests
+// ============================================================================
+
+describe('Notes status', () => {
+    describe('WorkTask notes status', () => {
+        test('should accept notes as a valid status', () => {
+            const task = new WorkTask({
+                title: 'A note',
+                description: 'Some information',
+                status: 'notes'
+            });
+
+            expect(task.status).toBe('notes');
+        });
+
+        test('convertToNote() should change status to notes', () => {
+            const task = new WorkTask({ title: 'Task', description: 'Desc', status: 'pending' });
+
+            task.convertToNote();
+
+            expect(task.status).toBe('notes');
+        });
+
+        test('convertToNote() should work from any status', () => {
+            const statuses: TaskStatus[] = ['pending', 'in_progress', 'completed', 'blocked'];
+
+            for (const status of statuses) {
+                const task = new WorkTask({ title: 'Task', description: 'Desc', status });
+                task.convertToNote();
+                expect(task.status).toBe('notes');
+            }
+        });
+
+        test('unblock() should set status to pending when blocked', () => {
+            const task = new WorkTask({ title: 'Task', description: 'Desc', status: 'blocked' });
+
+            const result = task.unblock();
+
+            expect(result).toBe(true);
+            expect(task.status).toBe('pending');
+        });
+
+        test('unblock() should return false and not change status when not blocked', () => {
+            const statuses: TaskStatus[] = ['pending', 'in_progress', 'completed', 'notes'];
+
+            for (const status of statuses) {
+                const task = new WorkTask({ title: 'Task', description: 'Desc', status });
+                const result = task.unblock();
+                expect(result).toBe(false);
+                expect(task.status).toBe(status);
+            }
+        });
+
+        test('notes should not be considered open', () => {
+            const task = new WorkTask({ title: 'Note', description: 'Info', status: 'notes' });
+
+            expect(task.isOpen()).toBe(false);
+        });
+
+        test('notes status should serialize correctly', () => {
+            const task = new WorkTask({ title: 'Note', description: 'Info', status: 'notes' });
+
+            const json = task.toJSON();
+
+            expect(json.status).toBe('notes');
+        });
+
+        test('notes status should deserialize correctly', () => {
+            const json = {
+                id: 'task123',
+                title: 'Note',
+                description: 'Info',
+                status: 'notes' as TaskStatus,
+                ordinal: 0,
+                creationDate: '2025-12-10T10:00:00.000Z',
+                completionDate: null,
+                editIds: []
+            };
+
+            const task = WorkTask.fromJSON(json);
+
+            expect(task.status).toBe('notes');
+        });
+
+        test('notes status should work in YAML serialization', () => {
+            const task = new WorkTask({ title: 'Note', description: 'Info', status: 'notes' });
+
+            const yaml = task.toYAML();
+
+            expect(yaml.status).toBe('notes');
+        });
+    });
+
+    describe('WorkPlan notes counting', () => {
+        test('getTaskCount() should exclude notes', () => {
+            const plan = new WorkPlan();
+            plan.addTaskAtEnd(new WorkTask({ title: 'Task 1', description: 'D', status: 'pending' }));
+            plan.addTaskAtEnd(new WorkTask({ title: 'Task 2', description: 'D', status: 'completed' }));
+            plan.addTaskAtEnd(new WorkTask({ title: 'Note 1', description: 'D', status: 'notes' }));
+
+            // getTaskCount should only count actionable tasks
+            expect(plan.getTaskCount()).toBe(2);
+        });
+
+        test('getCompletedCount() should work with notes present', () => {
+            const plan = new WorkPlan();
+            plan.addTaskAtEnd(new WorkTask({ title: 'Task 1', description: 'D', status: 'pending' }));
+            plan.addTaskAtEnd(new WorkTask({ title: 'Task 2', description: 'D', status: 'completed' }));
+            plan.addTaskAtEnd(new WorkTask({ title: 'Note 1', description: 'D', status: 'notes' }));
+
+            expect(plan.getCompletedCount()).toBe(1);
+        });
+
+        test('tasks array should still include notes', () => {
+            const plan = new WorkPlan();
+            plan.addTaskAtEnd(new WorkTask({ title: 'Task 1', description: 'D', status: 'pending' }));
+            plan.addTaskAtEnd(new WorkTask({ title: 'Note 1', description: 'D', status: 'notes' }));
+
+            expect(plan.tasks.length).toBe(2);
+            expect(plan.tasks.find(t => t.status === 'notes')).toBeDefined();
+        });
+
+        test('getOpenTasks() should exclude notes', () => {
+            const plan = new WorkPlan();
+            plan.addTaskAtEnd(new WorkTask({ title: 'Task 1', description: 'D', status: 'pending' }));
+            plan.addTaskAtEnd(new WorkTask({ title: 'Task 2', description: 'D', status: 'in_progress' }));
+            plan.addTaskAtEnd(new WorkTask({ title: 'Note 1', description: 'D', status: 'notes' }));
+
+            const openTasks = plan.getOpenTasks();
+
+            expect(openTasks.length).toBe(2);
+            expect(openTasks.every(t => t.status !== 'notes')).toBe(true);
+        });
+
+        test('hasNotes() should return true when notes exist', () => {
+            const plan = new WorkPlan();
+            plan.addTaskAtEnd(new WorkTask({ title: 'Task 1', description: 'D', status: 'pending' }));
+
+            expect(plan.hasNotes()).toBe(false);
+
+            plan.addTaskAtEnd(new WorkTask({ title: 'Note 1', description: 'D', status: 'notes' }));
+
+            expect(plan.hasNotes()).toBe(true);
+        });
+    });
+
+    describe('YAML serialization with notes', () => {
+        test('should serialize and deserialize plan with notes', () => {
+            const plan = new WorkPlan();
+            plan.addTaskAtEnd(new WorkTask({ title: 'Task', description: 'D', status: 'pending' }));
+            plan.addTaskAtEnd(new WorkTask({ title: 'Note', description: 'Info', status: 'notes' }));
+
+            const yaml = plan.toYAMLFrontmatter();
+            const restored = WorkPlan.fromYAMLFrontmatter(yaml);
+
+            expect(restored.tasks.length).toBe(2);
+            expect(restored.tasks[1].status).toBe('notes');
+        });
+
+        test('should parse Python-generated YAML with notes status', () => {
+            const pythonYaml = `---
+tasks:
+- id: wt12345678
+  title: Important note
+  description: Reference information
+  status: notes
+  ordinal: 0
+  creationDate: '2025-12-10T10:00:00Z'
+  completionDate: null
+  editIds: []
+---
+`;
+
+            const plan = WorkPlan.fromYAMLFrontmatter(pythonYaml);
+
+            expect(plan.tasks[0].status).toBe('notes');
+        });
+    });
+});
+

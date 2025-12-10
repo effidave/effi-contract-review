@@ -42,8 +42,9 @@ async def get_work_plan(filename: str) -> str:
     
     data = plan.to_dict()
     
-    # Add summary info
-    task_count = len(plan.tasks)
+    # Add summary info - exclude notes from taskCount
+    actionable_tasks = [t for t in plan.tasks if t.status != "notes"]
+    task_count = len(actionable_tasks)
     completed = sum(1 for t in plan.tasks if t.status == "completed")
     in_progress = sum(1 for t in plan.tasks if t.status == "in_progress")
     pending = sum(1 for t in plan.tasks if t.status == "pending")
@@ -145,8 +146,8 @@ async def update_task(
         changes.append("description updated")
     
     if status is not None:
-        if status not in ("pending", "in_progress", "completed", "blocked"):
-            return f"Error: Invalid status '{status}'. Must be pending, in_progress, completed, or blocked"
+        if status not in ("pending", "in_progress", "completed", "blocked", "notes"):
+            return f"Error: Invalid status '{status}'. Must be pending, in_progress, completed, blocked, or notes"
         task.status = status
         changes.append(f"status={status}")
         
@@ -265,6 +266,99 @@ async def block_task(filename: str, task_id: str) -> str:
         Success message or error message
     """
     return await update_task(filename, task_id, status="blocked")
+
+
+async def unblock_task(filename: str, task_id: str) -> str:
+    """
+    Unblock a blocked task (set status to pending).
+    
+    Only works if the task is currently blocked. Returns a warning if
+    the task is not blocked.
+    
+    Args:
+        filename: Path to any document in the project
+        task_id: ID of the task to unblock
+        
+    Returns:
+        Success message or warning message
+    """
+    plan, project_path = get_or_create_plan_from_filename(filename)
+    if plan is None:
+        return f"Error: Cannot determine project path from '{filename}'"
+    
+    task = plan.get_task_by_id(task_id)
+    if task is None:
+        return f"Error: Task '{task_id}' not found"
+    
+    if not task.unblock():
+        return f"Warning: Task '{task.title}' is not blocked (current status: {task.status})"
+    
+    if not save_plan_from_filename(filename, plan):
+        return "Error: Failed to save plan"
+    
+    return f"Task '{task.title}' unblocked (status: pending)"
+
+
+async def convert_to_note(filename: str, task_id: str) -> str:
+    """
+    Convert a task to a note.
+    
+    Notes are not counted towards task completion totals.
+    
+    Args:
+        filename: Path to any document in the project
+        task_id: ID of the task to convert to a note
+        
+    Returns:
+        Success message or error message
+    """
+    plan, project_path = get_or_create_plan_from_filename(filename)
+    if plan is None:
+        return f"Error: Cannot determine project path from '{filename}'"
+    
+    task = plan.get_task_by_id(task_id)
+    if task is None:
+        return f"Error: Task '{task_id}' not found"
+    
+    task.convert_to_note()
+    
+    if not save_plan_from_filename(filename, plan):
+        return "Error: Failed to save plan"
+    
+    return f"Task '{task.title}' converted to note"
+
+
+async def convert_to_task(filename: str, task_id: str) -> str:
+    """
+    Convert a note back to a regular task (pending status).
+    
+    Only works if the item is currently a note. Returns a warning if
+    the item is not a note.
+    
+    Args:
+        filename: Path to any document in the project
+        task_id: ID of the note to convert to a task
+        
+    Returns:
+        Success message or warning message
+    """
+    plan, project_path = get_or_create_plan_from_filename(filename)
+    if plan is None:
+        return f"Error: Cannot determine project path from '{filename}'"
+    
+    task = plan.get_task_by_id(task_id)
+    if task is None:
+        return f"Error: Task '{task_id}' not found"
+    
+    if task.status != "notes":
+        return f"Warning: '{task.title}' is not a note (current status: {task.status})"
+    
+    task.status = "pending"
+    
+    if not save_plan_from_filename(filename, plan):
+        return "Error: Failed to save plan"
+    
+    return f"Note '{task.title}' converted to task (status: pending)"
 
 
 async def add_plan_document(filename: str, display_name: Optional[str] = None) -> str:
