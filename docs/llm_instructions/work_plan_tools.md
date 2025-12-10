@@ -74,7 +74,7 @@ Reorder a task (0-based position).
 
 ### Task Status
 
-Tasks have four statuses: `pending`, `in_progress`, `completed`, `blocked`
+Tasks have five statuses: `pending`, `in_progress`, `completed`, `blocked`, `notes`
 
 **start_task(filename, task_id)**
 
@@ -89,6 +89,40 @@ Mark a task as finished. Sets status to `completed` and records completion time.
 **block_task(filename, task_id)**
 
 Mark a task as blocked (waiting on something external).
+
+**unblock_task(filename, task_id)**
+
+Remove blocked status, returning to `pending`. Only works on blocked tasks.
+
+---
+
+### Notes Status
+
+The `notes` status is special - it's for non-actionable items like reference information, decisions made, or context that doesn't need completing.
+
+**Key difference:** Notes don't count towards progress. If you have 5 tasks and 2 notes, the progress shows "X of 5" (not "X of 7").
+
+**convert_to_note(filename, task_id)**
+
+Convert any task to a note. Sets status to `notes`.
+
+```
+convert_to_note(
+    filename="C:/EL_Projects/Acme/drafts/current_drafts/nda.docx",
+    task_id="a1b2c3d4"
+)
+```
+
+**convert_to_task(filename, task_id)**
+
+Convert a note back to an actionable task. Sets status to `pending`.
+
+Returns a warning if the item wasn't actually a note (but still converts it).
+
+**When to use notes:**
+- Recording a decision: "Client confirmed 3-year term is acceptable"
+- Reference information: "Key contact: John Smith, Legal Counsel"
+- Context for future work: "Previous version had unlimited liability - this was negotiated down"
 
 ---
 
@@ -204,6 +238,9 @@ This shows how many tasks are completed vs remaining.
 | `start_task` | Begin work (→ in_progress) |
 | `complete_task` | Finish work (→ completed) |
 | `block_task` | Mark as waiting (→ blocked) |
+| `unblock_task` | Remove blocked status (→ pending) |
+| `convert_to_note` | Convert to non-actionable note |
+| `convert_to_task` | Convert note back to task |
 | `add_plan_document` | Track a document |
 | `remove_plan_document` | Untrack a document |
 | `list_plan_documents` | List tracked documents |

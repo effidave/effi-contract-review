@@ -12,6 +12,8 @@ const execAsync = promisify(exec);
 
 let webviewPanel: vscode.WebviewPanel | undefined;
 let planWebviewPanel: vscode.WebviewPanel | undefined;
+let planPollingInterval: NodeJS.Timeout | undefined;
+const PLAN_POLLING_INTERVAL_MS = 3000;  // Poll every 3 seconds
 let currentDocumentPath: string | undefined;
 let currentProjectPath: string | undefined;
 let planProvider: PlanProvider | undefined;
@@ -350,15 +352,34 @@ function showPlanWebview(context: vscode.ExtensionContext) {
             context.subscriptions
         );
 
+        // Handle panel visibility changes - pause polling when hidden
+        planWebviewPanel.onDidChangeViewState(
+            (e) => {
+                if (e.webviewPanel.visible) {
+                    // Panel became visible - start/resume polling
+                    startPlanPolling();
+                } else {
+                    // Panel became hidden - pause polling
+                    stopPlanPolling();
+                }
+            },
+            null,
+            context.subscriptions
+        );
+
         // Handle panel disposal
         planWebviewPanel.onDidDispose(
             () => {
+                stopPlanPolling();
                 planWebviewPanel = undefined;
                 vscode.commands.executeCommand('setContext', 'effiPlanViewerActive', false);
             },
             null,
             context.subscriptions
         );
+
+        // Start polling for plan updates
+        startPlanPolling();
 
         vscode.commands.executeCommand('setContext', 'effiPlanViewerActive', true);
     }
@@ -1569,6 +1590,37 @@ async function rejectAllRevisions(documentPath: string, webviewPanel: vscode.Web
 // ============================================================================
 // Plan Tab Handlers
 // ============================================================================
+
+/**
+ * Start polling for plan updates
+ */
+function startPlanPolling() {
+    // Clear any existing interval
+    stopPlanPolling();
+    
+    planPollingInterval = setInterval(async () => {
+        if (planWebviewPanel && currentProjectPath) {
+            try {
+                await handleGetPlan(currentProjectPath, planWebviewPanel);
+            } catch (error) {
+                console.error('Plan polling error:', error);
+            }
+        }
+    }, PLAN_POLLING_INTERVAL_MS);
+    
+    console.log('Plan polling started');
+}
+
+/**
+ * Stop polling for plan updates
+ */
+function stopPlanPolling() {
+    if (planPollingInterval) {
+        clearInterval(planPollingInterval);
+        planPollingInterval = undefined;
+        console.log('Plan polling stopped');
+    }
+}
 
 /**
  * Get or create PlanProvider for a project path

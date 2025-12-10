@@ -390,7 +390,7 @@ The LLM can create and manage WorkPlans via MCP tools:
 
 **Available Tools:**
 | Tool | Description |
-|------|-------------|
+|------|-----------|
 | `get_work_plan(filename)` | Get plan with tasks, documents, and summary stats |
 | `add_task(filename, title, description, position?, ordinal?)` | Add task (start/end/at) |
 | `update_task(filename, task_id, title?, description?, status?)` | Modify task |
@@ -399,9 +399,19 @@ The LLM can create and manage WorkPlans via MCP tools:
 | `start_task(filename, task_id)` | Set status to in_progress |
 | `complete_task(filename, task_id)` | Set status to completed |
 | `block_task(filename, task_id)` | Set status to blocked |
+| `unblock_task(filename, task_id)` | Remove blocked status (→ pending) |
+| `convert_to_note(filename, task_id)` | Convert task to non-actionable note |
+| `convert_to_task(filename, task_id)` | Convert note back to pending task |
 | `add_plan_document(filename, display_name?)` | Track document |
 | `remove_plan_document(filename, document_id)` | Untrack document |
 | `list_plan_documents(filename)` | List tracked documents |
+
+**Task Status Values:**
+- `pending` - Not yet started
+- `in_progress` - Currently being worked on
+- `completed` - Finished
+- `blocked` - Waiting on external input
+- `notes` - Non-actionable item (doesn't count towards progress)
 
 **Project Path Derivation:**
 All tools use `filename` (any document in the project) to derive project path.
@@ -478,7 +488,13 @@ Note: After migration, `word_document_server` is pristine upstream. All customiz
   - `test_local_mcp.py` - MCP protocol integration via HTTP transport
   - `test_mcp_tools_availability.py` - Tool registration verification
   - `test_mcp_tool_logging.py` - Python @with_logging decorator (27 tests)
-  - `test_plan_mcp_tools.py` - Plan MCP tools for LLM plan management (45 tests)
+  - `test_plan_mcp_tools.py` - Plan MCP tools for LLM plan management (61 tests, includes notes status)
+
+**TypeScript Tests** (extension/src/__tests__):
+- `workplan.test.ts` - WorkPlan/WorkTask models (96 tests, includes notes status)
+- `planStorage.test.ts` - Plan file I/O operations
+- `planIntegration.test.ts` - PlanProvider integration tests
+- `mcpToolLogger.test.ts` - Tool logging integration
 
 **Testing Approach**:
 - Unit tests for utilities (dual signature support, count calculations)

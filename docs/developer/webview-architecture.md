@@ -66,11 +66,58 @@ These panels can be opened side-by-side for an integrated workflow.
 - **Created by:** `showPlanWebview()`
 - **Command:** `effi-contract-viewer.showPlan`
 - **Content:** `getPlanWebviewContent()` returns HTML with planMain.js and plan.js
+- **Auto-refresh:** Polls for plan changes every 3 seconds (see [Polling Mechanism](#polling-mechanism))
 
 Both panels:
 - Persist when hidden (`retainContextWhenHidden: true`)
 - Can be revealed in the same or different view columns
 - Communicate via `postMessage()` with the extension host
+
+### Polling Mechanism
+
+The Work Plan panel automatically polls for updates to `plan.md` every 3 seconds. This enables real-time visibility into LLM-driven plan changes when MCP tools modify the plan.
+
+**Implementation (`extension.ts`):**
+
+```typescript
+// Configuration
+const PLAN_POLLING_INTERVAL_MS = 3000;  // 3 seconds
+let planPollingInterval: NodeJS.Timeout | undefined;
+
+// Start polling
+function startPlanPolling() {
+    stopPlanPolling();  // Clear any existing
+    planPollingInterval = setInterval(async () => {
+        if (planWebviewPanel && currentProjectPath) {
+            await handleGetPlan(currentProjectPath, planWebviewPanel);
+        }
+    }, PLAN_POLLING_INTERVAL_MS);
+}
+
+// Stop polling
+function stopPlanPolling() {
+    if (planPollingInterval) {
+        clearInterval(planPollingInterval);
+        planPollingInterval = undefined;
+    }
+}
+```
+
+**Resource Efficiency:**
+- Polling pauses when panel is hidden (`onDidChangeViewState`)
+- Polling stops when panel is disposed
+- Uses `reloadPlan()` to force disk read (bypasses cache)
+
+**Visibility-aware polling:**
+```typescript
+planWebviewPanel.onDidChangeViewState((e) => {
+    if (e.webviewPanel.visible) {
+        startPlanPolling();   // Resume when visible
+    } else {
+        stopPlanPolling();    // Pause when hidden
+    }
+});
+```
 
 ## Architecture Components
 

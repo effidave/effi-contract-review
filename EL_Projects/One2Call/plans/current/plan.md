@@ -817,67 +817,120 @@ tasks:
   editIds: []
 - id: wt90c3d4e3
   title: 1.3 Clarify indemnity cap
-  description: 'Add to clause 19.4: ''The liability of either party under clause 17
-    (Indemnities) shall be subject to the cap set out in this clause 19.4.''
+  description: '**COMPLETED 10 Dec 2025**
 
 
-    Reference: Managed services agreement (1).docx — clause 19 (Limitation of Liability)'
-  status: pending
+    Added to clause 19.4: "(including under any indemnities)" after "the Supplier''s
+    total liability to the Customer".
+
+
+    This clarifies that indemnity obligations under clause 17 are subject to the overall
+    liability cap.
+
+
+    **Comment added to document:** Negotiation fallback if customer pushes back on
+    £100k cap for IPR indemnities — could offer two-tier cap: (a) £1m supercap for
+    IPR infringement claims under clause 17.2; and (b) lower general cap for other
+    liability.
+
+
+    Reference: MSA (HJ7) — clause 19.4 (Limitation of Liability)'
+  status: completed
   ordinal: 4
   creationDate: '2025-12-09T19:51:25.068098Z'
-  completionDate: null
+  completionDate: '2025-12-10T09:03:49.111891Z'
   editIds: []
 - id: wt74ad3e5e
   title: 1.7 Add regulatory compliance clauses
-  description: 'Add to clause 24 (General) with explanatory drafting notes:
+  description: '**COMPLETED 10 Dec 2025**
 
 
-    (a) Anti-bribery — Compliance with Bribery Act 2010; no bribes or facilitation
-    payments; right to terminate for breach. [Note: May be required by larger clients
-    and public sector customers.]
+    Added three optional regulatory/dispute clauses to clause 24 (General), after
+    clause 24.10 (Jurisdiction):
 
 
-    (b) Anti-slavery — Compliance with Modern Slavery Act 2015; due diligence on supply
-    chain; annual statement. [Note: May be required by larger clients and public sector
-    customers.]
+    (a) **Anti-bribery** — Compliance with Bribery Act 2010; no bribes/facilitation
+    payments; termination right for breach.
+
+    *Comment: OPTIONAL — May be required by larger clients, public sector, or compliance-conscious
+    organisations.*
 
 
-    (c) Dispute escalation — Before commencing litigation, disputes to be escalated
-    to senior management for good faith resolution discussions for 14 days. [Note:
-    May reduce legal costs and preserve commercial relationships.]
+    (b) **Anti-slavery** — Compliance with Modern Slavery Act 2015; policies and procedures;
+    notification obligation.
+
+    *Comment: OPTIONAL — May be required by larger clients (250+ employees) or public
+    sector.*
 
 
-    Reference:
+    (c) **Dispute resolution** — 14-day good faith negotiation before litigation.
 
-    • Managed services agreement (1).docx — clause 29 (Anti-bribery), clause 30 (Anti-slavery),
-    clause 35 (Dispute resolution)'
-  status: pending
+    *Comment: OPTIONAL — Encourages commercial resolution; safe to delete if direct
+    court access preferred.*
+
+
+    Reference: MSA (HJ7) — clause 24 (General)'
+  status: completed
   ordinal: 5
   creationDate: '2025-12-09T19:51:51.851235Z'
-  completionDate: null
+  completionDate: '2025-12-10T09:06:42.754167Z'
   editIds: []
 - id: aff8ea33
   title: Add no verbal/physical abuse clause to client obligations
-  description: Add provision from Milewood General T&Cs cl 5.1.5 giving One2Call the
-    right to suspend services if client subjects any One2Call employee, contractor
-    or representative to verbal, physical or other abuse. This is a modern, employee-protective
-    provision. Consider adding to MSA client obligations section.
-  status: pending
+  description: '**COMPLETED 10 Dec 2025**
+
+
+    Added new clause 12.4 to Customer''s obligations requiring customers to treat
+    One2Call personnel with respect. Provides:
+
+    - Immediate suspension right if customer personnel abuse One2Call staff
+
+    - Termination right for repeated or serious incidents
+
+
+    Comment added explaining this is an employee-protective provision, increasingly
+    common in service contracts.
+
+
+    Source: Milewood General T&Cs cl 5.1.5
+
+
+    Reference: MSA (HJ7) — clause 12 (Customer''s obligations)'
+  status: completed
   ordinal: 6
   creationDate: '2025-12-10T02:03:21.569422Z'
-  completionDate: null
+  completionDate: '2025-12-10T09:13:40.141950Z'
   editIds: []
 - id: 5d103576
   title: 'Query: Include detailed returns policy in goods provisions?'
-  description: Add comment to MSA goods/equipment provisions querying whether to include
-    the detailed 16-point returns policy from Milewood General T&Cs cl 4.8. That policy
-    includes specific timeframes (14 days for unused goods, 30 days for faulty), restocking
-    fees, and detailed procedures. Query whether client wants this level of detail
-    in MSA or Annex 3F (Hardware Provision).
-  status: pending
+  description: '**COMPLETED 10 Dec 2025**
+
+
+    Added comment to clause 7 (Quality of Goods) querying whether client wants detailed
+    returns policy.
+
+
+    Comment presents three options:
+
+    (a) Add detailed returns provisions to cl 7
+
+    (b) Add to Annex 3F (Hardware Provision) when drafted
+
+    (c) Leave as-is — current provisions adequate for B2B
+
+
+    Recommendation provided: Option (c) for typical B2B; consider (b) if hardware
+    sales are significant.
+
+
+    Source: Milewood General T&Cs cl 4.8
+
+
+    Reference: MSA (HJ7) — clause 7 (Quality of Goods)'
+  status: completed
   ordinal: 7
   creationDate: '2025-12-10T07:00:44.378647Z'
-  completionDate: null
+  completionDate: '2025-12-10T09:15:56.248485Z'
   editIds: []
 - id: 09886f5d
   title: 1.12 Add document hierarchy/priority clause to MSA
@@ -2407,35 +2460,68 @@ The following exit/transition provisions were considered but intentionally not a
 Reference: Managed services agreement (1).docx — clause 21 (Exit Plan and Transition Services)
 
 ## 5. 1.3 Clarify indemnity cap
-**Status:** pending
+**Status:** completed
 
-Add to clause 19.4: 'The liability of either party under clause 17 (Indemnities) shall be subject to the cap set out in this clause 19.4.'
+**COMPLETED 10 Dec 2025**
 
-Reference: Managed services agreement (1).docx — clause 19 (Limitation of Liability)
+Added to clause 19.4: "(including under any indemnities)" after "the Supplier's total liability to the Customer".
+
+This clarifies that indemnity obligations under clause 17 are subject to the overall liability cap.
+
+**Comment added to document:** Negotiation fallback if customer pushes back on £100k cap for IPR indemnities — could offer two-tier cap: (a) £1m supercap for IPR infringement claims under clause 17.2; and (b) lower general cap for other liability.
+
+Reference: MSA (HJ7) — clause 19.4 (Limitation of Liability)
 
 ## 6. 1.7 Add regulatory compliance clauses
-**Status:** pending
+**Status:** completed
 
-Add to clause 24 (General) with explanatory drafting notes:
+**COMPLETED 10 Dec 2025**
 
-(a) Anti-bribery — Compliance with Bribery Act 2010; no bribes or facilitation payments; right to terminate for breach. [Note: May be required by larger clients and public sector customers.]
+Added three optional regulatory/dispute clauses to clause 24 (General), after clause 24.10 (Jurisdiction):
 
-(b) Anti-slavery — Compliance with Modern Slavery Act 2015; due diligence on supply chain; annual statement. [Note: May be required by larger clients and public sector customers.]
+(a) **Anti-bribery** — Compliance with Bribery Act 2010; no bribes/facilitation payments; termination right for breach.
+*Comment: OPTIONAL — May be required by larger clients, public sector, or compliance-conscious organisations.*
 
-(c) Dispute escalation — Before commencing litigation, disputes to be escalated to senior management for good faith resolution discussions for 14 days. [Note: May reduce legal costs and preserve commercial relationships.]
+(b) **Anti-slavery** — Compliance with Modern Slavery Act 2015; policies and procedures; notification obligation.
+*Comment: OPTIONAL — May be required by larger clients (250+ employees) or public sector.*
 
-Reference:
-• Managed services agreement (1).docx — clause 29 (Anti-bribery), clause 30 (Anti-slavery), clause 35 (Dispute resolution)
+(c) **Dispute resolution** — 14-day good faith negotiation before litigation.
+*Comment: OPTIONAL — Encourages commercial resolution; safe to delete if direct court access preferred.*
+
+Reference: MSA (HJ7) — clause 24 (General)
 
 ## 7. Add no verbal/physical abuse clause to client obligations
-**Status:** pending
+**Status:** completed
 
-Add provision from Milewood General T&Cs cl 5.1.5 giving One2Call the right to suspend services if client subjects any One2Call employee, contractor or representative to verbal, physical or other abuse. This is a modern, employee-protective provision. Consider adding to MSA client obligations section.
+**COMPLETED 10 Dec 2025**
+
+Added new clause 12.4 to Customer's obligations requiring customers to treat One2Call personnel with respect. Provides:
+- Immediate suspension right if customer personnel abuse One2Call staff
+- Termination right for repeated or serious incidents
+
+Comment added explaining this is an employee-protective provision, increasingly common in service contracts.
+
+Source: Milewood General T&Cs cl 5.1.5
+
+Reference: MSA (HJ7) — clause 12 (Customer's obligations)
 
 ## 8. Query: Include detailed returns policy in goods provisions?
-**Status:** pending
+**Status:** completed
 
-Add comment to MSA goods/equipment provisions querying whether to include the detailed 16-point returns policy from Milewood General T&Cs cl 4.8. That policy includes specific timeframes (14 days for unused goods, 30 days for faulty), restocking fees, and detailed procedures. Query whether client wants this level of detail in MSA or Annex 3F (Hardware Provision).
+**COMPLETED 10 Dec 2025**
+
+Added comment to clause 7 (Quality of Goods) querying whether client wants detailed returns policy.
+
+Comment presents three options:
+(a) Add detailed returns provisions to cl 7
+(b) Add to Annex 3F (Hardware Provision) when drafted
+(c) Leave as-is — current provisions adequate for B2B
+
+Recommendation provided: Option (c) for typical B2B; consider (b) if hardware sales are significant.
+
+Source: Milewood General T&Cs cl 4.8
+
+Reference: MSA (HJ7) — clause 7 (Quality of Goods)
 
 ## 9. 1.12 Add document hierarchy/priority clause to MSA
 **Status:** pending
