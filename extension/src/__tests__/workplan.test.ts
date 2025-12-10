@@ -1114,8 +1114,8 @@ describe('WorkPlan documents', () => {
 
             expect(yaml).toContain('documents:');
             expect(yaml).toContain('id: doc1');
-            // Filename is quoted because it contains ':'
-            expect(yaml).toContain("filename: 'C:/Projects/nda.docx'");
+            // js-yaml determines quoting automatically based on YAML spec
+            expect(yaml).toContain('filename: C:/Projects/nda.docx');
             expect(yaml).toContain('displayName: NDA Draft');
         });
 

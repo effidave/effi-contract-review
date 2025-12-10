@@ -219,6 +219,10 @@ function renderMarkdown(markdown) {
     const markedLib = typeof window !== 'undefined' ? window.marked : 
                       typeof marked !== 'undefined' ? marked : null;
     
+    // Debug logging
+    console.log('[renderMarkdown] window.marked available:', !!markedLib);
+    console.log('[renderMarkdown] input length:', markdown.length);
+    
     if (!markedLib) {
         // Fallback: escape HTML and return as-is
         console.warn('marked library not available, returning plain text');
@@ -228,6 +232,7 @@ function renderMarkdown(markdown) {
     try {
         // Parse markdown to HTML
         const html = markedLib.parse(markdown);
+        console.log('[renderMarkdown] output length:', html.length);
         // Sanitize the output
         return sanitizeMarkdownHtml(html);
     } catch (err) {

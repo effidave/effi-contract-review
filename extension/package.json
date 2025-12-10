@@ -156,10 +156,12 @@
     "test": "node ./out/test/runTest.js"
   },
   "dependencies": {
+    "js-yaml": "^4.1.1",
     "marked": "^12.0.0"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "20.x",
     "@types/vscode": "^1.85.0",
     "@types/vscode-webview": "^1.57.5",

@@ -9,6 +9,7 @@
  */
 
 import * as crypto from 'crypto';
+import * as yaml from 'js-yaml';
 
 // ============================================================================
 // Types
@@ -88,7 +89,7 @@ function generateId(): string {
 }
 
 /**
- * Parse YAML frontmatter from markdown content
+ * Parse YAML frontmatter from markdown content using js-yaml
  */
 function parseYAMLFrontmatter(content: string): { frontmatter: Record<string, unknown>; body: string } {
     // Normalize line endings to \n
@@ -102,192 +103,13 @@ function parseYAMLFrontmatter(content: string): { frontmatter: Record<string, un
     const yamlContent = match[1];
     const body = match[2];
     
-    // Simple YAML parser for our specific structure
-    const frontmatter = parseSimpleYAML(yamlContent);
-    
-    return { frontmatter, body };
-}
-
-/**
- * Simple YAML parser for our specific task structure
- * Handles multi-line string values (folded style)
- */
-function parseSimpleYAML(yaml: string): Record<string, unknown> {
-    const result: Record<string, unknown> = {};
-    const lines = yaml.split('\n');
-    
-    let currentKey = '';
-    let currentArray: Record<string, unknown>[] = [];
-    let currentObject: Record<string, unknown> = {};
-    let inArray = false;
-    let inObject = false;
-    let inNestedArray = false;
-    let nestedArrayKey = '';
-    let nestedArray: string[] = [];
-    
-    // Track multi-line value building
-    let lastPropertyKey = '';
-    let lastPropertyIndent = 0;
-    
-    for (let i = 0; i < lines.length; i++) {
-        const line = lines[i];
-        
-        // Skip empty lines
-        if (line.trim() === '') continue;
-        
-        // Check if this is a continuation line (more indented than the property)
-        const lineIndent = line.match(/^(\s*)/)?.[1].length || 0;
-        if (lastPropertyKey && lineIndent > lastPropertyIndent && inObject) {
-            // This is a continuation of the previous value
-            const continuation = line.trim();
-            if (currentObject[lastPropertyKey] !== undefined) {
-                const existing = currentObject[lastPropertyKey];
-                if (typeof existing === 'string') {
-                    currentObject[lastPropertyKey] = existing + ' ' + continuation;
-                }
-            }
-            continue;
-        }
-        
-        // Top-level key with array indicator
-        const topLevelArrayMatch = line.match(/^(\w+):$/);
-        if (topLevelArrayMatch) {
-            // Save previous array if exists
-            if (inArray && currentKey) {
-                if (Object.keys(currentObject).length > 0) {
-                    currentArray.push(currentObject);
-                }
-                result[currentKey] = currentArray;
-            }
-            currentKey = topLevelArrayMatch[1];
-            currentArray = [];
-            currentObject = {};
-            inArray = true;
-            inObject = false;
-            lastPropertyKey = '';
-            continue;
-        }
-        
-        // Array item start (handles both "- key: value" and "  - key: value")
-        const arrayItemMatch = line.match(/^([ ]{0,2})- (\w+): (.*)$/);
-        if (arrayItemMatch && inArray) {
-            // Save previous object if exists
-            if (Object.keys(currentObject).length > 0) {
-                currentArray.push(currentObject);
-            }
-            currentObject = {};
-            inObject = true;
-            inNestedArray = false;
-            
-            const key = arrayItemMatch[2];
-            const value = parseYAMLValue(arrayItemMatch[3].trim());
-            currentObject[key] = value;
-            lastPropertyKey = key;
-            lastPropertyIndent = (arrayItemMatch[1].length || 0) + 2; // "- " adds 2
-            continue;
-        }
-        
-        // Nested array start (handles "  key:" or "    key:")
-        const nestedArrayStartMatch = line.match(/^[ ]{2,4}(\w+):$/);
-        if (nestedArrayStartMatch && inObject) {
-            nestedArrayKey = nestedArrayStartMatch[1];
-            nestedArray = [];
-            inNestedArray = true;
-            lastPropertyKey = '';
-            continue;
-        }
-        
-        // Nested array item (handles "    - value" or "      - value")
-        const nestedArrayItemMatch = line.match(/^[ ]{4,6}- (.*)$/);
-        if (nestedArrayItemMatch && inNestedArray) {
-            nestedArray.push(parseYAMLValue(nestedArrayItemMatch[1].trim()) as string);
-            continue;
-        }
-        
-        // Object property continuation (handles "  key: value" or "    key: value")
-        const objectPropMatch = line.match(/^([ ]{2,4})(\w+): (.*)$/);
-        if (objectPropMatch && inObject) {
-            // Save nested array if we were building one
-            if (inNestedArray && nestedArrayKey) {
-                currentObject[nestedArrayKey] = nestedArray;
-                inNestedArray = false;
-                nestedArrayKey = '';
-                nestedArray = [];
-            }
-            
-            const key = objectPropMatch[2];
-            const value = parseYAMLValue(objectPropMatch[3].trim());
-            currentObject[key] = value;
-            lastPropertyKey = key;
-            lastPropertyIndent = objectPropMatch[1].length;
-            continue;
-        }
+    try {
+        const frontmatter = yaml.load(yamlContent) as Record<string, unknown>;
+        return { frontmatter: frontmatter || {}, body };
+    } catch (e) {
+        console.error('parseYAMLFrontmatter: YAML parse error:', e);
+        return { frontmatter: {}, body: content };
     }
-    
-    // Save final object and array
-    if (inNestedArray && nestedArrayKey) {
-        currentObject[nestedArrayKey] = nestedArray;
-    }
-    if (Object.keys(currentObject).length > 0) {
-        currentArray.push(currentObject);
-    }
-    if (currentKey && currentArray.length > 0) {
-        result[currentKey] = currentArray;
-    }
-    
-    return result;
-}
-
-/**
- * Parse a YAML value string to appropriate type
- */
-function parseYAMLValue(value: string): string | number | boolean | null | string[] {
-    // Handle quoted strings
-    if ((value.startsWith("'") && value.endsWith("'")) || 
-        (value.startsWith('"') && value.endsWith('"'))) {
-        return value.slice(1, -1);
-    }
-    
-    // Handle null
-    if (value === 'null' || value === '~') {
-        return null;
-    }
-    
-    // Handle boolean
-    if (value === 'true') return true;
-    if (value === 'false') return false;
-    
-    // Handle empty array
-    if (value === '[]') return [];
-    
-    // Handle numbers
-    if (/^-?\d+$/.test(value)) {
-        return parseInt(value, 10);
-    }
-    if (/^-?\d+\.\d+$/.test(value)) {
-        return parseFloat(value);
-    }
-    
-    return value;
-}
-
-/**
- * Convert value to YAML string representation
- */
-function toYAMLValue(value: unknown): string {
-    if (value === null) return 'null';
-    if (typeof value === 'boolean') return value.toString();
-    if (typeof value === 'number') return value.toString();
-    if (typeof value === 'string') {
-        // Quote strings that could be interpreted as other types
-        if (value === 'null' || value === 'true' || value === 'false' || 
-            /^-?\d+(\.\d+)?$/.test(value) || value.includes(':') || value.includes('#')) {
-            return `'${value}'`;
-        }
-        return value;
-    }
-    if (Array.isArray(value) && value.length === 0) return '[]';
-    return String(value);
 }
 
 /**
@@ -815,41 +637,38 @@ export class WorkPlan {
      * Generate YAML frontmatter string
      */
     toYAMLFrontmatter(): string {
-        const lines: string[] = ['---'];
+        const data: Record<string, unknown> = {};
         
         // Documents section
         if (this.documents.length > 0) {
-            lines.push('documents:');
-            for (const doc of this.documents) {
-                lines.push(`  - id: ${toYAMLValue(doc.id)}`);
-                lines.push(`    filename: ${toYAMLValue(doc.filename)}`);
-                lines.push(`    displayName: ${toYAMLValue(doc.displayName)}`);
-                lines.push(`    addedDate: '${doc.addedDate.toISOString()}'`);
-            }
+            data.documents = this.documents.map(doc => ({
+                id: doc.id,
+                filename: doc.filename,
+                displayName: doc.displayName,
+                addedDate: doc.addedDate.toISOString()
+            }));
         }
         
         // Tasks section
-        lines.push('tasks:');
-        for (const task of this.tasks) {
-            lines.push(`  - id: ${toYAMLValue(task.id)}`);
-            lines.push(`    title: ${toYAMLValue(task.title)}`);
-            lines.push(`    description: ${toYAMLValue(task.description)}`);
-            lines.push(`    status: ${toYAMLValue(task.status)}`);
-            lines.push(`    ordinal: ${toYAMLValue(task.ordinal)}`);
-            lines.push(`    creationDate: '${task.creationDate.toISOString()}'`);
-            lines.push(`    completionDate: ${task.completionDate ? `'${task.completionDate.toISOString()}'` : 'null'}`);
-            if (task.editIds.length === 0) {
-                lines.push(`    editIds: []`);
-            } else {
-                lines.push(`    editIds:`);
-                for (const editId of task.editIds) {
-                    lines.push(`      - ${toYAMLValue(editId)}`);
-                }
-            }
-        }
+        data.tasks = this.tasks.map(task => ({
+            id: task.id,
+            title: task.title,
+            description: task.description,
+            status: task.status,
+            ordinal: task.ordinal,
+            creationDate: task.creationDate.toISOString(),
+            completionDate: task.completionDate ? task.completionDate.toISOString() : null,
+            editIds: task.editIds
+        }));
         
-        lines.push('---');
-        return lines.join('\n');
+        const yamlStr = yaml.dump(data, {
+            lineWidth: -1,  // Don't wrap lines
+            quotingType: "'",
+            forceQuotes: false,
+            noRefs: true
+        });
+        
+        return `---\n${yamlStr}---`;
     }
 
     /**

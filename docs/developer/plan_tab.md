@@ -337,7 +337,144 @@ This matches the existing `getAnalysisDir()` pattern.
 | 5a. TS MCP Integration | mcpToolLogger.test.ts | 39 |
 | 5b. Python MCP Logging | test_mcp_tool_logging.py | 27 |
 | 5e. Plan MCP Tools | test_plan_mcp_tools.py | 45 |
-| **Total** | | **390** |
+| 6. Markdown Rendering | markdown.test.js | 58 |
+| **Total** | | **448** |
+
+### 6. Markdown Rendering ✅ COMPLETE
+
+Task descriptions support markdown syntax, which is rendered as HTML in the Plan panel.
+
+#### Implementation
+
+**Library:** [marked](https://github.com/markedjs/marked) v12.0.0
+
+**Bundle Architecture:**
+The Plan webview uses a bundled script (`dist/planBundle.js`) that includes:
+- `marked` library for markdown parsing
+- `plan.js` (PlanPanel component)
+- `planMain.js` (webview initialization)
+
+**esbuild Configuration:**
+```javascript
+// Build 1: Extension host bundle (Node.js)
+const extensionCtx = await esbuild.context({
+    entryPoints: ['src/extension.ts'],
+    platform: 'node',
+    outfile: 'dist/extension.js',
+    // ...
+});
+
+// Build 2: Plan webview bundle (Browser)
+const planWebviewCtx = await esbuild.context({
+    entryPoints: ['src/webview/planBundle.js'],
+    platform: 'browser',
+    format: 'iife',
+    outfile: 'dist/planBundle.js',
+    // ...
+});
+```
+
+#### Sanitization (XSS Protection)
+
+The `sanitizeMarkdownHtml()` function uses a whitelist approach:
+
+**ALLOWED_TAGS:**
+```javascript
+['p', 'br', 'strong', 'b', 'em', 'i', 'u', 'code', 'pre',
+ 'ul', 'ol', 'li', 'a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+ 'blockquote', 'hr']
+```
+
+**ALLOWED_ATTRIBUTES:**
+```javascript
+{
+    'a': ['href', 'title'],
+    '*': []  // No global attributes
+}
+```
+
+**Dangerous Patterns Blocked:**
+- `<script>`, `<style>`, `<iframe>`, `<object>`, `<embed>`, `<form>`, `<img>`
+- Event handlers: `onclick`, `onmouseover`, `onerror`, etc.
+- Dangerous URLs: `javascript:`, `data:`, `vbscript:`
+
+**Environment Support:**
+- **Browser:** Uses DOMParser for robust HTML parsing
+- **Node.js (tests):** Falls back to regex-based sanitization
+
+#### Rendering Flow
+
+```
+task.description (markdown string)
+        ↓
+   renderMarkdown()
+        ↓
+   marked.parse()  → raw HTML
+        ↓
+   sanitizeMarkdownHtml()  → safe HTML
+        ↓
+   descEl.innerHTML = result
+```
+
+In `_renderTask()`:
+```javascript
+if (task.description) {
+    descEl.innerHTML = renderMarkdown(task.description);
+} else {
+    descEl.textContent = '(Click to add description)';
+}
+```
+
+#### CSS Styling
+
+Markdown elements inside `.task-description` are styled in `style.css`:
+
+| Element | Styling |
+|---------|---------|
+| `p` | Margin: 0 0 0.5em 0 |
+| `strong`, `b` | font-weight: 600 |
+| `em`, `i` | font-style: italic |
+| `code` | Monospace, light background, 11px |
+| `pre` | Block code with padding, overflow scroll |
+| `ul`, `ol` | Indented lists |
+| `a` | Blue link color, underline on hover |
+| `h1-h6` | Sized headers (16px down to 12px) |
+| `blockquote` | Left border, italic, light background |
+| `hr` | Thin divider line |
+
+#### Files
+
+| File | Purpose |
+|------|---------|
+| `extension/src/webview/planBundle.js` | Bundle entry point (imports marked + plan.js + planMain.js) |
+| `extension/src/webview/plan.js` | `renderMarkdown()`, `sanitizeMarkdownHtml()`, `ALLOWED_TAGS`, `ALLOWED_ATTRIBUTES` |
+| `extension/src/webview/style.css` | CSS for `.task-description` markdown elements |
+| `extension/esbuild.js` | Two-bundle build configuration |
+| `extension/src/extension.ts` | `getPlanWebviewContent()` loads planBundle.js |
+| `extension/src/webview/__tests__/markdown.test.js` | 58 tests |
+
+#### Tests
+
+The `markdown.test.js` file contains 58 tests covering:
+
+- **sanitizeMarkdownHtml (32 tests)**
+  - Allowed tags (p, strong, em, code, pre, ul, ol, li, a, br, h1-h6, blockquote)
+  - Disallowed tags (script, style, iframe, object, embed, form, img)
+  - Dangerous attributes (onclick, onmouseover, javascript:, data:)
+  - Edge cases (empty, null, undefined, nested, mixed)
+
+- **renderMarkdown (15 tests)**
+  - Bold, italic, code, code blocks
+  - Lists (ordered, unordered)
+  - Links, headings, blockquotes
+  - Complex markdown, sanitization
+
+- **Constants (8 tests)**
+  - ALLOWED_TAGS includes safe tags, excludes dangerous
+  - ALLOWED_ATTRIBUTES allows href, blocks event handlers
+
+- **Integration (3 tests)**
+  - Markdown renders to HTML, sanitization works, empty handling
 
 ## Further Considerations
 
